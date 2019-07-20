@@ -8,11 +8,16 @@
     <version>2.1.6.RELEASE</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
-  <groupId>hu.elte.bm</groupId>
+  <groupId>hu.elte.bm.transaction-service</groupId>
   <artifactId>budgetmanager-transaction-service</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>budgetmanager-transaction-service</name>
-  <description>Demo project for Spring Boot</description>
+  <packaging>pom</packaging>
+  <description>Thesis topic at ELTE IK</description>
+
+  <modules>
+    <module>bm-transaction-service-domain</module>
+  </modules>
 
   <properties>
     <start-class>hu.elte.bm.budgetmanagertransactionservice.BudgetmanagerTransactionServiceApplication</start-class>
@@ -20,8 +25,10 @@
 
     <java.version>11</java.version>
     <checkstyle.version>8.22</checkstyle.version>
+    <easymock.version>4.0.2</easymock.version>
     <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
     <maven.pmd.plugin.version>3.12.0</maven.pmd.plugin.version>
+    <testng.version>6.14.3</testng.version>
 
     <checkstyle.skip>false</checkstyle.skip>
     <checkstyleFailOnViolation>true</checkstyleFailOnViolation>
@@ -44,9 +51,15 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
+    <!-- Database -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
     </dependency>
 
     <dependency>
@@ -55,9 +68,25 @@
       <version>${maven.pmd.plugin.version}</version>
     </dependency>
 
+    <!--
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-test</artifactId>
+          <scope>test</scope>
+        </dependency>
+    -->
+
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>${easymock.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
