@@ -1,6 +1,7 @@
 package hu.elte.bm.transactionservice.domain.transaction;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
@@ -18,6 +19,7 @@ public class Transaction {
     private final LocalDate date;
     private final LocalDate endDate;
     private final String description;
+    private final boolean lockedPeriod;
 
     protected Transaction(final TransactionBuilder builder) {
         this.id = builder.id;
@@ -30,6 +32,7 @@ public class Transaction {
         this.date = builder.date;
         this.endDate = builder.endDate;
         this.description = builder.description;
+        this.lockedPeriod = builder.lockedPeriod;
     }
 
     public Long getId() {
@@ -72,6 +75,36 @@ public class Transaction {
         return description;
     }
 
+    public boolean isLockedPeriod() {
+        return lockedPeriod;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Transaction that = (Transaction) o;
+        return Double.compare(that.amount, amount) == 0
+            && monthly == that.monthly
+            && lockedPeriod == that.lockedPeriod
+            && title.equals(that.title)
+            && currency == that.currency
+            && mainCategory.equals(that.mainCategory)
+            && Objects.equals(subCategory, that.subCategory)
+            && date.equals(that.date)
+            && Objects.equals(endDate, that.endDate)
+            && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, amount, currency, mainCategory, subCategory, monthly, date, endDate, description, lockedPeriod);
+    }
+
     public static class TransactionBuilder {
         private Long id;
         private String title;
@@ -83,6 +116,7 @@ public class Transaction {
         private LocalDate date;
         private LocalDate endDate;
         private String description;
+        private boolean lockedPeriod;
 
         public TransactionBuilder withId(final Long id) {
             this.id = id;
@@ -131,6 +165,11 @@ public class Transaction {
 
         public TransactionBuilder withDescription(final String description) {
             this.description = description;
+            return this;
+        }
+
+        public TransactionBuilder withLocked(final boolean lockedPeriod) {
+            this.lockedPeriod = lockedPeriod;
             return this;
         }
 

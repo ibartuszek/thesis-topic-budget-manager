@@ -1,30 +1,35 @@
 package hu.elte.bm.transactionservice.domain;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.income.Income;
 
 public interface DatabaseFacade {
 
-    List<MainCategory> findAllMainCategory();
-
-    List<MainCategory> findAllMainCategoryForIncomes();
+    List<MainCategory> findAllMainCategory(CategoryType categoryType);
 
     MainCategory saveMainCategory(MainCategory mainCategory);
 
-    MainCategory updateMainCategoryForIncome(MainCategory mainCategory);
+    MainCategory updateMainCategory(MainCategory target);
 
-    SubCategory saveSubCategoryForIncome(SubCategory subCategory);
+    List<SubCategory> findAllSubCategory(CategoryType categoryType);
 
-    SubCategory updateSubCategoryForIncome(SubCategory subCategory);
+    SubCategory saveSubCategory(SubCategory subCategory);
 
-    List<Income> findAllIncome();
+    SubCategory updateSubCategory(SubCategory subCategory);
+
+    List<Income> getIncomeList(LocalDate start, LocalDate end);
+
+    Income getIncomeById(Long id);
 
     Income saveIncome(Income income);
 
     Income updateIncome(Income income);
 
     Income deleteIncome(Income income);
+
 }

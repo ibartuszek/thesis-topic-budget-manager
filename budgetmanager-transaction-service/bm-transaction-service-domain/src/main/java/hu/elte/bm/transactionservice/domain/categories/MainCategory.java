@@ -3,6 +3,9 @@ package hu.elte.bm.transactionservice.domain.categories;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * MainCategory represents the main category of the transaction (income or outcome).
+ */
 public final class MainCategory {
     private final Long id;
     private final String name;

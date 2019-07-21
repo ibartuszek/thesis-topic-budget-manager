@@ -1,6 +1,7 @@
 package hu.elte.bm.transactionservice.domain.categories.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -13,32 +14,50 @@ import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
 @Service("mainCategoryService")
 public class DefaultMainCategoryService implements MainCategoryService {
 
-    private static final String EXCEPTION_MESSAGE = "Unexpected error happens during execution. Please try again later.";
+    private static final String MAIN_CATEGORY_EXCEPTION_MESSAGE = "Unexpected error happens during execution. Please try again later.";
     private final DatabaseFacade databaseFacade;
 
     DefaultMainCategoryService(final DatabaseFacade databaseFacade) {
         this.databaseFacade = databaseFacade;
     }
 
-    private List<MainCategory> getMainCategoryList() {
-        return this.databaseFacade.findAllMainCategory();
+    private List<MainCategory> getMainCategoryList(final CategoryType categoryType) {
+        return databaseFacade.findAllMainCategory(categoryType);
     }
 
     @Override
     public List<MainCategory> getMainCategoryListForIncomes() {
-        return this.databaseFacade.findAllMainCategoryForIncomes();
+        return getMainCategoryList(CategoryType.INCOME);
     }
 
     @Override
-    public MainCategory saveMainCategory(final MainCategory mainCategory) throws MainCategoryException {
-        MainCategory result = null;
-        List<MainCategory> mainCategoryList = getMainCategoryList();
+    public Optional<MainCategory> saveMainCategory(final MainCategory mainCategory, final CategoryType categoryType)
+        throws MainCategoryException, IllegalArgumentException {
+        CategoryServiceUtility.checkParameters(categoryType, mainCategory);
+        Optional<MainCategory> result = Optional.empty();
+        List<MainCategory> mainCategoryList = getMainCategoryList(categoryType);
         if (!hasFoundInRepository(mainCategory, mainCategoryList)) {
-            MainCategory target = getTargetMainCategory(mainCategory, mainCategoryList);
+            MainCategory target = getCategoryWithUpdatedCategoryType(mainCategory, mainCategoryList);
             try {
-                result = this.databaseFacade.saveMainCategory(target);
+                result = Optional.of(databaseFacade.saveMainCategory(target));
             } catch (DataAccessException exception) {
-                throw new MainCategoryException(target, EXCEPTION_MESSAGE, exception);
+                throw new MainCategoryException(target, MAIN_CATEGORY_EXCEPTION_MESSAGE, exception);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<MainCategory> updateMainCategory(final MainCategory mainCategory, final CategoryType categoryType)
+        throws MainCategoryException, IllegalArgumentException {
+        CategoryServiceUtility.checkParameters(categoryType, mainCategory);
+        Optional<MainCategory> result = Optional.empty();
+        List<MainCategory> mainCategoryList = getMainCategoryList(categoryType);
+        if (canUpdated(mainCategory, mainCategoryList)) {
+            try {
+                result = Optional.of(databaseFacade.updateMainCategory(mainCategory));
+            } catch (DataAccessException exception) {
+                throw new MainCategoryException(mainCategory, MAIN_CATEGORY_EXCEPTION_MESSAGE, exception);
             }
         }
         return result;
@@ -50,7 +69,7 @@ public class DefaultMainCategoryService implements MainCategoryService {
             .anyMatch(mainCategory::equals);
     }
 
-    private MainCategory getTargetMainCategory(final MainCategory mainCategory,
+    private MainCategory getCategoryWithUpdatedCategoryType(final MainCategory mainCategory,
         final List<MainCategory> mainCategoryList) {
         MainCategory target = mainCategory;
         if (hasFoundInRepositoryWithDifferentType(mainCategory, mainCategoryList)) {
@@ -66,4 +85,21 @@ public class DefaultMainCategoryService implements MainCategoryService {
         return mainCategoryList.stream()
             .anyMatch(category -> mainCategory.getName().equals(category.getName()));
     }
+
+    private boolean canUpdated(final MainCategory mainCategory, final List<MainCategory> mainCategoryList) {
+        boolean result = false;
+        Long id = mainCategory.getId();
+        MainCategory mainCategoryFromRepo = mainCategoryList.stream()
+            .filter(category -> id.equals(category.getId()))
+            .findAny().orElse(null);
+        if (mainCategoryFromRepo != null) {
+            result = checkSubcategories(mainCategory, mainCategoryFromRepo);
+        }
+        return result;
+    }
+
+    private boolean checkSubcategories(final MainCategory mainCategory, final MainCategory mainCategoryFromRepo) {
+        return mainCategory.getSubCategorySet().containsAll(mainCategoryFromRepo.getSubCategorySet());
+    }
+
 }

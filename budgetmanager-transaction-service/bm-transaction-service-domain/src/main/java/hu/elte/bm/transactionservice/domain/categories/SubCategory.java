@@ -2,6 +2,9 @@ package hu.elte.bm.transactionservice.domain.categories;
 
 import java.util.Objects;
 
+/**
+ * It represents the secondary category of the transaction (can be income or outcome).
+ */
 public final class SubCategory {
 
     private final Long id;
@@ -54,6 +57,14 @@ public final class SubCategory {
 
         public static SubCategoryBuilder newInstance() {
             return new SubCategoryBuilder();
+        }
+
+        public static SubCategoryBuilder newInstance(final SubCategory subCategory) {
+            SubCategoryBuilder builder = new SubCategoryBuilder();
+            builder.id = subCategory.id;
+            builder.name = subCategory.name;
+            builder.categoryType = subCategory.categoryType;
+            return builder;
         }
 
         public SubCategoryBuilder withId(final Long id) {
