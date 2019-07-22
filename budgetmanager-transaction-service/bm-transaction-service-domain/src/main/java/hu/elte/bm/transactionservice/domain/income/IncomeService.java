@@ -35,10 +35,9 @@ public interface IncomeService {
      * @param income {@link Income} is extends {@link Transaction}. Cannot be null.
      * @return It returns a new {@link Optional<Income>} If it was saved the object contains the id as well.
      * If the income has saved already it returns an empty optional.
-     * @throws IncomeException          the object cannot be saved, when exception was thrown by the repository.
      * @throws IllegalArgumentException if income is null.
      */
-    Optional<Income> saveIncome(Income income) throws IncomeException, IllegalArgumentException;
+    Optional<Income> saveIncome(Income income) throws IllegalArgumentException;
 
     /**
      * Update the existing income in the repository if the budget period has not been locked
@@ -47,10 +46,9 @@ public interface IncomeService {
      * @param income {@link Income} is extends {@link Transaction}. Cannot be null.
      * @return It returns a new {@link Optional<Income>} If it was updated the object contains the modified values.
      * If the income has locked already it returns an empty optional.
-     * @throws IncomeException          the object cannot be saved, when exception was thrown by the repository.
      * @throws IllegalArgumentException if income is null.
      */
-    Optional<Income> updateIncome(Income income) throws IncomeException, IllegalArgumentException;
+    Optional<Income> updateIncome(Income income) throws IllegalArgumentException;
 
     /**
      * Delete the existing income in the repository if the budget period has not been locked
@@ -59,9 +57,8 @@ public interface IncomeService {
      * @param income {@link Income} is extends {@link Transaction}. Cannot be null.
      * @return It returns a new {@link Optional<Income>} If it was updated the object contains the modified values.
      * If the income has locked already it returns an empty optional.
-     * @throws IncomeException          the object cannot be deleted, when exception was thrown by the repository.
      * @throws IllegalArgumentException if income is null.
      */
-    Optional<Income> deleteIncome(Income income) throws IncomeException, IllegalArgumentException;
+    Optional<Income> deleteIncome(Income income) throws IllegalArgumentException;
 
 }

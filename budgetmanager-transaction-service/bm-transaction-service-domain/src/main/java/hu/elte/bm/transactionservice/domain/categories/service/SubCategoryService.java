@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryException;
 
 public interface SubCategoryService {
 
@@ -25,12 +24,10 @@ public interface SubCategoryService {
      *                     CategoryType.OUTCOME. It is needed to control the flow.
      * @return it returns an {@link Optional<SubCategory>}, which contains a new object with an id
      * if the actions was successful or it is an empty optional if the category has been saved already.
-     * @throws SubCategoryException     if the subCategory object cannot be saved. It can happen when
-     *                                  exception was thrown by the repository.
      * @throws IllegalArgumentException if the CategoryType parameter has CategoryType.BOTH value
      *                                  or subCategory is null.
      */
-    Optional<SubCategory> saveSubCategory(SubCategory subCategory, CategoryType categoryType) throws SubCategoryException, IllegalArgumentException;
+    Optional<SubCategory> saveSubCategory(SubCategory subCategory, CategoryType categoryType) throws IllegalArgumentException;
 
     /**
      * It will update the main category. Only its name can be modified or add new {@link SubCategory}
@@ -41,11 +38,9 @@ public interface SubCategoryService {
      *                     CategoryType.OUTCOME. It is needed to control the flow.
      * @return it returns an {@link Optional<SubCategory>}, which contains the modifications if the
      * actions was successful or it is an empty optional if the category has been saved already.
-     * @throws SubCategoryException     if the subCategory object cannot be saved. It can happen when
-     *                                  exception was thrown by the repository.
      * @throws IllegalArgumentException if the CategoryType parameter has CategoryType.BOTH value
      *                                  or subCategory is null.
      */
-    Optional<SubCategory> updateSubCategory(SubCategory subCategory, CategoryType categoryType) throws SubCategoryException, IllegalArgumentException;
+    Optional<SubCategory> updateSubCategory(SubCategory subCategory, CategoryType categoryType) throws IllegalArgumentException;
 
 }

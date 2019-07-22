@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain;
+package hu.elte.bm.transactionservice.domain.database;
 
 import java.time.LocalDate;
 import java.util.List;

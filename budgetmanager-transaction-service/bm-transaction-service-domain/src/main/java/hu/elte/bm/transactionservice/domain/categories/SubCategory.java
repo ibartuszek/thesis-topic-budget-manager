@@ -2,19 +2,32 @@ package hu.elte.bm.transactionservice.domain.categories;
 
 import java.util.Objects;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * It represents the secondary category of the transaction (can be income or outcome).
  */
 public final class SubCategory {
 
     private final Long id;
+    @NotBlank
     private final String name;
+    @NotNull
     private final CategoryType categoryType;
 
     private SubCategory(final SubCategoryBuilder builder) {
         this.id = builder.id;
         this.name = builder.name;
         this.categoryType = builder.categoryType;
+    }
+
+    public static SubCategoryBuilder builder() {
+        return new SubCategoryBuilder();
+    }
+
+    public static SubCategoryBuilder builder(final SubCategory subCategory) {
+        return new SubCategoryBuilder(subCategory);
     }
 
     public Long getId() {
@@ -55,16 +68,10 @@ public final class SubCategory {
         private SubCategoryBuilder() {
         }
 
-        public static SubCategoryBuilder newInstance() {
-            return new SubCategoryBuilder();
-        }
-
-        public static SubCategoryBuilder newInstance(final SubCategory subCategory) {
-            SubCategoryBuilder builder = new SubCategoryBuilder();
-            builder.id = subCategory.id;
-            builder.name = subCategory.name;
-            builder.categoryType = subCategory.categoryType;
-            return builder;
+        private SubCategoryBuilder(final SubCategory subCategory) {
+            this.id = subCategory.id;
+            this.name = subCategory.name;
+            this.categoryType = subCategory.categoryType;
         }
 
         public SubCategoryBuilder withId(final Long id) {

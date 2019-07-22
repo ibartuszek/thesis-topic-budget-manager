@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 
 public interface MainCategoryService {
@@ -26,12 +25,10 @@ public interface MainCategoryService {
      *                     CategoryType.OUTCOME. It is needed to control the flow.
      * @return it returns an {@link Optional<MainCategory>}, which contains a new object with an id
      * if the actions was successful or it is an empty optional if the category has been saved already.
-     * @throws MainCategoryException    if the mainCategory object cannot be saved. It can happen when
-     *                                  exception was thrown by the repository.
      * @throws IllegalArgumentException if the CategoryType parameter has CategoryType.BOTH value
      *                                  or mainCategory is null.
      */
-    Optional<MainCategory> saveMainCategory(MainCategory mainCategory, CategoryType categoryType) throws MainCategoryException, IllegalArgumentException;
+    Optional<MainCategory> saveMainCategory(MainCategory mainCategory, CategoryType categoryType) throws IllegalArgumentException;
 
     /**
      * It will update the main category. Only its name can be modified or add new {@link SubCategory}
@@ -42,11 +39,9 @@ public interface MainCategoryService {
      *                     CategoryType.OUTCOME. It is needed to control the flow.
      * @return it returns an {@link Optional<MainCategory>}, which contains the modifications if the
      * actions was successful or it is an empty optional if the category has been saved already.
-     * @throws MainCategoryException    if the mainCategory object cannot be saved. It can happen when
-     *                                  exception was thrown by the repository.
      * @throws IllegalArgumentException if the CategoryType parameter has CategoryType.BOTH value
      *                                  or mainCategory is null.
      */
-    Optional<MainCategory> updateMainCategory(MainCategory mainCategory, CategoryType categoryType) throws MainCategoryException, IllegalArgumentException;
+    Optional<MainCategory> updateMainCategory(MainCategory mainCategory, CategoryType categoryType) throws IllegalArgumentException;
 
 }

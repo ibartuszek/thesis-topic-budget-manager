@@ -1,6 +1,6 @@
 package hu.elte.bm.transactionservice.domain.income;
 
-public class IncomeException extends Exception {
+public class IncomeException extends RuntimeException {
 
     private final Income income;
 

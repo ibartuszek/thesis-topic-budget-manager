@@ -1,6 +1,6 @@
 package hu.elte.bm.transactionservice.domain.categories;
 
-public class MainCategoryException extends Exception {
+public class MainCategoryException extends RuntimeException {
 
     private final MainCategory mainCategory;
 

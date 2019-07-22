@@ -3,13 +3,19 @@ package hu.elte.bm.transactionservice.domain.categories;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * MainCategory represents the main category of the transaction (income or outcome).
  */
 public final class MainCategory {
     private final Long id;
+    @NotBlank
     private final String name;
+    @NotNull
     private final CategoryType categoryType;
+    @NotNull
     private final Set<SubCategory> subCategorySet;
 
     private MainCategory(final MainCategoryBuilder builder) {
@@ -17,6 +23,14 @@ public final class MainCategory {
         this.name = builder.name;
         this.categoryType = builder.categoryType;
         this.subCategorySet = builder.subCategorySet;
+    }
+
+    public static MainCategoryBuilder builder() {
+        return new MainCategoryBuilder();
+    }
+
+    public static MainCategoryBuilder builder(final MainCategory mainCategory) {
+        return new MainCategoryBuilder(mainCategory);
     }
 
     public Long getId() {
@@ -62,17 +76,11 @@ public final class MainCategory {
         private MainCategoryBuilder() {
         }
 
-        public static MainCategoryBuilder newInstance() {
-            return new MainCategoryBuilder();
-        }
-
-        public static MainCategoryBuilder newInstance(final MainCategory mainCategory) {
-            MainCategoryBuilder builder = new MainCategoryBuilder();
-            builder.withId(mainCategory.id);
-            builder.withName(mainCategory.name);
-            builder.withCategoryType(mainCategory.categoryType);
-            builder.withSubCategorySet(mainCategory.subCategorySet);
-            return builder;
+        private MainCategoryBuilder(final MainCategory mainCategory) {
+            this.id = mainCategory.id;
+            this.name = mainCategory.name;
+            this.categoryType = mainCategory.categoryType;
+            this.subCategorySet = mainCategory.subCategorySet;
         }
 
         public MainCategoryBuilder withId(final Long id) {

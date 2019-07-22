@@ -8,13 +8,22 @@ public final class Income extends Transaction {
         super(builder);
     }
 
-    public static final class IncomeBuilder extends TransactionBuilder {
+    public static IncomeBuilder builder() {
+        return new IncomeBuilder();
+    }
+
+    public static IncomeBuilder builder(final Income income) {
+        return new IncomeBuilder(income);
+    }
+
+    public static final class IncomeBuilder extends TransactionBuilder<IncomeBuilder> {
 
         private IncomeBuilder() {
+            super();
         }
 
-        public static IncomeBuilder newInstance() {
-            return new IncomeBuilder();
+        private IncomeBuilder(final Income income) {
+            super(income);
         }
 
         @Override

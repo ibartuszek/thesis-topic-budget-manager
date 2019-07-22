@@ -11,15 +11,13 @@ import java.util.Optional;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import org.springframework.dao.QueryTimeoutException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import hu.elte.bm.transactionservice.domain.DatabaseFacade;
 import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryException;
+import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
 
 public class DefaultSubCategoryServiceTest {
 
@@ -32,8 +30,8 @@ public class DefaultSubCategoryServiceTest {
     private static final String NEW_CATEGORY_NAME = "category4";
     private static final String CATEGORY_NAME_1 = "category1";
     private static final String CATEGORY_NAME_2 = "category3";
-    private static final String REPOSITORY_EXCEPTION_MESSAGE = "message";
-    private DatabaseFacade databaseFacade;
+
+    private DatabaseProxy databaseProxy;
     private IMocksControl control;
 
     private DefaultSubCategoryService underTest;
@@ -41,14 +39,14 @@ public class DefaultSubCategoryServiceTest {
     @BeforeMethod
     public void setup() {
         control = EasyMock.createStrictControl();
-        databaseFacade = control.createMock(DatabaseFacade.class);
-        underTest = new DefaultSubCategoryService(databaseFacade);
+        databaseProxy = control.createMock(DatabaseProxy.class);
+        underTest = new DefaultSubCategoryService(databaseProxy);
     }
 
     @Test
     public void testGetSubCategoryListForIncomesWhenThereIsNoSubCategory() {
         // GIVEN
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(Collections.emptyList());
+        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
         List<SubCategory> result = underTest.getSubCategoryListForIncomes();
@@ -61,7 +59,7 @@ public class DefaultSubCategoryServiceTest {
     public void testGetSubCategoryListForIncomesWhenThereAreMoreMainCategories() {
         // GIVEN
         List<SubCategory> subCategoryList = createSubCategoryList();
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(subCategoryList);
+        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(subCategoryList);
         control.replay();
         // WHEN
         List<SubCategory> result = underTest.getSubCategoryListForIncomes();
@@ -71,7 +69,7 @@ public class DefaultSubCategoryServiceTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveSubCategoryThrowIllegalArgumentExceptionWhenGotWrongCategoryType() throws SubCategoryException {
+    public void testSaveSubCategoryThrowIllegalArgumentExceptionWhenGotWrongCategoryType() {
         // GIVEN
         SubCategory subCategory = createExampleSubCategory(null, NEW_CATEGORY_NAME, INCOME);
         // WHEN
@@ -80,7 +78,7 @@ public class DefaultSubCategoryServiceTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveSubCategoryThrowIllegalArgumentExceptionWhenGotNullCategory() throws SubCategoryException {
+    public void testSaveSubCategoryThrowIllegalArgumentExceptionWhenGotNullCategory() {
         // GIVEN
         // WHEN
         underTest.saveSubCategory(null, INCOME);
@@ -88,11 +86,11 @@ public class DefaultSubCategoryServiceTest {
     }
 
     @Test
-    public void testSaveSubCategoryWhenThisCategoryHasBeenFoundInRepository() throws SubCategoryException {
+    public void testSaveSubCategoryWhenThisCategoryHasBeenFoundInRepository() {
         // GIVEN
         List<SubCategory> subCategoryList = createSubCategoryList();
         SubCategory subCategory = createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(subCategoryList);
+        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(subCategoryList);
         control.replay();
         // WHEN
         Optional<SubCategory> result = underTest.saveSubCategory(subCategory, INCOME);
@@ -101,31 +99,14 @@ public class DefaultSubCategoryServiceTest {
         Assert.assertEquals(Optional.empty(), result);
     }
 
-    @Test(expectedExceptions = SubCategoryException.class)
-    public void testSaveSubCategoryWhenRepositoryThrowsDataAccessException() throws SubCategoryException {
-        // GIVEN
-        List<SubCategory> subCategoryList = createSubCategoryList();
-        SubCategory subCategory = createExampleSubCategory(NEW_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(subCategoryList);
-        EasyMock.expect(databaseFacade.saveSubCategory(subCategory)).andThrow(new QueryTimeoutException(REPOSITORY_EXCEPTION_MESSAGE));
-        control.replay();
-        // WHEN
-        try {
-            underTest.saveSubCategory(subCategory, INCOME);
-        } finally {
-            // THEN
-            control.verify();
-        }
-    }
-
     @Test
-    public void testSaveSubCategoryWhenThisCategoryHasBeenFoundInRepositoryWithDifferentOtherType() throws SubCategoryException {
+    public void testSaveSubCategoryWhenThisCategoryHasBeenFoundInRepositoryWithDifferentOtherType() {
         // GIVEN
         List<SubCategory> subCategoryList = createSubCategoryList();
         SubCategory subCategory = createExampleSubCategory(null, EXPECTED_CATEGORY_NAME, OUTCOME);
         SubCategory expectedSubCategory = createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, BOTH);
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(subCategoryList);
-        EasyMock.expect(databaseFacade.saveSubCategory(expectedSubCategory)).andReturn(expectedSubCategory);
+        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(subCategoryList);
+        EasyMock.expect(databaseProxy.saveSubCategory(expectedSubCategory)).andReturn(expectedSubCategory);
         control.replay();
         // WHEN
         Optional<SubCategory> result = underTest.saveSubCategory(subCategory, INCOME);
@@ -135,13 +116,13 @@ public class DefaultSubCategoryServiceTest {
     }
 
     @Test
-    public void testSaveSubCategoryWhenNewCategorySavedIntoRepository() throws SubCategoryException {
+    public void testSaveSubCategoryWhenNewCategorySavedIntoRepository() {
         // GIVEN
         List<SubCategory> subCategoryList = createSubCategoryList();
         SubCategory subCategory = createExampleSubCategory(null, NEW_CATEGORY_NAME, INCOME);
         SubCategory expectedSubCategory = createExampleSubCategory(NEW_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(subCategoryList);
-        EasyMock.expect(databaseFacade.saveSubCategory(expectedSubCategory)).andReturn(expectedSubCategory);
+        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(subCategoryList);
+        EasyMock.expect(databaseProxy.saveSubCategory(expectedSubCategory)).andReturn(expectedSubCategory);
         control.replay();
         // WHEN
         Optional<SubCategory> result = underTest.saveSubCategory(subCategory, INCOME);
@@ -151,7 +132,7 @@ public class DefaultSubCategoryServiceTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testUpdateSubCategoryThrowIllegalArgumentExceptionWhenGotWrongCategoryType() throws SubCategoryException {
+    public void testUpdateSubCategoryThrowIllegalArgumentExceptionWhenGotWrongCategoryType() {
         // GIVEN
         SubCategory subCategory = createExampleSubCategory(null, NEW_CATEGORY_NAME, INCOME);
         // WHEN
@@ -160,7 +141,7 @@ public class DefaultSubCategoryServiceTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testUpdateSubCategoryThrowIllegalArgumentExceptionWhenGotNullCategory() throws SubCategoryException {
+    public void testUpdateSubCategoryThrowIllegalArgumentExceptionWhenGotNullCategory() {
         // GIVEN
         // WHEN
         underTest.updateSubCategory(null, INCOME);
@@ -168,11 +149,11 @@ public class DefaultSubCategoryServiceTest {
     }
 
     @Test
-    public void testUpdateSubCategoryWhenCategoryCannotBeFoundInRepository() throws SubCategoryException {
+    public void testUpdateSubCategoryWhenCategoryCannotBeFoundInRepository() {
         // GIVEN
         List<SubCategory> subCategoryList = createSubCategoryList();
         SubCategory subCategory = createExampleSubCategory(INVALID_ID, CATEGORY_NAME_1, INCOME);
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(subCategoryList);
+        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(subCategoryList);
         control.replay();
         // WHEN
         Optional<SubCategory> result = underTest.saveSubCategory(subCategory, INCOME);
@@ -182,35 +163,18 @@ public class DefaultSubCategoryServiceTest {
     }
 
     @Test
-    public void testUpdateSubCategoryWhenNewCategoryShouldBeUpdated() throws SubCategoryException {
+    public void testUpdateSubCategoryWhenNewCategoryShouldBeUpdated() {
         // GIVEN
         List<SubCategory> subCategoryList = createSubCategoryList();
         SubCategory newSubCategory = createExampleSubCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(subCategoryList);
-        EasyMock.expect(databaseFacade.updateSubCategory(newSubCategory)).andReturn(newSubCategory);
+        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(subCategoryList);
+        EasyMock.expect(databaseProxy.updateSubCategory(newSubCategory)).andReturn(newSubCategory);
         control.replay();
         // WHEN
         Optional<SubCategory> result = underTest.updateSubCategory(newSubCategory, INCOME);
         // THEN
         control.verify();
         Assert.assertEquals(newSubCategory, result.get());
-    }
-
-    @Test(expectedExceptions = SubCategoryException.class)
-    public void testUpdateSubCategoryWhenRepositoryThrowsDataAccessException() throws SubCategoryException {
-        // GIVEN
-        List<SubCategory> mainCategoryList = createSubCategoryList();
-        SubCategory newMainCategory = createExampleSubCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseFacade.findAllSubCategory(INCOME)).andReturn(mainCategoryList);
-        EasyMock.expect(databaseFacade.updateSubCategory(newMainCategory)).andThrow(new QueryTimeoutException(REPOSITORY_EXCEPTION_MESSAGE));
-        control.replay();
-        // WHEN
-        try {
-            Optional<SubCategory> result = underTest.updateSubCategory(newMainCategory, INCOME);
-        } finally {
-            // THEN
-            control.verify();
-        }
     }
 
     private List<SubCategory> createSubCategoryList() {
@@ -222,7 +186,7 @@ public class DefaultSubCategoryServiceTest {
     }
 
     private SubCategory createExampleSubCategory(final Long id, final String categoryName, final CategoryType type) {
-        return SubCategory.SubCategoryBuilder.newInstance()
+        return SubCategory.builder()
             .withId(id)
             .withName(categoryName)
             .withCategoryType(type)
