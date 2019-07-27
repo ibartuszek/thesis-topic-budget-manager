@@ -16,18 +16,14 @@ public final class SubCategory {
     @NotNull
     private final CategoryType categoryType;
 
-    private SubCategory(final SubCategoryBuilder builder) {
+    private SubCategory(final Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
         this.categoryType = builder.categoryType;
     }
 
-    public static SubCategoryBuilder builder() {
-        return new SubCategoryBuilder();
-    }
-
-    public static SubCategoryBuilder builder(final SubCategory subCategory) {
-        return new SubCategoryBuilder(subCategory);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Long getId() {
@@ -60,31 +56,34 @@ public final class SubCategory {
         return Objects.hash(name, categoryType);
     }
 
-    public static final class SubCategoryBuilder {
+    @Override
+    public String toString() {
+        return "SubCategory{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", categoryType=" + categoryType
+            + '}';
+    }
+
+    public static final class Builder {
         private Long id;
         private String name;
         private CategoryType categoryType;
 
-        private SubCategoryBuilder() {
+        private Builder() {
         }
 
-        private SubCategoryBuilder(final SubCategory subCategory) {
-            this.id = subCategory.id;
-            this.name = subCategory.name;
-            this.categoryType = subCategory.categoryType;
-        }
-
-        public SubCategoryBuilder withId(final Long id) {
+        public Builder withId(final Long id) {
             this.id = id;
             return this;
         }
 
-        public SubCategoryBuilder withName(final String name) {
+        public Builder withName(final String name) {
             this.name = name;
             return this;
         }
 
-        public SubCategoryBuilder withCategoryType(final CategoryType categoryType) {
+        public Builder withCategoryType(final CategoryType categoryType) {
             this.categoryType = categoryType;
             return this;
         }

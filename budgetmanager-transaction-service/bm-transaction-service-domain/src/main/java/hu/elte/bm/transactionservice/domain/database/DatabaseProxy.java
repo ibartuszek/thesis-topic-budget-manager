@@ -2,9 +2,10 @@ package hu.elte.bm.transactionservice.domain.database;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
@@ -14,14 +15,14 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategoryException;
 import hu.elte.bm.transactionservice.domain.income.Income;
 import hu.elte.bm.transactionservice.domain.income.IncomeException;
 
-@Service
+@Component("databaseProxy")
 public class DatabaseProxy implements DatabaseFacade {
 
     private static final String EXCEPTION_MESSAGE = "Unexpected error happens during execution. Please try again later.";
 
     private final DatabaseFacade databaseFacade;
 
-    public DatabaseProxy(DatabaseFacade databaseFacade) {
+    public DatabaseProxy(final DatabaseFacade databaseFacade) {
         this.databaseFacade = databaseFacade;
     }
 
@@ -35,7 +36,25 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public MainCategory saveMainCategory(final MainCategory mainCategory) {
+    public Optional<MainCategory> findMainCategoryById(final Long id) {
+        try {
+            return databaseFacade.findMainCategoryById(id);
+        } catch (DataAccessException exception) {
+            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+        }
+    }
+
+    @Override
+    public Optional<MainCategory> findMainCategoryByName(final String name, final CategoryType categoryType) {
+        try {
+            return databaseFacade.findMainCategoryByName(name, categoryType);
+        } catch (DataAccessException exception) {
+            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+        }
+    }
+
+    @Override
+    public Optional<MainCategory> saveMainCategory(final MainCategory mainCategory) {
         try {
             return databaseFacade.saveMainCategory(mainCategory);
         } catch (DataAccessException exception) {
@@ -44,7 +63,7 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public MainCategory updateMainCategory(final MainCategory mainCategory) {
+    public Optional<MainCategory> updateMainCategory(final MainCategory mainCategory) {
         try {
             return databaseFacade.updateMainCategory(mainCategory);
         } catch (DataAccessException exception) {
@@ -62,7 +81,25 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public SubCategory saveSubCategory(final SubCategory subCategory) {
+    public Optional<SubCategory> findSubCategoryById(final Long id) {
+        try {
+            return databaseFacade.findSubCategoryById(id);
+        } catch (DataAccessException exception) {
+            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+        }
+    }
+
+    @Override
+    public Optional<SubCategory> findSubCategoryByName(final String name, final CategoryType categoryType) {
+        try {
+            return databaseFacade.findSubCategoryByName(name, categoryType);
+        } catch (DataAccessException exception) {
+            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+        }
+    }
+
+    @Override
+    public Optional<SubCategory> saveSubCategory(final SubCategory subCategory) {
         try {
             return databaseFacade.saveSubCategory(subCategory);
         } catch (DataAccessException exception) {
@@ -71,7 +108,7 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public SubCategory updateSubCategory(final SubCategory subCategory) {
+    public Optional<SubCategory> updateSubCategory(final SubCategory subCategory) {
         try {
             return databaseFacade.updateSubCategory(subCategory);
         } catch (DataAccessException exception) {

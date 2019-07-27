@@ -1,8 +1,6 @@
 package hu.elte.bm.transactionservice.domain.categories.service;
 
-import static hu.elte.bm.transactionservice.domain.categories.CategoryType.BOTH;
 import static hu.elte.bm.transactionservice.domain.categories.CategoryType.INCOME;
-import static hu.elte.bm.transactionservice.domain.categories.CategoryType.OUTCOME;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,15 +22,13 @@ import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
 
 public class DefaultMainCategoryServiceTest {
 
-    private static final long EXPECTED_CATEGORY_ID = 2L;
-    private static final long NEW_CATEGORY_ID = 4L;
-    private static final long INVALID_ID = 5L;
-    private static final long CATEGORY_ID_1 = 1L;
-    private static final long CATEGORY_ID_2 = 3L;
-    private static final String EXPECTED_CATEGORY_NAME = "category2";
-    private static final String NEW_CATEGORY_NAME = "category4";
-    private static final String CATEGORY_NAME_1 = "category1";
-    private static final String CATEGORY_NAME_2 = "category3";
+    private static final long EXPECTED_CATEGORY_ID = 1L;
+    private static final long NEW_ID = 3L;
+    private static final long OTHER_ID = 2L;
+    private static final long INVALID_ID = 4L;
+    private static final String EXPECTED_CATEGORY_NAME = "category1";
+    private static final String OTHER_CATEGORY_NAME = "category2";
+    private static final String NEW_CATEGORY_NAME = "category3";
 
     private DatabaseProxy databaseProxy;
     private IMocksControl control;
@@ -47,187 +43,196 @@ public class DefaultMainCategoryServiceTest {
     }
 
     @Test
-    public void testGetMainCategoryListForIncomesWhenThereIsNoMainCategory() {
+    public void testGetMainCategoryListWhenThereIsNoSubCategory() {
         // GIVEN
         EasyMock.expect(databaseProxy.findAllMainCategory(INCOME)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
-        List<MainCategory> result = underTest.getMainCategoryListForIncomes();
+        List<MainCategory> result = underTest.getMainCategoryList(INCOME);
         // THEN
         control.verify();
         Assert.assertEquals(Collections.emptyList(), result);
     }
 
     @Test
-    public void testGetMainCategoryListForIncomesWhenThereAreMoreMainCategories() {
+    public void testGetMainCategoryListForIncomesWhenThereAreMoreSubCategories() {
         // GIVEN
         List<MainCategory> mainCategoryList = createMainCategoryList();
         EasyMock.expect(databaseProxy.findAllMainCategory(INCOME)).andReturn(mainCategoryList);
         control.replay();
         // WHEN
-        List<MainCategory> result = underTest.getMainCategoryListForIncomes();
+        List<MainCategory> result = underTest.getMainCategoryList(INCOME);
         // THEN
         control.verify();
         Assert.assertEquals(mainCategoryList, result);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveMainCategoryThrowIllegalArgumentExceptionWhenGotWrongCategoryType() {
-        // GIVEN
-        MainCategory mainCategory = createExampleMainCategory(null, NEW_CATEGORY_NAME, INCOME);
-        // WHEN
-        underTest.saveMainCategory(mainCategory, BOTH);
-        // THEN
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSaveMainCategoryThrowIllegalArgumentExceptionWhenGotNullCategory() {
         // GIVEN
         // WHEN
-        underTest.saveMainCategory(null, INCOME);
+        underTest.saveMainCategory(null);
         // THEN
-    }
-
-    @Test
-    public void testSaveMainCategoryWhenThisCategoryHasBeenFoundInRepository() {
-        // GIVEN
-        List<MainCategory> mainCategoryList = createMainCategoryList();
-        MainCategory mainCategory = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseProxy.findAllMainCategory(INCOME)).andReturn(mainCategoryList);
-        control.replay();
-        // WHEN
-        Optional<MainCategory> result = underTest.saveMainCategory(mainCategory, INCOME);
-        // THEN
-        control.verify();
-        Assert.assertEquals(Optional.empty(), result);
-    }
-
-    @Test
-    public void testSaveMainCategoryWhenThisCategoryHasBeenFoundInRepositoryWithDifferentOtherType() {
-        // GIVEN
-        List<MainCategory> mainCategoryList = createMainCategoryList();
-        MainCategory mainCategory = createExampleMainCategory(null, EXPECTED_CATEGORY_NAME, OUTCOME);
-        MainCategory expectedMainCategory = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, BOTH);
-        EasyMock.expect(databaseProxy.findAllMainCategory(INCOME)).andReturn(mainCategoryList);
-        EasyMock.expect(databaseProxy.saveMainCategory(expectedMainCategory)).andReturn(expectedMainCategory);
-        control.replay();
-        // WHEN
-        Optional<MainCategory> result = underTest.saveMainCategory(mainCategory, INCOME);
-        // THEN
-        control.verify();
-        Assert.assertEquals(expectedMainCategory, result.get());
     }
 
     @Test
     public void testSaveMainCategoryWhenNewCategorySavedIntoRepository() {
         // GIVEN
-        List<MainCategory> mainCategoryList = createMainCategoryList();
-        MainCategory mainCategory = createExampleMainCategory(null, NEW_CATEGORY_NAME, INCOME);
-        MainCategory expectedMainCategory = createExampleMainCategory(NEW_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseProxy.findAllMainCategory(INCOME)).andReturn(mainCategoryList);
-        EasyMock.expect(databaseProxy.saveMainCategory(expectedMainCategory)).andReturn(expectedMainCategory);
+        MainCategory mainCategoryToSave = createExampleMainCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> expectedMainCategory = Optional.of(createExampleMainCategory(NEW_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryByName(EXPECTED_CATEGORY_NAME, INCOME)).andReturn(Optional.empty());
+        EasyMock.expect(databaseProxy.saveMainCategory(mainCategoryToSave)).andReturn(expectedMainCategory);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.saveMainCategory(mainCategory, INCOME);
+        Optional<MainCategory> result = underTest.saveMainCategory(mainCategoryToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedMainCategory, result.get());
+        Assert.assertEquals(expectedMainCategory, result);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testUpdateMainCategoryThrowIllegalArgumentExceptionWhenGotWrongCategoryType() {
+    @Test
+    public void testSaveMainCategoryWhenCategoryWithSameNameAndTypeFoundInRepository() {
         // GIVEN
-        MainCategory mainCategory = createExampleMainCategory(null, NEW_CATEGORY_NAME, INCOME);
+        MainCategory mainCategoryToSave = createExampleMainCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> mainCategoryFromRepository = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryByName(EXPECTED_CATEGORY_NAME, INCOME)).andReturn(mainCategoryFromRepository);
+        control.replay();
         // WHEN
-        underTest.updateMainCategory(mainCategory, BOTH);
+        Optional<MainCategory> result = underTest.saveMainCategory(mainCategoryToSave);
         // THEN
+        control.verify();
+        Assert.assertEquals(Optional.empty(), result);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateMainCategoryThrowIllegalArgumentExceptionWhenGotNullCategory() {
         // GIVEN
         // WHEN
-        underTest.updateMainCategory(null, INCOME);
+        underTest.updateMainCategory(null);
         // THEN
     }
 
     @Test
-    public void testUpdateMainCategoryWhenMainCategoryCannotBeFoundInRepository() {
+    public void testUpdateMainCategoryWhenCategoryCannotBeFoundInRepository() {
         // GIVEN
-        List<MainCategory> mainCategoryList = createMainCategoryList();
-        MainCategory mainCategory = createExampleMainCategory(INVALID_ID, CATEGORY_NAME_1, INCOME);
-        EasyMock.expect(databaseProxy.findAllMainCategory(INCOME)).andReturn(mainCategoryList);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(INVALID_ID, NEW_CATEGORY_NAME, INCOME);
+        EasyMock.expect(databaseProxy.findMainCategoryById(INVALID_ID)).andReturn(Optional.empty());
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.updateMainCategory(mainCategory, INCOME);
+        Optional<MainCategory> result = underTest.updateMainCategory(mainCategoryToUpdate);
         // THEN
         control.verify();
         Assert.assertEquals(Optional.empty(), result);
     }
 
     @Test
-    public void testUpdateMainCategoryWhenNewCategoryHasNotGotAllSubCategory() {
+    public void testUpdateMainCategoryWhenFoundById() {
         // GIVEN
-        List<MainCategory> mainCategoryList = createMainCategoryList();
-        MainCategory newMainCategory = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseProxy.findAllMainCategory(INCOME)).andReturn(mainCategoryList);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        Optional<MainCategory> copyNewMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID)).andReturn(originalMainCategory);
+        EasyMock.expect(databaseProxy.findMainCategoryByName(NEW_CATEGORY_NAME, INCOME)).andReturn(Optional.empty());
+        EasyMock.expect(databaseProxy.updateMainCategory(mainCategoryToUpdate)).andReturn(copyNewMainCategory);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.updateMainCategory(newMainCategory, INCOME);
+        Optional<MainCategory> result = underTest.updateMainCategory(mainCategoryToUpdate);
+        // THEN
+        control.verify();
+        Assert.assertEquals(copyNewMainCategory, result);
+    }
+
+    @Test
+    public void testUpdateMainCategoryWhenFoundByIdAndByNameAndHasSameType() {
+        // GIVEN
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        Optional<MainCategory> mainCategoryWithSameName = Optional.of(createExampleMainCategory(OTHER_ID, NEW_CATEGORY_NAME, INCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID)).andReturn(originalMainCategory);
+        EasyMock.expect(databaseProxy.findMainCategoryByName(NEW_CATEGORY_NAME, INCOME)).andReturn(mainCategoryWithSameName);
+        control.replay();
+        // WHEN
+        Optional<MainCategory> result = underTest.updateMainCategory(mainCategoryToUpdate);
         // THEN
         control.verify();
         Assert.assertEquals(Optional.empty(), result);
     }
 
     @Test
-    public void testUpdateMainCategoryWhenNewCategoryShouldBeUpdated() {
+    public void testUpdateMainCategoryWhenFoundByIdButHasNewSubCategory() {
         // GIVEN
-        List<MainCategory> mainCategoryList = createMainCategoryList();
-        Set<SubCategory> subCategorySet = createSubcategorySet();
-        subCategorySet.add(createExampleSubCategory(NEW_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
-        MainCategory newMainCategory = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME, subCategorySet);
-        EasyMock.expect(databaseProxy.findAllMainCategory(INCOME)).andReturn(mainCategoryList);
-        EasyMock.expect(databaseProxy.updateMainCategory(newMainCategory)).andReturn(newMainCategory);
+        SubCategory newSubCategory = createSubCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        mainCategoryToUpdate.getSubCategorySet().add(newSubCategory);
+        Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        Optional<MainCategory> copyNewMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        copyNewMainCategory.get().getSubCategorySet().add(newSubCategory);
+        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID)).andReturn(originalMainCategory);
+        EasyMock.expect(databaseProxy.findMainCategoryByName(EXPECTED_CATEGORY_NAME, INCOME)).andReturn(originalMainCategory);
+        EasyMock.expect(databaseProxy.updateMainCategory(mainCategoryToUpdate)).andReturn(copyNewMainCategory);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.updateMainCategory(newMainCategory, INCOME);
+        Optional<MainCategory> result = underTest.updateMainCategory(mainCategoryToUpdate);
         // THEN
         control.verify();
-        Assert.assertEquals(newMainCategory, result.get());
+        Assert.assertEquals(copyNewMainCategory, result);
+    }
+
+    @Test
+    public void testUpdateMainCategoryWhenFoundByIdAndHasLessSubCategory() {
+        // GIVEN
+        SubCategory newSubCategory = createSubCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        originalMainCategory.get().getSubCategorySet().add(newSubCategory);
+        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID)).andReturn(originalMainCategory);
+        control.replay();
+        // WHEN
+        Optional<MainCategory> result = underTest.updateMainCategory(mainCategoryToUpdate);
+        // THEN
+        control.verify();
+        Assert.assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    public void testUpdateMainCategoryWhenFoundByIdButHasNewSubCategoryButWithoutId() {
+        // GIVEN
+        SubCategory newSubCategory = createSubCategory(null, NEW_CATEGORY_NAME, INCOME);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        mainCategoryToUpdate.getSubCategorySet().add(newSubCategory);
+        Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID)).andReturn(originalMainCategory);
+        control.replay();
+        // WHEN
+        Optional<MainCategory> result = underTest.updateMainCategory(mainCategoryToUpdate);
+        // THEN
+        control.verify();
+        Assert.assertEquals(Optional.empty(), result);
     }
 
     private List<MainCategory> createMainCategoryList() {
         List<MainCategory> mainCategoryList = new ArrayList<>();
-        mainCategoryList.add(createExampleMainCategory(CATEGORY_ID_1, CATEGORY_NAME_1, INCOME, createSubcategorySet()));
-        mainCategoryList.add(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME, createSubcategorySet()));
-        mainCategoryList.add(createExampleMainCategory(CATEGORY_ID_2, CATEGORY_NAME_2, BOTH, createSubcategorySet()));
+        mainCategoryList.add(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
         return mainCategoryList;
     }
 
-    private Set<SubCategory> createSubcategorySet() {
-        Set<SubCategory> subCategorySet = new HashSet<>();
-        subCategorySet.add(createExampleSubCategory(CATEGORY_ID_1, CATEGORY_NAME_1, INCOME));
-        subCategorySet.add(createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
-        subCategorySet.add(createExampleSubCategory(CATEGORY_ID_2, CATEGORY_NAME_2, BOTH));
-        return subCategorySet;
-    }
-
-    private MainCategory createExampleMainCategory(final Long id, final String categoryName,
-        final CategoryType type) {
-        return createExampleMainCategory(id, categoryName, type, new HashSet<>());
-    }
-
-    private MainCategory createExampleMainCategory(final Long id, final String categoryName,
-        final CategoryType type, final Set<SubCategory> subCategorySet) {
+    private MainCategory createExampleMainCategory(final Long id, final String categoryName, final CategoryType type) {
         return MainCategory.builder()
             .withId(id)
             .withName(categoryName)
             .withCategoryType(type)
-            .withSubCategorySet(subCategorySet)
+            .withSubCategorySet(createSubCategorySet(type))
             .build();
     }
 
-    private SubCategory createExampleSubCategory(final Long id, final String categoryName, final CategoryType type) {
+    private Set<SubCategory> createSubCategorySet(final CategoryType type) {
+        Set<SubCategory> subCategorySet = new HashSet<>();
+        subCategorySet.add(createSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, type));
+        subCategorySet.add(createSubCategory(OTHER_ID, OTHER_CATEGORY_NAME, type));
+        return subCategorySet;
+    }
+
+    private SubCategory createSubCategory(final Long id, final String categoryName, final CategoryType type) {
         return SubCategory.builder()
             .withId(id)
             .withName(categoryName)

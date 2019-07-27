@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
  * MainCategory represents the main category of the transaction (income or outcome).
  */
 public final class MainCategory {
+
     private final Long id;
     @NotBlank
     private final String name;
@@ -18,19 +19,15 @@ public final class MainCategory {
     @NotNull
     private final Set<SubCategory> subCategorySet;
 
-    private MainCategory(final MainCategoryBuilder builder) {
+    private MainCategory(final Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
         this.categoryType = builder.categoryType;
         this.subCategorySet = builder.subCategorySet;
     }
 
-    public static MainCategoryBuilder builder() {
-        return new MainCategoryBuilder();
-    }
-
-    public static MainCategoryBuilder builder(final MainCategory mainCategory) {
-        return new MainCategoryBuilder(mainCategory);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Long getId() {
@@ -50,7 +47,7 @@ public final class MainCategory {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -59,46 +56,51 @@ public final class MainCategory {
         }
         MainCategory that = (MainCategory) o;
         return Objects.equals(name, that.name)
-            && categoryType == that.categoryType;
+            && categoryType == that.categoryType
+            && subCategorySet.size() == that.subCategorySet.size()
+            && subCategorySet.containsAll(that.subCategorySet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, categoryType);
+        return Objects.hash(name, categoryType, subCategorySet);
     }
 
-    public static final class MainCategoryBuilder {
+    @Override
+    public String toString() {
+        return "MainCategory{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", categoryType=" + categoryType
+            + ", subCategorySet=" + subCategorySet
+            + '}';
+    }
+
+    public static final class Builder {
         private Long id;
         private String name;
         private CategoryType categoryType;
         private Set<SubCategory> subCategorySet;
 
-        private MainCategoryBuilder() {
+        private Builder() {
         }
 
-        private MainCategoryBuilder(final MainCategory mainCategory) {
-            this.id = mainCategory.id;
-            this.name = mainCategory.name;
-            this.categoryType = mainCategory.categoryType;
-            this.subCategorySet = mainCategory.subCategorySet;
-        }
-
-        public MainCategoryBuilder withId(final Long id) {
+        public Builder withId(final Long id) {
             this.id = id;
             return this;
         }
 
-        public MainCategoryBuilder withName(final String name) {
+        public Builder withName(final String name) {
             this.name = name;
             return this;
         }
 
-        public MainCategoryBuilder withCategoryType(final CategoryType categoryType) {
+        public Builder withCategoryType(final CategoryType categoryType) {
             this.categoryType = categoryType;
             return this;
         }
 
-        public MainCategoryBuilder withSubCategorySet(final Set<SubCategory> subCategorySet) {
+        public Builder withSubCategorySet(final Set<SubCategory> subCategorySet) {
             this.subCategorySet = subCategorySet;
             return this;
         }

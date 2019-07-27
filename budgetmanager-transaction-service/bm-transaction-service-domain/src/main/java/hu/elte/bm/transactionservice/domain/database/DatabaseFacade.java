@@ -2,6 +2,7 @@ package hu.elte.bm.transactionservice.domain.database;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
@@ -12,15 +13,23 @@ public interface DatabaseFacade {
 
     List<MainCategory> findAllMainCategory(CategoryType categoryType);
 
-    MainCategory saveMainCategory(MainCategory mainCategory);
+    Optional<MainCategory> findMainCategoryById(Long id);
 
-    MainCategory updateMainCategory(MainCategory target);
+    Optional<MainCategory> findMainCategoryByName(String name, CategoryType categoryType);
+
+    Optional<MainCategory> saveMainCategory(MainCategory mainCategory);
+
+    Optional<MainCategory> updateMainCategory(MainCategory target);
 
     List<SubCategory> findAllSubCategory(CategoryType categoryType);
 
-    SubCategory saveSubCategory(SubCategory subCategory);
+    Optional<SubCategory> findSubCategoryById(Long id);
 
-    SubCategory updateSubCategory(SubCategory subCategory);
+    Optional<SubCategory> findSubCategoryByName(String name, CategoryType categoryType);
+
+    Optional<SubCategory> saveSubCategory(SubCategory subCategory);
+
+    Optional<SubCategory> updateSubCategory(SubCategory subCategory);
 
     List<Income> getIncomeList(LocalDate start, LocalDate end);
 

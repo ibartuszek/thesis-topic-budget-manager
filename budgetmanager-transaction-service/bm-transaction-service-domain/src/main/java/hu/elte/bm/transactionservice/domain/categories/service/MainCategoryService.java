@@ -10,38 +10,31 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 public interface MainCategoryService {
 
     /**
-     * Returns a list of MainCategory for incomes.
+     * Returns a list of MainCategory for the given types.
      * If there is no result it will returns with an empty list.
      *
+     * @param categoryType the type of the transaction. It is needed to control the flow.
      * @return list of {@link MainCategory}.
      */
-    List<MainCategory> getMainCategoryListForIncomes();
+    List<MainCategory> getMainCategoryList(CategoryType categoryType);
 
     /**
      * It will save the main category into the repository.
      *
      * @param mainCategory the object that needs to be saved. Cannot be null.
-     * @param categoryType the type of the transaction. (It can be only CategoryType.INCOME or
-     *                     CategoryType.OUTCOME. It is needed to control the flow.
      * @return it returns an {@link Optional<MainCategory>}, which contains a new object with an id
      * if the actions was successful or it is an empty optional if the category has been saved already.
-     * @throws IllegalArgumentException if the CategoryType parameter has CategoryType.BOTH value
-     *                                  or mainCategory is null.
      */
-    Optional<MainCategory> saveMainCategory(MainCategory mainCategory, CategoryType categoryType) throws IllegalArgumentException;
+    Optional<MainCategory> saveMainCategory(MainCategory mainCategory);
 
     /**
      * It will update the main category. Only its name can be modified or add new {@link SubCategory}
      * to its subCategories.
      *
      * @param mainCategory the object that needs to be updated. Cannot be null.
-     * @param categoryType the type of the transaction. (It can be only CategoryType.INCOME or
-     *                     CategoryType.OUTCOME. It is needed to control the flow.
      * @return it returns an {@link Optional<MainCategory>}, which contains the modifications if the
      * actions was successful or it is an empty optional if the category has been saved already.
-     * @throws IllegalArgumentException if the CategoryType parameter has CategoryType.BOTH value
-     *                                  or mainCategory is null.
      */
-    Optional<MainCategory> updateMainCategory(MainCategory mainCategory, CategoryType categoryType) throws IllegalArgumentException;
+    Optional<MainCategory> updateMainCategory(MainCategory mainCategory);
 
 }
