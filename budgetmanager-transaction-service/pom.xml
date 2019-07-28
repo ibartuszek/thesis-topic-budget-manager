@@ -16,11 +16,13 @@
   <description>Thesis topic at ELTE IK</description>
 
   <modules>
+    <module>bm-transaction-service-app</module>
+    <module>bm-transaction-service-dal</module>
     <module>bm-transaction-service-domain</module>
   </modules>
 
   <properties>
-    <start-class>hu.elte.bm.budgetmanagertransactionservice.BudgetmanagerTransactionServiceApplication</start-class>
+    <start-class>hu.elte.bm.transactionservice.app.TransactionServiceApplication</start-class>
     <main.basedir>${basedir}</main.basedir>
 
     <java.version>11</java.version>
@@ -53,8 +55,18 @@
 
     <!-- Database -->
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
     </dependency>
 
     <dependency>
@@ -68,13 +80,11 @@
       <version>${maven.pmd.plugin.version}</version>
     </dependency>
 
-    <!--
-        <dependency>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-test</artifactId>
-          <scope>test</scope>
-        </dependency>
-    -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.testng</groupId>
@@ -93,23 +103,6 @@
 
   <build>
     <plugins>
-
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <mainClass>${start-class}</mainClass>
-          <layout>JAR</layout>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
