@@ -9,8 +9,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
+import hu.elte.bm.transactionservice.domain.categories.DefaultSubCategoryService;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.categories.service.DefaultSubCategoryService;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
@@ -32,7 +32,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
             .withTransactionType(INCOME)
             .build();
         // WHEN
-        Optional<SubCategory> result = subCategoryService.saveSubCategory(newSubCategory);
+        Optional<SubCategory> result = subCategoryService.save(newSubCategory);
         // THEN
         Assert.assertEquals(newSubCategory, result.get());
     }
@@ -45,7 +45,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
             .withTransactionType(TransactionType.OUTCOME)
             .build();
         // WHEN
-        Optional<SubCategory> result = subCategoryService.saveSubCategory(newSubCategory);
+        Optional<SubCategory> result = subCategoryService.save(newSubCategory);
         // THEN
         Assert.assertEquals(newSubCategory, result.get());
     }
@@ -58,7 +58,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
             .withTransactionType(INCOME)
             .build();
         // WHEN
-        Optional<SubCategory> result = subCategoryService.saveSubCategory(newSubCategory);
+        Optional<SubCategory> result = subCategoryService.save(newSubCategory);
         // THEN
         Assert.assertEquals(Optional.empty(), result);
     }
@@ -72,7 +72,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
             .withTransactionType(INCOME)
             .build();
         // WHEN
-        Optional<SubCategory> result = subCategoryService.updateSubCategory(newSubCategory);
+        Optional<SubCategory> result = subCategoryService.update(newSubCategory);
         // THEN
         Assert.assertEquals(newSubCategory, result.get());
     }
@@ -86,7 +86,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
             .withTransactionType(TransactionType.OUTCOME)
             .build();
         // WHEN
-        Optional<SubCategory> result = subCategoryService.updateSubCategory(newSubCategory);
+        Optional<SubCategory> result = subCategoryService.update(newSubCategory);
         // THEN
         Assert.assertEquals(newSubCategory, result.get());
     }
@@ -101,7 +101,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
             .withTransactionType(INCOME)
             .build();
         // WHEN
-        Optional<SubCategory> result = subCategoryService.updateSubCategory(newSubCategory);
+        Optional<SubCategory> result = subCategoryService.update(newSubCategory);
         // THEN
         Assert.assertEquals(Optional.empty(), result);
     }

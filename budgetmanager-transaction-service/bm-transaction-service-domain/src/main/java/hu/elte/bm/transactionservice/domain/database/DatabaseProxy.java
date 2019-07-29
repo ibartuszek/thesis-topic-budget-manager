@@ -11,8 +11,8 @@ import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryException;
-import hu.elte.bm.transactionservice.domain.income.Income;
-import hu.elte.bm.transactionservice.domain.income.IncomeException;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component("databaseProxy")
@@ -117,47 +117,57 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public List<Income> getIncomeList(final LocalDate start, final LocalDate end) {
+    public List<Transaction> findAllTransaction(final LocalDate start, final LocalDate end, final TransactionType transactionType) {
         try {
-            return databaseFacade.getIncomeList(start, end);
+            return databaseFacade.findAllTransaction(start, end, transactionType);
         } catch (DataAccessException exception) {
             throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }
     }
 
     @Override
-    public Income getIncomeById(final Long id) {
+    public Optional<Transaction> findTransactionById(final Long id) {
         try {
-            return databaseFacade.getIncomeById(id);
+            return databaseFacade.findTransactionById(id);
         } catch (DataAccessException exception) {
             throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }
     }
 
     @Override
-    public Income saveIncome(final Income income) {
+    public List<Transaction> findTransactionByTitle(final String name, final TransactionType transactionType) {
         try {
-            return databaseFacade.saveIncome(income);
+            return databaseFacade.findTransactionByTitle(name, transactionType);
         } catch (DataAccessException exception) {
-            throw new IncomeException(income, EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }
     }
 
     @Override
-    public Income updateIncome(final Income income) {
+    public Optional<Transaction> saveTransaction(final Transaction transaction) {
         try {
-            return databaseFacade.updateIncome(income);
+            return databaseFacade.saveTransaction(transaction);
         } catch (DataAccessException exception) {
-            throw new IncomeException(income, EXCEPTION_MESSAGE, exception);
+            throw new TransactionException(transaction, EXCEPTION_MESSAGE, exception);
         }
     }
 
     @Override
-    public Income deleteIncome(final Income income) {
+    public Optional<Transaction> updateTransaction(final Transaction transaction) {
         try {
-            return databaseFacade.deleteIncome(income);
+            return databaseFacade.updateTransaction(transaction);
         } catch (DataAccessException exception) {
-            throw new IncomeException(income, EXCEPTION_MESSAGE, exception);
+            throw new TransactionException(transaction, EXCEPTION_MESSAGE, exception);
         }
     }
+
+    @Override
+    public Optional<Transaction> deleteTransaction(final Transaction transaction) {
+        try {
+            return databaseFacade.deleteTransaction(transaction);
+        } catch (DataAccessException exception) {
+            throw new TransactionException(transaction, EXCEPTION_MESSAGE, exception);
+        }
+    }
+
 }

@@ -12,7 +12,7 @@ import hu.elte.bm.transactionservice.dal.categories.SubCategoryDao;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseFacade;
-import hu.elte.bm.transactionservice.domain.income.Income;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Service("databaseFacade")
@@ -75,27 +75,33 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
     }
 
     @Override
-    public List<Income> getIncomeList(final LocalDate start, final LocalDate end) {
+    public List<Transaction> findAllTransaction(final LocalDate start, final LocalDate end, final TransactionType transactionType) {
         return null;
     }
 
     @Override
-    public Income getIncomeById(final Long id) {
+    public Optional<Transaction> findTransactionById(final Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Transaction> findTransactionByTitle(final String name, final TransactionType transactionType) {
         return null;
     }
 
     @Override
-    public Income saveIncome(final Income income) {
-        return null;
+    public Optional<Transaction> saveTransaction(final Transaction transaction) {
+        return Optional.empty();
     }
 
     @Override
-    public Income updateIncome(final Income income) {
-        return null;
+    public Optional<Transaction> updateTransaction(final Transaction transaction) {
+        return Optional.empty();
     }
 
     @Override
-    public Income deleteIncome(final Income income) {
-        return null;
+    public Optional<Transaction> deleteTransaction(final Transaction transaction) {
+        return Optional.empty();
     }
+
 }

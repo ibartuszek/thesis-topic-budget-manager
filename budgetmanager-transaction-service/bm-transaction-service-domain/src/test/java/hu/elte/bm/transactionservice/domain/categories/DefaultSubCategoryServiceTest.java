@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.categories.service;
+package hu.elte.bm.transactionservice.domain.categories;
 
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.OUTCOME;
@@ -14,7 +14,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
@@ -68,7 +67,7 @@ public class DefaultSubCategoryServiceTest {
     public void testSaveSubCategoryThrowIllegalArgumentExceptionWhenGotNullCategory() {
         // GIVEN
         // WHEN
-        underTest.saveSubCategory(null);
+        underTest.save(null);
         // THEN
     }
 
@@ -80,7 +79,7 @@ public class DefaultSubCategoryServiceTest {
         EasyMock.expect(databaseProxy.findSubCategoryByName(EXPECTED_CATEGORY_NAME, INCOME)).andReturn(subCategoryFromRepository);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.saveSubCategory(subCategoryToSave);
+        Optional<SubCategory> result = underTest.save(subCategoryToSave);
         // THEN
         control.verify();
         Assert.assertEquals(Optional.empty(), result);
@@ -95,7 +94,7 @@ public class DefaultSubCategoryServiceTest {
         EasyMock.expect(databaseProxy.saveSubCategory(subCategoryToSave)).andReturn(expectedSubCategory);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.saveSubCategory(subCategoryToSave);
+        Optional<SubCategory> result = underTest.save(subCategoryToSave);
         // THEN
         control.verify();
         Assert.assertEquals(expectedSubCategory, result);
@@ -111,7 +110,7 @@ public class DefaultSubCategoryServiceTest {
         EasyMock.expect(databaseProxy.saveSubCategory(subCategoryToSave)).andReturn(expectedSubCategory);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.saveSubCategory(subCategoryToSave);
+        Optional<SubCategory> result = underTest.save(subCategoryToSave);
         // THEN
         control.verify();
         Assert.assertEquals(expectedSubCategory, result);
@@ -121,7 +120,7 @@ public class DefaultSubCategoryServiceTest {
     public void testUpdateSubCategoryThrowIllegalArgumentExceptionWhenGotNullCategory() {
         // GIVEN
         // WHEN
-        underTest.updateSubCategory(null);
+        underTest.update(null);
         // THEN
     }
 
@@ -132,7 +131,7 @@ public class DefaultSubCategoryServiceTest {
         EasyMock.expect(databaseProxy.findSubCategoryById(INVALID_ID)).andReturn(Optional.empty());
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.updateSubCategory(subCategoryToUpdate);
+        Optional<SubCategory> result = underTest.update(subCategoryToUpdate);
         // THEN
         control.verify();
         Assert.assertEquals(Optional.empty(), result);
@@ -149,7 +148,7 @@ public class DefaultSubCategoryServiceTest {
         EasyMock.expect(databaseProxy.updateSubCategory(subCategoryToUpdate)).andReturn(copyNewSubCategory);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.updateSubCategory(subCategoryToUpdate);
+        Optional<SubCategory> result = underTest.update(subCategoryToUpdate);
         // THEN
         control.verify();
         Assert.assertEquals(copyNewSubCategory, result);
@@ -165,7 +164,7 @@ public class DefaultSubCategoryServiceTest {
         EasyMock.expect(databaseProxy.findSubCategoryByName(NEW_CATEGORY_NAME, INCOME)).andReturn(subCategoryWithSameName);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.updateSubCategory(subCategoryToUpdate);
+        Optional<SubCategory> result = underTest.update(subCategoryToUpdate);
         // THEN
         control.verify();
         Assert.assertEquals(Optional.empty(), result);

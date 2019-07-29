@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.categories.service;
+package hu.elte.bm.transactionservice.domain.categories;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +7,6 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
@@ -30,7 +28,7 @@ public class DefaultMainCategoryService implements MainCategoryService {
     }
 
     @Override
-    public Optional<MainCategory> saveMainCategory(final MainCategory mainCategory) {
+    public Optional<MainCategory> save(final MainCategory mainCategory) {
         Assert.notNull(mainCategory, CATEGORY_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
         return isSavable(mainCategory) ? databaseProxy.saveMainCategory(mainCategory) : Optional.empty();
     }
@@ -49,7 +47,7 @@ public class DefaultMainCategoryService implements MainCategoryService {
     }
 
     @Override
-    public Optional<MainCategory> updateMainCategory(final MainCategory mainCategory) {
+    public Optional<MainCategory> update(final MainCategory mainCategory) {
         Assert.notNull(mainCategory, CATEGORY_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
         return isUpdatable(mainCategory) ? databaseProxy.updateMainCategory(mainCategory) : Optional.empty();
     }

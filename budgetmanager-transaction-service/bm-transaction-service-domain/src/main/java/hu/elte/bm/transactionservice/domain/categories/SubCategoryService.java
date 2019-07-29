@@ -1,9 +1,8 @@
-package hu.elte.bm.transactionservice.domain.categories.service;
+package hu.elte.bm.transactionservice.domain.categories;
 
 import java.util.List;
 import java.util.Optional;
 
-import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public interface SubCategoryService {
@@ -24,7 +23,7 @@ public interface SubCategoryService {
      * @return it returns an {@link Optional<SubCategory>}, which contains a new object with an id
      * if the actions was successful or it is an empty optional if the category has been saved already.
      */
-    Optional<SubCategory> saveSubCategory(SubCategory subCategory);
+    Optional<SubCategory> save(SubCategory subCategory);
 
     /**
      * It will update the main category. Only its name can be modified.
@@ -33,6 +32,6 @@ public interface SubCategoryService {
      * @return it returns an {@link Optional<SubCategory>}, which contains the modifications if the
      * actions was successful or it is an empty optional if the category has been saved already.
      */
-    Optional<SubCategory> updateSubCategory(SubCategory subCategory);
+    Optional<SubCategory> update(SubCategory subCategory);
 
 }

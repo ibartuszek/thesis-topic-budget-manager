@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.income.Income;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public interface DatabaseFacade {
@@ -31,14 +31,16 @@ public interface DatabaseFacade {
 
     Optional<SubCategory> updateSubCategory(SubCategory subCategory);
 
-    List<Income> getIncomeList(LocalDate start, LocalDate end);
+    List<Transaction> findAllTransaction(LocalDate start, LocalDate end, TransactionType transactionType);
 
-    Income getIncomeById(Long id);
+    Optional<Transaction> findTransactionById(Long id);
 
-    Income saveIncome(Income income);
+    List<Transaction> findTransactionByTitle(String name, TransactionType transactionType);
 
-    Income updateIncome(Income income);
+    Optional<Transaction> saveTransaction(Transaction transaction);
 
-    Income deleteIncome(Income income);
+    Optional<Transaction> updateTransaction(Transaction transaction);
+
+    Optional<Transaction> deleteTransaction(Transaction transaction);
 
 }

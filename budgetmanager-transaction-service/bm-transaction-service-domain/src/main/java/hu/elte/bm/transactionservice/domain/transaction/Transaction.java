@@ -1,17 +1,24 @@
 package hu.elte.bm.transactionservice.domain.transaction;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 
-public abstract class Transaction {
+public final class Transaction {
 
     private final Long id;
     @NotBlank
@@ -21,20 +28,24 @@ public abstract class Transaction {
     @NotNull
     private final Currency currency;
     @NotNull
+    private final TransactionType transactionType;
+    @NotNull
     private final MainCategory mainCategory;
     private final SubCategory subCategory;
     private final boolean monthly;
     @NotNull
+    @PastOrPresent
     private final LocalDate date;
     private final LocalDate endDate;
     private final String description;
     private final boolean locked;
 
-    protected Transaction(final TransactionBuilder builder) {
+    private Transaction(final Builder builder) {
         this.id = builder.id;
         this.title = builder.title;
         this.amount = builder.amount;
         this.currency = builder.currency;
+        this.transactionType = builder.transactionType;
         this.mainCategory = builder.mainCategory;
         this.subCategory = builder.subCategory;
         this.monthly = builder.monthly;
@@ -42,6 +53,10 @@ public abstract class Transaction {
         this.endDate = builder.endDate;
         this.description = builder.description;
         this.locked = builder.locked;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Long getId() {
@@ -58,6 +73,10 @@ public abstract class Transaction {
 
     public Currency getCurrency() {
         return currency;
+    }
+
+    public TransactionType getTransactionType() {
+        return transactionType;
     }
 
     public MainCategory getMainCategory() {
@@ -102,6 +121,7 @@ public abstract class Transaction {
             && locked == that.locked
             && title.equals(that.title)
             && currency == that.currency
+            && transactionType == that.transactionType
             && mainCategory.equals(that.mainCategory)
             && Objects.equals(subCategory, that.subCategory)
             && date.equals(that.date)
@@ -111,14 +131,15 @@ public abstract class Transaction {
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, amount, currency, mainCategory, subCategory, monthly, date, endDate, description, locked);
+        return Objects.hash(title, amount, currency, transactionType, mainCategory, subCategory, monthly, date, endDate, description, locked);
     }
 
-    public abstract static class TransactionBuilder<B extends TransactionBuilder> {
+    public static class Builder {
         private Long id;
         private String title;
         private double amount;
         private Currency currency;
+        private TransactionType transactionType;
         private MainCategory mainCategory;
         private SubCategory subCategory;
         private boolean monthly;
@@ -127,83 +148,76 @@ public abstract class Transaction {
         private String description;
         private boolean locked;
 
-        protected TransactionBuilder() {
-        }
-
-        protected TransactionBuilder(final Transaction transaction) {
-            this.id = transaction.id;
-            this.title = transaction.title;
-            this.amount = transaction.amount;
-            this.currency = transaction.currency;
-            this.mainCategory = transaction.mainCategory;
-            this.subCategory = transaction.subCategory;
-            this.monthly = transaction.monthly;
-            this.date = transaction.date;
-            this.endDate = transaction.endDate;
-            this.description = transaction.description;
-            this.locked = transaction.locked;
-        }
-
-        @SuppressWarnings("unchecked")
-        final B self() {
-            return (B) this;
-        }
-
-        public B withId(final Long id) {
+        public Builder withId(final Long id) {
             this.id = id;
-            return self();
+            return this;
         }
 
-        public B withTitle(final String title) {
+        public Builder withTitle(final String title) {
             this.title = title;
-            return self();
+            return this;
         }
 
-        public B withAmount(final double amount) {
+        public Builder withAmount(final double amount) {
             this.amount = amount;
-            return self();
+            return this;
         }
 
-        public B withCurrency(final Currency currency) {
+        public Builder withCurrency(final Currency currency) {
             this.currency = currency;
-            return self();
+            return this;
         }
 
-        public B withMainCategory(final MainCategory mainCategory) {
+        public Builder withTransactionType(final TransactionType transactionType) {
+            this.transactionType = transactionType;
+            return this;
+        }
+
+        public Builder withMainCategory(final MainCategory mainCategory) {
             this.mainCategory = mainCategory;
-            return self();
+            return this;
         }
 
-        public B withSubCategory(final SubCategory subCategory) {
+        public Builder withSubCategory(final SubCategory subCategory) {
             this.subCategory = subCategory;
-            return self();
+            return this;
         }
 
-        public B withMonthly(final boolean monthly) {
+        public Builder withMonthly(final boolean monthly) {
             this.monthly = monthly;
-            return self();
+            return this;
         }
 
-        public B withDate(final LocalDate date) {
+        public Builder withDate(final LocalDate date) {
             this.date = date;
-            return self();
+            return this;
         }
 
-        public B withEndDate(final LocalDate endDate) {
+        public Builder withEndDate(final LocalDate endDate) {
             this.endDate = endDate;
-            return self();
+            return this;
         }
 
-        public B withDescription(final String description) {
+        public Builder withDescription(final String description) {
             this.description = description;
-            return self();
+            return this;
         }
 
-        public B withLocked(final boolean locked) {
+        public Builder withLocked(final boolean locked) {
             this.locked = locked;
-            return self();
+            return this;
         }
 
-        public abstract Transaction build();
+        public Transaction build() {
+            Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+            Transaction transaction = new Transaction(this);
+            Set<ConstraintViolation<Transaction>> violations = validator.validate(transaction);
+            if (!violations.isEmpty()) {
+                ConstraintViolationException wrappedException = new ConstraintViolationException(
+                    new HashSet<ConstraintViolation<?>>(violations));
+                throw new TransactionException(transaction, "invalid transaction", wrappedException);
+            }
+            return transaction;
+        }
     }
 }
