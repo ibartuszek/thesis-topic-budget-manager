@@ -21,7 +21,7 @@ public class MainCategoryEntityTransformer {
         return MainCategory.builder()
             .withId(mainCategoryEntity.getId())
             .withName(mainCategoryEntity.getName())
-            .withCategoryType(mainCategoryEntity.getCategoryType())
+            .withTransactionType(mainCategoryEntity.getTransactionType())
             .withSubCategorySet(transformToSubCategorySet(mainCategoryEntity.getSubCategoryEntitySet()))
             .build();
     }
@@ -36,7 +36,7 @@ public class MainCategoryEntityTransformer {
         return MainCategoryEntity.builder()
             .withId(mainCategory.getId())
             .withName(mainCategory.getName())
-            .withCategoryType(mainCategory.getCategoryType())
+            .withTransactionType(mainCategory.getTransactionType())
             .withSubCategoryEntitySet(transformToSubCategoryEntitySet(mainCategory.getSubCategorySet()))
             .build();
     }

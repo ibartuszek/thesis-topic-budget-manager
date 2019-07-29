@@ -1,14 +1,14 @@
-INSERT INTO sub_category VALUES (NULL, 'INCOME', 'supplementary category 1');
-INSERT INTO sub_category VALUES (NULL, 'INCOME', 'supplementary category 2');
-INSERT INTO sub_category VALUES (NULL, 'INCOME', 'supplementary category 3');
-INSERT INTO sub_category VALUES (NULL, 'OUTCOME', 'supplementary category 2');
-INSERT INTO sub_category VALUES (NULL, 'OUTCOME', 'supplementary category 3');
+INSERT INTO sub_category(id, name, transaction_type) VALUES (NULL, 'supplementary category 1', 'INCOME');
+INSERT INTO sub_category(id, name, transaction_type) VALUES (NULL, 'supplementary category 2', 'INCOME');
+INSERT INTO sub_category(id, name, transaction_type) VALUES (NULL, 'supplementary category 3', 'INCOME');
+INSERT INTO sub_category(id, name, transaction_type) VALUES (NULL, 'supplementary category 2', 'OUTCOME');
+INSERT INTO sub_category(id, name, transaction_type) VALUES (NULL, 'supplementary category 3', 'OUTCOME');
 
-INSERT INTO main_category VALUES (NULL, 'INCOME', 'main category 1');
-INSERT INTO main_category VALUES (NULL, 'INCOME', 'main category 2');
-INSERT INTO main_category VALUES (NULL, 'INCOME', 'main category 3');
-INSERT INTO main_category VALUES (NULL, 'OUTCOME', 'main category 2');
-INSERT INTO main_category VALUES (NULL, 'OUTCOME', 'main category 3');
+INSERT INTO main_category(id, name, transaction_type) VALUES (NULL, 'main category 1', 'INCOME');
+INSERT INTO main_category(id, name, transaction_type) VALUES (NULL, 'main category 2', 'INCOME');
+INSERT INTO main_category(id, name, transaction_type) VALUES (NULL, 'main category 3', 'INCOME');
+INSERT INTO main_category(id, name, transaction_type) VALUES (NULL, 'main category 2', 'OUTCOME');
+INSERT INTO main_category(id, name, transaction_type) VALUES (NULL, 'main category 3', 'OUTCOME');
 
-INSERT INTO category_join_table VALUES (1, 1);
-INSERT INTO category_join_table VALUES (1, 2);
+INSERT INTO category_join_table(main_category_id, sub_category_id) VALUES (1, 1);
+INSERT INTO category_join_table(main_category_id, sub_category_id) VALUES (1, 2);

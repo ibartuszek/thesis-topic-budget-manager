@@ -1,7 +1,7 @@
 package hu.elte.bm.transactionservice.app.test;
 
-import static hu.elte.bm.transactionservice.domain.categories.CategoryType.INCOME;
-import static hu.elte.bm.transactionservice.domain.categories.CategoryType.OUTCOME;
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.OUTCOME;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -12,10 +12,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.service.DefaultMainCategoryService;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class MainCategoryTest extends AbstractTransactionServiceApplicationTest {
 
@@ -33,7 +33,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         // GIVEN
         MainCategory newMainCategory = MainCategory.builder()
             .withName(NEW_CATEGORY_NAME)
-            .withCategoryType(INCOME)
+            .withTransactionType(INCOME)
             .withSubCategorySet(new HashSet<>())
             .build();
         // WHEN
@@ -47,7 +47,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         // GIVEN
         MainCategory newMainCategory = MainCategory.builder()
             .withName(RESERVED_CATEGORY_NAME)
-            .withCategoryType(OUTCOME)
+            .withTransactionType(OUTCOME)
             .withSubCategorySet(new HashSet<>())
             .build();
         // WHEN
@@ -61,7 +61,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         // GIVEN
         MainCategory newMainCategory = MainCategory.builder()
             .withName(RESERVED_CATEGORY_NAME)
-            .withCategoryType(INCOME)
+            .withTransactionType(INCOME)
             .withSubCategorySet(createSubCategorySet())
             .build();
         // WHEN
@@ -77,7 +77,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         subCategorySet.add(createSubCategory(null, "illegal supplementary category", INCOME));
         MainCategory newMainCategory = MainCategory.builder()
             .withName(NEW_CATEGORY_NAME)
-            .withCategoryType(INCOME)
+            .withTransactionType(INCOME)
             .withSubCategorySet(subCategorySet)
             .build();
         // WHEN
@@ -92,7 +92,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategory newMainCategory = MainCategory.builder()
             .withId(EXISTING_INCOME_ID)
             .withName(NEW_CATEGORY_NAME)
-            .withCategoryType(INCOME)
+            .withTransactionType(INCOME)
             .withSubCategorySet(createSubCategorySet())
             .build();
         // WHEN
@@ -107,7 +107,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategory newMainCategory = MainCategory.builder()
             .withId(EXISTING_OUTCOME_ID)
             .withName(RESERVED_CATEGORY_NAME)
-            .withCategoryType(OUTCOME)
+            .withTransactionType(OUTCOME)
             .withSubCategorySet(new HashSet<>())
             .build();
         // WHEN
@@ -122,7 +122,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategory newMainCategory = MainCategory.builder()
             .withId(EXISTING_INCOME_ID)
             .withName(OTHER_RESERVED_CATEGORY_NAME)
-            .withCategoryType(INCOME)
+            .withTransactionType(INCOME)
             .withSubCategorySet(createSubCategorySet())
             .build();
         // WHEN
@@ -139,7 +139,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategory newMainCategory = MainCategory.builder()
             .withId(EXISTING_INCOME_ID)
             .withName(NEW_CATEGORY_NAME)
-            .withCategoryType(INCOME)
+            .withTransactionType(INCOME)
             .withSubCategorySet(subCategorySet)
             .build();
         // WHEN
@@ -155,11 +155,11 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         return subCategorySet;
     }
 
-    private SubCategory createSubCategory(final Long id, final String name, final CategoryType type) {
+    private SubCategory createSubCategory(final Long id, final String name, final TransactionType type) {
         return SubCategory.builder()
             .withId(id)
             .withName(name)
-            .withCategoryType(type)
+            .withTransactionType(type)
             .build();
     }
 }

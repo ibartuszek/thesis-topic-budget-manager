@@ -11,7 +11,7 @@ public class SubCategoryEntityTransformer {
         return SubCategory.builder()
             .withId(subCategoryEntity.getId())
             .withName(subCategoryEntity.getName())
-            .withCategoryType(subCategoryEntity.getCategoryType())
+            .withTransactionType(subCategoryEntity.getTransactionType())
             .build();
     }
 
@@ -19,7 +19,7 @@ public class SubCategoryEntityTransformer {
         return SubCategoryEntity.builder()
             .withId(subCategory.getId())
             .withName(subCategory.getName())
-            .withCategoryType(subCategory.getCategoryType())
+            .withTransactionType(subCategory.getTransactionType())
             .build();
     }
 }

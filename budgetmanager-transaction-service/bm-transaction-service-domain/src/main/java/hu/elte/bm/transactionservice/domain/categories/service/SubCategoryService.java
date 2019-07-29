@@ -3,8 +3,8 @@ package hu.elte.bm.transactionservice.domain.categories.service;
 import java.util.List;
 import java.util.Optional;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public interface SubCategoryService {
 
@@ -12,10 +12,10 @@ public interface SubCategoryService {
      * Returns a list of SubCategory for the given types.
      * If there is no result it will returns with an empty list.
      *
-     * @param categoryType {@link CategoryType} the type of the elements of the result list.
+     * @param transactionType {@link TransactionType} the type of the elements of the result list.
      * @return list of {@link SubCategory}.
      */
-    List<SubCategory> getSubCategoryList(CategoryType categoryType);
+    List<SubCategory> getSubCategoryList(TransactionType transactionType);
 
     /**
      * It will save the subCategory into the repository.

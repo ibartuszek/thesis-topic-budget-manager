@@ -1,6 +1,6 @@
 package hu.elte.bm.transactionservice.dal.categories;
 
-import static hu.elte.bm.transactionservice.domain.categories.CategoryType.INCOME;
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,9 +16,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class MainCategoryDaoTest {
 
@@ -44,7 +44,7 @@ public class MainCategoryDaoTest {
     @Test
     public void testFindAllWhenThereIsNoCategoryInTheRepository() {
         // GIVEN
-        EasyMock.expect(mainCategoryRepository.findAllMaincategory(INCOME)).andReturn(Collections.emptyList());
+        EasyMock.expect(mainCategoryRepository.findAllMainCategory(INCOME)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
         List<MainCategory> result = underTest.findAll(INCOME);
@@ -57,7 +57,7 @@ public class MainCategoryDaoTest {
     public void testFindAllWhenThereAreMoreCategoriesInTheRepository() {
         // GIVEN
         Iterable<MainCategoryEntity> mainCategoryEntities = createMainCategoryEntities();
-        EasyMock.expect(mainCategoryRepository.findAllMaincategory(INCOME)).andReturn(mainCategoryEntities);
+        EasyMock.expect(mainCategoryRepository.findAllMainCategory(INCOME)).andReturn(mainCategoryEntities);
         List<MainCategory> expectedList = createMainCategoryList();
         control.replay();
         // WHEN
@@ -136,7 +136,7 @@ public class MainCategoryDaoTest {
         MainCategoryEntity capturedCategory = capture.getValue();
         Assert.assertEquals(mainCategoryToSave.getId(), capturedCategory.getId());
         Assert.assertEquals(mainCategoryToSave.getName(), capturedCategory.getName());
-        Assert.assertEquals(mainCategoryToSave.getCategoryType(), capturedCategory.getCategoryType());
+        Assert.assertEquals(mainCategoryToSave.getTransactionType(), capturedCategory.getTransactionType());
     }
 
     private Iterable<MainCategoryEntity> createMainCategoryEntities() {
@@ -145,21 +145,21 @@ public class MainCategoryDaoTest {
         return mainCategoryEntityList;
     }
 
-    private MainCategoryEntity createMainCategoryEntity(final Long id, final String categoryName, final CategoryType type,
+    private MainCategoryEntity createMainCategoryEntity(final Long id, final String categoryName, final TransactionType type,
         final Set<SubCategoryEntity> subCategoryEntitySet) {
         return MainCategoryEntity.builder()
             .withId(id)
             .withName(categoryName)
-            .withCategoryType(type)
+            .withTransactionType(type)
             .withSubCategoryEntitySet(subCategoryEntitySet)
             .build();
     }
 
-    private SubCategoryEntity createSubCategoryEntity(final Long id, final String categoryName, final CategoryType type) {
+    private SubCategoryEntity createSubCategoryEntity(final Long id, final String categoryName, final TransactionType type) {
         return SubCategoryEntity.builder()
             .withId(id)
             .withName(categoryName)
-            .withCategoryType(type)
+            .withTransactionType(type)
             .build();
     }
 
@@ -169,11 +169,11 @@ public class MainCategoryDaoTest {
         return subCategoryEntitySet;
     }
 
-    private MainCategory createMainCategory(final Long id, final String categoryName, final CategoryType type, final Set<SubCategory> subCategorySet) {
+    private MainCategory createMainCategory(final Long id, final String categoryName, final TransactionType type, final Set<SubCategory> subCategorySet) {
         return MainCategory.builder()
             .withId(id)
             .withName(categoryName)
-            .withCategoryType(type)
+            .withTransactionType(type)
             .withSubCategorySet(subCategorySet)
             .build();
     }
@@ -184,11 +184,11 @@ public class MainCategoryDaoTest {
         return subCategorySet;
     }
 
-    private SubCategory createSubCategory(final Long id, final String categoryName, final CategoryType type) {
+    private SubCategory createSubCategory(final Long id, final String categoryName, final TransactionType type) {
         return SubCategory.builder()
             .withId(id)
             .withName(categoryName)
-            .withCategoryType(type)
+            .withTransactionType(type)
             .build();
     }
 

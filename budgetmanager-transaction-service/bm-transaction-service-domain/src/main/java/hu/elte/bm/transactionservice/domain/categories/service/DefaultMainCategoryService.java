@@ -7,10 +7,10 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Service("mainCategoryService")
 public class DefaultMainCategoryService implements MainCategoryService {
@@ -24,9 +24,9 @@ public class DefaultMainCategoryService implements MainCategoryService {
     }
 
     @Override
-    public List<MainCategory> getMainCategoryList(final CategoryType categoryType) {
-        Assert.notNull(categoryType, TYPE_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
-        return databaseProxy.findAllMainCategory(categoryType);
+    public List<MainCategory> getMainCategoryList(final TransactionType transactionType) {
+        Assert.notNull(transactionType, TYPE_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
+        return databaseProxy.findAllMainCategory(transactionType);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class DefaultMainCategoryService implements MainCategoryService {
     }
 
     private boolean thereIsNoCategoryWithSameName(final MainCategory mainCategory) {
-        Optional<MainCategory> mainCategoryWithSameName = databaseProxy.findMainCategoryByName(mainCategory.getName(), mainCategory.getCategoryType());
+        Optional<MainCategory> mainCategoryWithSameName = databaseProxy.findMainCategoryByName(mainCategory.getName(), mainCategory.getTransactionType());
         return mainCategoryWithSameName.isEmpty();
     }
 
@@ -65,12 +65,12 @@ public class DefaultMainCategoryService implements MainCategoryService {
 
     private boolean mainCategoryTypeWasNotChangedAndHasOldSubCategories(final MainCategory mainCategory, final MainCategory originalMainCategory) {
         return originalMainCategory != null
-            && mainCategory.getCategoryType() == originalMainCategory.getCategoryType()
+            && mainCategory.getTransactionType() == originalMainCategory.getTransactionType()
             && mainCategory.getSubCategorySet().containsAll(originalMainCategory.getSubCategorySet());
     }
 
     private boolean hasDifferentType(final MainCategory mainCategory, final MainCategory originalMainCategory) {
-        Optional<MainCategory> mainCategoryWithSameName = databaseProxy.findMainCategoryByName(mainCategory.getName(), mainCategory.getCategoryType());
+        Optional<MainCategory> mainCategoryWithSameName = databaseProxy.findMainCategoryByName(mainCategory.getName(), mainCategory.getTransactionType());
         return mainCategoryWithSameName.isEmpty()
             || originalMainCategory.equals(mainCategoryWithSameName.get());
     }

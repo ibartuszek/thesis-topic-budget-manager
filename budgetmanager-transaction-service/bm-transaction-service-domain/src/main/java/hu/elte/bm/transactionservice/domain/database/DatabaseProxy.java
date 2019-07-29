@@ -7,13 +7,13 @@ import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryException;
 import hu.elte.bm.transactionservice.domain.income.Income;
 import hu.elte.bm.transactionservice.domain.income.IncomeException;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component("databaseProxy")
 public class DatabaseProxy implements DatabaseFacade {
@@ -27,9 +27,9 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public List<MainCategory> findAllMainCategory(final CategoryType categoryType) {
+    public List<MainCategory> findAllMainCategory(final TransactionType transactionType) {
         try {
-            return databaseFacade.findAllMainCategory(categoryType);
+            return databaseFacade.findAllMainCategory(transactionType);
         } catch (DataAccessException exception) {
             throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }
@@ -45,9 +45,9 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public Optional<MainCategory> findMainCategoryByName(final String name, final CategoryType categoryType) {
+    public Optional<MainCategory> findMainCategoryByName(final String name, final TransactionType transactionType) {
         try {
-            return databaseFacade.findMainCategoryByName(name, categoryType);
+            return databaseFacade.findMainCategoryByName(name, transactionType);
         } catch (DataAccessException exception) {
             throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }
@@ -72,9 +72,9 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public List<SubCategory> findAllSubCategory(final CategoryType categoryType) {
+    public List<SubCategory> findAllSubCategory(final TransactionType transactionType) {
         try {
-            return databaseFacade.findAllSubCategory(categoryType);
+            return databaseFacade.findAllSubCategory(transactionType);
         } catch (DataAccessException exception) {
             throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }
@@ -90,9 +90,9 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public Optional<SubCategory> findSubCategoryByName(final String name, final CategoryType categoryType) {
+    public Optional<SubCategory> findSubCategoryByName(final String name, final TransactionType transactionType) {
         try {
-            return databaseFacade.findSubCategoryByName(name, categoryType);
+            return databaseFacade.findSubCategoryByName(name, transactionType);
         } catch (DataAccessException exception) {
             throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }

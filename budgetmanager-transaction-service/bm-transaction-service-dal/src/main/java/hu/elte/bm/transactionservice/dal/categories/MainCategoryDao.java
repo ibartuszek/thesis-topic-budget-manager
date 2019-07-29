@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component
 public class MainCategoryDao {
@@ -21,8 +21,8 @@ public class MainCategoryDao {
         this.mainCategoryEntityTransformer = mainCategoryEntityTransformer;
     }
 
-    public List<MainCategory> findAll(final CategoryType categoryType) {
-        Iterable<MainCategoryEntity> mainCategoryEntities = mainCategoryRepository.findAllMaincategory(categoryType);
+    public List<MainCategory> findAll(final TransactionType transactionType) {
+        Iterable<MainCategoryEntity> mainCategoryEntities = mainCategoryRepository.findAllMainCategory(transactionType);
         return transformToSubCategoryList(mainCategoryEntities);
     }
 
@@ -39,8 +39,8 @@ public class MainCategoryDao {
         return Optional.ofNullable(result);
     }
 
-    public Optional<MainCategory> findByName(final String name, final CategoryType categoryType) {
-        Optional<MainCategoryEntity> mainCategoryEntity = mainCategoryRepository.findByName(name, categoryType);
+    public Optional<MainCategory> findByName(final String name, final TransactionType transactionType) {
+        Optional<MainCategoryEntity> mainCategoryEntity = mainCategoryRepository.findByName(name, transactionType);
         MainCategory result = mainCategoryEntity.map(mainCategoryEntityTransformer::transformToMainCategory).orElse(null);
         return Optional.ofNullable(result);
     }

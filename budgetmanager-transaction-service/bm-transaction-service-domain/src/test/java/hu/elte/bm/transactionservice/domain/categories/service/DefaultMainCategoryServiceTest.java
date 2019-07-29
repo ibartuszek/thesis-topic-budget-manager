@@ -1,6 +1,6 @@
 package hu.elte.bm.transactionservice.domain.categories.service;
 
-import static hu.elte.bm.transactionservice.domain.categories.CategoryType.INCOME;
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,10 +15,10 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class DefaultMainCategoryServiceTest {
 
@@ -216,27 +216,27 @@ public class DefaultMainCategoryServiceTest {
         return mainCategoryList;
     }
 
-    private MainCategory createExampleMainCategory(final Long id, final String categoryName, final CategoryType type) {
+    private MainCategory createExampleMainCategory(final Long id, final String categoryName, final TransactionType type) {
         return MainCategory.builder()
             .withId(id)
             .withName(categoryName)
-            .withCategoryType(type)
+            .withTransactionType(type)
             .withSubCategorySet(createSubCategorySet(type))
             .build();
     }
 
-    private Set<SubCategory> createSubCategorySet(final CategoryType type) {
+    private Set<SubCategory> createSubCategorySet(final TransactionType type) {
         Set<SubCategory> subCategorySet = new HashSet<>();
         subCategorySet.add(createSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, type));
         subCategorySet.add(createSubCategory(OTHER_ID, OTHER_CATEGORY_NAME, type));
         return subCategorySet;
     }
 
-    private SubCategory createSubCategory(final Long id, final String categoryName, final CategoryType type) {
+    private SubCategory createSubCategory(final Long id, final String categoryName, final TransactionType type) {
         return SubCategory.builder()
             .withId(id)
             .withName(categoryName)
-            .withCategoryType(type)
+            .withTransactionType(type)
             .build();
     }
 

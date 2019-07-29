@@ -3,9 +3,9 @@ package hu.elte.bm.transactionservice.domain.categories.service;
 import java.util.List;
 import java.util.Optional;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public interface MainCategoryService {
 
@@ -13,10 +13,10 @@ public interface MainCategoryService {
      * Returns a list of MainCategory for the given types.
      * If there is no result it will returns with an empty list.
      *
-     * @param categoryType the type of the transaction. It is needed to control the flow.
+     * @param transactionType the type of the transaction. It is needed to control the flow.
      * @return list of {@link MainCategory}.
      */
-    List<MainCategory> getMainCategoryList(CategoryType categoryType);
+    List<MainCategory> getMainCategoryList(TransactionType transactionType);
 
     /**
      * It will save the main category into the repository.

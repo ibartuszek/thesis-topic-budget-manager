@@ -1,5 +1,7 @@
 package hu.elte.bm.transactionservice.app.test;
 
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +9,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.service.DefaultSubCategoryService;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
 
@@ -27,7 +29,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
         // GIVEN
         SubCategory newSubCategory = SubCategory.builder()
             .withName(NEW_CATEGORY_NAME)
-            .withCategoryType(CategoryType.INCOME)
+            .withTransactionType(INCOME)
             .build();
         // WHEN
         Optional<SubCategory> result = subCategoryService.saveSubCategory(newSubCategory);
@@ -40,7 +42,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
         // GIVEN
         SubCategory newSubCategory = SubCategory.builder()
             .withName(RESERVED_CATEGORY_NAME)
-            .withCategoryType(CategoryType.OUTCOME)
+            .withTransactionType(TransactionType.OUTCOME)
             .build();
         // WHEN
         Optional<SubCategory> result = subCategoryService.saveSubCategory(newSubCategory);
@@ -53,7 +55,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
         // GIVEN
         SubCategory newSubCategory = SubCategory.builder()
             .withName(RESERVED_CATEGORY_NAME)
-            .withCategoryType(CategoryType.INCOME)
+            .withTransactionType(INCOME)
             .build();
         // WHEN
         Optional<SubCategory> result = subCategoryService.saveSubCategory(newSubCategory);
@@ -67,7 +69,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
         SubCategory newSubCategory = SubCategory.builder()
             .withId(EXISTING_INCOME_ID)
             .withName(NEW_CATEGORY_NAME)
-            .withCategoryType(CategoryType.INCOME)
+            .withTransactionType(INCOME)
             .build();
         // WHEN
         Optional<SubCategory> result = subCategoryService.updateSubCategory(newSubCategory);
@@ -81,7 +83,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
         SubCategory newSubCategory = SubCategory.builder()
             .withId(EXISTING_OUTCOME_ID)
             .withName(RESERVED_CATEGORY_NAME)
-            .withCategoryType(CategoryType.OUTCOME)
+            .withTransactionType(TransactionType.OUTCOME)
             .build();
         // WHEN
         Optional<SubCategory> result = subCategoryService.updateSubCategory(newSubCategory);
@@ -96,7 +98,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
         SubCategory newSubCategory = SubCategory.builder()
             .withId(EXISTING_INCOME_ID)
             .withName(OTHER_RESERVED_CATEGORY_NAME)
-            .withCategoryType(CategoryType.INCOME)
+            .withTransactionType(INCOME)
             .build();
         // WHEN
         Optional<SubCategory> result = subCategoryService.updateSubCategory(newSubCategory);

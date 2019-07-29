@@ -1,7 +1,7 @@
 package hu.elte.bm.transactionservice.domain.categories.service;
 
-import static hu.elte.bm.transactionservice.domain.categories.CategoryType.INCOME;
-import static hu.elte.bm.transactionservice.domain.categories.CategoryType.OUTCOME;
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.OUTCOME;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,9 +14,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class DefaultSubCategoryServiceTest {
 
@@ -177,11 +177,11 @@ public class DefaultSubCategoryServiceTest {
         return subCategoryList;
     }
 
-    private SubCategory createExampleSubCategory(final Long id, final String categoryName, final CategoryType type) {
+    private SubCategory createExampleSubCategory(final Long id, final String categoryName, final TransactionType type) {
         return SubCategory.builder()
             .withId(id)
             .withName(categoryName)
-            .withCategoryType(type)
+            .withTransactionType(type)
             .build();
     }
 

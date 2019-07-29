@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+
 /**
  * MainCategory represents the main category of the transaction (income or outcome).
  */
@@ -15,14 +17,14 @@ public final class MainCategory {
     @NotBlank
     private final String name;
     @NotNull
-    private final CategoryType categoryType;
+    private final TransactionType transactionType;
     @NotNull
     private final Set<SubCategory> subCategorySet;
 
     private MainCategory(final Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
-        this.categoryType = builder.categoryType;
+        this.transactionType = builder.transactionType;
         this.subCategorySet = builder.subCategorySet;
     }
 
@@ -38,8 +40,8 @@ public final class MainCategory {
         return name;
     }
 
-    public CategoryType getCategoryType() {
-        return categoryType;
+    public TransactionType getTransactionType() {
+        return transactionType;
     }
 
     public Set<SubCategory> getSubCategorySet() {
@@ -56,14 +58,14 @@ public final class MainCategory {
         }
         MainCategory that = (MainCategory) o;
         return Objects.equals(name, that.name)
-            && categoryType == that.categoryType
+            && transactionType == that.transactionType
             && subCategorySet.size() == that.subCategorySet.size()
             && subCategorySet.containsAll(that.subCategorySet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, categoryType, subCategorySet);
+        return Objects.hash(name, transactionType, subCategorySet);
     }
 
     @Override
@@ -71,7 +73,7 @@ public final class MainCategory {
         return "MainCategory{"
             + "id=" + id
             + ", name='" + name + '\''
-            + ", categoryType=" + categoryType
+            + ", transactionType=" + transactionType
             + ", subCategorySet=" + subCategorySet
             + '}';
     }
@@ -79,7 +81,7 @@ public final class MainCategory {
     public static final class Builder {
         private Long id;
         private String name;
-        private CategoryType categoryType;
+        private TransactionType transactionType;
         private Set<SubCategory> subCategorySet;
 
         private Builder() {
@@ -95,8 +97,8 @@ public final class MainCategory {
             return this;
         }
 
-        public Builder withCategoryType(final CategoryType categoryType) {
-            this.categoryType = categoryType;
+        public Builder withTransactionType(final TransactionType transactionType) {
+            this.transactionType = transactionType;
             return this;
         }
 

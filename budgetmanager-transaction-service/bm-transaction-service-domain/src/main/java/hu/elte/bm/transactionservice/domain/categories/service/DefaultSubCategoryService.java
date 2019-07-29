@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Service("subCategoryService")
 public class DefaultSubCategoryService implements SubCategoryService {
@@ -22,9 +22,9 @@ public class DefaultSubCategoryService implements SubCategoryService {
     }
 
     @Override
-    public List<SubCategory> getSubCategoryList(final CategoryType categoryType) {
-        Assert.notNull(categoryType, TYPE_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
-        return databaseProxy.findAllSubCategory(categoryType);
+    public List<SubCategory> getSubCategoryList(final TransactionType transactionType) {
+        Assert.notNull(transactionType, TYPE_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
+        return databaseProxy.findAllSubCategory(transactionType);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class DefaultSubCategoryService implements SubCategoryService {
     }
 
     private boolean isSavable(final SubCategory subCategory) {
-        Optional<SubCategory> subCategoryWithSameName = databaseProxy.findSubCategoryByName(subCategory.getName(), subCategory.getCategoryType());
+        Optional<SubCategory> subCategoryWithSameName = databaseProxy.findSubCategoryByName(subCategory.getName(), subCategory.getTransactionType());
         return subCategoryWithSameName.isEmpty() || subCategoryWithSameName.map(category -> hasDifferentType(subCategory, category)).get();
     }
 
@@ -52,14 +52,14 @@ public class DefaultSubCategoryService implements SubCategoryService {
         boolean result = false;
         Optional<SubCategory> originalSubCategory = databaseProxy.findSubCategoryById(subCategory.getId());
         if (originalSubCategory.isPresent() && subCategoryTypeWasNotChanged(subCategory, originalSubCategory.get())) {
-            Optional<SubCategory> subCategoryWithSameName = databaseProxy.findSubCategoryByName(subCategory.getName(), subCategory.getCategoryType());
+            Optional<SubCategory> subCategoryWithSameName = databaseProxy.findSubCategoryByName(subCategory.getName(), subCategory.getTransactionType());
             result = subCategoryWithSameName.isEmpty();
         }
         return result;
     }
 
     private boolean subCategoryTypeWasNotChanged(final SubCategory subCategory, final SubCategory originalSubCategory) {
-        return subCategory.getCategoryType() == originalSubCategory.getCategoryType();
+        return subCategory.getTransactionType() == originalSubCategory.getTransactionType();
     }
 
 }

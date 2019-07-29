@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryDao;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryDao;
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseFacade;
 import hu.elte.bm.transactionservice.domain.income.Income;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Service("databaseFacade")
 public class DefaultDatabaseFacade implements DatabaseFacade {
@@ -25,8 +25,8 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
     private SubCategoryDao subCategoryDao;
 
     @Override
-    public List<MainCategory> findAllMainCategory(final CategoryType categoryType) {
-        return mainCategoryDao.findAll(categoryType);
+    public List<MainCategory> findAllMainCategory(final TransactionType transactionType) {
+        return mainCategoryDao.findAll(transactionType);
     }
 
     @Override
@@ -35,8 +35,8 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
     }
 
     @Override
-    public Optional<MainCategory> findMainCategoryByName(final String name, final CategoryType categoryType) {
-        return mainCategoryDao.findByName(name, categoryType);
+    public Optional<MainCategory> findMainCategoryByName(final String name, final TransactionType transactionType) {
+        return mainCategoryDao.findByName(name, transactionType);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
     }
 
     @Override
-    public List<SubCategory> findAllSubCategory(final CategoryType categoryType) {
-        return subCategoryDao.findAll(categoryType);
+    public List<SubCategory> findAllSubCategory(final TransactionType transactionType) {
+        return subCategoryDao.findAll(transactionType);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
     }
 
     @Override
-    public Optional<SubCategory> findSubCategoryByName(final String name, final CategoryType categoryType) {
-        return subCategoryDao.findByName(name, categoryType);
+    public Optional<SubCategory> findSubCategoryByName(final String name, final TransactionType transactionType) {
+        return subCategoryDao.findByName(name, transactionType);
     }
 
     @Override

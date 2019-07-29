@@ -5,6 +5,8 @@ import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+
 /**
  * It represents the secondary category of the transaction (can be income or outcome).
  */
@@ -14,12 +16,12 @@ public final class SubCategory {
     @NotBlank
     private final String name;
     @NotNull
-    private final CategoryType categoryType;
+    private final TransactionType transactionType;
 
     private SubCategory(final Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
-        this.categoryType = builder.categoryType;
+        this.transactionType = builder.transactionType;
     }
 
     public static Builder builder() {
@@ -34,8 +36,8 @@ public final class SubCategory {
         return name;
     }
 
-    public CategoryType getCategoryType() {
-        return categoryType;
+    public TransactionType getTransactionType() {
+        return transactionType;
     }
 
     @Override
@@ -48,12 +50,12 @@ public final class SubCategory {
         }
         SubCategory that = (SubCategory) o;
         return Objects.equals(name, that.name)
-            && categoryType == that.categoryType;
+            && transactionType == that.transactionType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, categoryType);
+        return Objects.hash(name, transactionType);
     }
 
     @Override
@@ -61,14 +63,14 @@ public final class SubCategory {
         return "SubCategory{"
             + "id=" + id
             + ", name='" + name + '\''
-            + ", categoryType=" + categoryType
+            + ", transactionType=" + transactionType
             + '}';
     }
 
     public static final class Builder {
         private Long id;
         private String name;
-        private CategoryType categoryType;
+        private TransactionType transactionType;
 
         private Builder() {
         }
@@ -83,8 +85,8 @@ public final class SubCategory {
             return this;
         }
 
-        public Builder withCategoryType(final CategoryType categoryType) {
-            this.categoryType = categoryType;
+        public Builder withTransactionType(final TransactionType transactionType) {
+            this.transactionType = transactionType;
             return this;
         }
 

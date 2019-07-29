@@ -10,11 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import hu.elte.bm.transactionservice.domain.categories.CategoryType;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Entity
 @Table(name = "sub_category",
-    uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "category_type" }) })
+    uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "transaction_type" }) })
 public final class SubCategoryEntity {
 
     private static final int MAXIMUM_NAME_LENGTH = 50;
@@ -23,8 +23,8 @@ public final class SubCategoryEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category_type")
-    private CategoryType categoryType;
+    @Column(name = "transaction_type")
+    private TransactionType transactionType;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,7 +36,7 @@ public final class SubCategoryEntity {
     private SubCategoryEntity(final Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
-        this.categoryType = builder.categoryType;
+        this.transactionType = builder.transactionType;
     }
 
     public static Builder builder() {
@@ -51,14 +51,14 @@ public final class SubCategoryEntity {
         return name;
     }
 
-    public CategoryType getCategoryType() {
-        return categoryType;
+    public TransactionType getTransactionType() {
+        return transactionType;
     }
 
     public static final class Builder {
         private Long id;
         private String name;
-        private CategoryType categoryType;
+        private TransactionType transactionType;
 
         private Builder() {
         }
@@ -73,8 +73,8 @@ public final class SubCategoryEntity {
             return this;
         }
 
-        public Builder withCategoryType(final CategoryType categoryType) {
-            this.categoryType = categoryType;
+        public Builder withTransactionType(final TransactionType transactionType) {
+            this.transactionType = transactionType;
             return this;
         }
 
