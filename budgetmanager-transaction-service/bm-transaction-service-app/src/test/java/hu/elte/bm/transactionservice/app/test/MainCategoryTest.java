@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
 import hu.elte.bm.transactionservice.domain.categories.DefaultMainCategoryService;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
@@ -70,7 +71,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         Assert.assertEquals(Optional.empty(), result);
     }
 
-    @Test
+    @Test(expectedExceptions = MainCategoryException.class)
     public void testSaveCategoryWhenCategoryHasNewNameButThereIsOneSubCategoryWithoutId() {
         // GIVEN
         Set<SubCategory> subCategorySet = createSubCategorySet();
@@ -81,9 +82,8 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
             .withSubCategorySet(subCategorySet)
             .build();
         // WHEN
-        Optional<MainCategory> result = mainCategoryService.save(newMainCategory);
+        mainCategoryService.save(newMainCategory);
         // THEN
-        Assert.assertEquals(Optional.empty(), result);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         Assert.assertEquals(Optional.empty(), result);
     }
 
-    @Test
+    @Test(expectedExceptions = MainCategoryException.class)
     public void testUpdateCategoryWhenCategoryHasNewNameButThereIsOneSubCategoryWithoutId() {
         // GIVEN
         Set<SubCategory> subCategorySet = createSubCategorySet();
@@ -143,9 +143,8 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
             .withSubCategorySet(subCategorySet)
             .build();
         // WHEN
-        Optional<MainCategory> result = mainCategoryService.update(newMainCategory);
+        mainCategoryService.update(newMainCategory);
         // THEN
-        Assert.assertEquals(Optional.empty(), result);
     }
 
     private Set<SubCategory> createSubCategorySet() {

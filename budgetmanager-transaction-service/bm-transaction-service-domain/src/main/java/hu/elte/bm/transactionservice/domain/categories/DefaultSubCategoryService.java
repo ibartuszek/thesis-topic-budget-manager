@@ -14,6 +14,9 @@ public class DefaultSubCategoryService implements SubCategoryService {
 
     private static final String CATEGORY_CANNOT_BE_NULL_EXCEPTION_MESSAGE = "subCategory cannot be null!";
     private static final String TYPE_CANNOT_BE_NULL_EXCEPTION_MESSAGE = "categoryType cannot be null!";
+    private static final String ORIGINAL_SUB_CATEGORY_CANNOT_BE_FOUND_EXCEPTION_MESSAGE = "Original subCategory cannot be found in the repository!";
+    private static final String TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE = "Transaction type cannot be changed!";
+
     private final DatabaseProxy databaseProxy;
 
     DefaultSubCategoryService(final DatabaseProxy databaseProxy) {
@@ -28,37 +31,33 @@ public class DefaultSubCategoryService implements SubCategoryService {
 
     @Override
     public Optional<SubCategory> save(final SubCategory subCategory) {
-        Assert.notNull(subCategory, CATEGORY_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
+        validate(subCategory);
         return isSavable(subCategory) ? databaseProxy.saveSubCategory(subCategory) : Optional.empty();
+    }
+
+    private void validate(final SubCategory subCategory) {
+        Assert.notNull(subCategory, CATEGORY_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
     }
 
     private boolean isSavable(final SubCategory subCategory) {
         Optional<SubCategory> subCategoryWithSameName = databaseProxy.findSubCategoryByName(subCategory.getName(), subCategory.getTransactionType());
-        return subCategoryWithSameName.isEmpty() || subCategoryWithSameName.map(category -> hasDifferentType(subCategory, category)).get();
-    }
-
-    private boolean hasDifferentType(final SubCategory subCategory, final SubCategory subCategoryWithSameName) {
-        return !subCategory.equals(subCategoryWithSameName);
+        return subCategoryWithSameName.isEmpty();
     }
 
     @Override
     public Optional<SubCategory> update(final SubCategory subCategory) {
-        Assert.notNull(subCategory, CATEGORY_CANNOT_BE_NULL_EXCEPTION_MESSAGE);
-        return isUpdatable(subCategory) ? databaseProxy.updateSubCategory(subCategory) : Optional.empty();
+        validateForUpdate(subCategory);
+        return isSavable(subCategory) ? databaseProxy.updateSubCategory(subCategory) : Optional.empty();
     }
 
-    private boolean isUpdatable(final SubCategory subCategory) {
-        boolean result = false;
-        Optional<SubCategory> originalSubCategory = databaseProxy.findSubCategoryById(subCategory.getId());
-        if (originalSubCategory.isPresent() && subCategoryTypeWasNotChanged(subCategory, originalSubCategory.get())) {
-            Optional<SubCategory> subCategoryWithSameName = databaseProxy.findSubCategoryByName(subCategory.getName(), subCategory.getTransactionType());
-            result = subCategoryWithSameName.isEmpty();
+    private void validateForUpdate(final SubCategory subCategory) {
+        validate(subCategory);
+        SubCategory originalSubCategory = databaseProxy.findSubCategoryById(subCategory.getId()).orElse(null);
+        if (originalSubCategory == null) {
+            throw new SubCategoryException(subCategory, ORIGINAL_SUB_CATEGORY_CANNOT_BE_FOUND_EXCEPTION_MESSAGE);
+        } else if (subCategory.getTransactionType() != originalSubCategory.getTransactionType()) {
+            throw new SubCategoryException(subCategory, TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE);
         }
-        return result;
-    }
-
-    private boolean subCategoryTypeWasNotChanged(final SubCategory subCategory, final SubCategory originalSubCategory) {
-        return subCategory.getTransactionType() == originalSubCategory.getTransactionType();
     }
 
 }

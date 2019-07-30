@@ -10,13 +10,19 @@ import java.util.function.Predicate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
 
 @Service("transactionService")
 public class DefaultTransactionService implements TransactionService {
 
-    private static final String CANNOT_BE_NULL_EXCEPTION_MESSAGE = "{0} cannot be null!";
     private static final long DAYS_TO_SUBTRACT = 30L;
+    private static final String CANNOT_BE_NULL_EXCEPTION_MESSAGE = "{0} cannot be null!";
+    private static final String MAIN_CATEGORY_ID_EXCEPTION_MESSAGE = "The Id of mainCategory cannot be null!";
+    private static final String SUB_CATEGORY_ID_EXCEPTION_MESSAGE = "The Id of subCategory cannot be null!";
+    private static final String DATE_BEFORE_THE_PERIOD_EXCEPTION_MESSAGE = "The date of transaction cannot be before the beginning of the period!";
+    private static final String ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_EXCEPTION_MESSAGE = "Original transaction cannot be found in the repository!";
+    private static final String TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE = "Transaction type cannot be changed!";
 
     private final DatabaseProxy dataBaseProxy;
 
@@ -39,29 +45,38 @@ public class DefaultTransactionService implements TransactionService {
 
     @Override
     public Optional<Transaction> save(final Transaction transaction) {
-        Assert.notNull(transaction, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "transaction"));
-        return isValid(transaction) && isSavable(transaction) ? dataBaseProxy.saveTransaction(transaction) : Optional.empty();
+        validate(transaction);
+        return isSavable(transaction) ? dataBaseProxy.saveTransaction(transaction) : Optional.empty();
     }
 
     @Override
     public Optional<Transaction> update(final Transaction transaction) {
-        Assert.notNull(transaction, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "transaction"));
-        return isValid(transaction) && isUpdatable(transaction) ? dataBaseProxy.updateTransaction(transaction) : Optional.empty();
+        validateForUpdate(transaction);
+        return isSavable(transaction) ? dataBaseProxy.updateTransaction(transaction) : Optional.empty();
     }
 
     @Override
     public Optional<Transaction> delete(final Transaction transaction) {
-        Assert.notNull(transaction, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "transaction"));
-        return Optional.empty();
+        validateForUpdate(transaction);
+        return isSavable(transaction) ? dataBaseProxy.deleteTransaction(transaction) : Optional.empty();
     }
 
-    private boolean isValid(final Transaction transaction) {
+    private void validate(final Transaction transaction) {
+        Assert.notNull(transaction, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "transaction"));
         LocalDate endOfTheLastPeriod = getLastDateOfThePeriod(transaction)
             .orElse(LocalDate.now().minusDays(DAYS_TO_SUBTRACT));
-        return transaction.getMainCategory().getId() != null
-            && transaction.getMainCategory().getSubCategorySet().stream()
-            .noneMatch(subCategory -> subCategory.getId() == null)
-            && transaction.getDate().isAfter(endOfTheLastPeriod);
+        if (transaction.getMainCategory().getId() == null) {
+            throw new TransactionException(transaction, MAIN_CATEGORY_ID_EXCEPTION_MESSAGE);
+        } else if (!hasValidSubCategories(transaction.getMainCategory())) {
+            throw new TransactionException(transaction, SUB_CATEGORY_ID_EXCEPTION_MESSAGE);
+        } else if (transaction.getDate().isBefore(endOfTheLastPeriod)) {
+            throw new TransactionException(transaction, DATE_BEFORE_THE_PERIOD_EXCEPTION_MESSAGE);
+        }
+    }
+
+    private boolean hasValidSubCategories(final MainCategory mainCategory) {
+        return mainCategory.getSubCategorySet().stream()
+            .noneMatch(subCategory -> subCategory.getId() == null);
     }
 
     private Optional<LocalDate> getLastDateOfThePeriod(final Transaction transaction) {
@@ -79,11 +94,16 @@ public class DefaultTransactionService implements TransactionService {
             .findAny().isEmpty();
     }
 
-    private boolean isUpdatable(final Transaction transaction) {
+    private void validateForUpdate(final Transaction transaction) {
+        validate(transaction);
         Transaction transactionFromRepository = dataBaseProxy.findTransactionById(transaction.getId()).orElse(null);
-        return transactionFromRepository != null
-            && !transactionFromRepository.isLocked()
-            && transactionFromRepository.getTransactionType() == transaction.getTransactionType()
-            && isSavable(transaction);
+        if (transactionFromRepository == null) {
+            throw new TransactionException(transaction, MAIN_CATEGORY_ID_EXCEPTION_MESSAGE);
+        } else if (transactionFromRepository.isLocked()) {
+            throw new TransactionException(transaction, ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_EXCEPTION_MESSAGE);
+        } else if (transaction.getTransactionType() != transactionFromRepository.getTransactionType()) {
+            throw new TransactionException(transaction, TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE);
+        }
     }
+
 }
