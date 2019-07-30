@@ -15,8 +15,9 @@ public class DefaultMainCategoryService implements MainCategoryService {
     private static final String SUB_CATEGORY_ID_EXCEPTION_MESSAGE = "A subCategory does not have id!";
     private static final String ORIGINAL_MAIN_CATEGORY_CANNOT_BE_FOUND_EXCEPTION_MESSAGE = "Original mainCategory cannot be found in the repository!";
     private static final String TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE = "Transaction type cannot be changed!";
-    private static final String CATEGORY_CANNOT_BE_NULL_EXCEPTION_MESSAGE = "mainCategory cannot be null!";
-    private static final String TYPE_CANNOT_BE_NULL_EXCEPTION_MESSAGE = "categoryType cannot be null!";
+    private static final String CATEGORY_CANNOT_BE_NULL_EXCEPTION_MESSAGE = "The mainCategory cannot be null!";
+    private static final String TYPE_CANNOT_BE_NULL_EXCEPTION_MESSAGE = "The categoryType cannot be null!";
+    private static final String MAIN_CATEGORY_NOT_CONTAINS_ALL_SUBCATEGORY_EXCEPTION_MESSAGE = "New mainCategory does not contain all original subCategory!";
     private final DatabaseProxy databaseProxy;
 
     DefaultMainCategoryService(final DatabaseProxy databaseProxy) {
@@ -65,6 +66,8 @@ public class DefaultMainCategoryService implements MainCategoryService {
             throw new MainCategoryException(mainCategory, ORIGINAL_MAIN_CATEGORY_CANNOT_BE_FOUND_EXCEPTION_MESSAGE);
         } else if (mainCategory.getTransactionType() != originalMainCategory.getTransactionType()) {
             throw new MainCategoryException(mainCategory, TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE);
+        } else if (!mainCategory.getSubCategorySet().containsAll(originalMainCategory.getSubCategorySet())) {
+            throw new MainCategoryException(mainCategory, MAIN_CATEGORY_NOT_CONTAINS_ALL_SUBCATEGORY_EXCEPTION_MESSAGE);
         }
 
     }

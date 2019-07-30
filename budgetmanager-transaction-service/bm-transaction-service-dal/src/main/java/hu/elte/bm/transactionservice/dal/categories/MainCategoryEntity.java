@@ -13,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -37,73 +37,58 @@ public final class MainCategoryEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = SubCategoryEntity.class)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = SubCategoryEntity.class)
     @JoinTable(name = "category_join_table",
         joinColumns = @JoinColumn(name = "main_category_id"),
         inverseJoinColumns = @JoinColumn(name = "sub_category_id"))
     private Set<SubCategoryEntity> subCategoryEntitySet;
 
-    private MainCategoryEntity() {
+    public MainCategoryEntity() {
     }
 
-    private MainCategoryEntity(final Builder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-        this.transactionType = builder.transactionType;
-        this.subCategoryEntitySet = builder.subCategoryEntitySet;
+    public MainCategoryEntity(final String name, final TransactionType transactionType,
+        final Set<SubCategoryEntity> subCategoryEntitySet) {
+        this(null, name, transactionType, subCategoryEntitySet);
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public Long getId() {
-        return id;
+    public MainCategoryEntity(final Long id, final String name, final TransactionType transactionType,
+        final Set<SubCategoryEntity> subCategoryEntitySet) {
+        this.id = id;
+        this.name = name;
+        this.transactionType = transactionType;
+        this.subCategoryEntitySet = subCategoryEntitySet;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(final String name) {
+        this.name = name;
+    }
+
     public TransactionType getTransactionType() {
         return transactionType;
+    }
+
+    public void setTransactionType(final TransactionType transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
     }
 
     public Set<SubCategoryEntity> getSubCategoryEntitySet() {
         return subCategoryEntitySet;
     }
 
-    public static final class Builder {
-        private Long id;
-        private String name;
-        private TransactionType transactionType;
-        private Set<SubCategoryEntity> subCategoryEntitySet;
-
-        private Builder() {
-        }
-
-        public Builder withId(final Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder withName(final String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder withTransactionType(final TransactionType transactionType) {
-            this.transactionType = transactionType;
-            return this;
-        }
-
-        public Builder withSubCategoryEntitySet(final Set<SubCategoryEntity> subCategoryEntitySet) {
-            this.subCategoryEntitySet = subCategoryEntitySet;
-            return this;
-        }
-
-        public MainCategoryEntity build() {
-            return new MainCategoryEntity(this);
-        }
+    public void setSubCategoryEntitySet(final Set<SubCategoryEntity> subCategoryEntitySet) {
+        this.subCategoryEntitySet = subCategoryEntitySet;
     }
+
 }

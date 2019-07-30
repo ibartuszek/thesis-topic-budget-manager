@@ -17,7 +17,7 @@ public class MainCategoryEntityTransformer {
         this.subCategoryEntityTransformer = subCategoryEntityTransformer;
     }
 
-    MainCategory transformToMainCategory(final MainCategoryEntity mainCategoryEntity) {
+    public MainCategory transformToMainCategory(final MainCategoryEntity mainCategoryEntity) {
         return MainCategory.builder()
             .withId(mainCategoryEntity.getId())
             .withName(mainCategoryEntity.getName())
@@ -32,18 +32,8 @@ public class MainCategoryEntityTransformer {
             .collect(Collectors.toSet());
     }
 
-    MainCategoryEntity transformToMainCategoryEntity(final MainCategory mainCategory) {
-        return MainCategoryEntity.builder()
-            .withId(mainCategory.getId())
-            .withName(mainCategory.getName())
-            .withTransactionType(mainCategory.getTransactionType())
-            .withSubCategoryEntitySet(transformToSubCategoryEntitySet(mainCategory.getSubCategorySet()))
-            .build();
+    public MainCategoryEntity transformToMainCategoryEntity(final MainCategory mainCategory, final Set<SubCategoryEntity> subCategoryEntitySet) {
+        return new MainCategoryEntity(mainCategory.getId(), mainCategory.getName(), mainCategory.getTransactionType(), subCategoryEntitySet);
     }
 
-    private Set<SubCategoryEntity> transformToSubCategoryEntitySet(final Set<SubCategory> subCategorySet) {
-        return subCategorySet.stream()
-            .map(subCategoryEntityTransformer::transformToSubCategoryEntity)
-            .collect(Collectors.toSet());
-    }
 }

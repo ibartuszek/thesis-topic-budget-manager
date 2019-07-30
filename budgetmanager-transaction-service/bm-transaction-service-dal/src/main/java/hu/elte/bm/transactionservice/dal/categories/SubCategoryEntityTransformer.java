@@ -7,7 +7,7 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 @Component
 public class SubCategoryEntityTransformer {
 
-    SubCategory transformToSubCategory(final SubCategoryEntity subCategoryEntity) {
+    public SubCategory transformToSubCategory(final SubCategoryEntity subCategoryEntity) {
         return SubCategory.builder()
             .withId(subCategoryEntity.getId())
             .withName(subCategoryEntity.getName())
@@ -15,11 +15,7 @@ public class SubCategoryEntityTransformer {
             .build();
     }
 
-    SubCategoryEntity transformToSubCategoryEntity(final SubCategory subCategory) {
-        return SubCategoryEntity.builder()
-            .withId(subCategory.getId())
-            .withName(subCategory.getName())
-            .withTransactionType(subCategory.getTransactionType())
-            .build();
+    public SubCategoryEntity transformToSubCategoryEntity(final SubCategory subCategory) {
+        return new SubCategoryEntity(subCategory.getId(), subCategory.getName(), subCategory.getTransactionType());
     }
 }

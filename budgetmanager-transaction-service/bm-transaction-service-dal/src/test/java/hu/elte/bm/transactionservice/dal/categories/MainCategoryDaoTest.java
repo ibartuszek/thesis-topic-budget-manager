@@ -33,12 +33,14 @@ public class MainCategoryDaoTest {
 
     private IMocksControl control;
     private MainCategoryRepository mainCategoryRepository;
+    private SubCategoryRepository subCategoryRepository;
 
     @BeforeMethod
     public void setup() {
         control = EasyMock.createStrictControl();
         mainCategoryRepository = control.createMock(MainCategoryRepository.class);
-        underTest = new MainCategoryDao(mainCategoryRepository, mainCategoryEntityTransformer);
+        subCategoryRepository = control.createMock(SubCategoryRepository.class);
+        underTest = new MainCategoryDao(mainCategoryRepository, subCategoryRepository, mainCategoryEntityTransformer);
     }
 
     @Test
@@ -126,6 +128,8 @@ public class MainCategoryDaoTest {
         MainCategoryEntity mainCategoryFromRepository = createMainCategoryEntity(NEW_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryEntitySet());
         Optional<MainCategory> expectedMainCategory = Optional.of(createMainCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME, createSubCategorySet()));
         Capture<MainCategoryEntity> capture = Capture.newInstance();
+        EasyMock.expect(subCategoryRepository.findById(EXISTING_ID)).andReturn(
+            Optional.ofNullable(mainCategoryFromRepository.getSubCategoryEntitySet().iterator().next()));
         EasyMock.expect(mainCategoryRepository.save(EasyMock.capture(capture))).andReturn(mainCategoryFromRepository);
         control.replay();
         // WHEN
@@ -147,20 +151,11 @@ public class MainCategoryDaoTest {
 
     private MainCategoryEntity createMainCategoryEntity(final Long id, final String categoryName, final TransactionType type,
         final Set<SubCategoryEntity> subCategoryEntitySet) {
-        return MainCategoryEntity.builder()
-            .withId(id)
-            .withName(categoryName)
-            .withTransactionType(type)
-            .withSubCategoryEntitySet(subCategoryEntitySet)
-            .build();
+        return new MainCategoryEntity(id, categoryName, type, subCategoryEntitySet);
     }
 
     private SubCategoryEntity createSubCategoryEntity(final Long id, final String categoryName, final TransactionType type) {
-        return SubCategoryEntity.builder()
-            .withId(id)
-            .withName(categoryName)
-            .withTransactionType(type)
-            .build();
+        return new SubCategoryEntity(id, categoryName, type);
     }
 
     private Set<SubCategoryEntity> createSubCategoryEntitySet() {

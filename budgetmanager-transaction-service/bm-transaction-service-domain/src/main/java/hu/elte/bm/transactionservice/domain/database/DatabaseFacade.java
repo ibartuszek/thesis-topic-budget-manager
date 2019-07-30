@@ -33,14 +33,14 @@ public interface DatabaseFacade {
 
     List<Transaction> findAllTransaction(LocalDate start, LocalDate end, TransactionType transactionType);
 
-    Optional<Transaction> findTransactionById(Long id);
+    Optional<Transaction> findTransactionById(Long id, TransactionType transactionType);
 
-    List<Transaction> findTransactionByTitle(String name, TransactionType transactionType);
+    List<Transaction> findTransactionByTitle(String title, TransactionType transactionType);
 
     Optional<Transaction> saveTransaction(Transaction transaction);
 
     Optional<Transaction> updateTransaction(Transaction transaction);
 
-    Optional<Transaction> deleteTransaction(Transaction transaction);
+    void deleteTransaction(Transaction transaction);
 
 }

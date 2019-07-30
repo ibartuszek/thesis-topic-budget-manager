@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
@@ -35,6 +34,7 @@ public class DefaultTransactionServiceTest {
     private static final String CATEGORY_NAME = "category";
     private static final long DAYS_TO_SUBTRACT = 30L;
     private static final String NEW_TITLE = "new Title";
+
     private DefaultTransactionService underTest;
     private IMocksControl control;
     private DatabaseProxy databaseProxy;
@@ -111,11 +111,8 @@ public class DefaultTransactionServiceTest {
     public void testSaveWhenMainCategoryOfTransactionHasNotId() {
         // GIVEN
         createExampleListForEndOfLastPeriodWithCalls();
-        MainCategory mainCategory = MainCategory.builder()
+        MainCategory mainCategory = createExampleMainCategoryBuilderWithDefaultValues()
             .withId(null)
-            .withName(CATEGORY_NAME)
-            .withTransactionType(INCOME)
-            .withSubCategorySet(new HashSet<>())
             .build();
         Transaction transaction = createExampleTransactionBuilder()
             .withId(null)
@@ -135,17 +132,8 @@ public class DefaultTransactionServiceTest {
     public void testSaveWhenMainCategoryOfTransactionHasInvalidSubCategory() {
         // GIVEN
         createExampleListForEndOfLastPeriodWithCalls();
-        Set<SubCategory> subCategorySet = new HashSet<>();
-        subCategorySet.add(SubCategory.builder()
-            .withName(CATEGORY_NAME).
-                withTransactionType(INCOME)
-            .build());
-        MainCategory mainCategory = MainCategory.builder()
-            .withId(CATEGORY_ID)
-            .withName(CATEGORY_NAME)
-            .withTransactionType(INCOME)
-            .withSubCategorySet(subCategorySet)
-            .build();
+        MainCategory mainCategory = createExampleMainCategoryBuilderWithDefaultValues().build();
+        mainCategory.getSubCategorySet().add(createExampleSubCategory(null, CATEGORY_NAME, INCOME));
         Transaction transaction = createExampleTransactionBuilder()
             .withId(null)
             .withMainCategory(mainCategory)
@@ -178,15 +166,30 @@ public class DefaultTransactionServiceTest {
         }
     }
 
+    @Test(expectedExceptions = TransactionException.class)
+    public void testSaveWhenSubCategoryIdIsNull() {
+        // GIVEN
+        createExampleListForEndOfLastPeriodWithCalls();
+        Transaction transaction = createExampleTransactionBuilder()
+            .withId(null)
+            .withSubCategory(createExampleSubCategory(null, CATEGORY_NAME, INCOME))
+            .build();
+        control.replay();
+        // WHEN
+        try {
+            underTest.save(transaction);
+        } finally {
+            // THEN
+            control.verify();
+        }
+    }
+
     @Test
     public void testSaveWhenThereIsOneTransactionWithSameNameAndDate() {
         // GIVEN
         createExampleListForEndOfLastPeriodWithCalls();
-        Transaction transactionWithSameTitle = createExampleTransactionBuilder()
-            .withId(EXPECTED_ID)
-            .build();
         List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
-        listOfTransactionsWithSameTitle.add(transactionWithSameTitle);
+        listOfTransactionsWithSameTitle.add(createExampleTransactionBuilder().build());
         Transaction transaction = createExampleTransactionBuilder()
             .withId(null)
             .build();
@@ -204,7 +207,6 @@ public class DefaultTransactionServiceTest {
         // GIVEN
         createExampleListForEndOfLastPeriodWithCalls();
         Transaction transactionWithSameTitle = createExampleTransactionBuilder()
-            .withId(EXPECTED_ID)
             .withDate(LocalDate.now().minusDays(1))
             .build();
         List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
@@ -237,11 +239,8 @@ public class DefaultTransactionServiceTest {
     public void testUpdateWhenMainCategoryOfTransactionHasNotId() {
         // GIVEN
         createExampleListForEndOfLastPeriodWithCalls();
-        MainCategory mainCategory = MainCategory.builder()
+        MainCategory mainCategory = createExampleMainCategoryBuilderWithDefaultValues()
             .withId(null)
-            .withName(CATEGORY_NAME)
-            .withTransactionType(INCOME)
-            .withSubCategorySet(new HashSet<>())
             .build();
         Transaction transaction = createExampleTransactionBuilder()
             .withId(null)
@@ -261,19 +260,9 @@ public class DefaultTransactionServiceTest {
     public void testUpdateWhenMainCategoryOfTransactionHasInvalidSubCategory() {
         // GIVEN
         createExampleListForEndOfLastPeriodWithCalls();
-        Set<SubCategory> subCategorySet = new HashSet<>();
-        subCategorySet.add(SubCategory.builder()
-            .withName(CATEGORY_NAME).
-                withTransactionType(INCOME)
-            .build());
-        MainCategory mainCategory = MainCategory.builder()
-            .withId(CATEGORY_ID)
-            .withName(CATEGORY_NAME)
-            .withTransactionType(INCOME)
-            .withSubCategorySet(subCategorySet)
-            .build();
+        MainCategory mainCategory = createExampleMainCategoryBuilderWithDefaultValues().build();
+        mainCategory.getSubCategorySet().add(createExampleSubCategory(null, CATEGORY_NAME, INCOME));
         Transaction transaction = createExampleTransactionBuilder()
-            .withId(EXPECTED_ID)
             .withTitle(NEW_TITLE)
             .withMainCategory(mainCategory)
             .build();
@@ -311,9 +300,8 @@ public class DefaultTransactionServiceTest {
         createExampleListForEndOfLastPeriodWithCalls();
         Transaction transaction = createExampleTransactionBuilder()
             .withTitle(NEW_TITLE)
-            .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT - 1))
             .build();
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId())).andReturn(Optional.empty());
+        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType())).andReturn(Optional.empty());
         control.replay();
         // WHEN
         try {
@@ -330,14 +318,12 @@ public class DefaultTransactionServiceTest {
         createExampleListForEndOfLastPeriodWithCalls();
         Transaction transaction = createExampleTransactionBuilder()
             .withTitle(NEW_TITLE)
-            .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT - 1))
             .build();
         Optional<Transaction> originalTransaction = Optional.ofNullable(createExampleTransactionBuilder()
-            .withTitle(EXPECTED_TITLE)
             .withLocked(true)
-            .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT - 1))
             .build());
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId())).andReturn(originalTransaction);
+        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType()))
+            .andReturn(originalTransaction);
         control.replay();
         // WHEN
         try {
@@ -347,7 +333,6 @@ public class DefaultTransactionServiceTest {
             control.verify();
         }
     }
-    // TODO:  and delete
 
     @Test(expectedExceptions = TransactionException.class)
     public void testUpdateWhenTransactionTypeHasChanged() {
@@ -359,7 +344,8 @@ public class DefaultTransactionServiceTest {
         Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder()
             .withTransactionType(OUTCOME)
             .build());
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId())).andReturn(transactionFromRepository);
+        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType()))
+            .andReturn(transactionFromRepository);
         control.replay();
         // WHEN
         try {
@@ -375,7 +361,7 @@ public class DefaultTransactionServiceTest {
         // GIVEN
         createExampleListForEndOfLastPeriodWithCalls();
         Transaction transactionWithSameTitle = createExampleTransactionBuilder()
-            .withId(EXPECTED_ID)
+            .withId(ID_2)
             .withDate(LocalDate.now().minusDays(1))
             .build();
         List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
@@ -387,7 +373,8 @@ public class DefaultTransactionServiceTest {
         Optional<Transaction> expectedTransaction = Optional.ofNullable(createExampleTransactionBuilder()
             .withTitle(NEW_TITLE)
             .build());
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId())).andReturn(transactionFromRepository);
+        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType()))
+            .andReturn(transactionFromRepository);
         EasyMock.expect(databaseProxy.findTransactionByTitle(transaction.getTitle(), INCOME)).andReturn(listOfTransactionsWithSameTitle);
         EasyMock.expect(databaseProxy.updateTransaction(transaction)).andReturn(expectedTransaction);
         control.replay();
@@ -402,24 +389,17 @@ public class DefaultTransactionServiceTest {
     public void testDelete() {
         // GIVEN
         createExampleListForEndOfLastPeriodWithCalls();
-        Transaction transactionWithSameTitle = createExampleTransactionBuilder()
-            .withId(EXPECTED_ID)
-            .withDate(LocalDate.now().minusDays(1))
-            .build();
-        List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
-        listOfTransactionsWithSameTitle.add(transactionWithSameTitle);
         Transaction transaction = createExampleTransactionBuilder().build();
         Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder().build());
-        Optional<Transaction> expectedTransaction = Optional.ofNullable(createExampleTransactionBuilder().build());
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId())).andReturn(transactionFromRepository);
-        EasyMock.expect(databaseProxy.findTransactionByTitle(transaction.getTitle(), INCOME)).andReturn(listOfTransactionsWithSameTitle);
-        EasyMock.expect(databaseProxy.deleteTransaction(transaction)).andReturn(expectedTransaction);
+        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType()))
+            .andReturn(transactionFromRepository);
+        databaseProxy.deleteTransaction(transaction);
         control.replay();
         // WHEN
-        Optional<Transaction> result = underTest.delete(transaction);
+        Boolean result = underTest.delete(transaction);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedTransaction, result);
+        Assert.assertTrue(result);
     }
 
     private void createExampleListForEndOfLastPeriodWithCalls() {
@@ -436,7 +416,6 @@ public class DefaultTransactionServiceTest {
             .build());
         transactionList.add(createExampleTransactionBuilder()
             .withId(ID_3)
-            .withLocked(false)
             .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT - 2))
             .build());
         LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
@@ -457,14 +436,24 @@ public class DefaultTransactionServiceTest {
             .withAmount(AMOUNT)
             .withCurrency(CURRENCY)
             .withTransactionType(INCOME)
-            .withMainCategory(MainCategory.builder()
-                .withId(CATEGORY_ID)
-                .withName(CATEGORY_NAME)
-                .withTransactionType(INCOME)
-                .withSubCategorySet(new HashSet<>())
-                .build()
-            )
+            .withMainCategory(createExampleMainCategoryBuilderWithDefaultValues().build())
             .withDate(LocalDate.now());
+    }
+
+    private MainCategory.Builder createExampleMainCategoryBuilderWithDefaultValues() {
+        return MainCategory.builder()
+            .withId(CATEGORY_ID)
+            .withName(CATEGORY_NAME)
+            .withTransactionType(INCOME)
+            .withSubCategorySet(new HashSet<>());
+    }
+
+    private SubCategory createExampleSubCategory(final Long id, final String name, final TransactionType type) {
+        return SubCategory.builder()
+            .withId(id)
+            .withName(name)
+            .withTransactionType(type)
+            .build();
     }
 
 }

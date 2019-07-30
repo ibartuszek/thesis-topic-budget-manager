@@ -21,8 +21,8 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 public class MainCategoryTest extends AbstractTransactionServiceApplicationTest {
 
     private static final String NEW_CATEGORY_NAME = "new main category";
-    private static final long EXISTING_INCOME_ID = 1L;
-    private static final long EXISTING_OUTCOME_ID = 4L;
+    private static final Long EXISTING_INCOME_ID = 1L;
+    private static final Long EXISTING_OUTCOME_ID = 4L;
     private static final String RESERVED_CATEGORY_NAME = "main category 1";
     private static final String OTHER_RESERVED_CATEGORY_NAME = "main category 2";
 
@@ -35,7 +35,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategory newMainCategory = MainCategory.builder()
             .withName(NEW_CATEGORY_NAME)
             .withTransactionType(INCOME)
-            .withSubCategorySet(new HashSet<>())
+            .withSubCategorySet(createSubCategorySet())
             .build();
         // WHEN
         Optional<MainCategory> result = mainCategoryService.save(newMainCategory);
@@ -49,7 +49,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategory newMainCategory = MainCategory.builder()
             .withName(RESERVED_CATEGORY_NAME)
             .withTransactionType(OUTCOME)
-            .withSubCategorySet(new HashSet<>())
+            .withSubCategorySet(createSubCategorySet())
             .build();
         // WHEN
         Optional<MainCategory> result = mainCategoryService.save(newMainCategory);
@@ -99,6 +99,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         Optional<MainCategory> result = mainCategoryService.update(newMainCategory);
         // THEN
         Assert.assertEquals(newMainCategory, result.get());
+        Assert.assertEquals(EXISTING_INCOME_ID, result.get().getId());
     }
 
     @Test
@@ -108,12 +109,13 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
             .withId(EXISTING_OUTCOME_ID)
             .withName(RESERVED_CATEGORY_NAME)
             .withTransactionType(OUTCOME)
-            .withSubCategorySet(new HashSet<>())
+            .withSubCategorySet(createSubCategorySet())
             .build();
         // WHEN
         Optional<MainCategory> result = mainCategoryService.update(newMainCategory);
         // THEN
         Assert.assertEquals(newMainCategory, result.get());
+        Assert.assertEquals(EXISTING_OUTCOME_ID, result.get().getId());
     }
 
     @Test
@@ -136,6 +138,22 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         // GIVEN
         Set<SubCategory> subCategorySet = createSubCategorySet();
         subCategorySet.add(createSubCategory(null, "illegal supplementary category", INCOME));
+        MainCategory newMainCategory = MainCategory.builder()
+            .withId(EXISTING_INCOME_ID)
+            .withName(NEW_CATEGORY_NAME)
+            .withTransactionType(INCOME)
+            .withSubCategorySet(subCategorySet)
+            .build();
+        // WHEN
+        mainCategoryService.update(newMainCategory);
+        // THEN
+    }
+
+    @Test(expectedExceptions = MainCategoryException.class)
+    public void testUpdateCategoryWhenCategoryHasNewNameButItHasLessSubCategory() {
+        // GIVEN
+        Set<SubCategory> subCategorySet = createSubCategorySet();
+        subCategorySet.remove(createSubCategory(1L, "supplementary category 1", INCOME));
         MainCategory newMainCategory = MainCategory.builder()
             .withId(EXISTING_INCOME_ID)
             .withName(NEW_CATEGORY_NAME)

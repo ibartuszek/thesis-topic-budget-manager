@@ -126,18 +126,18 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public Optional<Transaction> findTransactionById(final Long id) {
+    public Optional<Transaction> findTransactionById(final Long id, final TransactionType transactionType) {
         try {
-            return databaseFacade.findTransactionById(id);
+            return databaseFacade.findTransactionById(id, transactionType);
         } catch (DataAccessException exception) {
             throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }
     }
 
     @Override
-    public List<Transaction> findTransactionByTitle(final String name, final TransactionType transactionType) {
+    public List<Transaction> findTransactionByTitle(final String title, final TransactionType transactionType) {
         try {
-            return databaseFacade.findTransactionByTitle(name, transactionType);
+            return databaseFacade.findTransactionByTitle(title, transactionType);
         } catch (DataAccessException exception) {
             throw new DatabaseException(EXCEPTION_MESSAGE, exception);
         }
@@ -162,9 +162,9 @@ public class DatabaseProxy implements DatabaseFacade {
     }
 
     @Override
-    public Optional<Transaction> deleteTransaction(final Transaction transaction) {
+    public void deleteTransaction(final Transaction transaction) {
         try {
-            return databaseFacade.deleteTransaction(transaction);
+            databaseFacade.deleteTransaction(transaction);
         } catch (DataAccessException exception) {
             throw new TransactionException(transaction, EXCEPTION_MESSAGE, exception);
         }

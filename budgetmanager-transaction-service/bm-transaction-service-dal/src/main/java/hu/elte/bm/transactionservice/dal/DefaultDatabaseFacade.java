@@ -1,5 +1,7 @@
 package hu.elte.bm.transactionservice.dal;
 
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryDao;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryDao;
+import hu.elte.bm.transactionservice.dal.transaction.IncomeDao;
+import hu.elte.bm.transactionservice.dal.transaction.OutcomeDao;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseFacade;
@@ -23,6 +27,12 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
 
     @Autowired
     private SubCategoryDao subCategoryDao;
+
+    @Autowired
+    private IncomeDao incomeDao;
+
+    @Autowired
+    private OutcomeDao outcomeDao;
 
     @Override
     public List<MainCategory> findAllMainCategory(final TransactionType transactionType) {
@@ -76,32 +86,36 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
 
     @Override
     public List<Transaction> findAllTransaction(final LocalDate start, final LocalDate end, final TransactionType transactionType) {
-        return null;
+        return transactionType == INCOME ? incomeDao.findAll(start, end) : outcomeDao.findAll(start, end);
     }
 
     @Override
-    public Optional<Transaction> findTransactionById(final Long id) {
-        return Optional.empty();
+    public Optional<Transaction> findTransactionById(final Long id, final TransactionType transactionType) {
+        return transactionType == INCOME ? incomeDao.findById(id) : outcomeDao.findById(id);
     }
 
     @Override
-    public List<Transaction> findTransactionByTitle(final String name, final TransactionType transactionType) {
-        return null;
+    public List<Transaction> findTransactionByTitle(final String title, final TransactionType transactionType) {
+        return transactionType == INCOME ? incomeDao.findByTitle(title) : outcomeDao.findByTitle(title);
     }
 
     @Override
     public Optional<Transaction> saveTransaction(final Transaction transaction) {
-        return Optional.empty();
+        return transaction.getTransactionType() == INCOME ? incomeDao.save(transaction) : outcomeDao.save(transaction);
     }
 
     @Override
     public Optional<Transaction> updateTransaction(final Transaction transaction) {
-        return Optional.empty();
+        return transaction.getTransactionType() == INCOME ? incomeDao.update(transaction) : outcomeDao.update(transaction);
     }
 
     @Override
-    public Optional<Transaction> deleteTransaction(final Transaction transaction) {
-        return Optional.empty();
+    public void deleteTransaction(final Transaction transaction) {
+        if (transaction.getTransactionType() == INCOME) {
+            incomeDao.delete(transaction);
+        } else {
+            outcomeDao.delete(transaction);
+        }
     }
 
 }

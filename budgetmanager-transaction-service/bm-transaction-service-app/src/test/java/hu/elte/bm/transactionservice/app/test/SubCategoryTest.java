@@ -16,8 +16,8 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
 
     private static final String NEW_CATEGORY_NAME = "new supplementary category";
-    private static final long EXISTING_INCOME_ID = 1L;
-    private static final long EXISTING_OUTCOME_ID = 4L;
+    private static final Long EXISTING_INCOME_ID = 1L;
+    private static final Long EXISTING_OUTCOME_ID = 4L;
     private static final String RESERVED_CATEGORY_NAME = "supplementary category 1";
     private static final String OTHER_RESERVED_CATEGORY_NAME = "supplementary category 2";
 
@@ -75,6 +75,7 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
         Optional<SubCategory> result = subCategoryService.update(newSubCategory);
         // THEN
         Assert.assertEquals(newSubCategory, result.get());
+        Assert.assertEquals(EXISTING_INCOME_ID, result.get().getId());
     }
 
     @Test
@@ -89,9 +90,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
         Optional<SubCategory> result = subCategoryService.update(newSubCategory);
         // THEN
         Assert.assertEquals(newSubCategory, result.get());
+        Assert.assertEquals(EXISTING_OUTCOME_ID, result.get().getId());
     }
 
-    // TODO:
     @Test
     public void testUpdateCategorySaveWhenCategoryHasNewNameAndItIsReserved() {
         // GIVEN

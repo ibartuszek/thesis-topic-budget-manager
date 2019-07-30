@@ -23,6 +23,7 @@ public class DefaultTransactionService implements TransactionService {
     private static final String DATE_BEFORE_THE_PERIOD_EXCEPTION_MESSAGE = "The date of transaction cannot be before the beginning of the period!";
     private static final String ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_EXCEPTION_MESSAGE = "Original transaction cannot be found in the repository!";
     private static final String TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE = "Transaction type cannot be changed!";
+    private static final String TRANSACTION_IS_LOCKED_EXCEPTION_MESSAGE = "Transaction is locked, cannot be changed!";
 
     private final DatabaseProxy dataBaseProxy;
 
@@ -56,9 +57,15 @@ public class DefaultTransactionService implements TransactionService {
     }
 
     @Override
-    public Optional<Transaction> delete(final Transaction transaction) {
+    public boolean delete(final Transaction transaction) {
         validateForUpdate(transaction);
-        return isSavable(transaction) ? dataBaseProxy.deleteTransaction(transaction) : Optional.empty();
+        // TODO: check and delete
+        // boolean result = false;
+        //if (isSavable(transaction)) {
+        dataBaseProxy.deleteTransaction(transaction);
+        //    result = true;
+        //}
+        return true;
     }
 
     private void validate(final Transaction transaction) {
@@ -71,6 +78,8 @@ public class DefaultTransactionService implements TransactionService {
             throw new TransactionException(transaction, SUB_CATEGORY_ID_EXCEPTION_MESSAGE);
         } else if (transaction.getDate().isBefore(endOfTheLastPeriod)) {
             throw new TransactionException(transaction, DATE_BEFORE_THE_PERIOD_EXCEPTION_MESSAGE);
+        } else if (transaction.getSubCategory() != null && transaction.getSubCategory().getId() == null) {
+            throw new TransactionException(transaction, SUB_CATEGORY_ID_EXCEPTION_MESSAGE);
         }
     }
 
@@ -89,18 +98,18 @@ public class DefaultTransactionService implements TransactionService {
     private boolean isSavable(final Transaction transaction) {
         List<Transaction> transactionList = dataBaseProxy.findTransactionByTitle(transaction.getTitle(), transaction.getTransactionType());
         return transactionList.stream()
-            .filter(Predicate.not(Transaction::isLocked))
             .filter(t1 -> t1.getDate().equals(transaction.getDate()))
+            .filter(Predicate.not(Transaction::isLocked))
             .findAny().isEmpty();
     }
 
     private void validateForUpdate(final Transaction transaction) {
         validate(transaction);
-        Transaction transactionFromRepository = dataBaseProxy.findTransactionById(transaction.getId()).orElse(null);
+        Transaction transactionFromRepository = dataBaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType()).orElse(null);
         if (transactionFromRepository == null) {
-            throw new TransactionException(transaction, MAIN_CATEGORY_ID_EXCEPTION_MESSAGE);
-        } else if (transactionFromRepository.isLocked()) {
             throw new TransactionException(transaction, ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_EXCEPTION_MESSAGE);
+        } else if (transactionFromRepository.isLocked()) {
+            throw new TransactionException(transaction, TRANSACTION_IS_LOCKED_EXCEPTION_MESSAGE);
         } else if (transaction.getTransactionType() != transactionFromRepository.getTransactionType()) {
             throw new TransactionException(transaction, TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE);
         }

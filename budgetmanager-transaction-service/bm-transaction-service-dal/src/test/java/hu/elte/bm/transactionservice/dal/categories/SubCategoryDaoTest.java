@@ -143,11 +143,7 @@ public class SubCategoryDaoTest {
     }
 
     private SubCategoryEntity createSubCategoryEntity(final Long id, final String categoryName, final TransactionType type) {
-        return SubCategoryEntity.builder()
-            .withId(id)
-            .withName(categoryName)
-            .withTransactionType(type)
-            .build();
+        return new SubCategoryEntity(id, categoryName, type);
     }
 
     private List<SubCategory> createSubCategoryList() {

@@ -149,9 +149,26 @@ public class DefaultMainCategoryServiceTest {
     @Test(expectedExceptions = MainCategoryException.class)
     public void testUpdateWhenCategoryTypeHasChanged() {
         // GIVEN
-        MainCategory mainCategoryToUpdate = createExampleMainCategory(INVALID_ID, NEW_CATEGORY_NAME, INCOME);
-        Optional<MainCategory> mainCategoryFromRepository = Optional.of(createExampleMainCategory(INVALID_ID, NEW_CATEGORY_NAME, OUTCOME));
-        EasyMock.expect(databaseProxy.findMainCategoryById(INVALID_ID)).andReturn(mainCategoryFromRepository);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> mainCategoryFromRepository = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, OUTCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID)).andReturn(mainCategoryFromRepository);
+        control.replay();
+        // WHEN
+        try {
+            underTest.update(mainCategoryToUpdate);
+        } finally {
+            // THEN
+            control.verify();
+        }
+    }
+
+    @Test(expectedExceptions = MainCategoryException.class)
+    public void testUpdateWhenCategoryContainsLessSubCategory() {
+        // GIVEN
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
+        mainCategoryToUpdate.getSubCategorySet().remove(createSubCategory(OTHER_ID, OTHER_CATEGORY_NAME, INCOME));
+        Optional<MainCategory> mainCategoryFromRepository = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID)).andReturn(mainCategoryFromRepository);
         control.replay();
         // WHEN
         try {

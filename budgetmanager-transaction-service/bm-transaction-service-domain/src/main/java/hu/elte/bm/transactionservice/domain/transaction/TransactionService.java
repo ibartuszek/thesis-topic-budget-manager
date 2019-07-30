@@ -52,8 +52,8 @@ public interface TransactionService {
      *
      * @param transaction {@link Transaction} is extends {@link Transaction}. Cannot be null.
      * @return It returns a new {@link Optional<Transaction>}.
-     * If the transaction has locked already it returns an empty optional.
+     * If the transaction has locked already it returns false.
      */
-    Optional<Transaction> delete(Transaction transaction);
+    boolean delete(Transaction transaction);
 
 }
