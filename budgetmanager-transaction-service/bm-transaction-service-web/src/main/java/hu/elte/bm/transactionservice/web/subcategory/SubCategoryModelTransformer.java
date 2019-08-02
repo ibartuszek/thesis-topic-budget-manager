@@ -11,7 +11,7 @@ public class SubCategoryModelTransformer {
 
     private static final Integer SUB_CATEGORY_NAME_MAXIMUM_LENGTH = 50;
 
-    SubCategoryModel transformToSubCategoryModel(final SubCategory subCategory) {
+    public SubCategoryModel transformToSubCategoryModel(final SubCategory subCategory) {
         ModelStringValue name = ModelStringValue.builder()
             .withValue(subCategory.getName())
             .build();
@@ -43,7 +43,7 @@ public class SubCategoryModelTransformer {
         return copySubCategoryModel;
     }
 
-    SubCategory transformToSubCategory(final SubCategoryModel subCategoryModel) {
+    public SubCategory transformToSubCategory(final SubCategoryModel subCategoryModel) {
         return SubCategory.builder()
             .withId(subCategoryModel.getId())
             .withName(subCategoryModel.getName().getValue())

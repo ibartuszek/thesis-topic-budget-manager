@@ -183,6 +183,7 @@ public class SubCategoryModelServiceTest {
         Assert.assertFalse(result.isSuccessful());
     }
 
+    @Test
     public void testUpdate() {
         // GIVEN
         SubCategoryModel categoryModelToUpdate = createSubCategoryModelBuilderWithDefaultValues(RESERVED_ID, NEW_NAME, INCOME).build();
