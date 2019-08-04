@@ -23,24 +23,8 @@ public class SubCategoryModelTransformer {
             .withName(name)
             .withTransactionType(type)
             .build();
-        populateValidationFields(subCategoryModel);
+        setValidationFields(subCategoryModel);
         return subCategoryModel;
-    }
-
-    SubCategoryModel transformToSubCategoryModel(final SubCategoryModel subCategoryModel) {
-        ModelStringValue name = ModelStringValue.builder()
-            .withValue(subCategoryModel.getName().getValue())
-            .build();
-        ModelStringValue type = ModelStringValue.builder()
-            .withValue(subCategoryModel.getTransactionType().getValue())
-            .build();
-        SubCategoryModel copySubCategoryModel = SubCategoryModel.builder()
-            .withId(subCategoryModel.getId())
-            .withName(name)
-            .withTransactionType(type)
-            .build();
-        populateValidationFields(copySubCategoryModel);
-        return copySubCategoryModel;
     }
 
     public SubCategory transformToSubCategory(final SubCategoryModel subCategoryModel) {
@@ -51,7 +35,7 @@ public class SubCategoryModelTransformer {
             .build();
     }
 
-    private void populateValidationFields(final SubCategoryModel subCategoryModel) {
+    void setValidationFields(final SubCategoryModel subCategoryModel) {
         subCategoryModel.getName().setMaximumLength(SUB_CATEGORY_NAME_MAXIMUM_LENGTH);
         subCategoryModel.getTransactionType().setPossibleEnumValues(TransactionType.getPossibleValues());
     }

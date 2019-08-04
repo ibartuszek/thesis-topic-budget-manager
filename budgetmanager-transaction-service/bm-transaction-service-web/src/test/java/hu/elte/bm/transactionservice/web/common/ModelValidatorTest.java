@@ -1,6 +1,7 @@
 package hu.elte.bm.transactionservice.web.common;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.Set;
 
 import org.testng.Assert;
@@ -26,6 +27,14 @@ public class ModelValidatorTest {
     private static final Set<String> POSSIBLE_VALUES = TransactionType.getPossibleValues();
     private static final String VALIDATOR_FIELD_VALUE_NOT_ENUM = MessageFormat.format("Name must be one of them: {0}!", POSSIBLE_VALUES);
     private static final String ENUMERATED_VALUE = "INCOME";
+    private static final Double ZERO = 0.0d;
+    private static final Double POSITIVE = 0.1d;
+    private static final Double NEGATIVE = -0.1d;
+    private static final String VALIDATOR_FIELD_VALUE_POSITIVE = "Name must be positive number!";
+    private static final String VALIDATOR_FIELD_VALUE_POSITIVE_OR_ZERO = "Name must be positive number or zero!";
+    private static final LocalDate BEFORE_DEADLINE = LocalDate.now().minusDays(1L);
+    private static final LocalDate DEADLINE = LocalDate.now();
+    private static final String VALIDATOR_FIELD_VALUE_MUST_BE_AFTER = MessageFormat.format("Name must be after {0}!", DEADLINE);
 
     private final ModelValidator underTest = new ModelValidator();
 
@@ -34,7 +43,7 @@ public class ModelValidatorTest {
         // GIVEN
         // WHEN
         try {
-            underTest.validateModelStringValue(null, FIELD_NAME);
+            underTest.validate((ModelStringValue) null, FIELD_NAME);
         } catch (Exception e) {
             // THEN
             Assert.assertEquals(VALIDATOR_FIELD_CANNOT_BE_NUL_MESSAGE, e.getMessage());
@@ -48,7 +57,7 @@ public class ModelValidatorTest {
         ModelStringValue value = ModelStringValue.builder().build();
         // WHEN
         try {
-            underTest.validateModelStringValue(value, FIELD_NAME);
+            underTest.validate(value, FIELD_NAME);
         } catch (Exception e) {
             // THEN
             Assert.assertEquals(VALIDATOR_FIELD_VALUE_CANNOT_BE_NUL_MESSAGE, e.getMessage());
@@ -64,7 +73,7 @@ public class ModelValidatorTest {
             .build();
         // WHEN
         try {
-            underTest.validateModelStringValue(value, null);
+            underTest.validate(value, null);
         } catch (Exception e) {
             // THEN
             Assert.assertEquals(VALIDATOR_FIELD_NAME_CANNOT_BE_NUL_MESSAGE, e.getMessage());
@@ -79,7 +88,7 @@ public class ModelValidatorTest {
             .withValue(EMPTY_VALUE)
             .build();
         // WHEN
-        boolean result = underTest.validateModelStringValue(value, FIELD_NAME);
+        boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
         Assert.assertEquals(VALIDATOR_FIELD_VALUE_CANNOT_BE_EMPTY_MESSAGE, value.getErrorMessage());
@@ -93,7 +102,7 @@ public class ModelValidatorTest {
             .withMaximumLength(MAXIMUM_LENGTH)
             .build();
         // WHEN
-        boolean result = underTest.validateModelStringValue(value, FIELD_NAME);
+        boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertTrue(result);
         Assert.assertNull(value.getErrorMessage());
@@ -107,7 +116,7 @@ public class ModelValidatorTest {
             .withMaximumLength(MAXIMUM_LENGTH)
             .build();
         // WHEN
-        boolean result = underTest.validateModelStringValue(value, FIELD_NAME);
+        boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
         Assert.assertEquals(VALIDATOR_FIELD_VALUE_LONGER_THAN_MAXIMUM, value.getErrorMessage());
@@ -121,7 +130,7 @@ public class ModelValidatorTest {
             .withRegexp(REGEX)
             .build();
         // WHEN
-        boolean result = underTest.validateModelStringValue(value, FIELD_NAME);
+        boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
         Assert.assertEquals(VALIDATOR_FIELD_VALUE_NOT_MATCH, value.getErrorMessage());
@@ -135,7 +144,7 @@ public class ModelValidatorTest {
             .withRegexp(REGEX)
             .build();
         // WHEN
-        boolean result = underTest.validateModelStringValue(value, FIELD_NAME);
+        boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertTrue(result);
         Assert.assertNull(value.getErrorMessage());
@@ -149,7 +158,7 @@ public class ModelValidatorTest {
             .withPossibleEnumValues(POSSIBLE_VALUES)
             .build();
         // WHEN
-        boolean result = underTest.validateModelStringValue(value, FIELD_NAME);
+        boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
         Assert.assertEquals(VALIDATOR_FIELD_VALUE_NOT_ENUM, value.getErrorMessage());
@@ -163,9 +172,94 @@ public class ModelValidatorTest {
             .withPossibleEnumValues(POSSIBLE_VALUES)
             .build();
         // WHEN
-        boolean result = underTest.validateModelStringValue(value, FIELD_NAME);
+        boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertTrue(result);
         Assert.assertNull(value.getErrorMessage());
     }
+
+    @Test
+    void testValidateWhenValueIsNotPositive() {
+        // GIVEN
+        ModelAmountValue value = ModelAmountValue.builder()
+            .withValue(ZERO)
+            .withPositive(true)
+            .build();
+        // WHEN
+        boolean result = underTest.validate(value, FIELD_NAME);
+        // THEN
+        Assert.assertFalse(result);
+        Assert.assertEquals(VALIDATOR_FIELD_VALUE_POSITIVE, value.getErrorMessage());
+    }
+
+    @Test
+    void testValidateWhenValueIsPositive() {
+        // GIVEN
+        ModelAmountValue value = ModelAmountValue.builder()
+            .withValue(POSITIVE)
+            .withPositive(true)
+            .build();
+        // WHEN
+        boolean result = underTest.validate(value, FIELD_NAME);
+        // THEN
+        Assert.assertTrue(result);
+        Assert.assertNull(value.getErrorMessage());
+    }
+
+    @Test
+    void testValidateWhenValueIsNegative() {
+        // GIVEN
+        ModelAmountValue value = ModelAmountValue.builder()
+            .withValue(NEGATIVE)
+            .withPositiveOrZero(true)
+            .build();
+        // WHEN
+        boolean result = underTest.validate(value, FIELD_NAME);
+        // THEN
+        Assert.assertFalse(result);
+        Assert.assertEquals(VALIDATOR_FIELD_VALUE_POSITIVE_OR_ZERO, value.getErrorMessage());
+    }
+
+    @Test
+    void testValidateWhenValueIsNotNegative() {
+        // GIVEN
+        ModelAmountValue value = ModelAmountValue.builder()
+            .withValue(ZERO)
+            .withPositiveOrZero(true)
+            .build();
+        // WHEN
+        boolean result = underTest.validate(value, FIELD_NAME);
+        // THEN
+        Assert.assertTrue(result);
+        Assert.assertNull(value.getErrorMessage());
+    }
+
+    @Test
+    void testValidateWhenDateIsBeforeTheEndOfLastPeriod() {
+        // GIVEN
+        ModelDateValue value = ModelDateValue.builder()
+            .withValue(BEFORE_DEADLINE)
+            .withAfter(DEADLINE)
+            .build();
+        // WHEN
+        boolean result = underTest.validate(value, FIELD_NAME);
+        // THEN
+        Assert.assertFalse(result);
+        Assert.assertEquals(VALIDATOR_FIELD_VALUE_MUST_BE_AFTER, value.getErrorMessage());
+    }
+
+    @Test
+    void testValidateWhenDateIsAfterTheEndOfLastPeriod() {
+        // GIVEN
+        ModelDateValue value = ModelDateValue.builder()
+            .withValue(DEADLINE)
+            .withAfter(DEADLINE)
+            .build();
+        // WHEN
+        boolean result = underTest.validate(value, FIELD_NAME);
+        // THEN
+        Assert.assertTrue(result);
+        Assert.assertNull(value.getErrorMessage());
+    }
+
 }

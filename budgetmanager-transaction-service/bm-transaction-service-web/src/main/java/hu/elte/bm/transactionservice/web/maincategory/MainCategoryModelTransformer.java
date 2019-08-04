@@ -35,25 +35,8 @@ public class MainCategoryModelTransformer {
             .withTransactionType(type)
             .withSubCategoryModelSet(transformToSubCategoryModelSet(mainCategory.getSubCategorySet()))
             .build();
-        populateValidationFields(mainCategoryModel);
+        setValidationFields(mainCategoryModel);
         return mainCategoryModel;
-    }
-
-    MainCategoryModel transformToMainCategoryModel(final MainCategoryModel mainCategoryModel) {
-        ModelStringValue name = ModelStringValue.builder()
-            .withValue(mainCategoryModel.getName().getValue())
-            .build();
-        ModelStringValue type = ModelStringValue.builder()
-            .withValue(mainCategoryModel.getTransactionType().getValue())
-            .build();
-        MainCategoryModel copySubCategoryModel = MainCategoryModel.builder()
-            .withId(mainCategoryModel.getId())
-            .withName(name)
-            .withTransactionType(type)
-            .withSubCategoryModelSet(mainCategoryModel.getSubCategoryModelSet())
-            .build();
-        populateValidationFields(copySubCategoryModel);
-        return copySubCategoryModel;
     }
 
     public MainCategory transformToMainCategory(final MainCategoryModel mainCategoryModel) {
@@ -65,7 +48,7 @@ public class MainCategoryModelTransformer {
             .build();
     }
 
-    private void populateValidationFields(final MainCategoryModel mainCategoryModel) {
+    void setValidationFields(final MainCategoryModel mainCategoryModel) {
         mainCategoryModel.getName().setMaximumLength(MAIN_CATEGORY_NAME_MAXIMUM_LENGTH);
         mainCategoryModel.getTransactionType().setPossibleEnumValues(TransactionType.getPossibleValues());
     }

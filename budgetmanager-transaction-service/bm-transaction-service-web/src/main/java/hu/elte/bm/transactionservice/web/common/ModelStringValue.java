@@ -15,7 +15,6 @@ public final class ModelStringValue {
 
     private ModelStringValue(final Builder builder) {
         this.value = builder.value;
-        this.errorMessage = builder.errorMessage;
         this.maximumLength = builder.maximumLength;
         this.regexp = builder.regexp;
         this.possibleEnumValues = builder.possibleEnumValues;
@@ -67,7 +66,6 @@ public final class ModelStringValue {
 
     public static final class Builder {
         private String value;
-        private String errorMessage;
         private Integer maximumLength;
         private String regexp;
         private Set<String> possibleEnumValues;
@@ -77,11 +75,6 @@ public final class ModelStringValue {
 
         public Builder withValue(final String value) {
             this.value = value;
-            return this;
-        }
-
-        public Builder withErrorMessage(final String errorMessage) {
-            this.errorMessage = errorMessage;
             return this;
         }
 

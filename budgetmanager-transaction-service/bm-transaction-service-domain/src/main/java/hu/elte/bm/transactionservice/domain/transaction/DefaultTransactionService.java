@@ -59,19 +59,29 @@ public class DefaultTransactionService implements TransactionService {
     @Override
     public boolean delete(final Transaction transaction) {
         validateForUpdate(transaction);
-        // TODO: check and delete
-        // boolean result = false;
-        //if (isSavable(transaction)) {
+        // TODO: boolean is necessary?
         dataBaseProxy.deleteTransaction(transaction);
-        //    result = true;
-        //}
         return true;
+    }
+
+    @Override
+    public LocalDate getTheFirstDateOfTheNewPeriod(final TransactionType type) {
+        return dataBaseProxy.findAllTransaction(LocalDate.now().minusDays(DAYS_TO_SUBTRACT), LocalDate.now(), type).stream()
+            .filter(Transaction::isLocked)
+            .max(Comparator.comparing(Transaction::getDate))
+            .map(Transaction::getDate)
+            .map(localDate -> localDate.plusDays(1L))
+            .orElseGet(() -> LocalDate.now().minusDays(DAYS_TO_SUBTRACT));
+    }
+
+    @Override
+    public boolean isLockedTransaction(final Long id, final TransactionType type) {
+        return dataBaseProxy.findTransactionById(id, type).map(Transaction::isLocked).orElse(true);
     }
 
     private void validate(final Transaction transaction) {
         Assert.notNull(transaction, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "transaction"));
-        LocalDate endOfTheLastPeriod = getLastDateOfThePeriod(transaction)
-            .orElse(LocalDate.now().minusDays(DAYS_TO_SUBTRACT));
+        LocalDate endOfTheLastPeriod = getTheFirstDateOfTheNewPeriod(transaction.getTransactionType());
         if (transaction.getMainCategory().getId() == null) {
             throw new TransactionException(transaction, MAIN_CATEGORY_ID_EXCEPTION_MESSAGE);
         } else if (!hasValidSubCategories(transaction.getMainCategory())) {
@@ -86,13 +96,6 @@ public class DefaultTransactionService implements TransactionService {
     private boolean hasValidSubCategories(final MainCategory mainCategory) {
         return mainCategory.getSubCategorySet().stream()
             .noneMatch(subCategory -> subCategory.getId() == null);
-    }
-
-    private Optional<LocalDate> getLastDateOfThePeriod(final Transaction transaction) {
-        return dataBaseProxy.findAllTransaction(LocalDate.now().minusDays(DAYS_TO_SUBTRACT), LocalDate.now(), transaction.getTransactionType()).stream()
-            .filter(Transaction::isLocked)
-            .max(Comparator.comparing(Transaction::getDate))
-            .map(Transaction::getDate);
     }
 
     private boolean isSavable(final Transaction transaction) {

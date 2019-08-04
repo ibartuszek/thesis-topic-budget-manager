@@ -56,4 +56,22 @@ public interface TransactionService {
      */
     boolean delete(Transaction transaction);
 
+    /**
+     * Find the last day of the previous budget period.
+     * If it can be found in the database the service add an extra day and gives it back as a start of the new period.
+     * If it cannot be found it gives back a predefined time according to the current date.
+     *
+     * @param type the type of the transaction: {@link TransactionType}
+     * @return the first available date: {@link LocalDate}
+     */
+    LocalDate getTheFirstDateOfTheNewPeriod(TransactionType type);
+
+    /**
+     * Find the transaction by id and gives back its locked field.
+     *
+     * @param id   the id of the {@link Transaction}
+     * @param type the type of the transaction: {@link TransactionType}
+     * @return true if the transaction is locked already or if it cannot be found in the repository.
+     */
+    boolean isLockedTransaction(Long id, TransactionType type);
 }

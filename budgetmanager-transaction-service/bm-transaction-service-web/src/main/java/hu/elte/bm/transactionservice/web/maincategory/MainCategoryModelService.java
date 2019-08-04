@@ -40,7 +40,7 @@ public class MainCategoryModelService {
 
     MainCategoryModelResponse saveMainCategory(final MainCategoryModel mainCategoryModel) {
         preValidateSavableCategory(mainCategoryModel);
-        MainCategoryModelResponse result = createResponseWithDefaultValues(transformer.transformToMainCategoryModel(mainCategoryModel));
+        MainCategoryModelResponse result = createResponseWithDefaultValues(mainCategoryModel);
         if (isValid(result.getMainCategoryModel())) {
             Optional<MainCategory> savedMainCategory = mainCategoryService.save(transformer.transformToMainCategory(result.getMainCategoryModel()));
             updateResponse(savedMainCategory, result, CATEGORY_HAS_BEEN_SAVED, CATEGORY_HAS_BEEN_SAVED_BEFORE_MESSAGE);
@@ -52,7 +52,7 @@ public class MainCategoryModelService {
 
     MainCategoryModelResponse updateMainCategory(final MainCategoryModel mainCategoryModel) {
         preValidateUpdatableCategory(mainCategoryModel);
-        MainCategoryModelResponse result = createResponseWithDefaultValues(transformer.transformToMainCategoryModel(mainCategoryModel));
+        MainCategoryModelResponse result = createResponseWithDefaultValues(mainCategoryModel);
         if (isValid(result.getMainCategoryModel())) {
             Optional<MainCategory> savedMainCategory = mainCategoryService.update(transformer.transformToMainCategory(result.getMainCategoryModel()));
             updateResponse(savedMainCategory, result, CATEGORY_HAS_BEEN_UPDATED, CATEGORY_CANNOT_BE_UPDATED_MESSAGE);
@@ -66,39 +66,40 @@ public class MainCategoryModelService {
         if (mainCategoryModel.getId() != null) {
             throw new IllegalArgumentException(CATEGORY_IS_INVALID_MESSAGE);
         }
-        validateSubCategoryModelFields(mainCategoryModel);
+        validateMainCategoryModelFields(mainCategoryModel);
     }
 
     private void preValidateUpdatableCategory(final MainCategoryModel mainCategoryModel) {
         Assert.notNull(mainCategoryModel.getId(), CATEGORY_IS_INVALID_MESSAGE);
-        validateSubCategoryModelFields(mainCategoryModel);
+        validateMainCategoryModelFields(mainCategoryModel);
     }
 
-    private void validateSubCategoryModelFields(final MainCategoryModel mainCategoryModel) {
+    private void validateMainCategoryModelFields(final MainCategoryModel mainCategoryModel) {
         Assert.notNull(mainCategoryModel.getName(), CATEGORY_IS_INVALID_MESSAGE);
         Assert.notNull(mainCategoryModel.getTransactionType(), CATEGORY_IS_INVALID_MESSAGE);
     }
 
     private MainCategoryModelResponse createResponseWithDefaultValues(final MainCategoryModel mainCategoryModel) {
+        transformer.setValidationFields(mainCategoryModel);
         MainCategoryModelResponse result = new MainCategoryModelResponse();
         result.setMainCategoryModel(mainCategoryModel);
         return result;
     }
 
     private boolean isValid(final MainCategoryModel mainCategoryModel) {
-        boolean name = validator.validateModelStringValue(mainCategoryModel.getName(), "Name");
-        boolean type = validator.validateModelStringValue(mainCategoryModel.getTransactionType(), "Type");
+        boolean name = validator.validate(mainCategoryModel.getName(), "Name");
+        boolean type = validator.validate(mainCategoryModel.getTransactionType(), "Type");
         return name && type;
     }
 
     private void updateResponse(final Optional<MainCategory> mainCategory,
-        final MainCategoryModelResponse result, final String successMessage, final String unSuccessMessage) {
+        final MainCategoryModelResponse response, final String successMessage, final String unSuccessMessage) {
         if (mainCategory.isPresent()) {
-            result.setMainCategoryModel(transformer.transformToMainCategoryModel(mainCategory.get()));
-            result.setSuccessful(true);
-            result.setMessage(successMessage);
+            response.setMainCategoryModel(transformer.transformToMainCategoryModel(mainCategory.get()));
+            response.setSuccessful(true);
+            response.setMessage(successMessage);
         } else {
-            result.setMessage(unSuccessMessage);
+            response.setMessage(unSuccessMessage);
         }
     }
 
