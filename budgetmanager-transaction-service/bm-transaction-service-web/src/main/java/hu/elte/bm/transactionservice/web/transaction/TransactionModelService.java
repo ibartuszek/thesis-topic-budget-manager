@@ -73,8 +73,8 @@ public class TransactionModelService {
         preValidateUpdatableCategory(context.getTransactionModel());
         TransactionModelResponse result = createResponseWithDefaultValues(context);
         if (isValid(result.getTransactionModel()) && !isLocked(result.getTransactionModel())) {
-            boolean successful = transactionService.delete(transformer.transformToTransaction(result.getTransactionModel()));
-            updateResponse(successful, result, TRANSACTION_HAS_BEEN_DELETED, TRANSACTION_CANNOT_BE_DELETED);
+            Optional<Transaction> deletedTransaction = transactionService.delete(transformer.transformToTransaction(result.getTransactionModel()));
+            updateResponse(deletedTransaction, result, TRANSACTION_HAS_BEEN_DELETED, TRANSACTION_CANNOT_BE_DELETED);
         } else {
             result.setMessage(TRANSACTION_IS_INVALID);
         }
@@ -131,16 +131,6 @@ public class TransactionModelService {
         final TransactionModelResponse response, final String successMessage, final String unSuccessMessage) {
         if (transaction.isPresent()) {
             response.setTransactionModel(transformer.transformToTransactionModel(transaction.get(), response.getFirstPossibleDay()));
-            response.setSuccessful(true);
-            response.setMessage(successMessage);
-        } else {
-            response.setMessage(unSuccessMessage);
-        }
-    }
-
-    private void updateResponse(final boolean successful,
-        final TransactionModelResponse response, final String successMessage, final String unSuccessMessage) {
-        if (successful) {
             response.setSuccessful(true);
             response.setMessage(successMessage);
         } else {

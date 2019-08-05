@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +18,11 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component("databaseProxy")
+@PropertySource("classpath:messages.properties")
 public class DatabaseProxy implements DatabaseFacade {
 
-    private static final String EXCEPTION_MESSAGE = "Unexpected error happens during execution. Please try again later.";
+    @Value("${database_proxy.unexpected_error_message}")
+    private String exceptionMessage;
 
     private final DatabaseFacade databaseFacade;
 
@@ -31,7 +35,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findAllMainCategory(transactionType);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -40,7 +44,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findMainCategoryById(id);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -49,7 +53,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findMainCategoryByName(name, transactionType);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -58,7 +62,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.saveMainCategory(mainCategory);
         } catch (DataAccessException exception) {
-            throw new MainCategoryException(mainCategory, EXCEPTION_MESSAGE, exception);
+            throw new MainCategoryException(mainCategory, exceptionMessage, exception);
         }
     }
 
@@ -67,7 +71,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.updateMainCategory(mainCategory);
         } catch (DataAccessException exception) {
-            throw new MainCategoryException(mainCategory, EXCEPTION_MESSAGE, exception);
+            throw new MainCategoryException(mainCategory, exceptionMessage, exception);
         }
     }
 
@@ -76,7 +80,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findAllSubCategory(transactionType);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -85,7 +89,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findSubCategoryById(id);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -94,7 +98,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findSubCategoryByName(name, transactionType);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -103,7 +107,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.saveSubCategory(subCategory);
         } catch (DataAccessException exception) {
-            throw new SubCategoryException(subCategory, EXCEPTION_MESSAGE, exception);
+            throw new SubCategoryException(subCategory, exceptionMessage, exception);
         }
     }
 
@@ -112,7 +116,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.updateSubCategory(subCategory);
         } catch (DataAccessException exception) {
-            throw new SubCategoryException(subCategory, EXCEPTION_MESSAGE, exception);
+            throw new SubCategoryException(subCategory, exceptionMessage, exception);
         }
     }
 
@@ -121,7 +125,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findAllTransaction(start, end, transactionType);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -130,7 +134,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findTransactionById(id, transactionType);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -139,7 +143,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.findTransactionByTitle(title, transactionType);
         } catch (DataAccessException exception) {
-            throw new DatabaseException(EXCEPTION_MESSAGE, exception);
+            throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
@@ -148,7 +152,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.saveTransaction(transaction);
         } catch (DataAccessException exception) {
-            throw new TransactionException(transaction, EXCEPTION_MESSAGE, exception);
+            throw new TransactionException(transaction, exceptionMessage, exception);
         }
     }
 
@@ -157,7 +161,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             return databaseFacade.updateTransaction(transaction);
         } catch (DataAccessException exception) {
-            throw new TransactionException(transaction, EXCEPTION_MESSAGE, exception);
+            throw new TransactionException(transaction, exceptionMessage, exception);
         }
     }
 
@@ -166,7 +170,7 @@ public class DatabaseProxy implements DatabaseFacade {
         try {
             databaseFacade.deleteTransaction(transaction);
         } catch (DataAccessException exception) {
-            throw new TransactionException(transaction, EXCEPTION_MESSAGE, exception);
+            throw new TransactionException(transaction, exceptionMessage, exception);
         }
     }
 

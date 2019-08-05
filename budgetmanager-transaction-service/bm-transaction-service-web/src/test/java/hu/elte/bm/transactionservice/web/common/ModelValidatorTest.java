@@ -2,7 +2,9 @@ package hu.elte.bm.transactionservice.web.common;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -24,7 +26,7 @@ public class ModelValidatorTest {
     private static final String REGEX_MATCHING_VALUE = "example@email.com";
     private static final String REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
     private static final String VALIDATOR_FIELD_VALUE_NOT_MATCH = MessageFormat.format("Name must be match with {0}!", REGEX);
-    private static final Set<String> POSSIBLE_VALUES = TransactionType.getPossibleValues();
+    private static final Set<String> POSSIBLE_VALUES = Arrays.stream(TransactionType.values()).map(TransactionType::name).collect(Collectors.toSet());
     private static final String VALIDATOR_FIELD_VALUE_NOT_ENUM = MessageFormat.format("Name must be one of them: {0}!", POSSIBLE_VALUES);
     private static final String ENUMERATED_VALUE = "INCOME";
     private static final Double ZERO = 0.0d;

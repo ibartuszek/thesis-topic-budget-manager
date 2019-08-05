@@ -27,8 +27,9 @@ import hu.elte.bm.transactionservice.domain.Currency;
 @Table(name = "outcomes")
 public final class OutcomeEntity {
 
-    private static final int TITLE_LENGTH = 100;
+    private static final int TITLE_LENGTH = 50;
     private static final int DESCRIPTION_LENGTH = 100;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -30,11 +30,7 @@ public final class SubCategoryEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    public SubCategoryEntity() {
-    }
-
-    public SubCategoryEntity(final String name, final TransactionType transactionType) {
-        this(null, name, transactionType);
+    private SubCategoryEntity() {
     }
 
     public SubCategoryEntity(final Long id, final String name, final TransactionType transactionType) {

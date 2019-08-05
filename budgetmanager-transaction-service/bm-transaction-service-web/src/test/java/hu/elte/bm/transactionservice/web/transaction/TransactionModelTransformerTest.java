@@ -1,6 +1,9 @@
 package hu.elte.bm.transactionservice.web.transaction;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
@@ -34,6 +37,8 @@ public class TransactionModelTransformerTest {
     private static final LocalDate DEFAULT_START_OF_NEW_PERIOD = LocalDate.now().minusDays(1);
     private static final LocalDate DEFAULT_END_DATE = LocalDate.now().plusYears(1);
     private static final String DEFAULT_DESCRIPTION = "desctiption";
+    private static final Set<String> POSSIBLE_CURRENCIES = Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet());
+    private static final Set<String> POSSIBLE_TRANSCATION_TYPES = Arrays.stream(TransactionType.values()).map(TransactionType::name).collect(Collectors.toSet());
 
     private TransactionModelTransformer underTest;
 
@@ -66,7 +71,7 @@ public class TransactionModelTransformerTest {
         Assert.assertEquals(DEFAULT_AMOUNT, result.getAmount().getValue());
         Assert.assertTrue(result.getAmount().getPositive());
         Assert.assertEquals(DEFAULT_CURRENCY.name(), result.getCurrency().getValue());
-        Assert.assertEquals(Currency.getPossibleValues(), result.getCurrency().getPossibleEnumValues());
+        Assert.assertEquals(POSSIBLE_CURRENCIES, result.getCurrency().getPossibleEnumValues());
         Assert.assertEquals(DEFAULT_TYPE.name(), result.getTransactionType().getValue());
         Assert.assertNotNull(result.getMainCategory());
         Assert.assertNull(result.getSubCategory());
@@ -178,11 +183,11 @@ public class TransactionModelTransformerTest {
                 .build())
             .withCurrency(ModelStringValue.builder()
                 .withValue(DEFAULT_CURRENCY.name())
-                .withPossibleEnumValues(Currency.getPossibleValues())
+                .withPossibleEnumValues(POSSIBLE_CURRENCIES)
                 .build())
             .withTransactionType(ModelStringValue.builder()
                 .withValue(DEFAULT_TYPE.name())
-                .withPossibleEnumValues(TransactionType.getPossibleValues())
+                .withPossibleEnumValues(POSSIBLE_TRANSCATION_TYPES)
                 .build())
             .withMainCategory(MainCategoryModel.builder().build())
             .withDate(ModelDateValue.builder()

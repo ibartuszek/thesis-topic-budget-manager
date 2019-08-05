@@ -43,12 +43,7 @@ public final class MainCategoryEntity {
         inverseJoinColumns = @JoinColumn(name = "sub_category_id"))
     private Set<SubCategoryEntity> subCategoryEntitySet;
 
-    public MainCategoryEntity() {
-    }
-
-    public MainCategoryEntity(final String name, final TransactionType transactionType,
-        final Set<SubCategoryEntity> subCategoryEntitySet) {
-        this(null, name, transactionType, subCategoryEntitySet);
+    private MainCategoryEntity() {
     }
 
     public MainCategoryEntity(final Long id, final String name, final TransactionType transactionType,

@@ -57,11 +57,12 @@ public class DefaultTransactionService implements TransactionService {
     }
 
     @Override
-    public boolean delete(final Transaction transaction) {
+    public Optional<Transaction> delete(final Transaction transaction) {
         validateForUpdate(transaction);
-        // TODO: boolean is necessary?
+        Optional<Transaction> result;
         dataBaseProxy.deleteTransaction(transaction);
-        return true;
+        result = Optional.of(transaction);
+        return result;
     }
 
     @Override

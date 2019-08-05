@@ -1,6 +1,8 @@
 package hu.elte.bm.transactionservice.web.transaction;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -97,8 +99,8 @@ public class TransactionModelTransformer {
     void populateValidationFields(final TransactionModel transactionModel, final LocalDate firstPossibleDay) {
         transactionModel.getTitle().setMaximumLength(TRANSACTION_TITLE_MAXIMUM_LENGTH);
         transactionModel.getAmount().setPositive(true);
-        transactionModel.getCurrency().setPossibleEnumValues(Currency.getPossibleValues());
-        transactionModel.getTransactionType().setPossibleEnumValues(TransactionType.getPossibleValues());
+        transactionModel.getCurrency().setPossibleEnumValues(Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet()));
+        transactionModel.getTransactionType().setPossibleEnumValues(Arrays.stream(TransactionType.values()).map(TransactionType::name).collect(Collectors.toSet()));
         transactionModel.getDate().setPossibleFirstDay(firstPossibleDay);
         if (transactionModel.getDescription() != null) {
             transactionModel.getDescription().setMaximumLength(TRANSACTION_DESCRIPTION_MAXIMUM_LENGTH);

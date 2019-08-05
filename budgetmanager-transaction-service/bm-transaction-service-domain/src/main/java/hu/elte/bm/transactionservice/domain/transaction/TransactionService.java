@@ -37,12 +37,12 @@ public interface TransactionService {
     Optional<Transaction> save(Transaction transaction);
 
     /**
-     * Update the existing income in the repository if the budget period has not been locked
+     * Update the existing transaction in the repository if the budget period has not been locked
      * (e.g. at the end of the month).
      *
      * @param transaction {@link Transaction} is extends {@link Transaction}. Cannot be null.
      * @return It returns a new {@link Optional<Transaction>} If update was successful the object contains the modified values.
-     * If the income has locked already it returns an empty optional.
+     * If the transaction has locked already it returns an empty optional.
      */
     Optional<Transaction> update(Transaction transaction);
 
@@ -51,10 +51,10 @@ public interface TransactionService {
      * (e.g. at the end of the month).
      *
      * @param transaction {@link Transaction} is extends {@link Transaction}. Cannot be null.
-     * @return It returns a new {@link Optional<Transaction>}.
-     * If the transaction has locked already it returns false.
+     * @return It returns a new {@link Optional<Transaction>} If delete was successful the object contains the modified values.
+     * If the transaction has locked already it returns an empty optional.
      */
-    boolean delete(Transaction transaction);
+    Optional<Transaction> delete(Transaction transaction);
 
     /**
      * Find the last day of the previous budget period.

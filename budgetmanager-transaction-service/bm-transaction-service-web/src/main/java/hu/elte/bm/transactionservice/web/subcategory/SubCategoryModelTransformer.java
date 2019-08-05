@@ -1,5 +1,8 @@
 package hu.elte.bm.transactionservice.web.subcategory;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
@@ -37,6 +40,8 @@ public class SubCategoryModelTransformer {
 
     void setValidationFields(final SubCategoryModel subCategoryModel) {
         subCategoryModel.getName().setMaximumLength(SUB_CATEGORY_NAME_MAXIMUM_LENGTH);
-        subCategoryModel.getTransactionType().setPossibleEnumValues(TransactionType.getPossibleValues());
+        subCategoryModel.getTransactionType().setPossibleEnumValues(Arrays.stream(TransactionType.values())
+                .map(TransactionType::name)
+                .collect(Collectors.toSet()));
     }
 }

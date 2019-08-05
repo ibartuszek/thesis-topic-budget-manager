@@ -4,9 +4,12 @@ import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.I
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
@@ -44,12 +47,12 @@ public class TransactionModelServiceTest {
     private static final TransactionType DEFAULT_TYPE = INCOME;
     private static final LocalDate DEFAULT_DATE = LocalDate.now();
     private static final LocalDate DEFAULT_START_OF_NEW_PERIOD = LocalDate.now().minusDays(1);
-    private static final LocalDate DEFAULT_END_DATE = LocalDate.now().plusYears(1);
-    private static final String DEFAULT_DESCRIPTION = "desctiption";
     private static final LocalDate END = LocalDate.now();
     private static final boolean LOCKED = true;
     private static final boolean NOT_LOCKED = false;
     private static final MainCategoryModel MAIN_CATEGORY_MODEL = MainCategoryModel.builder().build();
+    private static final Set<String> POSSIBLE_CURRENCIES = Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet());
+    private static final Set<String> POSSIBLE_TRANSACTION_TYPES = Arrays.stream(TransactionType.values()).map(TransactionType::name).collect(Collectors.toSet());
 
     private TransactionModelService underTest;
 
@@ -275,7 +278,7 @@ public class TransactionModelServiceTest {
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transactionService.isLockedTransaction(transactionModel.getId(), INCOME)).andReturn(NOT_LOCKED);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.delete(transaction)).andReturn(false);
+        EasyMock.expect(transactionService.delete(transaction)).andReturn(Optional.empty());
         control.replay();
         // WHEN
         TransactionModelResponse result = underTest.deleteTransaction(context);
@@ -295,7 +298,8 @@ public class TransactionModelServiceTest {
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transactionService.isLockedTransaction(transactionModel.getId(), INCOME)).andReturn(NOT_LOCKED);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.delete(transaction)).andReturn(true);
+        EasyMock.expect(transactionService.delete(transaction)).andReturn(Optional.of(transaction));
+        EasyMock.expect(transformer.transformToTransactionModel(transaction, DEFAULT_START_OF_NEW_PERIOD)).andReturn(transactionModel);
         control.replay();
         // WHEN
         TransactionModelResponse result = underTest.deleteTransaction(context);
@@ -329,11 +333,11 @@ public class TransactionModelServiceTest {
                 .build())
             .withCurrency(ModelStringValue.builder()
                 .withValue(DEFAULT_CURRENCY.name())
-                .withPossibleEnumValues(Currency.getPossibleValues())
+                .withPossibleEnumValues(POSSIBLE_CURRENCIES)
                 .build())
             .withTransactionType(ModelStringValue.builder()
                 .withValue(DEFAULT_TYPE.name())
-                .withPossibleEnumValues(TransactionType.getPossibleValues())
+                .withPossibleEnumValues(POSSIBLE_TRANSACTION_TYPES)
                 .build())
             .withMainCategory(MAIN_CATEGORY_MODEL)
             .withDate(ModelDateValue.builder()

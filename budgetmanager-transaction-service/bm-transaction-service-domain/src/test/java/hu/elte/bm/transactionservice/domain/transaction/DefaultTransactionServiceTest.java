@@ -396,10 +396,10 @@ public class DefaultTransactionServiceTest {
         databaseProxy.deleteTransaction(transaction);
         control.replay();
         // WHEN
-        Boolean result = underTest.delete(transaction);
+        Optional<Transaction> result = underTest.delete(transaction);
         // THEN
         control.verify();
-        Assert.assertTrue(result);
+        Assert.assertEquals(transaction, result.get());
     }
 
     private void createExampleListForEndOfLastPeriodWithCalls() {
