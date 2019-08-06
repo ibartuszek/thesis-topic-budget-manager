@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
@@ -15,9 +17,12 @@ import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer;
 
 @Component
+@PropertySource("classpath:common_constraints.properties")
 public class MainCategoryModelTransformer {
 
-    private static final Integer MAIN_CATEGORY_NAME_MAXIMUM_LENGTH = 50;
+    @Value("${main_category.name.maximum_length}")
+    private Integer mainCategoryNameMaximumLength;
+
     private final SubCategoryModelTransformer subCategoryModelTransformer;
 
     MainCategoryModelTransformer(final SubCategoryModelTransformer subCategoryModelTransformer) {
@@ -51,7 +56,7 @@ public class MainCategoryModelTransformer {
     }
 
     void setValidationFields(final MainCategoryModel mainCategoryModel) {
-        mainCategoryModel.getName().setMaximumLength(MAIN_CATEGORY_NAME_MAXIMUM_LENGTH);
+        mainCategoryModel.getName().setMaximumLength(mainCategoryNameMaximumLength);
         mainCategoryModel.getTransactionType().setPossibleEnumValues(Arrays.stream(TransactionType.values())
                 .map(TransactionType::name)
                 .collect(Collectors.toSet()));

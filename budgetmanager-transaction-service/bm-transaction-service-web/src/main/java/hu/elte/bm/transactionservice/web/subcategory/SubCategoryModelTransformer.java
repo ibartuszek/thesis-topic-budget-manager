@@ -3,6 +3,8 @@ package hu.elte.bm.transactionservice.web.subcategory;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
@@ -10,9 +12,11 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 
 @Component
+@PropertySource("classpath:common_constraints.properties")
 public class SubCategoryModelTransformer {
 
-    private static final Integer SUB_CATEGORY_NAME_MAXIMUM_LENGTH = 50;
+    @Value("${sub_category.name.maximum_length}")
+    private Integer subCategoryNameMaximumLength;
 
     public SubCategoryModel transformToSubCategoryModel(final SubCategory subCategory) {
         ModelStringValue name = ModelStringValue.builder()
@@ -39,7 +43,7 @@ public class SubCategoryModelTransformer {
     }
 
     void setValidationFields(final SubCategoryModel subCategoryModel) {
-        subCategoryModel.getName().setMaximumLength(SUB_CATEGORY_NAME_MAXIMUM_LENGTH);
+        subCategoryModel.getName().setMaximumLength(subCategoryNameMaximumLength);
         subCategoryModel.getTransactionType().setPossibleEnumValues(Arrays.stream(TransactionType.values())
                 .map(TransactionType::name)
                 .collect(Collectors.toSet()));

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -26,7 +27,7 @@ import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer
 
 public class TransactionModelTransformerTest {
 
-    private static final Integer TRANSACTION_TITLE_MAXIMUM_LENGTH = 100;
+    private static final Integer TRANSACTION_TITLE_MAXIMUM_LENGTH = 50;
     private static final Integer TRANSACTION_DESCRIPTION_MAXIMUM_LENGTH = 100;
     private static final Long DEFAULT_ID = 1L;
     private static final String DEFAULT_TITLE = "title";
@@ -52,6 +53,8 @@ public class TransactionModelTransformerTest {
         mainCategoryModelTransformer = control.createMock(MainCategoryModelTransformer.class);
         subCategoryModelTransformer = control.createMock(SubCategoryModelTransformer.class);
         underTest = new TransactionModelTransformer(mainCategoryModelTransformer, subCategoryModelTransformer);
+        ReflectionTestUtils.setField(underTest, "transactionTitleMaximumLength", TRANSACTION_TITLE_MAXIMUM_LENGTH);
+        ReflectionTestUtils.setField(underTest, "transactionDescriptionMaximumLength", TRANSACTION_DESCRIPTION_MAXIMUM_LENGTH);
     }
 
     @Test

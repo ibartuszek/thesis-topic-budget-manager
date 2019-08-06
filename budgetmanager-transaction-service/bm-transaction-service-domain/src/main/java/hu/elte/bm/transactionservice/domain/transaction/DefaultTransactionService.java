@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -14,18 +16,34 @@ import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
 
 @Service("transactionService")
+@PropertySource({ "classpath:common_constraints.properties", "classpath:messages.properties" })
 public class DefaultTransactionService implements TransactionService {
 
-    private static final long DAYS_TO_SUBTRACT = 30L;
-    private static final String CANNOT_BE_NULL_EXCEPTION_MESSAGE = "{0} cannot be null!";
-    private static final String MAIN_CATEGORY_ID_EXCEPTION_MESSAGE = "The Id of mainCategory cannot be null!";
-    private static final String SUB_CATEGORY_ID_EXCEPTION_MESSAGE = "The Id of subCategory cannot be null!";
-    private static final String DATE_BEFORE_THE_PERIOD_EXCEPTION_MESSAGE = "The date of transaction cannot be before the beginning of the period!";
-    private static final String ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_EXCEPTION_MESSAGE = "Original transaction cannot be found in the repository!";
-    private static final String TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE = "Transaction type cannot be changed!";
-    private static final String TRANSACTION_IS_LOCKED_EXCEPTION_MESSAGE = "Transaction is locked, cannot be changed!";
-
     private final DatabaseProxy dataBaseProxy;
+
+    @Value("${transaction.days_to_subtract_to_calculate_first_day_of_new_period}")
+    private final long daysToSubtract = 30L;
+
+    @Value("${transaction.transaction_cannot_be_null}")
+    private String cannotBeNullExceptionMessage;
+
+    @Value("${transaction.main_category_id_cannot_be_null}")
+    private String mainCategoryIdExceptionMessage;
+
+    @Value("${transaction.sub_category_id_cannot_be_null}")
+    private String subCategoryIdExceptionMessage;
+
+    @Value("${transaction.date_before_the_beginning}")
+    private String dateBeforeThePeriodExceptionMessage;
+
+    @Value("${transaction.transaction_cannot_be_found}")
+    private String originalTransactionCannotBeFoundExceptionMessage;
+
+    @Value("${transaction.transaction_type_cannot_be_changed}")
+    private String transactionTypeCannotBeChangedExceptionMessage;
+
+    @Value("${transaction.transaction_is_locked}")
+    private String transactionIsLockedExceptionMessage;
 
     DefaultTransactionService(final DatabaseProxy dataBaseProxy) {
         this.dataBaseProxy = dataBaseProxy;
@@ -33,9 +51,9 @@ public class DefaultTransactionService implements TransactionService {
 
     @Override
     public List<Transaction> findAllTransaction(final LocalDate start, final LocalDate end, final TransactionType transactionType) {
-        Assert.notNull(start, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "start"));
-        Assert.notNull(end, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "end"));
-        Assert.notNull(transactionType, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "transactionType"));
+        Assert.notNull(start, MessageFormat.format(cannotBeNullExceptionMessage, "start"));
+        Assert.notNull(end, MessageFormat.format(cannotBeNullExceptionMessage, "end"));
+        Assert.notNull(transactionType, MessageFormat.format(cannotBeNullExceptionMessage, "transactionType"));
         return dataBaseProxy.findAllTransaction(start, end, transactionType);
     }
 
@@ -67,12 +85,12 @@ public class DefaultTransactionService implements TransactionService {
 
     @Override
     public LocalDate getTheFirstDateOfTheNewPeriod(final TransactionType type) {
-        return dataBaseProxy.findAllTransaction(LocalDate.now().minusDays(DAYS_TO_SUBTRACT), LocalDate.now(), type).stream()
+        return dataBaseProxy.findAllTransaction(LocalDate.now().minusDays(daysToSubtract), LocalDate.now(), type).stream()
             .filter(Transaction::isLocked)
             .max(Comparator.comparing(Transaction::getDate))
             .map(Transaction::getDate)
             .map(localDate -> localDate.plusDays(1L))
-            .orElseGet(() -> LocalDate.now().minusDays(DAYS_TO_SUBTRACT));
+            .orElseGet(() -> LocalDate.now().minusDays(daysToSubtract));
     }
 
     @Override
@@ -81,16 +99,16 @@ public class DefaultTransactionService implements TransactionService {
     }
 
     private void validate(final Transaction transaction) {
-        Assert.notNull(transaction, MessageFormat.format(CANNOT_BE_NULL_EXCEPTION_MESSAGE, "transaction"));
+        Assert.notNull(transaction, MessageFormat.format(cannotBeNullExceptionMessage, "transaction"));
         LocalDate endOfTheLastPeriod = getTheFirstDateOfTheNewPeriod(transaction.getTransactionType());
         if (transaction.getMainCategory().getId() == null) {
-            throw new TransactionException(transaction, MAIN_CATEGORY_ID_EXCEPTION_MESSAGE);
+            throw new TransactionException(transaction, mainCategoryIdExceptionMessage);
         } else if (!hasValidSubCategories(transaction.getMainCategory())) {
-            throw new TransactionException(transaction, SUB_CATEGORY_ID_EXCEPTION_MESSAGE);
+            throw new TransactionException(transaction, subCategoryIdExceptionMessage);
         } else if (transaction.getDate().isBefore(endOfTheLastPeriod)) {
-            throw new TransactionException(transaction, DATE_BEFORE_THE_PERIOD_EXCEPTION_MESSAGE);
+            throw new TransactionException(transaction, dateBeforeThePeriodExceptionMessage);
         } else if (transaction.getSubCategory() != null && transaction.getSubCategory().getId() == null) {
-            throw new TransactionException(transaction, SUB_CATEGORY_ID_EXCEPTION_MESSAGE);
+            throw new TransactionException(transaction, subCategoryIdExceptionMessage);
         }
     }
 
@@ -111,11 +129,11 @@ public class DefaultTransactionService implements TransactionService {
         validate(transaction);
         Transaction transactionFromRepository = dataBaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType()).orElse(null);
         if (transactionFromRepository == null) {
-            throw new TransactionException(transaction, ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_EXCEPTION_MESSAGE);
+            throw new TransactionException(transaction, originalTransactionCannotBeFoundExceptionMessage);
         } else if (transactionFromRepository.isLocked()) {
-            throw new TransactionException(transaction, TRANSACTION_IS_LOCKED_EXCEPTION_MESSAGE);
+            throw new TransactionException(transaction, transactionIsLockedExceptionMessage);
         } else if (transaction.getTransactionType() != transactionFromRepository.getTransactionType()) {
-            throw new TransactionException(transaction, TRANSACTION_TYPE_CANNOT_BE_CHANGED_EXCEPTION_MESSAGE);
+            throw new TransactionException(transaction, transactionTypeCannotBeChangedExceptionMessage);
         }
     }
 

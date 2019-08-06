@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,7 +39,22 @@ public class ModelValidatorTest {
     private static final LocalDate DEADLINE = LocalDate.now();
     private static final String VALIDATOR_FIELD_VALUE_MUST_BE_AFTER = MessageFormat.format("Name must be after {0}!", DEADLINE);
 
-    private final ModelValidator underTest = new ModelValidator();
+    private final ModelValidator underTest = createModelValidator();
+
+    private ModelValidator createModelValidator() {
+        ModelValidator validator = new ModelValidator();
+        ReflectionTestUtils.setField(validator, "validatorFieldCannotBeNul", "Validated field cannot be null!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValueCannotBeNul", "Validated field value cannot be null!");
+        ReflectionTestUtils.setField(validator, "validatorFieldNameCannotBeNul", "Validated field name cannot be null!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValueCannotBeEmpty", "{0} cannot be empty!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValueLongerThanMaximum", "{0} cannot be longer than {1}!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValueNotMatch", "{0} must be match with {1}!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValueNotEnum", "{0} must be one of them: {1}!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValuePositive", "{0} must be positive number!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValuePositiveOrZero", "{0} must be positive number or zero!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValueMustBeAfter", "{0} must be after {1}!");
+        return validator;
+    }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testValidateWhenModelStringValueIsNull() {

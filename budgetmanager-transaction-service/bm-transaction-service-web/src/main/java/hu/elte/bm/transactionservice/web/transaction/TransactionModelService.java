@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -14,15 +16,29 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.common.ModelValidator;
 
 @Service
+@PropertySource("classpath:messages.properties")
 public class TransactionModelService {
 
-    private static final String TRANSACTION_IS_INVALID = "The new transaction is invalid.";
-    private static final String TRANSACTION_HAS_BEEN_SAVED = "The transaction has been saved.";
-    private static final String TRANSACTION_HAS_BEEN_SAVED_BEFORE = "The transaction has been saved before.";
-    private static final String TRANSACTION_HAS_BEEN_UPDATED = "The transaction has been updated.";
-    private static final String TRANSACTION_CANNOT_BE_UPDATED = "You cannot update this transaction, because it exists.";
-    private static final String TRANSACTION_HAS_BEEN_DELETED = "The transaction has been deleted.";
-    private static final String TRANSACTION_CANNOT_BE_DELETED = "You cannot delete this transaction.";
+    @Value("${transaction.transaction_is_invalid}")
+    private String transactionIsInvalid;
+
+    @Value("${transaction.transaction_has_been_saved}")
+    private String transactionHasBeenSaved;
+
+    @Value("${transaction.transaction_has_been_saved_before}")
+    private String transactionHasBeenSavedBefore;
+
+    @Value("${transaction.transaction_has_been_updated}")
+    private String transactionHasBeenUpdated;
+
+    @Value("${transaction.transaction_cannot_be_updated}")
+    private String transactionCannotBeUpdated;
+
+    @Value("${transaction.transaction_has_been_deleted}")
+    private String transactionHasBeenDeleted;
+
+    @Value("${transaction.transaction_cannot_be_deleted}")
+    private String transactionCannotBeDeleted;
 
     private final ModelValidator validator;
     private final TransactionService transactionService;
@@ -50,9 +66,9 @@ public class TransactionModelService {
         TransactionModelResponse result = createResponseWithDefaultValues(context);
         if (isValid(result.getTransactionModel())) {
             Optional<Transaction> savedTransaction = transactionService.save(transformer.transformToTransaction(result.getTransactionModel()));
-            updateResponse(savedTransaction, result, TRANSACTION_HAS_BEEN_SAVED, TRANSACTION_HAS_BEEN_SAVED_BEFORE);
+            updateResponse(savedTransaction, result, transactionHasBeenSaved, transactionHasBeenSavedBefore);
         } else {
-            result.setMessage(TRANSACTION_IS_INVALID);
+            result.setMessage(transactionIsInvalid);
         }
         return result;
     }
@@ -62,9 +78,9 @@ public class TransactionModelService {
         TransactionModelResponse result = createResponseWithDefaultValues(context);
         if (isValid(result.getTransactionModel()) && !isLocked(result.getTransactionModel())) {
             Optional<Transaction> updatedTransaction = transactionService.update(transformer.transformToTransaction(result.getTransactionModel()));
-            updateResponse(updatedTransaction, result, TRANSACTION_HAS_BEEN_UPDATED, TRANSACTION_CANNOT_BE_UPDATED);
+            updateResponse(updatedTransaction, result, transactionHasBeenUpdated, transactionCannotBeUpdated);
         } else {
-            result.setMessage(TRANSACTION_IS_INVALID);
+            result.setMessage(transactionIsInvalid);
         }
         return result;
     }
@@ -74,32 +90,32 @@ public class TransactionModelService {
         TransactionModelResponse result = createResponseWithDefaultValues(context);
         if (isValid(result.getTransactionModel()) && !isLocked(result.getTransactionModel())) {
             Optional<Transaction> deletedTransaction = transactionService.delete(transformer.transformToTransaction(result.getTransactionModel()));
-            updateResponse(deletedTransaction, result, TRANSACTION_HAS_BEEN_DELETED, TRANSACTION_CANNOT_BE_DELETED);
+            updateResponse(deletedTransaction, result, transactionHasBeenDeleted, transactionCannotBeDeleted);
         } else {
-            result.setMessage(TRANSACTION_IS_INVALID);
+            result.setMessage(transactionIsInvalid);
         }
         return result;
     }
 
     private void preValidateSavableTransaction(final TransactionModel transactionModel) {
         if (transactionModel.getId() != null) {
-            throw new IllegalArgumentException(TRANSACTION_IS_INVALID);
+            throw new IllegalArgumentException(transactionIsInvalid);
         }
         validateTransactionModelFields(transactionModel);
     }
 
     private void preValidateUpdatableCategory(final TransactionModel transactionModel) {
-        Assert.notNull(transactionModel.getId(), TRANSACTION_IS_INVALID);
+        Assert.notNull(transactionModel.getId(), transactionIsInvalid);
         validateTransactionModelFields(transactionModel);
     }
 
     private void validateTransactionModelFields(final TransactionModel transactionModel) {
-        Assert.notNull(transactionModel.getTitle(), TRANSACTION_IS_INVALID);
-        Assert.notNull(transactionModel.getAmount(), TRANSACTION_IS_INVALID);
-        Assert.notNull(transactionModel.getCurrency(), TRANSACTION_IS_INVALID);
-        Assert.notNull(transactionModel.getTransactionType(), TRANSACTION_IS_INVALID);
-        Assert.notNull(transactionModel.getMainCategory(), TRANSACTION_IS_INVALID);
-        Assert.notNull(transactionModel.getDate(), TRANSACTION_IS_INVALID);
+        Assert.notNull(transactionModel.getTitle(), transactionIsInvalid);
+        Assert.notNull(transactionModel.getAmount(), transactionIsInvalid);
+        Assert.notNull(transactionModel.getCurrency(), transactionIsInvalid);
+        Assert.notNull(transactionModel.getTransactionType(), transactionIsInvalid);
+        Assert.notNull(transactionModel.getMainCategory(), transactionIsInvalid);
+        Assert.notNull(transactionModel.getDate(), transactionIsInvalid);
     }
 
     private TransactionModelResponse createResponseWithDefaultValues(final TransactionModelRequestContext context) {

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -12,13 +14,24 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategoryService;
 import hu.elte.bm.transactionservice.web.common.ModelValidator;
 
 @Service
+@PropertySource("classpath:messages.properties")
 public class SubCategoryModelService {
 
-    private static final String CATEGORY_IS_INVALID_MESSAGE = "The new category is invalid.";
-    private static final String CATEGORY_HAS_BEEN_SAVED = "The category has been saved.";
-    private static final String CATEGORY_HAS_BEEN_SAVED_BEFORE_MESSAGE = "The category has been saved before.";
-    private static final String CATEGORY_HAS_BEEN_UPDATED = "The category has been updated.";
-    private static final String CATEGORY_CANNOT_BE_UPDATED_MESSAGE = "You cannot update this category, because it exists.";
+
+    @Value("${sub_category.sub_category_is_invalid}")
+    private String categoryIsInvalidMessage;
+
+    @Value("${sub_category.sub_category_has_been_saved}")
+    private String categoryHasBeenSaved;
+
+    @Value("${sub_category.sub_category_has_been_saved_before}")
+    private String categoryHasBeenSavedBeforeMessage;
+
+    @Value("${sub_category.sub_category_has_been_updated}")
+    private String categoryHasBeenUpdated;
+
+    @Value("${sub_category.sub_category_cannot_be_updated}")
+    private String categoryCannotBeUpdatedMessage;
 
     private final ModelValidator validator;
     private final SubCategoryService subCategoryService;
@@ -43,9 +56,9 @@ public class SubCategoryModelService {
         SubCategoryModelResponse result = createResponseWithDefaultValues(subCategoryModel);
         if (isValid(result.getSubCategoryModel())) {
             Optional<SubCategory> savedSubCategory = subCategoryService.save(transformer.transformToSubCategory(result.getSubCategoryModel()));
-            updateResponse(savedSubCategory, result, CATEGORY_HAS_BEEN_SAVED, CATEGORY_HAS_BEEN_SAVED_BEFORE_MESSAGE);
+            updateResponse(savedSubCategory, result, categoryHasBeenSaved, categoryHasBeenSavedBeforeMessage);
         } else {
-            result.setMessage(CATEGORY_IS_INVALID_MESSAGE);
+            result.setMessage(categoryIsInvalidMessage);
         }
         return result;
     }
@@ -55,28 +68,28 @@ public class SubCategoryModelService {
         SubCategoryModelResponse result = createResponseWithDefaultValues(subCategoryModel);
         if (isValid(result.getSubCategoryModel())) {
             Optional<SubCategory> savedSubCategory = subCategoryService.update(transformer.transformToSubCategory(result.getSubCategoryModel()));
-            updateResponse(savedSubCategory, result, CATEGORY_HAS_BEEN_UPDATED, CATEGORY_CANNOT_BE_UPDATED_MESSAGE);
+            updateResponse(savedSubCategory, result, categoryHasBeenUpdated, categoryCannotBeUpdatedMessage);
         } else {
-            result.setMessage(CATEGORY_IS_INVALID_MESSAGE);
+            result.setMessage(categoryIsInvalidMessage);
         }
         return result;
     }
 
     private void preValidateSavableCategory(final SubCategoryModel subCategoryModel) {
         if (subCategoryModel.getId() != null) {
-            throw new IllegalArgumentException(CATEGORY_IS_INVALID_MESSAGE);
+            throw new IllegalArgumentException(categoryIsInvalidMessage);
         }
         validateSubCategoryModelFields(subCategoryModel);
     }
 
     private void preValidateUpdatableCategory(final SubCategoryModel subCategoryModel) {
-        Assert.notNull(subCategoryModel.getId(), CATEGORY_IS_INVALID_MESSAGE);
+        Assert.notNull(subCategoryModel.getId(), categoryIsInvalidMessage);
         validateSubCategoryModelFields(subCategoryModel);
     }
 
     private void validateSubCategoryModelFields(final SubCategoryModel subCategoryModel) {
-        Assert.notNull(subCategoryModel.getName(), CATEGORY_IS_INVALID_MESSAGE);
-        Assert.notNull(subCategoryModel.getTransactionType(), CATEGORY_IS_INVALID_MESSAGE);
+        Assert.notNull(subCategoryModel.getName(), categoryIsInvalidMessage);
+        Assert.notNull(subCategoryModel.getTransactionType(), categoryIsInvalidMessage);
     }
 
     private SubCategoryModelResponse createResponseWithDefaultValues(final SubCategoryModel subCategoryModel) {

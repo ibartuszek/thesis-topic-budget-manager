@@ -19,7 +19,7 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component("databaseProxy")
 @PropertySource("classpath:messages.properties")
-public class DatabaseProxy implements DatabaseFacade {
+public class DatabaseProxy {
 
     @Value("${database_proxy.unexpected_error_message}")
     private String exceptionMessage;
@@ -30,7 +30,6 @@ public class DatabaseProxy implements DatabaseFacade {
         this.databaseFacade = databaseFacade;
     }
 
-    @Override
     public List<MainCategory> findAllMainCategory(final TransactionType transactionType) {
         try {
             return databaseFacade.findAllMainCategory(transactionType);
@@ -39,7 +38,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<MainCategory> findMainCategoryById(final Long id) {
         try {
             return databaseFacade.findMainCategoryById(id);
@@ -48,7 +46,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<MainCategory> findMainCategoryByName(final String name, final TransactionType transactionType) {
         try {
             return databaseFacade.findMainCategoryByName(name, transactionType);
@@ -57,7 +54,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<MainCategory> saveMainCategory(final MainCategory mainCategory) {
         try {
             return databaseFacade.saveMainCategory(mainCategory);
@@ -66,7 +62,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<MainCategory> updateMainCategory(final MainCategory mainCategory) {
         try {
             return databaseFacade.updateMainCategory(mainCategory);
@@ -75,7 +70,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public List<SubCategory> findAllSubCategory(final TransactionType transactionType) {
         try {
             return databaseFacade.findAllSubCategory(transactionType);
@@ -84,7 +78,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<SubCategory> findSubCategoryById(final Long id) {
         try {
             return databaseFacade.findSubCategoryById(id);
@@ -93,7 +86,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<SubCategory> findSubCategoryByName(final String name, final TransactionType transactionType) {
         try {
             return databaseFacade.findSubCategoryByName(name, transactionType);
@@ -102,7 +94,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<SubCategory> saveSubCategory(final SubCategory subCategory) {
         try {
             return databaseFacade.saveSubCategory(subCategory);
@@ -111,7 +102,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<SubCategory> updateSubCategory(final SubCategory subCategory) {
         try {
             return databaseFacade.updateSubCategory(subCategory);
@@ -120,7 +110,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public List<Transaction> findAllTransaction(final LocalDate start, final LocalDate end, final TransactionType transactionType) {
         try {
             return databaseFacade.findAllTransaction(start, end, transactionType);
@@ -129,7 +118,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<Transaction> findTransactionById(final Long id, final TransactionType transactionType) {
         try {
             return databaseFacade.findTransactionById(id, transactionType);
@@ -138,7 +126,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public List<Transaction> findTransactionByTitle(final String title, final TransactionType transactionType) {
         try {
             return databaseFacade.findTransactionByTitle(title, transactionType);
@@ -147,7 +134,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<Transaction> saveTransaction(final Transaction transaction) {
         try {
             return databaseFacade.saveTransaction(transaction);
@@ -156,7 +142,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public Optional<Transaction> updateTransaction(final Transaction transaction) {
         try {
             return databaseFacade.updateTransaction(transaction);
@@ -165,7 +150,6 @@ public class DatabaseProxy implements DatabaseFacade {
         }
     }
 
-    @Override
     public void deleteTransaction(final Transaction transaction) {
         try {
             databaseFacade.deleteTransaction(transaction);

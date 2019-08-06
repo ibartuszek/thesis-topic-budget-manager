@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -44,6 +45,7 @@ public class DefaultTransactionServiceTest {
         control = EasyMock.createControl();
         databaseProxy = control.createMock(DatabaseProxy.class);
         underTest = new DefaultTransactionService(databaseProxy);
+        ReflectionTestUtils.setField(underTest, "cannotBeNullExceptionMessage", "{0} cannot be null!");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
