@@ -1,0 +1,92 @@
+body {
+    background-color: var(--gray);
+}
+
+main {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+label.input-group-addon.input-group-text {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.min-800 {
+    min-width: 800px;
+}
+
+.min-1000 {
+    min-width: 1000px;
+}
+
+.login-container {
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--white);
+    border-radius: 0.25rem;
+}
+
+.fas.fa-sort:hover {
+    cursor: pointer;
+}
+
+.my-nav-link:hover {
+    cursor: pointer;
+}
+
+.custom-error-message-container {
+    color: var(--danger);
+}
+
+/* DatePicker */
+.react-datepicker-wrapper {
+    flex: 1 1 auto;
+}
+
+div.react-datepicker-wrapper div.react-datepicker__input-container {
+    display: block;
+}
+
+#date {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Loading */
+
+.Loading {
+    height: 16vmin;
+    pointer-events: none;
+    animation: Loading-spin infinite 20s linear;
+    animation-duration: 5s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+    animation-name: Loading-spin;
+  }
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+  }
+
+@keyframes Loading-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+}
