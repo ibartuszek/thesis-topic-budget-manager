@@ -5,6 +5,6 @@ const Home = () => {
   return (
     <Loading data="(Home is under process...)"/>
   )
-}
+};
 
 export default Home;

@@ -5,6 +5,6 @@ const Draft = () => {
   return (
     <Loading data="(Draft is under process...)"/>
   )
-}
+};
 
 export default Draft;
