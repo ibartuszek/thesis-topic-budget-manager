@@ -46,7 +46,7 @@ public class SubCategoryDaoTest {
         List<SubCategory> result = underTest.findAll(INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(Collections.emptyList(), result);
+        Assert.assertEquals(result, Collections.emptyList());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class SubCategoryDaoTest {
         List<SubCategory> result = underTest.findAll(INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedList, result);
+        Assert.assertEquals(result, expectedList);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class SubCategoryDaoTest {
         Optional<SubCategory> result = underTest.findById(NEW_ID);
         // THEN
         control.verify();
-        Assert.assertEquals(Optional.empty(), result);
+        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class SubCategoryDaoTest {
         Optional<SubCategory> result = underTest.findById(EXISTING_ID);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedSubCategory, result);
+        Assert.assertEquals(result, expectedSubCategory);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class SubCategoryDaoTest {
         Optional<SubCategory> result = underTest.findByName(NEW_CATEGORY_NAME, INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(Optional.empty(), result);
+        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class SubCategoryDaoTest {
         Optional<SubCategory> result = underTest.findByName(EXISTING_CATEGORY_NAME, INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedSubCategory, result);
+        Assert.assertEquals(result, expectedSubCategory);
     }
 
     @Test
@@ -129,11 +129,11 @@ public class SubCategoryDaoTest {
         Optional<SubCategory> result = underTest.save(subCategoryToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(expecTedSubCategory, result);
+        Assert.assertEquals(result, expecTedSubCategory);
         SubCategoryEntity capturedCategory = capture.getValue();
-        Assert.assertEquals(subCategoryToSave.getId(), capturedCategory.getId());
-        Assert.assertEquals(subCategoryToSave.getName(), capturedCategory.getName());
-        Assert.assertEquals(subCategoryToSave.getTransactionType(), capturedCategory.getTransactionType());
+        Assert.assertEquals(capturedCategory.getId(), subCategoryToSave.getId());
+        Assert.assertEquals(capturedCategory.getName(), subCategoryToSave.getName());
+        Assert.assertEquals(capturedCategory.getTransactionType(), subCategoryToSave.getTransactionType());
     }
 
     private Iterable<SubCategoryEntity> createSubCategoryEntities() {

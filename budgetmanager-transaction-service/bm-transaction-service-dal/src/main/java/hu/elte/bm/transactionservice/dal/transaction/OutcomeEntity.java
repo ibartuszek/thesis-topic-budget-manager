@@ -2,7 +2,6 @@ package hu.elte.bm.transactionservice.dal.transaction;
 
 import java.util.Date;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,9 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
@@ -44,12 +40,8 @@ public final class OutcomeEntity {
     @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "sub_category_id")
     private SubCategoryEntity subCategoryEntity;
-    @Basic
     private boolean monthly;
-    @NotNull
-    @Temporal(TemporalType.DATE)
     private Date date;
-    @Temporal(TemporalType.DATE)
     private Date endDate;
     @Column(length = DESCRIPTION_LENGTH)
     private String description;

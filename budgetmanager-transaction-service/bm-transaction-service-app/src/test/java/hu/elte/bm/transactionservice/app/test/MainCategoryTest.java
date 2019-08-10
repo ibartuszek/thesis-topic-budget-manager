@@ -22,14 +22,176 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
     private static final Long EXISTING_INCOME_ID = 1L;
     private static final Long EXISTING_OUTCOME_ID = 4L;
     private static final Long NEW_ID = 6L;
+    private static final Long INVALID_ID = 7L;
+    private static final String EMPTY_NAME = "";
+    private static final String TOO_LONG_NAME = "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb1";
     private static final String NEW_CATEGORY_NAME = "new main category";
     private static final String RESERVED_CATEGORY_NAME = "main category 1";
     private static final String OTHER_RESERVED_CATEGORY_NAME = "main category 2";
     private static final String INCOME = "INCOME";
     private static final String OUTCOME = "OUTCOME";
+    private static final String INVALID_TYPE = "OUTCOME1";
 
     @Autowired
     private MainCategoryController mainCategoryController;
+
+    @Test
+    public void testSaveCategoryWhenCategoryNameIsNull() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withName(null)
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "The new category is invalid.");
+    }
+
+    @Test
+    public void testSaveCategoryWhenCategoryNameValueIsNull() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withName(ModelStringValue.builder().withValue(null).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "Validated field value cannot be null!");
+    }
+
+    @Test
+    public void testSaveCategoryWhenCategoryNameIsEmpty() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withName(ModelStringValue.builder().withValue(EMPTY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "The new category is invalid.");
+        Assert.assertEquals(response.getMainCategoryModel().getName().getErrorMessage(), "Name cannot be empty!");
+    }
+
+    @Test
+    public void testSaveCategoryWhenCategoryNameIsTooLong() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withName(ModelStringValue.builder().withValue(TOO_LONG_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "The new category is invalid.");
+        Assert.assertEquals(response.getMainCategoryModel().getName().getErrorMessage(), "Name cannot be longer than 50!");
+    }
+
+    @Test
+    public void testSaveCategoryWhenCategoryTypeIsNull() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(null)
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "The new category is invalid.");
+    }
+
+    @Test
+    public void testSaveCategoryWhenCategoryTypeValueIsNull() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(null).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "Validated field value cannot be null!");
+    }
+
+    @Test
+    public void testSaveCategoryWhenCategoryValueIsInvalid() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "The new category is invalid.");
+        Assert.assertEquals(response.getMainCategoryModel().getTransactionType().getErrorMessage(), "Type must be one of them: [INCOME, OUTCOME]!");
+    }
+
+    @Test
+    public void testSaveCategoryWhenCategoryHasASubCategoryWithoutId() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        mainCategoryToSave.getSubCategoryModelSet().add(createSubCategoryModel(null, "illegal supplementary category", INCOME));
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "A subCategory does not have id!");
+    }
+
+    @Test
+    public void testSaveCategoryWhenCategoryIdIsNotNull() {
+        // GIVEN
+        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
+                .withId(INVALID_ID)
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        // WHEN
+        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "The new category is invalid.");
+    }
 
     @Test
     public void testSaveCategoryWhenCategoryHasNewName() {
@@ -45,8 +207,9 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(NEW_ID, response.getMainCategoryModel().getId());
-        Assert.assertEquals(NEW_CATEGORY_NAME, response.getMainCategoryModel().getName().getValue());
+        Assert.assertEquals(response.getMessage(), "The category has been saved.");
+        Assert.assertEquals(response.getMainCategoryModel().getId(), NEW_ID);
+        Assert.assertEquals(response.getMainCategoryModel().getName().getValue(), NEW_CATEGORY_NAME);
     }
 
     @Test
@@ -63,8 +226,9 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(NEW_ID, response.getMainCategoryModel().getId());
-        Assert.assertEquals(RESERVED_CATEGORY_NAME, response.getMainCategoryModel().getName().getValue());
+        Assert.assertEquals(response.getMessage(), "The category has been saved.");
+        Assert.assertEquals(response.getMainCategoryModel().getId(), NEW_ID);
+        Assert.assertEquals(response.getMainCategoryModel().getName().getValue(), RESERVED_CATEGORY_NAME);
     }
 
     @Test
@@ -81,29 +245,106 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "The category has been saved before.");
     }
 
-    // MainCategoryException
     @Test
-    public void testSaveCategoryWhenCategoryHasNewNameButThereIsOneSubCategoryWithoutId() {
+    public void testUpdateCategoryWhenCategoryIdIsNull() {
         // GIVEN
-        MainCategoryModel mainCategoryToSave = MainCategoryModel.builder()
-            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-            .withSubCategoryModelSet(createSubCategoryModelSet())
-            .build();
-        mainCategoryToSave.getSubCategoryModelSet()
-            .add(createSubCategoryModel(null, "illegal supplementary category", INCOME));
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        MainCategoryModel mainCategoryToUpdate = MainCategoryModel.builder()
+                .withId(null)
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
-        ResponseEntity result = mainCategoryController.createMainCategory(context);
+        ResponseEntity result = mainCategoryController.updateMainCategory(context);
         MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "The new category is invalid.");
     }
 
     @Test
-    public void testUpdateCategorySaveWhenCategoryHasNewName() {
+    public void testUpdateCategoryWhenCategoryTypeIsChanged() {
+        // GIVEN
+        MainCategoryModel mainCategoryToUpdate = MainCategoryModel.builder()
+                .withId(EXISTING_INCOME_ID)
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(OUTCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        // WHEN
+        ResponseEntity result = mainCategoryController.updateMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "Transaction type cannot be changed!");
+    }
+
+
+    @Test
+    public void testUpdateCategoryWhenCategoryHasOneSubCategoryWithoutId() {
+        // GIVEN
+        MainCategoryModel mainCategoryToUpdate = MainCategoryModel.builder()
+                .withId(EXISTING_INCOME_ID)
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        mainCategoryToUpdate.getSubCategoryModelSet()
+                .add(createSubCategoryModel(null, "illegal supplementary category", INCOME));
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        // WHEN
+        ResponseEntity result = mainCategoryController.updateMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "A subCategory does not have id!");
+    }
+
+    @Test
+    public void testUpdateCategoryWhenCategoryHasLessSubCategory() {
+        // GIVEN
+        Set<SubCategoryModel> modifiedSet = new HashSet<>();
+        modifiedSet.add(createSubCategoryModel(1L, "supplementary category 1", INCOME));
+        MainCategoryModel mainCategoryToUpdate = MainCategoryModel.builder()
+            .withId(EXISTING_INCOME_ID)
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .withSubCategoryModelSet(modifiedSet)
+            .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        // WHEN
+        ResponseEntity result = mainCategoryController.updateMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "New mainCategory does not contain all original subCategory!");
+    }
+
+    @Test
+    public void testUpdateCategoryWhenCategoryCannotBeFoundInTheRepository() {
+        // GIVEN
+        MainCategoryModel mainCategoryToUpdate = MainCategoryModel.builder()
+                .withId(INVALID_ID)
+                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+                .withSubCategoryModelSet(createSubCategoryModelSet())
+                .build();
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        // WHEN
+        ResponseEntity result = mainCategoryController.updateMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "Original mainCategory cannot be found in the repository!");
+    }
+
+    @Test
+    public void testUpdateCategoryWhenCategoryHasNewName() {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate = MainCategoryModel.builder()
             .withId(EXISTING_INCOME_ID)
@@ -117,8 +358,8 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(EXISTING_INCOME_ID, response.getMainCategoryModel().getId());
-        Assert.assertEquals(NEW_CATEGORY_NAME, response.getMainCategoryModel().getName().getValue());
+        Assert.assertEquals(response.getMainCategoryModel().getId(), EXISTING_INCOME_ID);
+        Assert.assertEquals(response.getMainCategoryModel().getName().getValue(), NEW_CATEGORY_NAME);
     }
 
     @Test
@@ -136,8 +377,8 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(EXISTING_OUTCOME_ID, response.getMainCategoryModel().getId());
-        Assert.assertEquals(RESERVED_CATEGORY_NAME, response.getMainCategoryModel().getName().getValue());
+        Assert.assertEquals(response.getMainCategoryModel().getId(), EXISTING_OUTCOME_ID);
+        Assert.assertEquals(response.getMainCategoryModel().getName().getValue(), RESERVED_CATEGORY_NAME);
     }
 
     @Test
@@ -155,46 +396,7 @@ public class MainCategoryTest extends AbstractTransactionServiceApplicationTest 
         MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
-    }
-
-    // MainCategoryException
-    @Test
-    public void testUpdateCategoryWhenCategoryHasNewNameButThereIsOneSubCategoryWithoutId() {
-        // GIVEN
-        MainCategoryModel mainCategoryToUpdate = MainCategoryModel.builder()
-            .withId(EXISTING_INCOME_ID)
-            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-            .withSubCategoryModelSet(createSubCategoryModelSet())
-            .build();
-        mainCategoryToUpdate.getSubCategoryModelSet()
-            .add(createSubCategoryModel(null, "illegal supplementary category", INCOME));
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
-        // WHEN
-        ResponseEntity result = mainCategoryController.updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-    }
-
-    // MainCategoryException
-    @Test
-    public void testUpdateCategoryWhenCategoryHasNewNameButItHasLessSubCategory() {
-        // GIVEN
-        Set<SubCategoryModel> modifiedSet = new HashSet<>();
-        modifiedSet.add(createSubCategoryModel(1L, "supplementary category 1", INCOME));
-        MainCategoryModel mainCategoryToUpdate = MainCategoryModel.builder()
-            .withId(EXISTING_INCOME_ID)
-            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-            .withSubCategoryModelSet(modifiedSet)
-            .build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
-        // WHEN
-        ResponseEntity result = mainCategoryController.updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "You cannot update this category, because it exists.");
     }
 
     private Set<SubCategoryModel> createSubCategoryModelSet() {

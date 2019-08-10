@@ -23,6 +23,9 @@ import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer
 @PropertySource("classpath:common_constraints.properties")
 public class TransactionModelTransformer {
 
+    @Value("${transaction.endDate.minimum_extra_days_to_date}")
+    private Integer minimumDaysToAddToStartDate;
+
     @Value("${transaction.title.maximum_length}")
     private Integer transactionTitleMaximumLength;
 
@@ -110,6 +113,9 @@ public class TransactionModelTransformer {
         transactionModel.getDate().setPossibleFirstDay(firstPossibleDay);
         if (transactionModel.getDescription() != null) {
             transactionModel.getDescription().setMaximumLength(transactionDescriptionMaximumLength);
+        }
+        if (transactionModel.getEndDate() != null) {
+            transactionModel.getEndDate().setPossibleFirstDay(transactionModel.getDate().getValue().plusDays(minimumDaysToAddToStartDate));
         }
     }
 

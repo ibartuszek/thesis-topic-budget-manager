@@ -60,18 +60,18 @@ public class TransactionEntityTransformerTest {
         Transaction result = underTest.transformToTransaction(incomeEntity);
         // THEN
         control.verify();
-        Assert.assertEquals(EXPECTED_ID, result.getId());
-        Assert.assertEquals(EXPECTED_TITLE, result.getTitle());
-        Assert.assertEquals(EXPECTED_AMOUNT, result.getAmount());
-        Assert.assertEquals(EXPECTED_CURRENCY, result.getCurrency());
+        Assert.assertEquals(result.getId(), EXPECTED_ID);
+        Assert.assertEquals(result.getTitle(), EXPECTED_TITLE);
+        Assert.assertEquals(result.getAmount(), EXPECTED_AMOUNT);
+        Assert.assertEquals(result.getCurrency(), EXPECTED_CURRENCY);
         Assert.assertNotNull(result.getMainCategory());
         Assert.assertNull(result.getSubCategory());
-        Assert.assertEquals(EXPECTED_DATE.toLocalDate(), result.getDate());
-        Assert.assertEquals(EXPECTED_END_DATE.toLocalDate(), result.getEndDate());
-        Assert.assertEquals(MONTHLY, result.isMonthly());
-        Assert.assertEquals(DESCRIPTION, result.getDescription());
-        Assert.assertEquals(LOCKED, result.isLocked());
-        Assert.assertEquals(INCOME, result.getTransactionType());
+        Assert.assertEquals(result.getDate(), EXPECTED_DATE.toLocalDate());
+        Assert.assertEquals(result.getEndDate(), EXPECTED_END_DATE.toLocalDate());
+        Assert.assertEquals(result.isMonthly(), MONTHLY);
+        Assert.assertEquals(result.getDescription(), DESCRIPTION);
+        Assert.assertEquals(result.isLocked(), LOCKED);
+        Assert.assertEquals(result.getTransactionType(), INCOME);
     }
 
     @Test
@@ -89,18 +89,18 @@ public class TransactionEntityTransformerTest {
         Transaction result = underTest.transformToTransaction(incomeEntity);
         // THEN
         control.verify();
-        Assert.assertEquals(EXPECTED_ID, result.getId());
-        Assert.assertEquals(EXPECTED_TITLE, result.getTitle());
-        Assert.assertEquals(EXPECTED_AMOUNT, result.getAmount());
-        Assert.assertEquals(EXPECTED_CURRENCY, result.getCurrency());
+        Assert.assertEquals(result.getId(), EXPECTED_ID);
+        Assert.assertEquals(result.getTitle(), EXPECTED_TITLE);
+        Assert.assertEquals(result.getAmount(), EXPECTED_AMOUNT);
+        Assert.assertEquals(result.getCurrency(), EXPECTED_CURRENCY);
         Assert.assertNotNull(result.getMainCategory());
         Assert.assertNotNull(result.getSubCategory());
-        Assert.assertEquals(EXPECTED_DATE.toLocalDate(), result.getDate());
-        Assert.assertEquals(EXPECTED_END_DATE.toLocalDate(), result.getEndDate());
-        Assert.assertEquals(MONTHLY, result.isMonthly());
-        Assert.assertEquals(DESCRIPTION, result.getDescription());
-        Assert.assertEquals(LOCKED, result.isLocked());
-        Assert.assertEquals(INCOME, result.getTransactionType());
+        Assert.assertEquals(result.getDate(), EXPECTED_DATE.toLocalDate());
+        Assert.assertEquals(result.getEndDate(), EXPECTED_END_DATE.toLocalDate());
+        Assert.assertEquals(result.isMonthly(), MONTHLY);
+        Assert.assertEquals(result.getDescription(), DESCRIPTION);
+        Assert.assertEquals(result.isLocked(), LOCKED);
+        Assert.assertEquals(result.getTransactionType(), INCOME);
     }
 
     @Test
@@ -113,17 +113,17 @@ public class TransactionEntityTransformerTest {
         IncomeEntity result = underTest.transformToIncomeEntity(transaction, mainCategoryEntity, null);
         // THEN
         control.verify();
-        Assert.assertEquals(EXPECTED_ID, result.getId());
-        Assert.assertEquals(EXPECTED_TITLE, result.getTitle());
-        Assert.assertEquals(EXPECTED_AMOUNT, result.getAmount());
-        Assert.assertEquals(EXPECTED_CURRENCY, result.getCurrency());
+        Assert.assertEquals(result.getId(), EXPECTED_ID);
+        Assert.assertEquals(result.getTitle(), EXPECTED_TITLE);
+        Assert.assertEquals(result.getAmount(), EXPECTED_AMOUNT);
+        Assert.assertEquals(result.getCurrency(), EXPECTED_CURRENCY);
         Assert.assertNotNull(result.getMainCategoryEntity());
         Assert.assertNull(result.getSubCategoryEntity());
-        Assert.assertEquals(EXPECTED_DATE, result.getDate());
-        Assert.assertEquals(EXPECTED_END_DATE, result.getEndDate());
-        Assert.assertEquals(MONTHLY, result.isMonthly());
-        Assert.assertEquals(DESCRIPTION, result.getDescription());
-        Assert.assertEquals(LOCKED, result.isLocked());
+        Assert.assertEquals(result.getDate(), EXPECTED_DATE);
+        Assert.assertEquals(result.getEndDate(), EXPECTED_END_DATE);
+        Assert.assertEquals(result.isMonthly(), MONTHLY);
+        Assert.assertEquals(result.getDescription(), DESCRIPTION);
+        Assert.assertEquals(result.isLocked(), LOCKED);
     }
 
     @Test
@@ -139,17 +139,17 @@ public class TransactionEntityTransformerTest {
         IncomeEntity result = underTest.transformToIncomeEntity(transaction, mainCategoryEntity, subCategoryEntity);
         // THEN
         control.verify();
-        Assert.assertEquals(EXPECTED_ID, result.getId());
-        Assert.assertEquals(EXPECTED_TITLE, result.getTitle());
-        Assert.assertEquals(EXPECTED_AMOUNT, result.getAmount());
-        Assert.assertEquals(EXPECTED_CURRENCY, result.getCurrency());
+        Assert.assertEquals(result.getId(), EXPECTED_ID);
+        Assert.assertEquals(result.getTitle(), EXPECTED_TITLE);
+        Assert.assertEquals(result.getAmount(), EXPECTED_AMOUNT);
+        Assert.assertEquals(result.getCurrency(), EXPECTED_CURRENCY);
         Assert.assertNotNull(result.getMainCategoryEntity());
         Assert.assertNotNull(result.getSubCategoryEntity());
-        Assert.assertEquals(EXPECTED_DATE, result.getDate());
-        Assert.assertEquals(EXPECTED_END_DATE, result.getEndDate());
-        Assert.assertEquals(MONTHLY, result.isMonthly());
-        Assert.assertEquals(DESCRIPTION, result.getDescription());
-        Assert.assertEquals(LOCKED, result.isLocked());
+        Assert.assertEquals(result.getDate(), EXPECTED_DATE);
+        Assert.assertEquals(result.getEndDate(), EXPECTED_END_DATE);
+        Assert.assertEquals(result.isMonthly(), MONTHLY);
+        Assert.assertEquals(result.getDescription(), DESCRIPTION);
+        Assert.assertEquals(result.isLocked(), LOCKED);
     }
 
     private IncomeEntity createExampleIncomeEntity() {

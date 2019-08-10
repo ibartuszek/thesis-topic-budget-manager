@@ -49,8 +49,6 @@ public class TransactionModelServiceTest {
     private static final LocalDate DEFAULT_DATE = LocalDate.now();
     private static final LocalDate DEFAULT_START_OF_NEW_PERIOD = LocalDate.now().minusDays(1);
     private static final LocalDate END = LocalDate.now();
-    private static final boolean LOCKED = true;
-    private static final boolean NOT_LOCKED = false;
     private static final MainCategoryModel MAIN_CATEGORY_MODEL = MainCategoryModel.builder().build();
     private static final Set<String> POSSIBLE_CURRENCIES = Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet());
     private static final Set<String> POSSIBLE_TRANSACTION_TYPES = Arrays.stream(TransactionType.values()).map(TransactionType::name)
@@ -89,7 +87,7 @@ public class TransactionModelServiceTest {
         List<TransactionModel> result = underTest.findAll(context);
         // THEN
         control.verify();
-        Assert.assertEquals(Collections.emptyList(), result);
+        Assert.assertEquals(result, Collections.emptyList());
     }
 
     @Test
@@ -108,8 +106,8 @@ public class TransactionModelServiceTest {
         List<TransactionModel> result = underTest.findAll(context);
         // THEN
         control.verify();
-        Assert.assertEquals(transactionModelList, result);
-        Assert.assertEquals(transactionModelList.get(0), result.get(0));
+        Assert.assertEquals(result, transactionModelList);
+        Assert.assertEquals(result.get(0), transactionModelList.get(0));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "getData")
@@ -169,7 +167,7 @@ public class TransactionModelServiceTest {
         // THEN
         control.verify();
         Assert.assertFalse(result.isSuccessful());
-        Assert.assertEquals(TRANSACTION_IS_INVALID_MESSAGE, result.getMessage());
+        Assert.assertEquals(result.getMessage(), TRANSACTION_IS_INVALID_MESSAGE);
     }
 
     @Test
@@ -189,7 +187,7 @@ public class TransactionModelServiceTest {
         // THEN
         control.verify();
         Assert.assertFalse(result.isSuccessful());
-        Assert.assertEquals(TRANSACTION_HAS_BEEN_SAVED_BEFORE, result.getMessage());
+        Assert.assertEquals(result.getMessage(), TRANSACTION_HAS_BEEN_SAVED_BEFORE);
     }
 
     @Test
@@ -210,7 +208,7 @@ public class TransactionModelServiceTest {
         // THEN
         control.verify();
         Assert.assertTrue(result.isSuccessful());
-        Assert.assertEquals(TRANSACTION_HAS_BEEN_SAVED, result.getMessage());
+        Assert.assertEquals(result.getMessage(), TRANSACTION_HAS_BEEN_SAVED);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -224,24 +222,6 @@ public class TransactionModelServiceTest {
     }
 
     @Test
-    public void testUpdateWhenTransactionIsLocked() {
-        // GIVEN
-        TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues().build();
-        TransactionModelRequestContext context = createContext(END, transactionModel);
-        prepareForValidation(transactionModel, true);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
-        transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
-        EasyMock.expect(transactionService.isLockedTransaction(transactionModel.getId(), INCOME)).andReturn(LOCKED);
-        control.replay();
-        // WHEN
-        TransactionModelResponse result = underTest.updateTransaction(context);
-        // THEN
-        control.verify();
-        Assert.assertFalse(result.isSuccessful());
-        Assert.assertEquals(TRANSACTION_IS_INVALID_MESSAGE, result.getMessage());
-    }
-
-    @Test
     public void testUpdateWhenTransactionCannotBeUpdated() {
         // GIVEN
         TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues().build();
@@ -250,16 +230,15 @@ public class TransactionModelServiceTest {
         prepareForValidation(transactionModel, true);
         EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
-        EasyMock.expect(transactionService.isLockedTransaction(transactionModel.getId(), INCOME)).andReturn(NOT_LOCKED);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.update(transaction)).andReturn(Optional.empty());
+        EasyMock.expect(transactionService.update(transaction, INCOME)).andReturn(Optional.empty());
         control.replay();
         // WHEN
         TransactionModelResponse result = underTest.updateTransaction(context);
         // THEN
         control.verify();
         Assert.assertFalse(result.isSuccessful());
-        Assert.assertEquals(TRANSACTION_CANNOT_BE_UPDATED, result.getMessage());
+        Assert.assertEquals(result.getMessage(), TRANSACTION_CANNOT_BE_UPDATED);
     }
 
     @Test
@@ -271,9 +250,8 @@ public class TransactionModelServiceTest {
         prepareForValidation(transactionModel, true);
         EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
-        EasyMock.expect(transactionService.isLockedTransaction(transactionModel.getId(), INCOME)).andReturn(NOT_LOCKED);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.update(transaction)).andReturn(Optional.of(transaction));
+        EasyMock.expect(transactionService.update(transaction, INCOME)).andReturn(Optional.of(transaction));
         EasyMock.expect(transformer.transformToTransactionModel(transaction, DEFAULT_START_OF_NEW_PERIOD)).andReturn(transactionModel);
         control.replay();
         // WHEN
@@ -281,7 +259,17 @@ public class TransactionModelServiceTest {
         // THEN
         control.verify();
         Assert.assertTrue(result.isSuccessful());
-        Assert.assertEquals(TRANSACTION_HAS_BEEN_UPDATED, result.getMessage());
+        Assert.assertEquals(result.getMessage(), TRANSACTION_HAS_BEEN_UPDATED);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testDeleteWhenTransactionIsInvalid() {
+        // GIVEN
+        TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues().withId(null).build();
+        TransactionModelRequestContext context = createContext(END, transactionModel);
+        // WHEN
+        underTest.deleteTransaction(context);
+        // THEN
     }
 
     @Test
@@ -293,16 +281,15 @@ public class TransactionModelServiceTest {
         prepareForValidation(transactionModel, true);
         EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
-        EasyMock.expect(transactionService.isLockedTransaction(transactionModel.getId(), INCOME)).andReturn(NOT_LOCKED);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.delete(transaction)).andReturn(Optional.empty());
+        EasyMock.expect(transactionService.delete(transaction, INCOME)).andReturn(Optional.empty());
         control.replay();
         // WHEN
         TransactionModelResponse result = underTest.deleteTransaction(context);
         // THEN
         control.verify();
         Assert.assertFalse(result.isSuccessful());
-        Assert.assertEquals(TRANSACTION_CANNOT_BE_DELETED, result.getMessage());
+        Assert.assertEquals(result.getMessage(), TRANSACTION_CANNOT_BE_DELETED);
     }
 
     @Test
@@ -314,9 +301,8 @@ public class TransactionModelServiceTest {
         prepareForValidation(transactionModel, true);
         EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
-        EasyMock.expect(transactionService.isLockedTransaction(transactionModel.getId(), INCOME)).andReturn(NOT_LOCKED);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.delete(transaction)).andReturn(Optional.of(transaction));
+        EasyMock.expect(transactionService.delete(transaction, INCOME)).andReturn(Optional.of(transaction));
         EasyMock.expect(transformer.transformToTransactionModel(transaction, DEFAULT_START_OF_NEW_PERIOD)).andReturn(transactionModel);
         control.replay();
         // WHEN
@@ -324,7 +310,7 @@ public class TransactionModelServiceTest {
         // THEN
         control.verify();
         Assert.assertTrue(result.isSuccessful());
-        Assert.assertEquals(TRANSACTION_HAS_BEEN_DELETED, result.getMessage());
+        Assert.assertEquals(result.getMessage(), TRANSACTION_HAS_BEEN_DELETED);
     }
 
     private Transaction.Builder createExampleTransactionBuilderWithDefaultValues() {

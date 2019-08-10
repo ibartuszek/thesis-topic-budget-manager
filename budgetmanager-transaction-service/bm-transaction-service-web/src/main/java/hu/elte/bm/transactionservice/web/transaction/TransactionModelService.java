@@ -12,7 +12,6 @@ import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionService;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.common.ModelValidator;
 
 @Service
@@ -76,8 +75,8 @@ public class TransactionModelService {
     TransactionModelResponse updateTransaction(final TransactionModelRequestContext context) {
         preValidateUpdatableCategory(context.getTransactionModel());
         TransactionModelResponse result = createResponseWithDefaultValues(context);
-        if (isValid(result.getTransactionModel()) && !isLocked(result.getTransactionModel())) {
-            Optional<Transaction> updatedTransaction = transactionService.update(transformer.transformToTransaction(result.getTransactionModel()));
+        if (isValid(result.getTransactionModel())) {
+            Optional<Transaction> updatedTransaction = transactionService.update(transformer.transformToTransaction(result.getTransactionModel()), context.getTransactionType());
             updateResponse(updatedTransaction, result, transactionHasBeenUpdated, transactionCannotBeUpdated);
         } else {
             result.setMessage(transactionIsInvalid);
@@ -88,8 +87,8 @@ public class TransactionModelService {
     TransactionModelResponse deleteTransaction(final TransactionModelRequestContext context) {
         preValidateUpdatableCategory(context.getTransactionModel());
         TransactionModelResponse result = createResponseWithDefaultValues(context);
-        if (isValid(result.getTransactionModel()) && !isLocked(result.getTransactionModel())) {
-            Optional<Transaction> deletedTransaction = transactionService.delete(transformer.transformToTransaction(result.getTransactionModel()));
+        if (isValid(result.getTransactionModel())) {
+            Optional<Transaction> deletedTransaction = transactionService.delete(transformer.transformToTransaction(result.getTransactionModel()), context.getTransactionType());
             updateResponse(deletedTransaction, result, transactionHasBeenDeleted, transactionCannotBeDeleted);
         } else {
             result.setMessage(transactionIsInvalid);
@@ -134,13 +133,9 @@ public class TransactionModelService {
         boolean currency = validator.validate(transactionModel.getCurrency(), "Currency");
         boolean type = validator.validate(transactionModel.getTransactionType(), "Type");
         boolean date = validator.validate(transactionModel.getDate(), "Date");
+        boolean endDate = transactionModel.getEndDate() == null || validator.validate(transactionModel.getEndDate(), "End date");
         boolean description = transactionModel.getDescription() == null || validator.validate(transactionModel.getDescription(), "Description");
-        return title && amount && currency && type && date && description;
-    }
-
-    private boolean isLocked(final TransactionModel transactionModel) {
-        return transactionModel.isLocked()
-            || transactionService.isLockedTransaction(transactionModel.getId(), TransactionType.valueOf(transactionModel.getTransactionType().getValue()));
+        return title && amount && currency && type && date && endDate && description;
     }
 
     private void updateResponse(final Optional<Transaction> transaction,

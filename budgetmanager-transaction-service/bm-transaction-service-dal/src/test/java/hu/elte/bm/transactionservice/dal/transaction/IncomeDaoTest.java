@@ -41,12 +41,9 @@ public class IncomeDaoTest {
 
     private IMocksControl control;
     private IncomeRepository incomeRepository;
-    private OutcomeRepository outcomeRepository;
     private MainCategoryRepository mainCategoryRepository;
     private SubCategoryRepository subCategoryRepository;
     private TransactionEntityTransformer transformer;
-
-    // TODO outcome tests
 
     @BeforeMethod
     public void setup() {
@@ -67,7 +64,7 @@ public class IncomeDaoTest {
         List<Transaction> result = underTest.findAll(START, END);
         // THEN
         control.verify();
-        Assert.assertEquals(Collections.emptyList(), result);
+        Assert.assertEquals(result, Collections.emptyList());
     }
 
     @Test
@@ -83,7 +80,7 @@ public class IncomeDaoTest {
         List<Transaction> result = underTest.findAll(START, END);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedTransactionList, result);
+        Assert.assertEquals(result, expectedTransactionList);
     }
 
     @Test
@@ -95,7 +92,7 @@ public class IncomeDaoTest {
         Optional<Transaction> result = underTest.findById(EXPECTED_ID);
         // THEN
         control.verify();
-        Assert.assertEquals(Optional.empty(), result);
+        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -110,7 +107,7 @@ public class IncomeDaoTest {
         Optional<Transaction> result = underTest.findById(EXPECTED_ID);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedResult, result);
+        Assert.assertEquals(result, expectedResult);
     }
 
     @Test
@@ -126,7 +123,7 @@ public class IncomeDaoTest {
         List<Transaction> result = underTest.findByTitle(EXPECTED_TITLE);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedTransactionList, result);
+        Assert.assertEquals(result, expectedTransactionList);
     }
 
     @Test
@@ -138,7 +135,7 @@ public class IncomeDaoTest {
         List<Transaction> result = underTest.findByTitle(EXPECTED_TITLE);
         // THEN
         control.verify();
-        Assert.assertEquals(Collections.emptyList(), result);
+        Assert.assertEquals(result, Collections.emptyList());
     }
 
     @Test
@@ -165,7 +162,7 @@ public class IncomeDaoTest {
         Optional<Transaction> result = underTest.save(transactionToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedTransaction, result);
+        Assert.assertEquals(result, expectedTransaction);
     }
 
     @Test

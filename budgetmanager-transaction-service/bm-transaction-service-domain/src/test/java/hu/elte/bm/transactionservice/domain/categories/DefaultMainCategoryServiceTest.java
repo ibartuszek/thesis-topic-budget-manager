@@ -50,7 +50,7 @@ public class DefaultMainCategoryServiceTest {
         List<MainCategory> result = underTest.getMainCategoryList(INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(Collections.emptyList(), result);
+        Assert.assertEquals(result, Collections.emptyList());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class DefaultMainCategoryServiceTest {
         List<MainCategory> result = underTest.getMainCategoryList(INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(mainCategoryList, result);
+        Assert.assertEquals(result, mainCategoryList);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -95,7 +95,7 @@ public class DefaultMainCategoryServiceTest {
         Optional<MainCategory> result = underTest.save(mainCategoryToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(Optional.empty(), result);
+        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class DefaultMainCategoryServiceTest {
         Optional<MainCategory> result = underTest.save(mainCategoryToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedMainCategory, result);
+        Assert.assertEquals(result, expectedMainCategory);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -180,6 +180,22 @@ public class DefaultMainCategoryServiceTest {
     }
 
     @Test
+    public void testUpdateWhenCategoryWithSameNameAndTypeFoundInRepository() {
+        // GIVEN
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(NEW_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        Optional<MainCategory> sameMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryById(NEW_ID)).andReturn(originalMainCategory);
+        EasyMock.expect(databaseProxy.findMainCategoryByName(NEW_CATEGORY_NAME, INCOME)).andReturn(sameMainCategory);
+        control.replay();
+        // WHEN
+        Optional<MainCategory> result = underTest.update(mainCategoryToUpdate);
+        // THEN
+        control.verify();
+        Assert.assertEquals(result, Optional.empty());
+    }
+
+    @Test
     public void testUpdate() {
         // GIVEN
         MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
@@ -193,7 +209,7 @@ public class DefaultMainCategoryServiceTest {
         Optional<MainCategory> result = underTest.update(mainCategoryToUpdate);
         // THEN
         control.verify();
-        Assert.assertEquals(copyNewMainCategory, result);
+        Assert.assertEquals(result, copyNewMainCategory);
     }
 
     private List<MainCategory> createMainCategoryList() {

@@ -35,6 +35,8 @@ public class DefaultTransactionServiceTest {
     private static final String CATEGORY_NAME = "category";
     private static final long DAYS_TO_SUBTRACT = 30L;
     private static final String NEW_TITLE = "new Title";
+    private static final LocalDate EXPECTED_LAST_DATE = LocalDate.now().minusDays(DAYS_TO_SUBTRACT - 5);
+    private static final LocalDate AFTER_EXPECTED_LAST_DATE = LocalDate.now().minusDays(DAYS_TO_SUBTRACT - 10);
 
     private DefaultTransactionService underTest;
     private IMocksControl control;
@@ -83,7 +85,7 @@ public class DefaultTransactionServiceTest {
         List<Transaction> result = underTest.findAllTransaction(start, end, INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(Collections.emptyList(), result);
+        Assert.assertEquals(result, Collections.emptyList());
     }
 
     @Test
@@ -98,7 +100,7 @@ public class DefaultTransactionServiceTest {
         List<Transaction> result = underTest.findAllTransaction(start, end, INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedTransactionList, result);
+        Assert.assertEquals(result, expectedTransactionList);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -112,7 +114,6 @@ public class DefaultTransactionServiceTest {
     @Test(expectedExceptions = TransactionException.class)
     public void testSaveWhenMainCategoryOfTransactionHasNotId() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         MainCategory mainCategory = createExampleMainCategoryBuilderWithDefaultValues()
             .withId(null)
             .build();
@@ -133,7 +134,6 @@ public class DefaultTransactionServiceTest {
     @Test(expectedExceptions = TransactionException.class)
     public void testSaveWhenMainCategoryOfTransactionHasInvalidSubCategory() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         MainCategory mainCategory = createExampleMainCategoryBuilderWithDefaultValues().build();
         mainCategory.getSubCategorySet().add(createExampleSubCategory(null, CATEGORY_NAME, INCOME));
         Transaction transaction = createExampleTransactionBuilder()
@@ -151,27 +151,8 @@ public class DefaultTransactionServiceTest {
     }
 
     @Test(expectedExceptions = TransactionException.class)
-    public void testSaveWhenDateOfTransactionIsBeforeEndOfLastPeriod() {
-        // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
-        Transaction transaction = createExampleTransactionBuilder()
-            .withId(null)
-            .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT))
-            .build();
-        control.replay();
-        // WHEN
-        try {
-            underTest.save(transaction);
-        } finally {
-            // THEN
-            control.verify();
-        }
-    }
-
-    @Test(expectedExceptions = TransactionException.class)
     public void testSaveWhenSubCategoryIdIsNull() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         Transaction transaction = createExampleTransactionBuilder()
             .withId(null)
             .withSubCategory(createExampleSubCategory(null, CATEGORY_NAME, INCOME))
@@ -189,7 +170,6 @@ public class DefaultTransactionServiceTest {
     @Test
     public void testSaveWhenThereIsOneTransactionWithSameNameAndDate() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
         listOfTransactionsWithSameTitle.add(createExampleTransactionBuilder().build());
         Transaction transaction = createExampleTransactionBuilder()
@@ -201,13 +181,12 @@ public class DefaultTransactionServiceTest {
         Optional<Transaction> result = underTest.save(transaction);
         // THEN
         control.verify();
-        Assert.assertEquals(Optional.empty(), result);
+        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
     public void testSave() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         Transaction transactionWithSameTitle = createExampleTransactionBuilder()
             .withDate(LocalDate.now().minusDays(1))
             .build();
@@ -226,21 +205,20 @@ public class DefaultTransactionServiceTest {
         Optional<Transaction> result = underTest.save(transaction);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedTransAction, result);
+        Assert.assertEquals(result, expectedTransAction);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateWhenTransactionIsNull() {
         // GIVEN
         // WHEN
-        underTest.update(null);
+        underTest.update(null, INCOME);
         // THEN
     }
 
     @Test(expectedExceptions = TransactionException.class)
     public void testUpdateWhenMainCategoryOfTransactionHasNotId() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         MainCategory mainCategory = createExampleMainCategoryBuilderWithDefaultValues()
             .withId(null)
             .build();
@@ -251,7 +229,7 @@ public class DefaultTransactionServiceTest {
         control.replay();
         // WHEN
         try {
-            underTest.update(transaction);
+            underTest.update(transaction, INCOME);
         } finally {
             // THEN
             control.verify();
@@ -261,7 +239,6 @@ public class DefaultTransactionServiceTest {
     @Test(expectedExceptions = TransactionException.class)
     public void testUpdateWhenMainCategoryOfTransactionHasInvalidSubCategory() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         MainCategory mainCategory = createExampleMainCategoryBuilderWithDefaultValues().build();
         mainCategory.getSubCategorySet().add(createExampleSubCategory(null, CATEGORY_NAME, INCOME));
         Transaction transaction = createExampleTransactionBuilder()
@@ -271,25 +248,7 @@ public class DefaultTransactionServiceTest {
         control.replay();
         // WHEN
         try {
-            underTest.update(transaction);
-        } finally {
-            // THEN
-            control.verify();
-        }
-    }
-
-    @Test(expectedExceptions = TransactionException.class)
-    public void testUpdateWhenDateOfTransactionIsBeforeEndOfLastPeriod() {
-        // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
-        Transaction transaction = createExampleTransactionBuilder()
-            .withTitle(NEW_TITLE)
-            .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT))
-            .build();
-        control.replay();
-        // WHEN
-        try {
-            underTest.update(transaction);
+            underTest.update(transaction, INCOME);
         } finally {
             // THEN
             control.verify();
@@ -299,7 +258,6 @@ public class DefaultTransactionServiceTest {
     @Test(expectedExceptions = TransactionException.class)
     public void testUpdateWhenOriginalTransactionCannotBeFound() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         Transaction transaction = createExampleTransactionBuilder()
             .withTitle(NEW_TITLE)
             .build();
@@ -307,7 +265,7 @@ public class DefaultTransactionServiceTest {
         control.replay();
         // WHEN
         try {
-            underTest.update(transaction);
+            underTest.update(transaction, INCOME);
         } finally {
             // THEN
             control.verify();
@@ -317,7 +275,6 @@ public class DefaultTransactionServiceTest {
     @Test(expectedExceptions = TransactionException.class)
     public void testUpdateWhenOriginalTransactionIsLocked() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         Transaction transaction = createExampleTransactionBuilder()
             .withTitle(NEW_TITLE)
             .build();
@@ -329,7 +286,7 @@ public class DefaultTransactionServiceTest {
         control.replay();
         // WHEN
         try {
-            underTest.update(transaction);
+            underTest.update(transaction, INCOME);
         } finally {
             // THEN
             control.verify();
@@ -339,7 +296,6 @@ public class DefaultTransactionServiceTest {
     @Test(expectedExceptions = TransactionException.class)
     public void testUpdateWhenTransactionTypeHasChanged() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         Transaction transaction = createExampleTransactionBuilder()
             .withTitle(NEW_TITLE)
             .build();
@@ -351,7 +307,7 @@ public class DefaultTransactionServiceTest {
         control.replay();
         // WHEN
         try {
-            underTest.update(transaction);
+            underTest.update(transaction, INCOME);
         } finally {
             // THEN
             control.verify();
@@ -361,7 +317,6 @@ public class DefaultTransactionServiceTest {
     @Test
     public void testUpdate() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         Transaction transactionWithSameTitle = createExampleTransactionBuilder()
             .withId(ID_2)
             .withDate(LocalDate.now().minusDays(1))
@@ -381,16 +336,15 @@ public class DefaultTransactionServiceTest {
         EasyMock.expect(databaseProxy.updateTransaction(transaction)).andReturn(expectedTransaction);
         control.replay();
         // WHEN
-        Optional<Transaction> result = underTest.update(transaction);
+        Optional<Transaction> result = underTest.update(transaction, INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedTransaction, result);
+        Assert.assertEquals(result, expectedTransaction);
     }
 
     @Test
     public void testDelete() {
         // GIVEN
-        createExampleListForEndOfLastPeriodWithCalls();
         Transaction transaction = createExampleTransactionBuilder().build();
         Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder().build());
         EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType()))
@@ -398,13 +352,60 @@ public class DefaultTransactionServiceTest {
         databaseProxy.deleteTransaction(transaction);
         control.replay();
         // WHEN
-        Optional<Transaction> result = underTest.delete(transaction);
+        Optional<Transaction> result = underTest.delete(transaction, INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(transaction, result.get());
+        Assert.assertEquals(result.get(), transaction);
     }
 
-    private void createExampleListForEndOfLastPeriodWithCalls() {
+    @Test
+    public void testGetTheFirstDateOfTheNewPeriodWhenRepositoryReturnsWithEmptyList() {
+        // GIVEN
+        List<Transaction> transactionList = Collections.emptyList();
+        LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
+        LocalDate end = LocalDate.now();
+        EasyMock.expect(databaseProxy.findAllTransaction(start, end, INCOME)).andReturn(transactionList);
+        control.replay();
+        // WHEN
+        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(INCOME);
+        // THEN
+        control.verify();
+        Assert.assertEquals(result, start);
+    }
+
+    @Test
+    public void testGetTheFirstDateOfTheNewPeriodWhenThereCannotBeFoundALockedDate() {
+        // GIVEN
+        List<Transaction> transactionList = new ArrayList<>();
+        transactionList.add(createExampleTransactionBuilder().withDate(LocalDate.now()).build());
+        transactionList.add(createExampleTransactionBuilder().withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT)).build());
+        LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
+        LocalDate end = LocalDate.now();
+        EasyMock.expect(databaseProxy.findAllTransaction(start, end, INCOME)).andReturn(transactionList);
+        control.replay();
+        // WHEN
+        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(INCOME);
+        // THEN
+        control.verify();
+        Assert.assertEquals(result, start);
+    }
+
+    @Test
+    public void testGetTheFirstDateOfTheNewPeriodWhenThereCanBeFoundALockedDate() {
+        // GIVEN
+        List<Transaction> transactionList = createExampleListForEndOfLastPeriodWithCalls();
+        LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
+        LocalDate end = LocalDate.now();
+        EasyMock.expect(databaseProxy.findAllTransaction(start, end, INCOME)).andReturn(transactionList);
+        control.replay();
+        // WHEN
+        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(INCOME);
+        // THEN
+        control.verify();
+        Assert.assertEquals(result, EXPECTED_LAST_DATE.plusDays(1));
+    }
+
+    private List<Transaction> createExampleListForEndOfLastPeriodWithCalls() {
         List<Transaction> transactionList = new ArrayList<>();
         transactionList.add(createExampleTransactionBuilder()
             .withId(EXPECTED_ID)
@@ -414,15 +415,13 @@ public class DefaultTransactionServiceTest {
         transactionList.add(createExampleTransactionBuilder()
             .withId(ID_2)
             .withLocked(true)
-            .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT - 1))
+            .withDate(EXPECTED_LAST_DATE)
             .build());
         transactionList.add(createExampleTransactionBuilder()
             .withId(ID_3)
-            .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT - 2))
+            .withDate(AFTER_EXPECTED_LAST_DATE)
             .build());
-        LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
-        LocalDate end = LocalDate.now();
-        EasyMock.expect(databaseProxy.findAllTransaction(start, end, INCOME)).andReturn(transactionList);
+        return transactionList;
     }
 
     private List<Transaction> createExampleTransActionList() {

@@ -45,7 +45,7 @@ public class DefaultSubCategoryServiceTest {
         List<SubCategory> result = underTest.getSubCategoryList(INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(Collections.emptyList(), result);
+        Assert.assertEquals(result, Collections.emptyList());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class DefaultSubCategoryServiceTest {
         List<SubCategory> result = underTest.getSubCategoryList(INCOME);
         // THEN
         control.verify();
-        Assert.assertEquals(subCategoryList, result);
+        Assert.assertEquals(result, subCategoryList);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -80,7 +80,7 @@ public class DefaultSubCategoryServiceTest {
         Optional<SubCategory> result = underTest.save(subCategoryToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(Optional.empty(), result);
+        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class DefaultSubCategoryServiceTest {
         Optional<SubCategory> result = underTest.save(subCategoryToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedSubCategory, result);
+        Assert.assertEquals(result, expectedSubCategory);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -150,7 +150,7 @@ public class DefaultSubCategoryServiceTest {
         Optional<SubCategory> result = underTest.update(subCategoryToUpdate);
         // THEN
         control.verify();
-        Assert.assertEquals(Optional.empty(), result);
+        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -167,7 +167,7 @@ public class DefaultSubCategoryServiceTest {
         Optional<SubCategory> result = underTest.update(subCategoryToUpdate);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedSubCategory, result);
+        Assert.assertEquals(result, expectedSubCategory);
     }
 
     private List<SubCategory> createSubCategoryList() {

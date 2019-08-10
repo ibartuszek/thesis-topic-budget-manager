@@ -40,8 +40,8 @@ public class ModelValidator {
     @Value("${validator.amount_must_be_positive_or_zero}")
     private String validatorFieldValuePositiveOrZero;
 
-    @Value("${validator.date_must_be_after}")
-    private String validatorFieldValueMustBeAfter;
+    @Value("${validator.date_cannot_be_before}")
+    private String validatorFieldValueCannotBeBefore;
 
     public boolean validate(final ModelStringValue modelStringValue, final String name) {
         commonValidation(modelStringValue, name);
@@ -87,9 +87,10 @@ public class ModelValidator {
         Assert.notNull(modelDateValue.getValue(), validatorFieldValueCannotBeNul);
         boolean result = true;
         if (modelDateValue.getPossibleFirstDay() != null && modelDateValue.getValue().isBefore(modelDateValue.getPossibleFirstDay())) {
-            modelDateValue.setErrorMessage(MessageFormat.format(validatorFieldValueMustBeAfter, name, modelDateValue.getPossibleFirstDay()));
+            modelDateValue.setErrorMessage(MessageFormat.format(validatorFieldValueCannotBeBefore, name, modelDateValue.getPossibleFirstDay()));
             result = false;
         }
+
         return result;
     }
 

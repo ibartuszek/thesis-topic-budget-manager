@@ -41,20 +41,22 @@ public interface TransactionService {
      * (e.g. at the end of the month).
      *
      * @param transaction {@link Transaction} is extends {@link Transaction}. Cannot be null.
+     * @param transactionType {@link TransactionType} the type of the transaction. Cannot be null.
      * @return It returns a new {@link Optional<Transaction>} If update was successful the object contains the modified values.
      * If the transaction has locked already it returns an empty optional.
      */
-    Optional<Transaction> update(Transaction transaction);
+    Optional<Transaction> update(Transaction transaction, TransactionType transactionType);
 
     /**
      * Delete the existing transaction in the repository if the budget period has not been locked
      * (e.g. at the end of the month).
      *
      * @param transaction {@link Transaction} is extends {@link Transaction}. Cannot be null.
+     * @param transactionType {@link TransactionType} the type of the transaction. Cannot be null.
      * @return It returns a new {@link Optional<Transaction>} If delete was successful the object contains the modified values.
      * If the transaction has locked already it returns an empty optional.
      */
-    Optional<Transaction> delete(Transaction transaction);
+    Optional<Transaction> delete(Transaction transaction, TransactionType transactionType);
 
     /**
      * Find the last day of the previous budget period.
@@ -66,12 +68,4 @@ public interface TransactionService {
      */
     LocalDate getTheFirstDateOfTheNewPeriod(TransactionType type);
 
-    /**
-     * Find the transaction by id and gives back its locked field.
-     *
-     * @param id   the id of the {@link Transaction}
-     * @param type the type of the transaction: {@link TransactionType}
-     * @return true if the transaction is locked already or if it cannot be found in the repository.
-     */
-    boolean isLockedTransaction(Long id, TransactionType type);
 }

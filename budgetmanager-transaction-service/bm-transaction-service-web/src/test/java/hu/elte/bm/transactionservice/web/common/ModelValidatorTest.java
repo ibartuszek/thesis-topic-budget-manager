@@ -35,9 +35,9 @@ public class ModelValidatorTest {
     private static final Double NEGATIVE = -0.1d;
     private static final String VALIDATOR_FIELD_VALUE_POSITIVE = "Name must be positive number!";
     private static final String VALIDATOR_FIELD_VALUE_POSITIVE_OR_ZERO = "Name must be positive number or zero!";
-    private static final LocalDate BEFORE_DEADLINE = LocalDate.now().minusDays(1L);
-    private static final LocalDate DEADLINE = LocalDate.now();
-    private static final String VALIDATOR_FIELD_VALUE_MUST_BE_AFTER = MessageFormat.format("Name must be after {0}!", DEADLINE);
+    private static final LocalDate BEFORE_FIRST_POSSIBLE_DAY = LocalDate.now().minusDays(1L);
+    private static final LocalDate FIRST_POSSIBLE_DAY = LocalDate.now();
+    private static final String VALIDATOR_FIELD_VALUE_CANNOT_BE_BEFORE = MessageFormat.format("Name cannot be before {0}!", FIRST_POSSIBLE_DAY);
 
     private final ModelValidator underTest = createModelValidator();
 
@@ -52,7 +52,7 @@ public class ModelValidatorTest {
         ReflectionTestUtils.setField(validator, "validatorFieldValueNotEnum", "{0} must be one of them: {1}!");
         ReflectionTestUtils.setField(validator, "validatorFieldValuePositive", "{0} must be positive number!");
         ReflectionTestUtils.setField(validator, "validatorFieldValuePositiveOrZero", "{0} must be positive number or zero!");
-        ReflectionTestUtils.setField(validator, "validatorFieldValueMustBeAfter", "{0} must be after {1}!");
+        ReflectionTestUtils.setField(validator, "validatorFieldValueCannotBeBefore", "{0} cannot be before {1}!");
         return validator;
     }
 
@@ -64,7 +64,7 @@ public class ModelValidatorTest {
             underTest.validate((ModelStringValue) null, FIELD_NAME);
         } catch (Exception e) {
             // THEN
-            Assert.assertEquals(VALIDATOR_FIELD_CANNOT_BE_NUL_MESSAGE, e.getMessage());
+            Assert.assertEquals(e.getMessage(), VALIDATOR_FIELD_CANNOT_BE_NUL_MESSAGE);
             throw e;
         }
     }
@@ -78,7 +78,7 @@ public class ModelValidatorTest {
             underTest.validate(value, FIELD_NAME);
         } catch (Exception e) {
             // THEN
-            Assert.assertEquals(VALIDATOR_FIELD_VALUE_CANNOT_BE_NUL_MESSAGE, e.getMessage());
+            Assert.assertEquals(e.getMessage(), VALIDATOR_FIELD_VALUE_CANNOT_BE_NUL_MESSAGE);
             throw e;
         }
     }
@@ -94,7 +94,7 @@ public class ModelValidatorTest {
             underTest.validate(value, null);
         } catch (Exception e) {
             // THEN
-            Assert.assertEquals(VALIDATOR_FIELD_NAME_CANNOT_BE_NUL_MESSAGE, e.getMessage());
+            Assert.assertEquals(e.getMessage(), VALIDATOR_FIELD_NAME_CANNOT_BE_NUL_MESSAGE);
             throw e;
         }
     }
@@ -109,7 +109,7 @@ public class ModelValidatorTest {
         boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
-        Assert.assertEquals(VALIDATOR_FIELD_VALUE_CANNOT_BE_EMPTY_MESSAGE, value.getErrorMessage());
+        Assert.assertEquals(value.getErrorMessage(), VALIDATOR_FIELD_VALUE_CANNOT_BE_EMPTY_MESSAGE);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class ModelValidatorTest {
         boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
-        Assert.assertEquals(VALIDATOR_FIELD_VALUE_LONGER_THAN_MAXIMUM, value.getErrorMessage());
+        Assert.assertEquals(value.getErrorMessage(), VALIDATOR_FIELD_VALUE_LONGER_THAN_MAXIMUM);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class ModelValidatorTest {
         boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
-        Assert.assertEquals(VALIDATOR_FIELD_VALUE_NOT_MATCH, value.getErrorMessage());
+        Assert.assertEquals(value.getErrorMessage(), VALIDATOR_FIELD_VALUE_NOT_MATCH);
     }
 
     @Test
@@ -179,7 +179,7 @@ public class ModelValidatorTest {
         boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
-        Assert.assertEquals(VALIDATOR_FIELD_VALUE_NOT_ENUM, value.getErrorMessage());
+        Assert.assertEquals(value.getErrorMessage(), VALIDATOR_FIELD_VALUE_NOT_ENUM);
     }
 
     @Test
@@ -207,7 +207,7 @@ public class ModelValidatorTest {
         boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
-        Assert.assertEquals(VALIDATOR_FIELD_VALUE_POSITIVE, value.getErrorMessage());
+        Assert.assertEquals(value.getErrorMessage(), VALIDATOR_FIELD_VALUE_POSITIVE);
     }
 
     @Test
@@ -235,7 +235,7 @@ public class ModelValidatorTest {
         boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
-        Assert.assertEquals(VALIDATOR_FIELD_VALUE_POSITIVE_OR_ZERO, value.getErrorMessage());
+        Assert.assertEquals(value.getErrorMessage(), VALIDATOR_FIELD_VALUE_POSITIVE_OR_ZERO);
     }
 
     @Test
@@ -253,25 +253,25 @@ public class ModelValidatorTest {
     }
 
     @Test
-    void testValidateWhenDateIsBeforeTheEndOfLastPeriod() {
+    void testValidateWhenDateIsBeforeFirstPossibleDayOfThePeriod() {
         // GIVEN
         ModelDateValue value = ModelDateValue.builder()
-            .withValue(BEFORE_DEADLINE)
-            .withAfter(DEADLINE)
+            .withValue(BEFORE_FIRST_POSSIBLE_DAY)
+            .withAfter(FIRST_POSSIBLE_DAY)
             .build();
         // WHEN
         boolean result = underTest.validate(value, FIELD_NAME);
         // THEN
         Assert.assertFalse(result);
-        Assert.assertEquals(VALIDATOR_FIELD_VALUE_MUST_BE_AFTER, value.getErrorMessage());
+        Assert.assertEquals(value.getErrorMessage(), VALIDATOR_FIELD_VALUE_CANNOT_BE_BEFORE);
     }
 
     @Test
     void testValidateWhenDateIsAfterTheEndOfLastPeriod() {
         // GIVEN
         ModelDateValue value = ModelDateValue.builder()
-            .withValue(DEADLINE)
-            .withAfter(DEADLINE)
+            .withValue(FIRST_POSSIBLE_DAY)
+            .withAfter(FIRST_POSSIBLE_DAY)
             .build();
         // WHEN
         boolean result = underTest.validate(value, FIELD_NAME);

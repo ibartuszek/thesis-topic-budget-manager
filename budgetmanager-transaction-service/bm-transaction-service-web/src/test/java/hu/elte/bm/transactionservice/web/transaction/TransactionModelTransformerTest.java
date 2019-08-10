@@ -29,6 +29,7 @@ public class TransactionModelTransformerTest {
 
     private static final Integer TRANSACTION_TITLE_MAXIMUM_LENGTH = 50;
     private static final Integer TRANSACTION_DESCRIPTION_MAXIMUM_LENGTH = 100;
+    private static final Integer TRANSACTION_MINIMUM_DAYS_TO_ADD_TO_START_DATE = 1;
     private static final Long DEFAULT_ID = 1L;
     private static final String DEFAULT_TITLE = "title";
     private static final Double DEFAULT_AMOUNT = 100.0d;
@@ -55,6 +56,7 @@ public class TransactionModelTransformerTest {
         underTest = new TransactionModelTransformer(mainCategoryModelTransformer, subCategoryModelTransformer);
         ReflectionTestUtils.setField(underTest, "transactionTitleMaximumLength", TRANSACTION_TITLE_MAXIMUM_LENGTH);
         ReflectionTestUtils.setField(underTest, "transactionDescriptionMaximumLength", TRANSACTION_DESCRIPTION_MAXIMUM_LENGTH);
+        ReflectionTestUtils.setField(underTest, "minimumDaysToAddToStartDate", TRANSACTION_MINIMUM_DAYS_TO_ADD_TO_START_DATE);
     }
 
     @Test
@@ -68,18 +70,18 @@ public class TransactionModelTransformerTest {
         TransactionModel result = underTest.transformToTransactionModel(transaction, DEFAULT_START_OF_NEW_PERIOD);
         // THEN
         control.verify();
-        Assert.assertEquals(DEFAULT_ID, result.getId());
-        Assert.assertEquals(DEFAULT_TITLE, result.getTitle().getValue());
-        Assert.assertEquals(TRANSACTION_TITLE_MAXIMUM_LENGTH, result.getTitle().getMaximumLength());
-        Assert.assertEquals(DEFAULT_AMOUNT, result.getAmount().getValue());
+        Assert.assertEquals(result.getId(), DEFAULT_ID);
+        Assert.assertEquals(result.getTitle().getValue(), DEFAULT_TITLE);
+        Assert.assertEquals(result.getTitle().getMaximumLength(), TRANSACTION_TITLE_MAXIMUM_LENGTH);
+        Assert.assertEquals(result.getAmount().getValue(), DEFAULT_AMOUNT);
         Assert.assertTrue(result.getAmount().getPositive());
-        Assert.assertEquals(DEFAULT_CURRENCY.name(), result.getCurrency().getValue());
-        Assert.assertEquals(POSSIBLE_CURRENCIES, result.getCurrency().getPossibleEnumValues());
-        Assert.assertEquals(DEFAULT_TYPE.name(), result.getTransactionType().getValue());
+        Assert.assertEquals(result.getCurrency().getValue(), DEFAULT_CURRENCY.name());
+        Assert.assertEquals(result.getCurrency().getPossibleEnumValues(), POSSIBLE_CURRENCIES);
+        Assert.assertEquals(result.getTransactionType().getValue(), DEFAULT_TYPE.name());
         Assert.assertNotNull(result.getMainCategory());
         Assert.assertNull(result.getSubCategory());
-        Assert.assertEquals(DEFAULT_DATE, result.getDate().getValue());
-        Assert.assertEquals(DEFAULT_START_OF_NEW_PERIOD, result.getDate().getPossibleFirstDay());
+        Assert.assertEquals(result.getDate().getValue(), DEFAULT_DATE);
+        Assert.assertEquals(result.getDate().getPossibleFirstDay(), DEFAULT_START_OF_NEW_PERIOD);
         Assert.assertNull(result.getEndDate());
         Assert.assertNull(result.getDescription());
         Assert.assertFalse(result.isMonthly());
@@ -106,9 +108,10 @@ public class TransactionModelTransformerTest {
         // THEN
         control.verify();
         Assert.assertNotNull(result.getSubCategory());
-        Assert.assertEquals(DEFAULT_END_DATE, result.getEndDate().getValue());
-        Assert.assertEquals(DEFAULT_DESCRIPTION, result.getDescription().getValue());
-        Assert.assertEquals(TRANSACTION_DESCRIPTION_MAXIMUM_LENGTH, result.getDescription().getMaximumLength());
+        Assert.assertEquals(result.getEndDate().getValue(), DEFAULT_END_DATE);
+        Assert.assertEquals(result.getEndDate().getPossibleFirstDay(), DEFAULT_DATE.plusDays(1));
+        Assert.assertEquals(result.getDescription().getValue(), DEFAULT_DESCRIPTION);
+        Assert.assertEquals(result.getDescription().getMaximumLength(), TRANSACTION_DESCRIPTION_MAXIMUM_LENGTH);
         Assert.assertTrue(result.isMonthly());
         Assert.assertTrue(result.isLocked());
     }
@@ -124,14 +127,14 @@ public class TransactionModelTransformerTest {
         Transaction result = underTest.transformToTransaction(transactionModel);
         // THEN
         control.verify();
-        Assert.assertEquals(DEFAULT_ID, result.getId());
-        Assert.assertEquals(DEFAULT_TITLE, result.getTitle());
-        Assert.assertEquals(DEFAULT_AMOUNT, result.getAmount());
-        Assert.assertEquals(DEFAULT_CURRENCY, result.getCurrency());
-        Assert.assertEquals(DEFAULT_TYPE, result.getTransactionType());
+        Assert.assertEquals(result.getId(), DEFAULT_ID);
+        Assert.assertEquals(result.getTitle(), DEFAULT_TITLE);
+        Assert.assertEquals(result.getAmount(), DEFAULT_AMOUNT);
+        Assert.assertEquals(result.getCurrency(), DEFAULT_CURRENCY);
+        Assert.assertEquals(result.getTransactionType(), DEFAULT_TYPE);
         Assert.assertNotNull(result.getMainCategory());
         Assert.assertNull(result.getSubCategory());
-        Assert.assertEquals(DEFAULT_DATE, result.getDate());
+        Assert.assertEquals(result.getDate(), DEFAULT_DATE);
         Assert.assertNull(result.getEndDate());
         Assert.assertNull(result.getDescription());
     }
@@ -156,8 +159,8 @@ public class TransactionModelTransformerTest {
         // THEN
         control.verify();
         Assert.assertNotNull(result.getSubCategory());
-        Assert.assertEquals(DEFAULT_END_DATE, result.getEndDate());
-        Assert.assertEquals(DEFAULT_DESCRIPTION, result.getDescription());
+        Assert.assertEquals(result.getEndDate(), DEFAULT_END_DATE);
+        Assert.assertEquals(result.getDescription(), DEFAULT_DESCRIPTION);
         Assert.assertTrue(result.isMonthly());
         Assert.assertTrue(result.isLocked());
     }

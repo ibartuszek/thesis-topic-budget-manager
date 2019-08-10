@@ -65,10 +65,10 @@ public class MainCategoryModelServiceTest {
         List<MainCategoryModel> result = underTest.findAll(context);
         // THEN
         control.verify();
-        Assert.assertEquals(expectedList.size(), result.size());
-        Assert.assertEquals(expectedList.get(0).getId(), result.get(0).getId());
-        Assert.assertEquals(expectedList.get(0).getName().getValue(), result.get(0).getName().getValue());
-        Assert.assertEquals(expectedList.get(0).getTransactionType().getValue(), result.get(0).getTransactionType().getValue());
+        Assert.assertEquals(result.size(), expectedList.size());
+        Assert.assertEquals(result.get(0).getId(), expectedList.get(0).getId());
+        Assert.assertEquals(result.get(0).getName().getValue(), expectedList.get(0).getName().getValue());
+        Assert.assertEquals(result.get(0).getTransactionType().getValue(), expectedList.get(0).getTransactionType().getValue());
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -119,7 +119,7 @@ public class MainCategoryModelServiceTest {
         MainCategoryModelResponse result = underTest.saveMainCategory(categoryModelToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(CATEGORY_IS_INVALID_MESSAGE, result.getMessage());
+        Assert.assertEquals(result.getMessage(), CATEGORY_IS_INVALID_MESSAGE);
         Assert.assertFalse(result.isSuccessful());
     }
 
@@ -142,7 +142,7 @@ public class MainCategoryModelServiceTest {
         MainCategoryModelResponse result = underTest.saveMainCategory(categoryModelToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(CATEGORY_IS_INVALID_MESSAGE, result.getMessage());
+        Assert.assertEquals(result.getMessage(), CATEGORY_IS_INVALID_MESSAGE);
         Assert.assertFalse(result.isSuccessful());
     }
 
@@ -159,7 +159,7 @@ public class MainCategoryModelServiceTest {
         MainCategoryModelResponse result = underTest.saveMainCategory(categoryModelToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(CATEGORY_HAS_BEEN_SAVED_BEFORE_MESSAGE, result.getMessage());
+        Assert.assertEquals(result.getMessage(), CATEGORY_HAS_BEEN_SAVED_BEFORE_MESSAGE);
         Assert.assertFalse(result.isSuccessful());
     }
 
@@ -177,7 +177,7 @@ public class MainCategoryModelServiceTest {
         MainCategoryModelResponse result = underTest.saveMainCategory(categoryModelToSave);
         // THEN
         control.verify();
-        Assert.assertEquals(CATEGORY_HAS_BEEN_SAVED, result.getMessage());
+        Assert.assertEquals(result.getMessage(), CATEGORY_HAS_BEEN_SAVED);
         Assert.assertTrue(result.isSuccessful());
     }
 
@@ -203,7 +203,7 @@ public class MainCategoryModelServiceTest {
         MainCategoryModelResponse result = underTest.updateMainCategory(categoryModelToUpdate);
         // THEN
         control.verify();
-        Assert.assertEquals(CATEGORY_CANNOT_BE_UPDATED_MESSAGE, result.getMessage());
+        Assert.assertEquals(result.getMessage(), CATEGORY_CANNOT_BE_UPDATED_MESSAGE);
         Assert.assertFalse(result.isSuccessful());
     }
 
@@ -221,7 +221,7 @@ public class MainCategoryModelServiceTest {
         MainCategoryModelResponse result = underTest.updateMainCategory(categoryModelToUpdate);
         // THEN
         control.verify();
-        Assert.assertEquals(CATEGORY_HAS_BEEN_UPDATED, result.getMessage());
+        Assert.assertEquals(result.getMessage(), CATEGORY_HAS_BEEN_UPDATED);
         Assert.assertTrue(result.isSuccessful());
     }
 

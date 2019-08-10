@@ -69,14 +69,14 @@ public class DefaultTransactionService implements TransactionService {
     }
 
     @Override
-    public Optional<Transaction> update(final Transaction transaction) {
-        validateForUpdate(transaction);
+    public Optional<Transaction> update(final Transaction transaction, final TransactionType transactionType) {
+        validateForUpdate(transaction, transactionType);
         return isSavable(transaction) ? dataBaseProxy.updateTransaction(transaction) : Optional.empty();
     }
 
     @Override
-    public Optional<Transaction> delete(final Transaction transaction) {
-        validateForUpdate(transaction);
+    public Optional<Transaction> delete(final Transaction transaction, final TransactionType transactionType) {
+        validateForUpdate(transaction, transactionType);
         Optional<Transaction> result;
         dataBaseProxy.deleteTransaction(transaction);
         result = Optional.of(transaction);
@@ -93,20 +93,12 @@ public class DefaultTransactionService implements TransactionService {
             .orElseGet(() -> LocalDate.now().minusDays(daysToSubtract));
     }
 
-    @Override
-    public boolean isLockedTransaction(final Long id, final TransactionType type) {
-        return dataBaseProxy.findTransactionById(id, type).map(Transaction::isLocked).orElse(true);
-    }
-
     private void validate(final Transaction transaction) {
         Assert.notNull(transaction, MessageFormat.format(cannotBeNullExceptionMessage, "transaction"));
-        LocalDate endOfTheLastPeriod = getTheFirstDateOfTheNewPeriod(transaction.getTransactionType());
         if (transaction.getMainCategory().getId() == null) {
             throw new TransactionException(transaction, mainCategoryIdExceptionMessage);
         } else if (!hasValidSubCategories(transaction.getMainCategory())) {
             throw new TransactionException(transaction, subCategoryIdExceptionMessage);
-        } else if (transaction.getDate().isBefore(endOfTheLastPeriod)) {
-            throw new TransactionException(transaction, dateBeforeThePeriodExceptionMessage);
         } else if (transaction.getSubCategory() != null && transaction.getSubCategory().getId() == null) {
             throw new TransactionException(transaction, subCategoryIdExceptionMessage);
         }
@@ -125,9 +117,9 @@ public class DefaultTransactionService implements TransactionService {
             .findAny().isEmpty();
     }
 
-    private void validateForUpdate(final Transaction transaction) {
+    private void validateForUpdate(final Transaction transaction, final TransactionType transactionType) {
         validate(transaction);
-        Transaction transactionFromRepository = dataBaseProxy.findTransactionById(transaction.getId(), transaction.getTransactionType()).orElse(null);
+        Transaction transactionFromRepository = dataBaseProxy.findTransactionById(transaction.getId(), transactionType).orElse(null);
         if (transactionFromRepository == null) {
             throw new TransactionException(transaction, originalTransactionCannotBeFoundExceptionMessage);
         } else if (transactionFromRepository.isLocked()) {
