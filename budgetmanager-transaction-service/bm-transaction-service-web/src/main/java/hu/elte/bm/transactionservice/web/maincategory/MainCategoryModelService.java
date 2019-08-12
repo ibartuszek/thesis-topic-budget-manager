@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.MainCategoryService;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.common.ModelValidator;
 
 @Service
@@ -43,8 +44,8 @@ public class MainCategoryModelService {
         this.transformer = transformer;
     }
 
-    List<MainCategoryModel> findAll(final MainCategoryModelRequestContext context) {
-        List<MainCategory> subCategoryList = mainCategoryService.getMainCategoryList(context.getTransactionType());
+    List<MainCategoryModel> findAll(final TransactionType type) {
+        List<MainCategory> subCategoryList = mainCategoryService.getMainCategoryList(type);
         return subCategoryList.stream()
             .map(transformer::transformToMainCategoryModel)
             .collect(Collectors.toList());

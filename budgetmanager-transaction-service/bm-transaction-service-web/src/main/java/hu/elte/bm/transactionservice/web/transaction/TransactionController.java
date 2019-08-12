@@ -1,13 +1,18 @@
 package hu.elte.bm.transactionservice.web.transaction;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @RestController
 public class TransactionController {
@@ -21,7 +26,10 @@ public class TransactionController {
     }
 
     @RequestMapping(value = "/bm/transactions/findAll", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public ResponseEntity<Object> getTransactions(@RequestBody final TransactionModelRequestContext context) {
+    public ResponseEntity<Object> getTransactions(@RequestParam(value = "type") final TransactionType type,
+            @RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate start,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate end) {
+        TransactionModelRequestContext context = createContext(type, start, end);
         List<TransactionModel> transactionModelList = transactionModelService.findAll(context);
         return new ResponseEntity<>(transactionModelList, HttpStatus.OK);
     }
@@ -57,6 +65,14 @@ public class TransactionController {
             response = createErrorResponse(context, e);
         }
         return response.isSuccessful() ? new ResponseEntity<>(response, HttpStatus.OK) : new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    private TransactionModelRequestContext createContext(final TransactionType type, final LocalDate start, final LocalDate end) {
+        TransactionModelRequestContext context = new TransactionModelRequestContext();
+        context.setTransactionType(type);
+        context.setStart(start);
+        context.setEnd(end);
+        return context;
     }
 
     private TransactionModelResponse createErrorResponse(final TransactionModelRequestContext context, final Exception e) {

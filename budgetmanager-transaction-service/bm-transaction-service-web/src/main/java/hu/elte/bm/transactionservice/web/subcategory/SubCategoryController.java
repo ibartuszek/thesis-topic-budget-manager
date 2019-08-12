@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @RestController
 public class SubCategoryController {
@@ -19,8 +22,8 @@ public class SubCategoryController {
     }
 
     @RequestMapping(value = "/bm/subCategories/findAll", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Object> getSubCategories(@RequestBody final SubCategoryModelRequestContext context) {
-        List<SubCategoryModel> subCategoryModelList = subCategoryModelService.findAll(context);
+    public ResponseEntity<Object> getSubCategories(@RequestParam final TransactionType type) {
+        List<SubCategoryModel> subCategoryModelList = subCategoryModelService.findAll(type);
         return new ResponseEntity<>(subCategoryModelList, HttpStatus.OK);
     }
 

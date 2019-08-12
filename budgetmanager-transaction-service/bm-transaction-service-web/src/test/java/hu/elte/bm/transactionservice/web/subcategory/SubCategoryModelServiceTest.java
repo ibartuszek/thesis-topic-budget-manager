@@ -51,14 +51,12 @@ public class SubCategoryModelServiceTest {
     @Test
     public void testFindAll() {
         // GIVEN
-        SubCategoryModelRequestContext context = new SubCategoryModelRequestContext();
-        context.setTransactionType(INCOME);
         List<SubCategory> categoryList = createExampleSubCategoryList();
         List<SubCategoryModel> expectedList = createExampleSubCategoryModelList();
         EasyMock.expect(subCategoryService.getSubCategoryList(INCOME)).andReturn(categoryList);
         control.replay();
         // WHEN
-        List<SubCategoryModel> result = underTest.findAll(context);
+        List<SubCategoryModel> result = underTest.findAll(INCOME);
         // THEN
         control.verify();
         Assert.assertEquals(result.size(), expectedList.size());

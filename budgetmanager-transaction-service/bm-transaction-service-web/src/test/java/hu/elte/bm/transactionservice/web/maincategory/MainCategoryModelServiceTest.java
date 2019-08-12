@@ -55,14 +55,12 @@ public class MainCategoryModelServiceTest {
     @Test
     public void testFindAll() {
         // GIVEN
-        MainCategoryModelRequestContext context = new MainCategoryModelRequestContext();
-        context.setTransactionType(INCOME);
         List<MainCategory> categoryList = createExampleMainCategoryList();
         List<MainCategoryModel> expectedList = createExampleMainCategoryModelList();
         EasyMock.expect(mainCategoryService.getMainCategoryList(INCOME)).andReturn(categoryList);
         control.replay();
         // WHEN
-        List<MainCategoryModel> result = underTest.findAll(context);
+        List<MainCategoryModel> result = underTest.findAll(INCOME);
         // THEN
         control.verify();
         Assert.assertEquals(result.size(), expectedList.size());

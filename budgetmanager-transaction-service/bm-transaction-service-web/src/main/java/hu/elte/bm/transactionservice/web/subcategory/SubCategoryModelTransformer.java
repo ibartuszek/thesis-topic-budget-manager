@@ -35,10 +35,12 @@ public class SubCategoryModelTransformer {
     }
 
     public SubCategory transformToSubCategory(final SubCategoryModel subCategoryModel) {
+        String name = subCategoryModel.getName() == null ? null : subCategoryModel.getName().getValue();
+        TransactionType type = subCategoryModel.getTransactionType() == null ? null : TransactionType.valueOf(subCategoryModel.getTransactionType().getValue());
         return SubCategory.builder()
             .withId(subCategoryModel.getId())
-            .withName(subCategoryModel.getName().getValue())
-            .withTransactionType(TransactionType.valueOf(subCategoryModel.getTransactionType().getValue()))
+            .withName(name)
+            .withTransactionType(type)
             .build();
     }
 

@@ -47,10 +47,12 @@ public class MainCategoryModelTransformer {
     }
 
     public MainCategory transformToMainCategory(final MainCategoryModel mainCategoryModel) {
+        String name = mainCategoryModel.getName() == null ? null : mainCategoryModel.getName().getValue();
+        TransactionType type = mainCategoryModel.getTransactionType() == null ? null : TransactionType.valueOf(mainCategoryModel.getTransactionType().getValue());
         return MainCategory.builder()
             .withId(mainCategoryModel.getId())
-            .withName(mainCategoryModel.getName().getValue())
-            .withTransactionType(TransactionType.valueOf(mainCategoryModel.getTransactionType().getValue()))
+            .withName(name)
+            .withTransactionType(type)
             .withSubCategorySet(transformToSubCategorySet(mainCategoryModel.getSubCategoryModelSet()))
             .build();
     }
