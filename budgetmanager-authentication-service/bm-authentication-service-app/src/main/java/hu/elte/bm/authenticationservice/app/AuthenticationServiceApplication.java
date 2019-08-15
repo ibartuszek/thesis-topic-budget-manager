@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "hu.elte.bm.authenticationservice")
 public class AuthenticationServiceApplication {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceApplication.class);
@@ -32,6 +32,7 @@ public class AuthenticationServiceApplication {
             }
 
             LOGGER.info("# Application is running now.");
+
         };
     }
 

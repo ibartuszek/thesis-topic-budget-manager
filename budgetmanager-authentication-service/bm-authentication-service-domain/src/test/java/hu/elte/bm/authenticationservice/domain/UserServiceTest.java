@@ -61,7 +61,7 @@ public class UserServiceTest {
         // THEN
         control.verify();
         Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(user, result.get());
+        Assert.assertEquals(result.get(), user);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -95,7 +95,7 @@ public class UserServiceTest {
         // THEN
         control.verify();
         Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(user, result.get());
+        Assert.assertEquals(result.get(), user);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -133,8 +133,8 @@ public class UserServiceTest {
         // THEN
         control.verify();
         Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(VALID_ID, result.get().getId());
-        Assert.assertEquals(userFromRepository, result.get());
+        Assert.assertEquals(result.get().getId(), VALID_ID);
+        Assert.assertEquals(result.get(), userFromRepository);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -190,7 +190,7 @@ public class UserServiceTest {
         // THEN
         control.verify();
         Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(userToUpdate, result.get());
+        Assert.assertEquals(result.get(), userToUpdate);
     }
 
     @Test
@@ -206,7 +206,7 @@ public class UserServiceTest {
         // THEN
         control.verify();
         Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(userToDelete, result.get());
+        Assert.assertEquals(result.get(), userToDelete);
     }
 
     private User.Builder createExampleUserBuilder() {

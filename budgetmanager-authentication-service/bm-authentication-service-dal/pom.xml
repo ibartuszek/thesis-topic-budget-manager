@@ -17,4 +17,12 @@
     <main.basedir>${project.parent.basedir}</main.basedir>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
+      <artifactId>bm-authentication-service-domain</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+  </dependencies>
+
 </project>
