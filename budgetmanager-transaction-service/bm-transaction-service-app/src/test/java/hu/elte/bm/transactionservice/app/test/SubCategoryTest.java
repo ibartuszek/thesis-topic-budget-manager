@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryController;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelRequestContext;
@@ -35,9 +35,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenCategoryHasNoName() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withName(null)
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-                .build();
+            .withName(null)
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -51,9 +51,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenCategoryNameValueIsNull() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withName(ModelStringValue.builder().withValue(null).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-                .build();
+            .withName(ModelStringValue.builder().withValue(null).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -67,9 +67,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenCategoryHasEmptyName() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withName(ModelStringValue.builder().withValue(EMPTY_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-                .build();
+            .withName(ModelStringValue.builder().withValue(EMPTY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -84,9 +84,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenCategoryHasTooLongName() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withName(ModelStringValue.builder().withValue(TOO_LONG_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-                .build();
+            .withName(ModelStringValue.builder().withValue(TOO_LONG_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -101,9 +101,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenCategoryHasNoType() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-                .withTransactionType(null)
-                .build();
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(null)
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -117,9 +117,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenCategoryTypeValueIsNull() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(null).build())
-                .build();
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(null).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -133,9 +133,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenCategoryHasInvalidType() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build())
-                .build();
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -150,10 +150,10 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenIdIsNotNull() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withId(NEW_ID)
-                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-                .build();
+            .withId(NEW_ID)
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -167,9 +167,9 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testSaveCategoryWhenCategoryHasNewName() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-                .build();
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.createSubCategory(context);
@@ -219,10 +219,10 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testUpdateCategoryWhenCategoryIdIsNull() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withId(null)
-                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-                .build();
+            .withId(null)
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.updateSubCategory(context);
@@ -236,10 +236,10 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testUpdateCategoryWhenCategoryCannotBeFoundInRepository() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withId(INVALID_ID)
-                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
-                .build();
+            .withId(INVALID_ID)
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.updateSubCategory(context);
@@ -253,10 +253,10 @@ public class SubCategoryTest extends AbstractTransactionServiceApplicationTest {
     public void testUpdateCategoryWhenCategoryTypeHasChanged() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = SubCategoryModel.builder()
-                .withId(EXISTING_INCOME_ID)
-                .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
-                .withTransactionType(ModelStringValue.builder().withValue(OUTCOME).build())
-                .build();
+            .withId(EXISTING_INCOME_ID)
+            .withName(ModelStringValue.builder().withValue(NEW_CATEGORY_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(OUTCOME).build())
+            .build();
         SubCategoryModelRequestContext context = createContext(TransactionType.INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = subCategoryController.updateSubCategory(context);

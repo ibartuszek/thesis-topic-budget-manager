@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer;
 
@@ -20,10 +20,10 @@ import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer
 @PropertySource("classpath:common_constraints.properties")
 public class MainCategoryModelTransformer {
 
+    private final SubCategoryModelTransformer subCategoryModelTransformer;
+
     @Value("${main_category.name.maximum_length}")
     private Integer mainCategoryNameMaximumLength;
-
-    private final SubCategoryModelTransformer subCategoryModelTransformer;
 
     MainCategoryModelTransformer(final SubCategoryModelTransformer subCategoryModelTransformer) {
         this.subCategoryModelTransformer = subCategoryModelTransformer;
@@ -60,8 +60,8 @@ public class MainCategoryModelTransformer {
     void setValidationFields(final MainCategoryModel mainCategoryModel) {
         mainCategoryModel.getName().setMaximumLength(mainCategoryNameMaximumLength);
         mainCategoryModel.getTransactionType().setPossibleEnumValues(Arrays.stream(TransactionType.values())
-                .map(TransactionType::name)
-                .collect(Collectors.toSet()));
+            .map(TransactionType::name)
+            .collect(Collectors.toSet()));
     }
 
     private Set<SubCategoryModel> transformToSubCategoryModelSet(final Set<SubCategory> subCategorySet) {

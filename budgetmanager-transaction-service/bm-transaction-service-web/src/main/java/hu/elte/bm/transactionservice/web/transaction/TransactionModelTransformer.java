@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import hu.elte.bm.commonpack.validator.ModelAmountValue;
+import hu.elte.bm.commonpack.validator.ModelDateValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelAmountValue;
-import hu.elte.bm.transactionservice.web.common.ModelDateValue;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelTransformer;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
@@ -23,6 +23,9 @@ import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer
 @PropertySource("classpath:common_constraints.properties")
 public class TransactionModelTransformer {
 
+    private final MainCategoryModelTransformer mainCategoryModelTransformer;
+    private final SubCategoryModelTransformer subCategoryModelTransformer;
+
     @Value("${transaction.endDate.minimum_extra_days_to_date}")
     private Integer minimumDaysToAddToStartDate;
 
@@ -31,9 +34,6 @@ public class TransactionModelTransformer {
 
     @Value("${transaction.description.maximum_length}")
     private Integer transactionDescriptionMaximumLength;
-
-    private final MainCategoryModelTransformer mainCategoryModelTransformer;
-    private final SubCategoryModelTransformer subCategoryModelTransformer;
 
     TransactionModelTransformer(final MainCategoryModelTransformer mainCategoryModelTransformer,
         final SubCategoryModelTransformer subCategoryModelTransformer) {
@@ -109,7 +109,8 @@ public class TransactionModelTransformer {
         transactionModel.getTitle().setMaximumLength(transactionTitleMaximumLength);
         transactionModel.getAmount().setPositive(true);
         transactionModel.getCurrency().setPossibleEnumValues(Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet()));
-        transactionModel.getTransactionType().setPossibleEnumValues(Arrays.stream(TransactionType.values()).map(TransactionType::name).collect(Collectors.toSet()));
+        transactionModel.getTransactionType()
+            .setPossibleEnumValues(Arrays.stream(TransactionType.values()).map(TransactionType::name).collect(Collectors.toSet()));
         transactionModel.getDate().setPossibleFirstDay(firstPossibleDay);
         if (transactionModel.getDescription() != null) {
             transactionModel.getDescription().setMaximumLength(transactionDescriptionMaximumLength);

@@ -19,15 +19,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import hu.elte.bm.commonpack.validator.ModelAmountValue;
+import hu.elte.bm.commonpack.validator.ModelDateValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
+import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionService;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelAmountValue;
-import hu.elte.bm.transactionservice.web.common.ModelDateValue;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
-import hu.elte.bm.transactionservice.web.common.ModelValidator;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 
 public class TransactionModelServiceTest {
@@ -52,7 +52,7 @@ public class TransactionModelServiceTest {
     private static final MainCategoryModel MAIN_CATEGORY_MODEL = MainCategoryModel.builder().build();
     private static final Set<String> POSSIBLE_CURRENCIES = Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet());
     private static final Set<String> POSSIBLE_TRANSACTION_TYPES = Arrays.stream(TransactionType.values()).map(TransactionType::name)
-            .collect(Collectors.toSet());
+        .collect(Collectors.toSet());
     private static final String TITLE_FIELD_NAME = "Title";
     private static final String AMOUNT_FIELD_NAME = "Amount";
     private static final String CURRENCY_FIELD_NAME = "Currency";
@@ -112,17 +112,17 @@ public class TransactionModelServiceTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "getData")
     public void testSaveWhenTransactionModelIsInvalidViaPreValidation(final Long id, final ModelStringValue title, final ModelAmountValue amount,
-            final ModelStringValue currency, final ModelStringValue type, final MainCategoryModel mainCategoryModel, final ModelDateValue date) {
+        final ModelStringValue currency, final ModelStringValue type, final MainCategoryModel mainCategoryModel, final ModelDateValue date) {
         // GIVEN
         TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues()
-                .withId(id)
-                .withTitle(title)
-                .withAmount(amount)
-                .withCurrency(currency)
-                .withTransactionType(type)
-                .withMainCategory(mainCategoryModel)
-                .withDate(date)
-                .build();
+            .withId(id)
+            .withTitle(title)
+            .withAmount(amount)
+            .withCurrency(currency)
+            .withTransactionType(type)
+            .withMainCategory(mainCategoryModel)
+            .withDate(date)
+            .build();
         TransactionModelRequestContext context = createContext(END, transactionModel);
         // WHEN
         underTest.saveTransaction(context);
@@ -136,14 +136,14 @@ public class TransactionModelServiceTest {
         ModelStringValue currency = ModelStringValue.builder().withValue(DEFAULT_CURRENCY.name()).build();
         ModelStringValue type = ModelStringValue.builder().withValue(DEFAULT_TYPE.name()).build();
         ModelDateValue date = ModelDateValue.builder().withValue(DEFAULT_DATE).build();
-        return new Object[][]{
-                {DEFAULT_ID, title, amount, currency, type, MAIN_CATEGORY_MODEL, date},
-                {null, null, amount, currency, type, MAIN_CATEGORY_MODEL, date},
-                {null, title, null, currency, type, MAIN_CATEGORY_MODEL, date},
-                {null, title, amount, null, type, MAIN_CATEGORY_MODEL, date},
-                {null, title, amount, currency, null, MAIN_CATEGORY_MODEL, date},
-                {null, title, amount, currency, type, null, date},
-                {null, title, amount, currency, type, MAIN_CATEGORY_MODEL, null},
+        return new Object[][] {
+            { DEFAULT_ID, title, amount, currency, type, MAIN_CATEGORY_MODEL, date },
+            { null, null, amount, currency, type, MAIN_CATEGORY_MODEL, date },
+            { null, title, null, currency, type, MAIN_CATEGORY_MODEL, date },
+            { null, title, amount, null, type, MAIN_CATEGORY_MODEL, date },
+            { null, title, amount, currency, null, MAIN_CATEGORY_MODEL, date },
+            { null, title, amount, currency, type, null, date },
+            { null, title, amount, currency, type, MAIN_CATEGORY_MODEL, null },
         };
     }
 
@@ -151,12 +151,12 @@ public class TransactionModelServiceTest {
     public void testSaveWhenTransactionModelIsInvalidViaValidation() {
         // GIVEN
         TransactionModel invalidTransactionModel = createExampleTransactionModelBuilderWithDefaultValues()
-                .withId(null)
-                .withTitle(ModelStringValue.builder()
-                        .withValue(INVALID_TITLE)
-                        .withMaximumLength(TRANSACTION_TITLE_MAXIMUM_LENGTH)
-                        .build())
-                .build();
+            .withId(null)
+            .withTitle(ModelStringValue.builder()
+                .withValue(INVALID_TITLE)
+                .withMaximumLength(TRANSACTION_TITLE_MAXIMUM_LENGTH)
+                .build())
+            .build();
         TransactionModelRequestContext context = createContext(END, invalidTransactionModel);
         prepareForValidation(invalidTransactionModel, false);
         EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
@@ -315,39 +315,39 @@ public class TransactionModelServiceTest {
 
     private Transaction.Builder createExampleTransactionBuilderWithDefaultValues() {
         return Transaction.builder()
-                .withId(DEFAULT_ID)
-                .withTitle(DEFAULT_TITLE)
-                .withAmount(DEFAULT_AMOUNT)
-                .withCurrency(DEFAULT_CURRENCY)
-                .withTransactionType(DEFAULT_TYPE)
-                .withMainCategory(MainCategory.builder().build())
-                .withDate(DEFAULT_DATE);
+            .withId(DEFAULT_ID)
+            .withTitle(DEFAULT_TITLE)
+            .withAmount(DEFAULT_AMOUNT)
+            .withCurrency(DEFAULT_CURRENCY)
+            .withTransactionType(DEFAULT_TYPE)
+            .withMainCategory(MainCategory.builder().build())
+            .withDate(DEFAULT_DATE);
     }
 
     private TransactionModel.Builder createExampleTransactionModelBuilderWithDefaultValues() {
         return TransactionModel.builder()
-                .withId(DEFAULT_ID)
-                .withTitle(ModelStringValue.builder()
-                        .withValue(DEFAULT_TITLE)
-                        .withMaximumLength(TRANSACTION_TITLE_MAXIMUM_LENGTH)
-                        .build())
-                .withAmount(ModelAmountValue.builder()
-                        .withValue(DEFAULT_AMOUNT)
-                        .withPositive(true)
-                        .build())
-                .withCurrency(ModelStringValue.builder()
-                        .withValue(DEFAULT_CURRENCY.name())
-                        .withPossibleEnumValues(POSSIBLE_CURRENCIES)
-                        .build())
-                .withTransactionType(ModelStringValue.builder()
-                        .withValue(DEFAULT_TYPE.name())
-                        .withPossibleEnumValues(POSSIBLE_TRANSACTION_TYPES)
-                        .build())
-                .withMainCategory(MAIN_CATEGORY_MODEL)
-                .withDate(ModelDateValue.builder()
-                        .withValue(DEFAULT_DATE)
-                        .withAfter(DEFAULT_START_OF_NEW_PERIOD)
-                        .build());
+            .withId(DEFAULT_ID)
+            .withTitle(ModelStringValue.builder()
+                .withValue(DEFAULT_TITLE)
+                .withMaximumLength(TRANSACTION_TITLE_MAXIMUM_LENGTH)
+                .build())
+            .withAmount(ModelAmountValue.builder()
+                .withValue(DEFAULT_AMOUNT)
+                .withPositive(true)
+                .build())
+            .withCurrency(ModelStringValue.builder()
+                .withValue(DEFAULT_CURRENCY.name())
+                .withPossibleEnumValues(POSSIBLE_CURRENCIES)
+                .build())
+            .withTransactionType(ModelStringValue.builder()
+                .withValue(DEFAULT_TYPE.name())
+                .withPossibleEnumValues(POSSIBLE_TRANSACTION_TYPES)
+                .build())
+            .withMainCategory(MAIN_CATEGORY_MODEL)
+            .withDate(ModelDateValue.builder()
+                .withValue(DEFAULT_DATE)
+                .withAfter(DEFAULT_START_OF_NEW_PERIOD)
+                .build());
     }
 
     private TransactionModelRequestContext createContext(final LocalDate end, final TransactionModel transactionModel) {

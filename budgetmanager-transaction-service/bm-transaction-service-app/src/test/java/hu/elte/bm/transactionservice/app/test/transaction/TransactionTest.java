@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import hu.elte.bm.commonpack.validator.ModelDateValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelDateValue;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.transaction.TransactionController;
@@ -27,9 +27,9 @@ public class TransactionTest extends AbstactTransactionTest {
         // GIVEN
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME);
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(RESERVED_ID)
-                .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
-                .build();
+            .withId(RESERVED_ID)
+            .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -105,9 +105,9 @@ public class TransactionTest extends AbstactTransactionTest {
         // GIVEN
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         TransactionModel transactionToUpdate = createTransactionBuilderWithForUpdateValues(mainCategoryModel)
-                .withId(null)
-                .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
-                .build();
+            .withId(null)
+            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
         // WHEN
         ResponseEntity<Object> result = transactionController.updateTransaction(context);

@@ -9,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import hu.elte.bm.commonpack.validator.ModelAmountValue;
+import hu.elte.bm.commonpack.validator.ModelDateValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelAmountValue;
-import hu.elte.bm.transactionservice.web.common.ModelDateValue;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.transaction.TransactionController;
@@ -31,9 +31,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withTitle(null)
-                .build();
+            .withId(null)
+            .withTitle(null)
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -49,9 +49,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withTitle(ModelStringValue.builder().withValue(null).build())
-                .build();
+            .withId(null)
+            .withTitle(ModelStringValue.builder().withValue(null).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -67,9 +67,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withTitle(ModelStringValue.builder().withValue(EMPTY_STRING).build())
-                .build();
+            .withId(null)
+            .withTitle(ModelStringValue.builder().withValue(EMPTY_STRING).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -86,9 +86,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withTitle(ModelStringValue.builder().withValue(TOO_LONG_TITLE).build())
-                .build();
+            .withId(null)
+            .withTitle(ModelStringValue.builder().withValue(TOO_LONG_TITLE).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -105,9 +105,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withAmount(null)
-                .build();
+            .withId(null)
+            .withAmount(null)
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -123,9 +123,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withAmount(ModelAmountValue.builder().withValue(null).build())
-                .build();
+            .withId(null)
+            .withAmount(ModelAmountValue.builder().withValue(null).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -141,9 +141,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withAmount(ModelAmountValue.builder().withValue(ZERO).build())
-                .build();
+            .withId(null)
+            .withAmount(ModelAmountValue.builder().withValue(ZERO).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -160,9 +160,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withCurrency(null)
-                .build();
+            .withId(null)
+            .withCurrency(null)
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -178,9 +178,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withCurrency(ModelStringValue.builder().withValue(null).build())
-                .build();
+            .withId(null)
+            .withCurrency(ModelStringValue.builder().withValue(null).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -196,9 +196,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withCurrency(ModelStringValue.builder().withValue(INVALID_CURRENCY).build())
-                .build();
+            .withId(null)
+            .withCurrency(ModelStringValue.builder().withValue(INVALID_CURRENCY).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -215,9 +215,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withTransactionType(null)
-                .build();
+            .withId(null)
+            .withTransactionType(null)
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -233,9 +233,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withTransactionType(ModelStringValue.builder().withValue(null).build())
-                .build();
+            .withId(null)
+            .withTransactionType(ModelStringValue.builder().withValue(null).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -251,9 +251,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build())
-                .build();
+            .withId(null)
+            .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -268,8 +268,8 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
     public void testSaveWhenMainCategoryIsNull() {
         // GIVEN
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(null)
-                .withId(null)
-                .build();
+            .withId(null)
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -324,9 +324,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         SubCategoryModel subCategoryModel = createSubCategory(null, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withSubCategory(subCategoryModel)
-                .build();
+            .withId(null)
+            .withSubCategory(subCategoryModel)
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -342,9 +342,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withDate(null)
-                .build();
+            .withId(null)
+            .withDate(null)
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -360,9 +360,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withDate(ModelDateValue.builder().withValue(null).build())
-                .build();
+            .withId(null)
+            .withDate(ModelDateValue.builder().withValue(null).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -391,7 +391,8 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "The new transaction is invalid.");
-        Assert.assertEquals(response.getTransactionModel().getDate().getErrorMessage(), MessageFormat.format("Date cannot be before {0}!", FIRST_DATE_OF_THE_PERIOD));
+        Assert.assertEquals(response.getTransactionModel().getDate().getErrorMessage(),
+            MessageFormat.format("Date cannot be before {0}!", FIRST_DATE_OF_THE_PERIOD));
     }
 
     @Test
@@ -400,9 +401,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withEndDate(ModelDateValue.builder().withValue(null).build())
-                .build();
+            .withId(null)
+            .withEndDate(ModelDateValue.builder().withValue(null).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -420,10 +421,10 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         mainCategoryModel.getSubCategoryModelSet().add(subCategoryModel);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withSubCategory(subCategoryModel)
-                .withEndDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build())
-                .build();
+            .withId(null)
+            .withSubCategory(subCategoryModel)
+            .withEndDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -432,7 +433,7 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "The new transaction is invalid.");
         Assert.assertEquals(response.getTransactionModel().getEndDate().getErrorMessage(),
-                MessageFormat.format("End date cannot be before {0}!", EXPECTED_DATE.plusDays(1)));
+            MessageFormat.format("End date cannot be before {0}!", EXPECTED_DATE.plusDays(1)));
     }
 
     @Test
@@ -441,9 +442,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withDescription(ModelStringValue.builder().withValue(null).build())
-                .build();
+            .withId(null)
+            .withDescription(ModelStringValue.builder().withValue(null).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -459,9 +460,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withDescription(ModelStringValue.builder().withValue(EMPTY_STRING).build())
-                .build();
+            .withId(null)
+            .withDescription(ModelStringValue.builder().withValue(EMPTY_STRING).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);
@@ -478,9 +479,9 @@ public class TransactionFieldValidationTest extends AbstactTransactionTest {
         MainCategoryModel mainCategoryModel = createMainCategoryWithoutSubCategories(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategoryModel.getSubCategoryModelSet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
         TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-                .withId(null)
-                .withDescription(ModelStringValue.builder().withValue(TOO_LONG_DESCRIPTION).build())
-                .build();
+            .withId(null)
+            .withDescription(ModelStringValue.builder().withValue(TOO_LONG_DESCRIPTION).build())
+            .build();
         TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
         // WHEN
         ResponseEntity<Object> result = transactionController.createTransaction(context);

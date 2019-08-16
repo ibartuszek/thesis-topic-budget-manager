@@ -13,12 +13,12 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import hu.elte.bm.commonpack.validator.ModelStringValue;
+import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.categories.DefaultSubCategoryService;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryService;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
-import hu.elte.bm.transactionservice.web.common.ModelValidator;
 
 public class SubCategoryModelServiceTest {
 

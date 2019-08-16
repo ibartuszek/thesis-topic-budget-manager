@@ -1,6 +1,6 @@
 package hu.elte.bm.transactionservice.web.subcategory;
 
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 
 public final class SubCategoryModel {
 

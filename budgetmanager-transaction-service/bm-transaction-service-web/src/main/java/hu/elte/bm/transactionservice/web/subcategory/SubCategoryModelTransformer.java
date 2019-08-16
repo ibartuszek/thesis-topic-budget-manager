@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 
 @Component
 @PropertySource("classpath:common_constraints.properties")
@@ -47,7 +47,7 @@ public class SubCategoryModelTransformer {
     void setValidationFields(final SubCategoryModel subCategoryModel) {
         subCategoryModel.getName().setMaximumLength(subCategoryNameMaximumLength);
         subCategoryModel.getTransactionType().setPossibleEnumValues(Arrays.stream(TransactionType.values())
-                .map(TransactionType::name)
-                .collect(Collectors.toSet()));
+            .map(TransactionType::name)
+            .collect(Collectors.toSet()));
     }
 }

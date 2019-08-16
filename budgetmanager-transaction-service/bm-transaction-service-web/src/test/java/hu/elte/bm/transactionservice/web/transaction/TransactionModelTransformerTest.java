@@ -12,14 +12,14 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import hu.elte.bm.commonpack.validator.ModelAmountValue;
+import hu.elte.bm.commonpack.validator.ModelDateValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelAmountValue;
-import hu.elte.bm.transactionservice.web.common.ModelDateValue;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelTransformer;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
@@ -40,7 +40,8 @@ public class TransactionModelTransformerTest {
     private static final LocalDate DEFAULT_END_DATE = LocalDate.now().plusYears(1);
     private static final String DEFAULT_DESCRIPTION = "desctiption";
     private static final Set<String> POSSIBLE_CURRENCIES = Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet());
-    private static final Set<String> POSSIBLE_TRANSCATION_TYPES = Arrays.stream(TransactionType.values()).map(TransactionType::name).collect(Collectors.toSet());
+    private static final Set<String> POSSIBLE_TRANSCATION_TYPES = Arrays.stream(TransactionType.values()).map(TransactionType::name)
+        .collect(Collectors.toSet());
 
     private TransactionModelTransformer underTest;
 

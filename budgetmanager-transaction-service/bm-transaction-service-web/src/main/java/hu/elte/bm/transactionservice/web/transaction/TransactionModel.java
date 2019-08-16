@@ -1,8 +1,8 @@
 package hu.elte.bm.transactionservice.web.transaction;
 
-import hu.elte.bm.transactionservice.web.common.ModelAmountValue;
-import hu.elte.bm.transactionservice.web.common.ModelDateValue;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
+import hu.elte.bm.commonpack.validator.ModelAmountValue;
+import hu.elte.bm.commonpack.validator.ModelDateValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 

@@ -10,38 +10,32 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionService;
-import hu.elte.bm.transactionservice.web.common.ModelValidator;
 
 @Service
 @PropertySource("classpath:messages.properties")
 public class TransactionModelService {
 
-    @Value("${transaction.transaction_is_invalid}")
-    private String transactionIsInvalid;
-
-    @Value("${transaction.transaction_has_been_saved}")
-    private String transactionHasBeenSaved;
-
-    @Value("${transaction.transaction_has_been_saved_before}")
-    private String transactionHasBeenSavedBefore;
-
-    @Value("${transaction.transaction_has_been_updated}")
-    private String transactionHasBeenUpdated;
-
-    @Value("${transaction.transaction_cannot_be_updated}")
-    private String transactionCannotBeUpdated;
-
-    @Value("${transaction.transaction_has_been_deleted}")
-    private String transactionHasBeenDeleted;
-
-    @Value("${transaction.transaction_cannot_be_deleted}")
-    private String transactionCannotBeDeleted;
-
     private final ModelValidator validator;
     private final TransactionService transactionService;
     private final TransactionModelTransformer transformer;
+
+    @Value("${transaction.transaction_is_invalid}")
+    private String transactionIsInvalid;
+    @Value("${transaction.transaction_has_been_saved}")
+    private String transactionHasBeenSaved;
+    @Value("${transaction.transaction_has_been_saved_before}")
+    private String transactionHasBeenSavedBefore;
+    @Value("${transaction.transaction_has_been_updated}")
+    private String transactionHasBeenUpdated;
+    @Value("${transaction.transaction_cannot_be_updated}")
+    private String transactionCannotBeUpdated;
+    @Value("${transaction.transaction_has_been_deleted}")
+    private String transactionHasBeenDeleted;
+    @Value("${transaction.transaction_cannot_be_deleted}")
+    private String transactionCannotBeDeleted;
 
     TransactionModelService(final ModelValidator validator, final TransactionService transactionService,
         final TransactionModelTransformer transformer) {
@@ -76,7 +70,8 @@ public class TransactionModelService {
         preValidateUpdatableCategory(context.getTransactionModel());
         TransactionModelResponse result = createResponseWithDefaultValues(context);
         if (isValid(result.getTransactionModel())) {
-            Optional<Transaction> updatedTransaction = transactionService.update(transformer.transformToTransaction(result.getTransactionModel()), context.getTransactionType());
+            Optional<Transaction> updatedTransaction = transactionService
+                .update(transformer.transformToTransaction(result.getTransactionModel()), context.getTransactionType());
             updateResponse(updatedTransaction, result, transactionHasBeenUpdated, transactionCannotBeUpdated);
         } else {
             result.setMessage(transactionIsInvalid);
@@ -88,7 +83,8 @@ public class TransactionModelService {
         preValidateUpdatableCategory(context.getTransactionModel());
         TransactionModelResponse result = createResponseWithDefaultValues(context);
         if (isValid(result.getTransactionModel())) {
-            Optional<Transaction> deletedTransaction = transactionService.delete(transformer.transformToTransaction(result.getTransactionModel()), context.getTransactionType());
+            Optional<Transaction> deletedTransaction = transactionService
+                .delete(transformer.transformToTransaction(result.getTransactionModel()), context.getTransactionType());
             updateResponse(deletedTransaction, result, transactionHasBeenDeleted, transactionCannotBeDeleted);
         } else {
             result.setMessage(transactionIsInvalid);

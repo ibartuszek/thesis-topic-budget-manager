@@ -2,7 +2,7 @@ package hu.elte.bm.transactionservice.web.maincategory;
 
 import java.util.Set;
 
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 
 public final class MainCategoryModel {

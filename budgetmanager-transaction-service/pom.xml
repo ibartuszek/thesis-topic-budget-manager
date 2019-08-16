@@ -46,6 +46,22 @@
 
   <dependencies>
     <dependency>
+      <groupId>hu.elte.bm.common-pack</groupId>
+      <artifactId>budgetmanager-common-pack</artifactId>
+      <version>${version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-test</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
       <groupId>net.sf.dozer</groupId>
       <artifactId>dozer</artifactId>
       <version>${dozer.version}</version>

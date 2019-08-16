@@ -5,12 +5,12 @@ import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.I
 import java.time.LocalDate;
 import java.util.HashSet;
 
+import hu.elte.bm.commonpack.validator.ModelAmountValue;
+import hu.elte.bm.commonpack.validator.ModelDateValue;
+import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.common.ModelAmountValue;
-import hu.elte.bm.transactionservice.web.common.ModelDateValue;
-import hu.elte.bm.transactionservice.web.common.ModelStringValue;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.transaction.TransactionModel;
@@ -56,41 +56,41 @@ public abstract class AbstactTransactionTest extends AbstractTransactionServiceA
 
     TransactionModel.Builder createTransactionBuilderWithDefaultValues(final MainCategoryModel mainCategoryModel) {
         return TransactionModel.builder()
-                .withId(EXPECTED_ID)
-                .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())
-                .withAmount(ModelAmountValue.builder().withValue(EXPECTED_AMOUNT).build())
-                .withCurrency(ModelStringValue.builder().withValue(EXPECTED_CURRENCY.name()).build())
-                .withDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build())
-                .withMainCategory(mainCategoryModel);
+            .withId(EXPECTED_ID)
+            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())
+            .withAmount(ModelAmountValue.builder().withValue(EXPECTED_AMOUNT).build())
+            .withCurrency(ModelStringValue.builder().withValue(EXPECTED_CURRENCY.name()).build())
+            .withDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build())
+            .withMainCategory(mainCategoryModel);
     }
 
     TransactionModel.Builder createTransactionBuilderWithForUpdateValues(final MainCategoryModel mainCategoryModel) {
         return TransactionModel.builder()
-                .withId(RESERVED_ID)
-                .withTitle(ModelStringValue.builder().withValue(RESERVED_TITLE).build())
-                .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())
-                .withAmount(ModelAmountValue.builder().withValue(RESERVED_AMOUNT).build())
-                .withCurrency(ModelStringValue.builder().withValue(EXPECTED_CURRENCY.name()).build())
-                .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
-                .withMainCategory(mainCategoryModel);
+            .withId(RESERVED_ID)
+            .withTitle(ModelStringValue.builder().withValue(RESERVED_TITLE).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())
+            .withAmount(ModelAmountValue.builder().withValue(RESERVED_AMOUNT).build())
+            .withCurrency(ModelStringValue.builder().withValue(EXPECTED_CURRENCY.name()).build())
+            .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
+            .withMainCategory(mainCategoryModel);
     }
 
     MainCategoryModel createMainCategoryWithoutSubCategories(final Long id, final String name, final TransactionType type) {
         return MainCategoryModel.builder()
-                .withId(id)
-                .withName(ModelStringValue.builder().withValue(name).build())
-                .withTransactionType(ModelStringValue.builder().withValue(type.name()).build())
-                .withSubCategoryModelSet(new HashSet<>())
-                .build();
+            .withId(id)
+            .withName(ModelStringValue.builder().withValue(name).build())
+            .withTransactionType(ModelStringValue.builder().withValue(type.name()).build())
+            .withSubCategoryModelSet(new HashSet<>())
+            .build();
     }
 
     SubCategoryModel createSubCategory(final Long id, final String name, final TransactionType type) {
         return SubCategoryModel.builder()
-                .withId(id)
-                .withName(ModelStringValue.builder().withValue(name).build())
-                .withTransactionType(ModelStringValue.builder().withValue(type.name()).build())
-                .build();
+            .withId(id)
+            .withName(ModelStringValue.builder().withValue(name).build())
+            .withTransactionType(ModelStringValue.builder().withValue(type.name()).build())
+            .build();
     }
 
 }
