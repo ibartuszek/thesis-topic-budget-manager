@@ -2,9 +2,6 @@ package hu.elte.bm.transactionservice.domain.categories;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 /**
@@ -13,9 +10,7 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 public final class SubCategory {
 
     private final Long id;
-    @NotBlank
     private final String name;
-    @NotNull
     private final TransactionType transactionType;
 
     private SubCategory(final Builder builder) {

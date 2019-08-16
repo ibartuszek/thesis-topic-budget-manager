@@ -3,9 +3,6 @@ package hu.elte.bm.transactionservice.domain.categories;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 /**
@@ -14,11 +11,8 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 public final class MainCategory {
 
     private final Long id;
-    @NotBlank
     private final String name;
-    @NotNull
     private final TransactionType transactionType;
-    @NotNull
     private final Set<SubCategory> subCategorySet;
 
     private MainCategory(final Builder builder) {

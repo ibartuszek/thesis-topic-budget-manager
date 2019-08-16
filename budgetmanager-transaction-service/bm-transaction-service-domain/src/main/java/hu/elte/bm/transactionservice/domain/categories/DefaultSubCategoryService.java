@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -12,7 +11,6 @@ import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Service("subCategoryService")
-@PropertySource("classpath:messages.properties")
 public class DefaultSubCategoryService implements SubCategoryService {
 
     private final DatabaseProxy databaseProxy;

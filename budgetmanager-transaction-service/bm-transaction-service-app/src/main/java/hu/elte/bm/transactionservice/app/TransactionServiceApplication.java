@@ -9,8 +9,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(scanBasePackages = "hu.elte.bm.transactionservice")
+@PropertySource({ "classpath:common_constraints.properties", "classpath:messages.properties" })
 public class TransactionServiceApplication {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceApplication.class);

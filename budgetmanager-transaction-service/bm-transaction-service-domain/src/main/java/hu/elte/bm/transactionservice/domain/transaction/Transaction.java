@@ -1,18 +1,7 @@
 package hu.elte.bm.transactionservice.domain.transaction;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Positive;
 
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
@@ -21,20 +10,13 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 public final class Transaction {
 
     private final Long id;
-    @NotBlank
     private final String title;
-    @Positive
     private final double amount;
-    @NotNull
     private final Currency currency;
-    @NotNull
     private final TransactionType transactionType;
-    @NotNull
     private final MainCategory mainCategory;
     private final SubCategory subCategory;
     private final boolean monthly;
-    @NotNull
-    @PastOrPresent
     private final LocalDate date;
     private final LocalDate endDate;
     private final String description;
@@ -209,15 +191,7 @@ public final class Transaction {
         }
 
         public Transaction build() {
-            Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-            Transaction transaction = new Transaction(this);
-            Set<ConstraintViolation<Transaction>> violations = validator.validate(transaction);
-            if (!violations.isEmpty()) {
-                ConstraintViolationException wrappedException = new ConstraintViolationException(
-                    new HashSet<ConstraintViolation<?>>(violations));
-                throw new TransactionException(transaction, "invalid transaction", wrappedException);
-            }
-            return transaction;
+            return new Transaction(this);
         }
     }
 }

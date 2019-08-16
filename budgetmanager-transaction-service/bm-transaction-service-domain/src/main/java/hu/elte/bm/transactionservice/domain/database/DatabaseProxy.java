@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +17,11 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component("databaseProxy")
-@PropertySource("classpath:messages.properties")
 public class DatabaseProxy {
 
+    private final DatabaseFacade databaseFacade;
     @Value("${database_proxy.unexpected_error_message}")
     private String exceptionMessage;
-
-    private final DatabaseFacade databaseFacade;
 
     public DatabaseProxy(final DatabaseFacade databaseFacade) {
         this.databaseFacade = databaseFacade;

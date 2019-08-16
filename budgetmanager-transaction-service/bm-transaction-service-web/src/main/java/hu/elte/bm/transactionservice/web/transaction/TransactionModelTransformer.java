@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.commonpack.validator.ModelAmountValue;
@@ -20,7 +19,6 @@ import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer;
 
 @Component
-@PropertySource("classpath:common_constraints.properties")
 public class TransactionModelTransformer {
 
     private final MainCategoryModelTransformer mainCategoryModelTransformer;

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.commonpack.validator.ModelStringValue;
@@ -12,7 +11,6 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component
-@PropertySource("classpath:common_constraints.properties")
 public class SubCategoryModelTransformer {
 
     @Value("${sub_category.name.maximum_length}")

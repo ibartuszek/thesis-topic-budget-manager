@@ -6,7 +6,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
 @SpringBootTest
-@TestPropertySource("classpath:database-h2.properties")
+@TestPropertySource({
+    "classpath:common_constraints.properties",
+    "classpath:messages.properties",
+    "classpath:database-h2.properties" })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public abstract class AbstractTransactionServiceApplicationTest extends AbstractTestNGSpringContextTests {
 

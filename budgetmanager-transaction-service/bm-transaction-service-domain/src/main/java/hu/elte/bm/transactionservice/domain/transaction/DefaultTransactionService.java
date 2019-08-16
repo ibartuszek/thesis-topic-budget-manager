@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -16,7 +15,6 @@ import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
 
 @Service("transactionService")
-@PropertySource({ "classpath:common_constraints.properties", "classpath:messages.properties" })
 public class DefaultTransactionService implements TransactionService {
 
     private final DatabaseProxy dataBaseProxy;

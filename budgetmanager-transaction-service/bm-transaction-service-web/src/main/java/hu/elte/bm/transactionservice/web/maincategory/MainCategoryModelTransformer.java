@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.commonpack.validator.ModelStringValue;
@@ -17,7 +16,6 @@ import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer;
 
 @Component
-@PropertySource("classpath:common_constraints.properties")
 public class MainCategoryModelTransformer {
 
     private final SubCategoryModelTransformer subCategoryModelTransformer;
@@ -48,7 +46,8 @@ public class MainCategoryModelTransformer {
 
     public MainCategory transformToMainCategory(final MainCategoryModel mainCategoryModel) {
         String name = mainCategoryModel.getName() == null ? null : mainCategoryModel.getName().getValue();
-        TransactionType type = mainCategoryModel.getTransactionType() == null ? null : TransactionType.valueOf(mainCategoryModel.getTransactionType().getValue());
+        TransactionType type =
+            mainCategoryModel.getTransactionType() == null ? null : TransactionType.valueOf(mainCategoryModel.getTransactionType().getValue());
         return MainCategory.builder()
             .withId(mainCategoryModel.getId())
             .withName(name)

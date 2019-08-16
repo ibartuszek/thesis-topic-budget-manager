@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -15,20 +14,24 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategoryService;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Service
-@PropertySource("classpath:messages.properties")
 public class SubCategoryModelService {
 
     private final ModelValidator validator;
     private final SubCategoryService subCategoryService;
     private final SubCategoryModelTransformer transformer;
+
     @Value("${sub_category.sub_category_is_invalid}")
     private String categoryIsInvalidMessage;
+
     @Value("${sub_category.sub_category_has_been_saved}")
     private String categoryHasBeenSaved;
+
     @Value("${sub_category.sub_category_has_been_saved_before}")
     private String categoryHasBeenSavedBeforeMessage;
+
     @Value("${sub_category.sub_category_has_been_updated}")
     private String categoryHasBeenUpdated;
+
     @Value("${sub_category.sub_category_cannot_be_updated}")
     private String categoryCannotBeUpdatedMessage;
 
