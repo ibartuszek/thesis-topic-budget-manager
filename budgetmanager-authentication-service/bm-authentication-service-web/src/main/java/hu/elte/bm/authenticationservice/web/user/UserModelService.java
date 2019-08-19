@@ -1,8 +1,12 @@
 package hu.elte.bm.authenticationservice.web.user;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -13,7 +17,7 @@ import hu.elte.bm.authenticationservice.domain.UserService;
 import hu.elte.bm.commonpack.validator.ModelValidator;
 
 @Service
-public class UserModelService {
+public class UserModelService implements UserDetailsService {
 
     private final BCryptPasswordEncoder encoder;
     private final ModelValidator validator;
@@ -162,4 +166,14 @@ public class UserModelService {
             response.setMessage(unSuccessMessage);
         }
     }
+
+    @Override
+    public UserDetails loadUserByUsername(final String userName) throws UsernameNotFoundException {
+        Optional<User> user = userService.findUserByEmail(userName);
+        if (user.isEmpty()) {
+            throw new UserException(userCannotBeFound, User.builder().withEmail(userName).build());
+        }
+        return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), new ArrayList<>());
+    }
+
 }

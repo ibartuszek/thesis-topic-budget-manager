@@ -12,7 +12,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(scanBasePackages = "hu.elte.bm.authenticationservice")
-@PropertySource({ "classpath:common_constraints.properties", "classpath:messages.properties" })
+@PropertySource({
+    "classpath:common_constraints.properties",
+    "classpath:messages.properties",
+    "classpath:security.properties"
+})
 public class AuthenticationServiceApplication {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceApplication.class);
