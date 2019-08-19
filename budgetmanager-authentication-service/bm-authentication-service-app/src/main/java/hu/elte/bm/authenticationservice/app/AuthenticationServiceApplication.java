@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.PropertySource;
     "classpath:messages.properties",
     "classpath:security.properties"
 })
+@EnableZuulProxy
 public class AuthenticationServiceApplication {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceApplication.class);

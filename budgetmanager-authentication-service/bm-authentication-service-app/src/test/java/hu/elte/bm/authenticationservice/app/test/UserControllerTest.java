@@ -60,7 +60,7 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
     }
 
     @Test(dataProvider = "testDataForValidation")
-    public void testRegisterWhenEmailValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
+    public void testRegisterWhenValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
         // GIVEN
         UserModelRequestContext context = createContext(userModel);
         // WHEN
@@ -71,6 +71,15 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
         if (response.getUserModel().getEmail() != null && response.getUserModel().getEmail().getErrorMessage() != null) {
             Assert.assertEquals(response.getUserModel().getEmail().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getPassword() != null && response.getUserModel().getPassword().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getPassword().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getLastName() != null && response.getUserModel().getLastName().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getLastName().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getFirstName() != null && response.getUserModel().getFirstName().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getFirstName().getErrorMessage(), fieldErrorMessage);
         }
     }
 
@@ -189,7 +198,7 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
     }
 
     @Test(dataProvider = "testDataForValidation")
-    public void testUpdateWhenEmailValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
+    public void testUpdateWhenValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
         // GIVEN
         userModel.setId(RESERVED_ID);
         UserModelRequestContext context = createContext(userModel);
@@ -201,6 +210,15 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
         if (response.getUserModel().getEmail() != null && response.getUserModel().getEmail().getErrorMessage() != null) {
             Assert.assertEquals(response.getUserModel().getEmail().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getPassword() != null && response.getUserModel().getPassword().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getPassword().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getLastName() != null && response.getUserModel().getLastName().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getLastName().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getFirstName() != null && response.getUserModel().getFirstName().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getFirstName().getErrorMessage(), fieldErrorMessage);
         }
     }
 
@@ -273,7 +291,7 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
     }
 
     @Test(dataProvider = "testDataForValidation")
-    public void testDeleteWhenEmailValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
+    public void testDeleteWhenValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
         // GIVEN
         userModel.setId(RESERVED_ID);
         UserModelRequestContext context = createContext(userModel);
@@ -285,6 +303,15 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
         if (response.getUserModel().getEmail() != null && response.getUserModel().getEmail().getErrorMessage() != null) {
             Assert.assertEquals(response.getUserModel().getEmail().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getPassword() != null && response.getUserModel().getPassword().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getPassword().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getLastName() != null && response.getUserModel().getLastName().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getLastName().getErrorMessage(), fieldErrorMessage);
+        }
+        if (response.getUserModel().getFirstName() != null && response.getUserModel().getFirstName().getErrorMessage() != null) {
+            Assert.assertEquals(response.getUserModel().getFirstName().getErrorMessage(), fieldErrorMessage);
         }
     }
 
