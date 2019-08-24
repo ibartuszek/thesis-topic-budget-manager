@@ -46,6 +46,8 @@ public final class IncomeEntity {
     @Column(length = DESCRIPTION_LENGTH)
     private String description;
     private boolean locked;
+    @Column(name = "user_id")
+    private Long userId;
 
     IncomeEntity() {
     }
@@ -136,5 +138,13 @@ public final class IncomeEntity {
 
     public void setLocked(final boolean locked) {
         this.locked = locked;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final Long userId) {
+        this.userId = userId;
     }
 }

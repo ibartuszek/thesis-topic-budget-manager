@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 
 @Service("mainCategoryService")
 public class DefaultMainCategoryService implements MainCategoryService {
@@ -33,20 +33,29 @@ public class DefaultMainCategoryService implements MainCategoryService {
     @Value("${main_category.main_category_does_not_have_original_sub_categories}")
     private String mainCategoryNotContainsAllSubcategoryExceptionMessage;
 
+    @Value("${main_category.user_id_cannot_be_null}")
+    private String userIdCannotBeNullExceptionMessage;
+
     DefaultMainCategoryService(final DatabaseProxy databaseProxy) {
         this.databaseProxy = databaseProxy;
     }
 
     @Override
-    public List<MainCategory> getMainCategoryList(final TransactionType transactionType) {
-        Assert.notNull(transactionType, typeCannotBeNullExceptionMessage);
-        return databaseProxy.findAllMainCategory(transactionType);
+    public List<MainCategory> getMainCategoryList(final TransactionContext context) {
+        validate(context);
+        return databaseProxy.findAllMainCategory(context);
     }
 
     @Override
-    public Optional<MainCategory> save(final MainCategory mainCategory) {
+    public Optional<MainCategory> save(final MainCategory mainCategory, final TransactionContext context) {
+        validate(context);
         validate(mainCategory);
-        return thereIsNoCategoryWithSameName(mainCategory) ? databaseProxy.saveMainCategory(mainCategory) : Optional.empty();
+        return thereIsNoCategoryWithSameName(mainCategory, context) ? databaseProxy.saveMainCategory(mainCategory, context) : Optional.empty();
+    }
+
+    private void validate(final TransactionContext context) {
+        Assert.notNull(context.getTransactionType(), typeCannotBeNullExceptionMessage);
+        Assert.notNull(context.getUserId(), userIdCannotBeNullExceptionMessage);
     }
 
     private void validate(final MainCategory mainCategory) {
@@ -61,20 +70,21 @@ public class DefaultMainCategoryService implements MainCategoryService {
             .noneMatch(subCategory -> subCategory.getId() == null);
     }
 
-    private boolean thereIsNoCategoryWithSameName(final MainCategory mainCategory) {
-        Optional<MainCategory> mainCategoryWithSameName = databaseProxy.findMainCategoryByName(mainCategory.getName(), mainCategory.getTransactionType());
+    private boolean thereIsNoCategoryWithSameName(final MainCategory mainCategory, final TransactionContext context) {
+        Optional<MainCategory> mainCategoryWithSameName = databaseProxy.findMainCategoryByName(mainCategory.getName(), context);
         return mainCategoryWithSameName.isEmpty();
     }
 
     @Override
-    public Optional<MainCategory> update(final MainCategory mainCategory) {
-        validateForUpdate(mainCategory);
-        return thereIsNoCategoryWithSameName(mainCategory) ? databaseProxy.updateMainCategory(mainCategory) : Optional.empty();
+    public Optional<MainCategory> update(final MainCategory mainCategory, final TransactionContext context) {
+        validateForUpdate(mainCategory, context);
+        return thereIsNoCategoryWithSameName(mainCategory, context) ? databaseProxy.updateMainCategory(mainCategory, context) : Optional.empty();
     }
 
-    private void validateForUpdate(final MainCategory mainCategory) {
+    private void validateForUpdate(final MainCategory mainCategory, final TransactionContext context) {
+        validate(context);
         validate(mainCategory);
-        MainCategory originalMainCategory = databaseProxy.findMainCategoryById(mainCategory.getId()).orElse(null);
+        MainCategory originalMainCategory = databaseProxy.findMainCategoryById(mainCategory.getId(), context).orElse(null);
         if (originalMainCategory == null) {
             throw new MainCategoryException(mainCategory, originalMainCategoryCannotBeFoundExceptionMessage);
         } else if (mainCategory.getTransactionType() != originalMainCategory.getTransactionType()) {

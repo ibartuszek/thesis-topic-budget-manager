@@ -7,40 +7,40 @@ import java.util.Optional;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 
 public interface DatabaseFacade {
 
-    List<MainCategory> findAllMainCategory(TransactionType transactionType);
+    List<MainCategory> findAllMainCategory(TransactionContext context);
 
-    Optional<MainCategory> findMainCategoryById(Long id);
+    Optional<MainCategory> findMainCategoryById(Long id, TransactionContext context);
 
-    Optional<MainCategory> findMainCategoryByName(String name, TransactionType transactionType);
+    Optional<MainCategory> findMainCategoryByName(String name, TransactionContext context);
 
-    Optional<MainCategory> saveMainCategory(MainCategory mainCategory);
+    Optional<MainCategory> saveMainCategory(MainCategory mainCategory, TransactionContext context);
 
-    Optional<MainCategory> updateMainCategory(MainCategory target);
+    Optional<MainCategory> updateMainCategory(MainCategory mainCategory, TransactionContext context);
 
-    List<SubCategory> findAllSubCategory(TransactionType transactionType);
+    List<SubCategory> findAllSubCategory(TransactionContext context);
 
-    Optional<SubCategory> findSubCategoryById(Long id);
+    Optional<SubCategory> findSubCategoryById(Long id, TransactionContext context);
 
-    Optional<SubCategory> findSubCategoryByName(String name, TransactionType transactionType);
+    Optional<SubCategory> findSubCategoryByName(String name, TransactionContext context);
 
-    Optional<SubCategory> saveSubCategory(SubCategory subCategory);
+    Optional<SubCategory> saveSubCategory(SubCategory subCategory, TransactionContext context);
 
-    Optional<SubCategory> updateSubCategory(SubCategory subCategory);
+    Optional<SubCategory> updateSubCategory(SubCategory subCategory, TransactionContext context);
 
-    List<Transaction> findAllTransaction(LocalDate start, LocalDate end, TransactionType transactionType);
+    List<Transaction> findAllTransaction(LocalDate start, LocalDate end, TransactionContext context);
 
-    Optional<Transaction> findTransactionById(Long id, TransactionType transactionType);
+    Optional<Transaction> findTransactionById(Long id, TransactionContext context);
 
-    List<Transaction> findTransactionByTitle(String title, TransactionType transactionType);
+    List<Transaction> findTransactionByTitle(String title, TransactionContext context);
 
-    Optional<Transaction> saveTransaction(Transaction transaction);
+    Optional<Transaction> saveTransaction(Transaction transaction, TransactionContext context);
 
-    Optional<Transaction> updateTransaction(Transaction transaction);
+    Optional<Transaction> updateTransaction(Transaction transaction, TransactionContext context);
 
-    void deleteTransaction(Transaction transaction);
+    void deleteTransaction(Transaction transaction, TransactionContext context);
 
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 
 @Component
 public class MainCategoryDao {
@@ -28,47 +28,46 @@ public class MainCategoryDao {
         this.subCategoryRepository = subCategoryRepository;
     }
 
-    public List<MainCategory> findAll(final TransactionType transactionType) {
-        Iterable<MainCategoryEntity> mainCategoryEntities = mainCategoryRepository.findAllMainCategory(transactionType);
-        return transformToSubCategoryList(mainCategoryEntities);
+    public List<MainCategory> findAll(final TransactionContext context) {
+        Iterable<MainCategoryEntity> mainCategoryEntities = mainCategoryRepository.findAllMainCategory(context.getTransactionType(), context.getUserId());
+        return transformToMainCategoryList(mainCategoryEntities, context);
     }
 
-    private List<MainCategory> transformToSubCategoryList(final Iterable<MainCategoryEntity> mainCategoryEntities) {
-        List<MainCategory> mainCategoryList = new ArrayList<>();
-        mainCategoryEntities.iterator().forEachRemaining(subCategoryEntity ->
-            mainCategoryList.add(mainCategoryEntityTransformer.transformToMainCategory(subCategoryEntity)));
-        return mainCategoryList;
+    public Optional<MainCategory> findById(final Long id, final TransactionContext context) {
+        Optional<MainCategoryEntity> mainCategoryEntity = mainCategoryRepository.findByIdAndUserId(id, context.getUserId());
+        return mainCategoryEntity.map(mainCategoryEntityTransformer::transformToMainCategory);
     }
 
-    public Optional<MainCategory> findById(final Long id) {
-        Optional<MainCategoryEntity> mainCategoryEntity = mainCategoryRepository.findById(id);
-        MainCategory result = mainCategoryEntity.map(mainCategoryEntityTransformer::transformToMainCategory).orElse(null);
-        return Optional.ofNullable(result);
-    }
-
-    public Optional<MainCategory> findByName(final String name, final TransactionType transactionType) {
-        Optional<MainCategoryEntity> mainCategoryEntity = mainCategoryRepository.findByName(name, transactionType);
-        MainCategory result = mainCategoryEntity.map(mainCategoryEntityTransformer::transformToMainCategory).orElse(null);
-        return Optional.ofNullable(result);
+    public Optional<MainCategory> findByName(final String name, final TransactionContext context) {
+        Optional<MainCategoryEntity> mainCategoryEntity = mainCategoryRepository.findByName(name, context.getTransactionType(), context.getUserId());
+        return mainCategoryEntity.map(mainCategoryEntityTransformer::transformToMainCategory);
     }
 
     @Transactional
-    public Optional<MainCategory> save(final MainCategory mainCategory) {
-        Set<SubCategoryEntity> subCategoryEntitySet = getSubCategories(mainCategory.getSubCategorySet());
-        MainCategoryEntity mainCategoryEntity = mainCategoryEntityTransformer.transformToMainCategoryEntity(mainCategory, subCategoryEntitySet);
+    public Optional<MainCategory> save(final MainCategory mainCategory, final TransactionContext context) {
+        Set<SubCategoryEntity> subCategoryEntitySet = getSubCategories(mainCategory.getSubCategorySet(), context.getUserId());
+        MainCategoryEntity mainCategoryEntity = mainCategoryEntityTransformer
+            .transformToMainCategoryEntity(mainCategory, subCategoryEntitySet, context.getUserId());
         MainCategoryEntity response = mainCategoryRepository.save(mainCategoryEntity);
-        MainCategory result = mainCategoryEntityTransformer.transformToMainCategory(response);
-        return Optional.ofNullable(result);
+        return Optional.ofNullable(mainCategoryEntityTransformer.transformToMainCategory(response));
     }
 
-    private Set<SubCategoryEntity> getSubCategories(final Set<SubCategory> subCategorySet) {
+    public Optional<MainCategory> update(final MainCategory mainCategory, final TransactionContext context) {
+        return save(mainCategory, context);
+    }
+
+    private List<MainCategory> transformToMainCategoryList(final Iterable<MainCategoryEntity> mainCategoryEntities, final TransactionContext context) {
+        List<MainCategory> mainCategoryList = new ArrayList<>();
+        mainCategoryEntities.iterator().forEachRemaining(mainCategoryEntity ->
+            mainCategoryList.add(mainCategoryEntityTransformer.transformToMainCategory(mainCategoryEntity)));
+        return mainCategoryList;
+    }
+
+    private Set<SubCategoryEntity> getSubCategories(final Set<SubCategory> subCategorySet, final Long userId) {
         Set<SubCategoryEntity> subCategoryEntitySet = new HashSet<>();
-        subCategorySet.forEach(subCategory -> subCategoryEntitySet.add(subCategoryRepository.findById(subCategory.getId()).get()));
+        subCategorySet.forEach(subCategory -> subCategoryRepository.findByIdAndUserId(subCategory.getId(), userId)
+            .ifPresent(subCategoryEntitySet::add));
         return subCategoryEntitySet;
-    }
-
-    public Optional<MainCategory> update(final MainCategory mainCategory) {
-        return save(mainCategory);
     }
 
 }

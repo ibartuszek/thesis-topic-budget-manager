@@ -22,8 +22,8 @@ public class MainCategoryController {
     }
 
     @RequestMapping(value = "/bm/mainCategories/findAll", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Object> getSubCategories(@RequestParam final TransactionType type) {
-        List<MainCategoryModel> mainCategoryModelList = mainCategoryModelService.findAll(type);
+    public ResponseEntity<Object> getSubCategories(@RequestParam final TransactionType type, @RequestParam final Long userId) {
+        List<MainCategoryModel> mainCategoryModelList = mainCategoryModelService.findAll(type, userId);
         return new ResponseEntity<>(mainCategoryModelList, HttpStatus.OK);
     }
 
@@ -31,7 +31,7 @@ public class MainCategoryController {
     public ResponseEntity<Object> createMainCategory(@RequestBody final MainCategoryModelRequestContext context) {
         MainCategoryModelResponse response;
         try {
-            response = mainCategoryModelService.saveMainCategory(context.getMainCategoryModel());
+            response = mainCategoryModelService.saveMainCategory(context);
         } catch (Exception e) {
             response = createErrorResponse(context, e);
         }
@@ -42,7 +42,7 @@ public class MainCategoryController {
     public ResponseEntity<Object> updateMainCategory(@RequestBody final MainCategoryModelRequestContext context) {
         MainCategoryModelResponse response;
         try {
-            response = mainCategoryModelService.updateMainCategory(context.getMainCategoryModel());
+            response = mainCategoryModelService.updateMainCategory(context);
         } catch (Exception e) {
             response = createErrorResponse(context, e);
         }

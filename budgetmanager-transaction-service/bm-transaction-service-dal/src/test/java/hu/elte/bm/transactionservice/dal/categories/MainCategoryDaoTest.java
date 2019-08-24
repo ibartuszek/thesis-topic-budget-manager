@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class MainCategoryDaoTest {
@@ -26,6 +27,7 @@ public class MainCategoryDaoTest {
     private static final long NEW_ID = 2L;
     private static final String EXISTING_CATEGORY_NAME = "category name 1";
     private static final String NEW_CATEGORY_NAME = "category name";
+    private static final Long USER_ID = 1L;
     private final MainCategoryEntityTransformer mainCategoryEntityTransformer =
         new MainCategoryEntityTransformer(new SubCategoryEntityTransformer());
 
@@ -46,10 +48,11 @@ public class MainCategoryDaoTest {
     @Test
     public void testFindAllWhenThereIsNoCategoryInTheRepository() {
         // GIVEN
-        EasyMock.expect(mainCategoryRepository.findAllMainCategory(INCOME)).andReturn(Collections.emptyList());
+        TransactionContext context = createTransactionContext(INCOME);
+        EasyMock.expect(mainCategoryRepository.findAllMainCategory(INCOME, USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
-        List<MainCategory> result = underTest.findAll(INCOME);
+        List<MainCategory> result = underTest.findAll(context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Collections.emptyList());
@@ -58,12 +61,13 @@ public class MainCategoryDaoTest {
     @Test
     public void testFindAllWhenThereAreMoreCategoriesInTheRepository() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME);
         Iterable<MainCategoryEntity> mainCategoryEntities = createMainCategoryEntities();
-        EasyMock.expect(mainCategoryRepository.findAllMainCategory(INCOME)).andReturn(mainCategoryEntities);
+        EasyMock.expect(mainCategoryRepository.findAllMainCategory(INCOME, USER_ID)).andReturn(mainCategoryEntities);
         List<MainCategory> expectedList = createMainCategoryList();
         control.replay();
         // WHEN
-        List<MainCategory> result = underTest.findAll(INCOME);
+        List<MainCategory> result = underTest.findAll(context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedList);
@@ -72,10 +76,11 @@ public class MainCategoryDaoTest {
     @Test
     public void testFindByIdWhenCategoryCannotBeFound() {
         // GIVEN
-        EasyMock.expect(mainCategoryRepository.findById(NEW_ID)).andReturn(Optional.empty());
+        TransactionContext context = createTransactionContext(INCOME);
+        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(NEW_ID, USER_ID)).andReturn(Optional.empty());
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.findById(NEW_ID);
+        Optional<MainCategory> result = underTest.findById(NEW_ID, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Optional.empty());
@@ -84,12 +89,13 @@ public class MainCategoryDaoTest {
     @Test
     public void testFindByIdWhenCategoryCanBeFound() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME);
         MainCategoryEntity mainCategoryFromRepository = createMainCategoryEntity(EXISTING_ID, EXISTING_CATEGORY_NAME, INCOME, createSubCategoryEntitySet());
         Optional<MainCategory> expectedMainCategory = Optional.of(createMainCategory(EXISTING_ID, EXISTING_CATEGORY_NAME, INCOME, createSubCategorySet()));
-        EasyMock.expect(mainCategoryRepository.findById(EXISTING_ID)).andReturn(Optional.of(mainCategoryFromRepository));
+        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(EXISTING_ID, USER_ID)).andReturn(Optional.of(mainCategoryFromRepository));
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.findById(EXISTING_ID);
+        Optional<MainCategory> result = underTest.findById(EXISTING_ID, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedMainCategory);
@@ -98,10 +104,11 @@ public class MainCategoryDaoTest {
     @Test
     public void testFindByNameWhenCategoryCannotBeFound() {
         // GIVEN
-        EasyMock.expect(mainCategoryRepository.findByName(NEW_CATEGORY_NAME, INCOME)).andReturn(Optional.empty());
+        TransactionContext context = createTransactionContext(INCOME);
+        EasyMock.expect(mainCategoryRepository.findByName(NEW_CATEGORY_NAME, INCOME, USER_ID)).andReturn(Optional.empty());
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.findByName(NEW_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> result = underTest.findByName(NEW_CATEGORY_NAME, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Optional.empty());
@@ -110,12 +117,13 @@ public class MainCategoryDaoTest {
     @Test
     public void testFindByNameWhenCategoryCanBeFound() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME);
         MainCategoryEntity mainCategoryFromRepository = createMainCategoryEntity(EXISTING_ID, EXISTING_CATEGORY_NAME, INCOME, createSubCategoryEntitySet());
         Optional<MainCategory> expectedSubCategory = Optional.of(createMainCategory(EXISTING_ID, EXISTING_CATEGORY_NAME, INCOME, createSubCategorySet()));
-        EasyMock.expect(mainCategoryRepository.findByName(EXISTING_CATEGORY_NAME, INCOME)).andReturn(Optional.of(mainCategoryFromRepository));
+        EasyMock.expect(mainCategoryRepository.findByName(EXISTING_CATEGORY_NAME, INCOME, USER_ID)).andReturn(Optional.of(mainCategoryFromRepository));
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.findByName(EXISTING_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> result = underTest.findByName(EXISTING_CATEGORY_NAME, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedSubCategory);
@@ -124,16 +132,17 @@ public class MainCategoryDaoTest {
     @Test
     public void testSaveMainCategory() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME);
         MainCategory mainCategoryToSave = createMainCategory(null, NEW_CATEGORY_NAME, INCOME, createSubCategorySet());
         MainCategoryEntity mainCategoryFromRepository = createMainCategoryEntity(NEW_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryEntitySet());
         Optional<MainCategory> expectedMainCategory = Optional.of(createMainCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME, createSubCategorySet()));
         Capture<MainCategoryEntity> capture = Capture.newInstance();
-        EasyMock.expect(subCategoryRepository.findById(EXISTING_ID)).andReturn(
+        EasyMock.expect(subCategoryRepository.findByIdAndUserId(EXISTING_ID, USER_ID)).andReturn(
             Optional.ofNullable(mainCategoryFromRepository.getSubCategoryEntitySet().iterator().next()));
         EasyMock.expect(mainCategoryRepository.save(EasyMock.capture(capture))).andReturn(mainCategoryFromRepository);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.save(mainCategoryToSave);
+        Optional<MainCategory> result = underTest.save(mainCategoryToSave, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedMainCategory);
@@ -151,11 +160,22 @@ public class MainCategoryDaoTest {
 
     private MainCategoryEntity createMainCategoryEntity(final Long id, final String categoryName, final TransactionType type,
         final Set<SubCategoryEntity> subCategoryEntitySet) {
-        return new MainCategoryEntity(id, categoryName, type, subCategoryEntitySet);
+        return MainCategoryEntity.builder()
+            .withId(id)
+            .withName(categoryName)
+            .withTransactionType(type)
+            .withSubCategoryEntitySet(subCategoryEntitySet)
+            .withUserId(USER_ID)
+            .build();
     }
 
     private SubCategoryEntity createSubCategoryEntity(final Long id, final String categoryName, final TransactionType type) {
-        return new SubCategoryEntity(id, categoryName, type);
+        return SubCategoryEntity.builder()
+            .withId(id)
+            .withName(categoryName)
+            .withTransactionType(type)
+            .withUserId(USER_ID)
+            .build();
     }
 
     private Set<SubCategoryEntity> createSubCategoryEntitySet() {
@@ -192,6 +212,13 @@ public class MainCategoryDaoTest {
         Set<SubCategory> subCategorySet = createSubCategorySet();
         mainCategoryList.add(createMainCategory(EXISTING_ID, EXISTING_CATEGORY_NAME, INCOME, subCategorySet));
         return mainCategoryList;
+    }
+
+    private TransactionContext createTransactionContext(final TransactionType income) {
+        return TransactionContext.builder()
+            .withUserId(USER_ID)
+            .withTransactionType(income)
+            .build();
     }
 
 }

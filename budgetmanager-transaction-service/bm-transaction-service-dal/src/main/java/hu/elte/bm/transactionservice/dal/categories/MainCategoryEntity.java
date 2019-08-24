@@ -21,7 +21,7 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Entity
 @Table(name = "main_category",
-    uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "transaction_type" }) })
+    uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "transaction_type", "user_id" }) })
 public final class MainCategoryEntity {
 
     private static final int MAXIMUM_NAME_LENGTH = 50;
@@ -43,15 +43,22 @@ public final class MainCategoryEntity {
         inverseJoinColumns = @JoinColumn(name = "sub_category_id"))
     private Set<SubCategoryEntity> subCategoryEntitySet;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     private MainCategoryEntity() {
     }
 
-    public MainCategoryEntity(final Long id, final String name, final TransactionType transactionType,
-        final Set<SubCategoryEntity> subCategoryEntitySet) {
-        this.id = id;
-        this.name = name;
-        this.transactionType = transactionType;
-        this.subCategoryEntitySet = subCategoryEntitySet;
+    public MainCategoryEntity(final Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.transactionType = builder.transactionType;
+        this.subCategoryEntitySet = builder.subCategoryEntitySet;
+        this.userId = builder.userId;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getName() {
@@ -86,4 +93,51 @@ public final class MainCategoryEntity {
         this.subCategoryEntitySet = subCategoryEntitySet;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final Long userId) {
+        this.userId = userId;
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String name;
+        private TransactionType transactionType;
+        private Set<SubCategoryEntity> subCategoryEntitySet;
+        private Long userId;
+
+        private Builder() {
+        }
+
+        public Builder withId(final Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withName(final String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder withTransactionType(final TransactionType transactionType) {
+            this.transactionType = transactionType;
+            return this;
+        }
+
+        public Builder withSubCategoryEntitySet(final Set<SubCategoryEntity> subCategoryEntitySet) {
+            this.subCategoryEntitySet = subCategoryEntitySet;
+            return this;
+        }
+
+        public Builder withUserId(final Long userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public MainCategoryEntity build() {
+            return new MainCategoryEntity(this);
+        }
+    }
 }

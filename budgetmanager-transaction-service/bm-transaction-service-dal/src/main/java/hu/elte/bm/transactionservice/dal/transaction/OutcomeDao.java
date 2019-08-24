@@ -16,6 +16,7 @@ import hu.elte.bm.transactionservice.dal.categories.MainCategoryRepository;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryRepository;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 
 @Component
 public class OutcomeDao {
@@ -33,38 +34,38 @@ public class OutcomeDao {
         this.transactionEntityTransformer = transactionEntityTransformer;
     }
 
-    public List<Transaction> findAll(final LocalDate start, final LocalDate end) {
+    public List<Transaction> findAll(final LocalDate start, final LocalDate end, final TransactionContext context) {
         List<Transaction> transactionList = new ArrayList<>();
-        outcomeRepository.findAll(convertToDate(start), convertToDate(end))
+        outcomeRepository.findAll(convertToDate(start), convertToDate(end), context.getUserId())
             .forEach(entity -> transactionList.add(transactionEntityTransformer.transformToTransaction(entity)));
         return transactionList;
     }
 
-    public Optional<Transaction> findById(final Long id) {
-        Transaction transaction = outcomeRepository.findById(id).map(transactionEntityTransformer::transformToTransaction).orElse(null);
-        return Optional.ofNullable(transaction);
+    public Optional<Transaction> findById(final Long id, final TransactionContext context) {
+        return outcomeRepository.findByIdAndUserId(id, context.getUserId()).map(transactionEntityTransformer::transformToTransaction);
     }
 
-    public List<Transaction> findByTitle(final String title) {
+    public List<Transaction> findByTitle(final String title, final TransactionContext context) {
         List<Transaction> transactionList = new ArrayList<>();
-        outcomeRepository.findByTitle(title).forEach(entity -> transactionList.add(transactionEntityTransformer.transformToTransaction(entity)));
+        outcomeRepository.findByTitleAndUserId(title, context.getUserId()).forEach(entity ->
+            transactionList.add(transactionEntityTransformer.transformToTransaction(entity)));
         return transactionList;
     }
 
     @Transactional
-    public Optional<Transaction> save(final Transaction transaction) {
-        OutcomeEntity entityToSave = createOutcomeEntity(transaction);
+    public Optional<Transaction> save(final Transaction transaction, final TransactionContext context) {
+        OutcomeEntity entityToSave = createOutcomeEntity(transaction, context.getUserId());
         OutcomeEntity response = outcomeRepository.save(entityToSave);
         return Optional.ofNullable(transactionEntityTransformer.transformToTransaction(response));
     }
 
-    public Optional<Transaction> update(final Transaction transaction) {
-        return save(transaction);
+    public Optional<Transaction> update(final Transaction transaction, final TransactionContext context) {
+        return save(transaction, context);
     }
 
     @Transactional
-    public void delete(final Transaction transaction) {
-        OutcomeEntity entityToDelete = createOutcomeEntity(transaction);
+    public void delete(final Transaction transaction, final TransactionContext context) {
+        OutcomeEntity entityToDelete = createOutcomeEntity(transaction, context.getUserId());
         outcomeRepository.delete(entityToDelete);
     }
 
@@ -72,18 +73,18 @@ public class OutcomeDao {
         return Date.from(dateToConvert.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    private OutcomeEntity createOutcomeEntity(final Transaction transaction) {
-        return transactionEntityTransformer.
-            transformToOutcomeEntity(transaction, getMainCategoryEntityFromRepository(transaction), getSubCategoryFromRepository(transaction));
+    private OutcomeEntity createOutcomeEntity(final Transaction transaction, final Long userId) {
+        return transactionEntityTransformer.transformToOutcomeEntity(transaction, getMainCategoryEntityFromRepository(transaction, userId),
+            getSubCategoryFromRepository(transaction, userId), userId);
     }
 
-    private MainCategoryEntity getMainCategoryEntityFromRepository(final Transaction transaction) {
-        return mainCategoryRepository.findById(transaction.getMainCategory().getId()).orElse(null);
+    private MainCategoryEntity getMainCategoryEntityFromRepository(final Transaction transaction, final Long userId) {
+        return mainCategoryRepository.findByIdAndUserId(transaction.getMainCategory().getId(), userId).orElse(null);
     }
 
-    private SubCategoryEntity getSubCategoryFromRepository(final Transaction transaction) {
+    private SubCategoryEntity getSubCategoryFromRepository(final Transaction transaction, final Long userId) {
         return transaction.getSubCategory() == null ? null
-            : subCategoryRepository.findById(transaction.getSubCategory().getId()).orElse(null);
+            : subCategoryRepository.findByIdAndUserId(transaction.getSubCategory().getId(), userId).orElse(null);
     }
 
 }

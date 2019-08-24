@@ -22,8 +22,8 @@ public class SubCategoryController {
     }
 
     @RequestMapping(value = "/bm/subCategories/findAll", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Object> getSubCategories(@RequestParam final TransactionType type) {
-        List<SubCategoryModel> subCategoryModelList = subCategoryModelService.findAll(type);
+    public ResponseEntity<Object> getSubCategories(@RequestParam final TransactionType type, @RequestParam final Long userId) {
+        List<SubCategoryModel> subCategoryModelList = subCategoryModelService.findAll(type, userId);
         return new ResponseEntity<>(subCategoryModelList, HttpStatus.OK);
     }
 
@@ -31,7 +31,7 @@ public class SubCategoryController {
     public ResponseEntity<Object> createSubCategory(@RequestBody final SubCategoryModelRequestContext context) {
         SubCategoryModelResponse response;
         try {
-            response = subCategoryModelService.saveSubCategory(context.getSubCategoryModel());
+            response = subCategoryModelService.saveSubCategory(context);
         } catch (Exception e) {
             response = createErrorResponse(context, e);
         }
@@ -42,7 +42,7 @@ public class SubCategoryController {
     public ResponseEntity<Object> updateSubCategory(@RequestBody final SubCategoryModelRequestContext context) {
         SubCategoryModelResponse response;
         try {
-            response = subCategoryModelService.updateSubCategory(context.getSubCategoryModel());
+            response = subCategoryModelService.updateSubCategory(context);
         } catch (Exception e) {
             response = createErrorResponse(context, e);
         }

@@ -100,20 +100,17 @@ public final class Transaction {
         Transaction that = (Transaction) o;
         return Double.compare(that.amount, amount) == 0
             && monthly == that.monthly
-            && locked == that.locked
             && title.equals(that.title)
             && currency == that.currency
             && transactionType == that.transactionType
             && mainCategory.equals(that.mainCategory)
-            && Objects.equals(subCategory, that.subCategory)
-            && date.equals(that.date)
-            && Objects.equals(endDate, that.endDate)
-            && Objects.equals(description, that.description);
+            && subCategory.equals(that.subCategory)
+            && date.equals(that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, amount, currency, transactionType, mainCategory, subCategory, monthly, date, endDate, description, locked);
+        return Objects.hash(title, amount, currency, transactionType, mainCategory, subCategory, monthly, date);
     }
 
     public static class Builder {

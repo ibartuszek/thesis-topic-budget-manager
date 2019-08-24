@@ -11,7 +11,8 @@
   <suppress checks="[a-zA-Z0-9]*" files=".*\.jspf?$"/>
   <suppress checks="[a-zA-Z0-9]*" files="[\\/]target[\\/]"/>
 
-  <suppress id="noWhiteSpaceAfterError" files="TransactionModelServiceTest.java"/>
+  <suppress id="noWhiteSpaceAfterError" files="hu.elte.bm.*Test"/>
+  <suppress id="noWhiteSpaceAfterError" files="hu.elte.bm.*Test"/>
   <suppress id="ParameterNumber_Error" files="TransactionModelServiceTest.java"/>
 
 </suppressions>

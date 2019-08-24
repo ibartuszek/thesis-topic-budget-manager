@@ -32,8 +32,15 @@ public class MainCategoryEntityTransformer {
             .collect(Collectors.toSet());
     }
 
-    public MainCategoryEntity transformToMainCategoryEntity(final MainCategory mainCategory, final Set<SubCategoryEntity> subCategoryEntitySet) {
-        return new MainCategoryEntity(mainCategory.getId(), mainCategory.getName(), mainCategory.getTransactionType(), subCategoryEntitySet);
+    public MainCategoryEntity transformToMainCategoryEntity(final MainCategory mainCategory, final Set<SubCategoryEntity> subCategoryEntitySet,
+        final Long userId) {
+        return MainCategoryEntity.builder()
+            .withId(mainCategory.getId())
+            .withName(mainCategory.getName())
+            .withTransactionType(mainCategory.getTransactionType())
+            .withSubCategoryEntitySet(subCategoryEntitySet)
+            .withUserId(userId)
+            .build();
     }
 
 }

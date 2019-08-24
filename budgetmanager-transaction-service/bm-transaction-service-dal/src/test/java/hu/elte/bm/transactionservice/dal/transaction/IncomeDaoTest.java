@@ -24,6 +24,8 @@ import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class IncomeDaoTest {
 
@@ -36,6 +38,7 @@ public class IncomeDaoTest {
     private static final Date EXPECTED_DATE = Date.valueOf(LocalDate.now().minusDays(1));
     private static final long CATEGORY_ID = 1L;
     private static final String CATEGORY_NAME = "category";
+    private static final Long USER_ID = 1L;
 
     private IncomeDao underTest;
 
@@ -58,10 +61,11 @@ public class IncomeDaoTest {
     @Test
     public void testFindAllWhenRepositoryReturnsWithEmptyList() {
         // GIVEN
-        EasyMock.expect(incomeRepository.findAll(Date.valueOf(START), Date.valueOf(END))).andReturn(Collections.emptyList());
+        TransactionContext context = createExampleTransactionContext(INCOME);
+        EasyMock.expect(incomeRepository.findAll(Date.valueOf(START), Date.valueOf(END), USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
-        List<Transaction> result = underTest.findAll(START, END);
+        List<Transaction> result = underTest.findAll(START, END, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Collections.emptyList());
@@ -70,14 +74,15 @@ public class IncomeDaoTest {
     @Test
     public void testFindAll() {
         // GIVEN
+        TransactionContext context = createExampleTransactionContext(INCOME);
         List<IncomeEntity> incomeEntityList = createExampleIncomeEntityList();
         List<Transaction> expectedTransactionList = new ArrayList<>();
         expectedTransactionList.add(createTransactionBuilderWithDefaultValues().build());
-        EasyMock.expect(incomeRepository.findAll(Date.valueOf(START), Date.valueOf(END))).andReturn(incomeEntityList);
+        EasyMock.expect(incomeRepository.findAll(Date.valueOf(START), Date.valueOf(END), USER_ID)).andReturn(incomeEntityList);
         EasyMock.expect(transformer.transformToTransaction(incomeEntityList.get(0))).andReturn(expectedTransactionList.get(0));
         control.replay();
         // WHEN
-        List<Transaction> result = underTest.findAll(START, END);
+        List<Transaction> result = underTest.findAll(START, END, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedTransactionList);
@@ -86,10 +91,11 @@ public class IncomeDaoTest {
     @Test
     public void testFindByIdWhenCannotBeFound() {
         // GIVEN
-        EasyMock.expect(incomeRepository.findById(EXPECTED_ID)).andReturn(Optional.empty());
+        TransactionContext context = createExampleTransactionContext(INCOME);
+        EasyMock.expect(incomeRepository.findByIdAndUserId(EXPECTED_ID, USER_ID)).andReturn(Optional.empty());
         control.replay();
         // WHEN
-        Optional<Transaction> result = underTest.findById(EXPECTED_ID);
+        Optional<Transaction> result = underTest.findById(EXPECTED_ID, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Optional.empty());
@@ -98,13 +104,14 @@ public class IncomeDaoTest {
     @Test
     public void testFindById() {
         // GIVEN
+        TransactionContext context = createExampleTransactionContext(INCOME);
         Optional<IncomeEntity> incomeEntityFromRepository = Optional.ofNullable(createExampleIncomeEntity());
         Optional<Transaction> expectedResult = Optional.of(createTransactionBuilderWithDefaultValues().build());
-        EasyMock.expect(incomeRepository.findById(EXPECTED_ID)).andReturn(incomeEntityFromRepository);
+        EasyMock.expect(incomeRepository.findByIdAndUserId(EXPECTED_ID, USER_ID)).andReturn(incomeEntityFromRepository);
         EasyMock.expect(transformer.transformToTransaction(incomeEntityFromRepository.get())).andReturn(expectedResult.get());
         control.replay();
         // WHEN
-        Optional<Transaction> result = underTest.findById(EXPECTED_ID);
+        Optional<Transaction> result = underTest.findById(EXPECTED_ID, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedResult);
@@ -113,14 +120,15 @@ public class IncomeDaoTest {
     @Test
     public void testFindByTitleWhenRepositoryReturnsWithEmptyList() {
         // GIVEN
+        TransactionContext context = createExampleTransactionContext(INCOME);
         List<IncomeEntity> incomeEntityList = createExampleIncomeEntityList();
         List<Transaction> expectedTransactionList = new ArrayList<>();
         expectedTransactionList.add(createTransactionBuilderWithDefaultValues().build());
-        EasyMock.expect(incomeRepository.findByTitle(EXPECTED_TITLE)).andReturn(incomeEntityList);
+        EasyMock.expect(incomeRepository.findByTitleAndUserId(EXPECTED_TITLE, USER_ID)).andReturn(incomeEntityList);
         EasyMock.expect(transformer.transformToTransaction(incomeEntityList.get(0))).andReturn(expectedTransactionList.get(0));
         control.replay();
         // WHEN
-        List<Transaction> result = underTest.findByTitle(EXPECTED_TITLE);
+        List<Transaction> result = underTest.findByTitle(EXPECTED_TITLE, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedTransactionList);
@@ -129,10 +137,11 @@ public class IncomeDaoTest {
     @Test
     public void testFindByTitle() {
         // GIVEN
-        EasyMock.expect(incomeRepository.findByTitle(EXPECTED_TITLE)).andReturn(Collections.emptyList());
+        TransactionContext context = createExampleTransactionContext(INCOME);
+        EasyMock.expect(incomeRepository.findByTitleAndUserId(EXPECTED_TITLE, USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
-        List<Transaction> result = underTest.findByTitle(EXPECTED_TITLE);
+        List<Transaction> result = underTest.findByTitle(EXPECTED_TITLE, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Collections.emptyList());
@@ -141,6 +150,7 @@ public class IncomeDaoTest {
     @Test
     public void voidTestSave() {
         // GIVEN
+        TransactionContext context = createExampleTransactionContext(INCOME);
         Transaction transactionToSave = createTransactionBuilderWithDefaultValues()
             .withId(null)
             .withSubCategory(createExampleSubCategory())
@@ -152,14 +162,14 @@ public class IncomeDaoTest {
         transformedEntity.setSubCategoryEntity(subCategoryEntity);
         IncomeEntity responseEntity = createExampleIncomeEntity();
         Optional<Transaction> expectedTransaction = Optional.ofNullable(createTransactionBuilderWithDefaultValues().build());
-        EasyMock.expect(mainCategoryRepository.findById(CATEGORY_ID)).andReturn(Optional.of(mainCategoryEntity));
-        EasyMock.expect(subCategoryRepository.findById(CATEGORY_ID)).andReturn(Optional.of(subCategoryEntity));
-        EasyMock.expect(transformer.transformToIncomeEntity(transactionToSave, mainCategoryEntity, subCategoryEntity)).andReturn(transformedEntity);
+        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
+        EasyMock.expect(subCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(subCategoryEntity));
+        EasyMock.expect(transformer.transformToIncomeEntity(transactionToSave, mainCategoryEntity, subCategoryEntity, USER_ID)).andReturn(transformedEntity);
         EasyMock.expect(incomeRepository.save(transformedEntity)).andReturn(responseEntity);
         EasyMock.expect(transformer.transformToTransaction(responseEntity)).andReturn(expectedTransaction.get());
         control.replay();
         // WHEN
-        Optional<Transaction> result = underTest.save(transactionToSave);
+        Optional<Transaction> result = underTest.save(transactionToSave, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedTransaction);
@@ -168,15 +178,16 @@ public class IncomeDaoTest {
     @Test
     public void voidTestDelete() {
         // GIVEN
+        TransactionContext context = createExampleTransactionContext(INCOME);
         Transaction transactionToDelete = createTransactionBuilderWithDefaultValues().build();
         IncomeEntity transformedEntity = createExampleIncomeEntity();
         MainCategoryEntity mainCategoryEntity = transformedEntity.getMainCategoryEntity();
-        EasyMock.expect(mainCategoryRepository.findById(CATEGORY_ID)).andReturn(Optional.of(mainCategoryEntity));
-        EasyMock.expect(transformer.transformToIncomeEntity(transactionToDelete, mainCategoryEntity, null)).andReturn(transformedEntity);
+        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
+        EasyMock.expect(transformer.transformToIncomeEntity(transactionToDelete, mainCategoryEntity, null, USER_ID)).andReturn(transformedEntity);
         incomeRepository.delete(transformedEntity);
         control.replay();
         // WHEN
-        underTest.delete(transactionToDelete);
+        underTest.delete(transactionToDelete, context);
         // THEN
         control.verify();
     }
@@ -199,11 +210,22 @@ public class IncomeDaoTest {
     }
 
     private MainCategoryEntity createExampleMainCategoryEntity() {
-        return new MainCategoryEntity(CATEGORY_ID, CATEGORY_NAME, INCOME, new HashSet<>());
+        return MainCategoryEntity.builder()
+            .withId(CATEGORY_ID)
+            .withName(CATEGORY_NAME)
+            .withTransactionType(INCOME)
+            .withSubCategoryEntitySet(new HashSet<>())
+            .withUserId(USER_ID)
+            .build();
     }
 
     private SubCategoryEntity createExampleSubCategoryEntity() {
-        return new SubCategoryEntity(CATEGORY_ID, CATEGORY_NAME, INCOME);
+        return SubCategoryEntity.builder()
+            .withId(CATEGORY_ID)
+            .withName(CATEGORY_NAME)
+            .withTransactionType(INCOME)
+            .withUserId(USER_ID)
+            .build();
     }
 
     private Transaction.Builder createTransactionBuilderWithDefaultValues() {
@@ -230,6 +252,13 @@ public class IncomeDaoTest {
             .withId(CATEGORY_ID)
             .withName(CATEGORY_NAME)
             .withTransactionType(INCOME)
+            .build();
+    }
+
+    private TransactionContext createExampleTransactionContext(final TransactionType type) {
+        return TransactionContext.builder()
+            .withUserId(USER_ID)
+            .withTransactionType(type)
             .build();
     }
 

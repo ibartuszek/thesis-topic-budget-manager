@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.MainCategoryService;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Service
@@ -19,6 +20,12 @@ public class MainCategoryModelService {
     private final ModelValidator validator;
     private final MainCategoryService mainCategoryService;
     private final MainCategoryModelTransformer transformer;
+
+    @Value("${sub_category.category_type_cannot_be_null}")
+    private String typeCannotBeNull;
+
+    @Value("${main_category.user_id_cannot_be_null}")
+    private String userIdCannotBeNull;
 
     @Value("${main_category.main_category_is_invalid}")
     private String categoryIsInvalidMessage;
@@ -42,18 +49,21 @@ public class MainCategoryModelService {
         this.transformer = transformer;
     }
 
-    List<MainCategoryModel> findAll(final TransactionType type) {
-        List<MainCategory> subCategoryList = mainCategoryService.getMainCategoryList(type);
+    List<MainCategoryModel> findAll(final TransactionType type, final Long userId) {
+        validateTransactionContext(userId, type);
+        List<MainCategory> subCategoryList = mainCategoryService.getMainCategoryList(createTransactionContext(type, userId));
         return subCategoryList.stream()
             .map(transformer::transformToMainCategoryModel)
             .collect(Collectors.toList());
     }
 
-    MainCategoryModelResponse saveMainCategory(final MainCategoryModel mainCategoryModel) {
-        preValidateSavableCategory(mainCategoryModel);
-        MainCategoryModelResponse result = createResponseWithDefaultValues(mainCategoryModel);
+    MainCategoryModelResponse saveMainCategory(final MainCategoryModelRequestContext context) {
+        preValidateSavableCategory(context);
+        MainCategoryModelResponse result = createResponseWithDefaultValues(context.getMainCategoryModel());
         if (isValid(result.getMainCategoryModel())) {
-            Optional<MainCategory> savedMainCategory = mainCategoryService.save(transformer.transformToMainCategory(result.getMainCategoryModel()));
+            Optional<MainCategory> savedMainCategory = mainCategoryService.save(
+                transformer.transformToMainCategory(result.getMainCategoryModel()),
+                createTransactionContext(context.getTransactionType(), context.getUserId()));
             updateResponse(savedMainCategory, result, categoryHasBeenSaved, categoryHasBeenSavedBeforeMessage);
         } else {
             result.setMessage(categoryIsInvalidMessage);
@@ -61,11 +71,13 @@ public class MainCategoryModelService {
         return result;
     }
 
-    MainCategoryModelResponse updateMainCategory(final MainCategoryModel mainCategoryModel) {
-        preValidateUpdatableCategory(mainCategoryModel);
-        MainCategoryModelResponse result = createResponseWithDefaultValues(mainCategoryModel);
+    MainCategoryModelResponse updateMainCategory(final MainCategoryModelRequestContext context) {
+        preValidateUpdatableCategory(context);
+        MainCategoryModelResponse result = createResponseWithDefaultValues(context.getMainCategoryModel());
         if (isValid(result.getMainCategoryModel())) {
-            Optional<MainCategory> savedMainCategory = mainCategoryService.update(transformer.transformToMainCategory(result.getMainCategoryModel()));
+            Optional<MainCategory> savedMainCategory = mainCategoryService.update(
+                transformer.transformToMainCategory(result.getMainCategoryModel()),
+                createTransactionContext(context.getTransactionType(), context.getUserId()));
             updateResponse(savedMainCategory, result, categoryHasBeenUpdated, categoryCannotBeUpdatedMessage);
         } else {
             result.setMessage(categoryIsInvalidMessage);
@@ -73,21 +85,29 @@ public class MainCategoryModelService {
         return result;
     }
 
-    private void preValidateSavableCategory(final MainCategoryModel mainCategoryModel) {
-        if (mainCategoryModel.getId() != null) {
+    private void preValidateSavableCategory(final MainCategoryModelRequestContext context) {
+        Assert.notNull(context.getMainCategoryModel(), categoryIsInvalidMessage);
+        if (context.getMainCategoryModel().getId() != null) {
             throw new IllegalArgumentException(categoryIsInvalidMessage);
         }
-        validateMainCategoryModelFields(mainCategoryModel);
+        validateMainCategoryModelFields(context);
     }
 
-    private void preValidateUpdatableCategory(final MainCategoryModel mainCategoryModel) {
-        Assert.notNull(mainCategoryModel.getId(), categoryIsInvalidMessage);
-        validateMainCategoryModelFields(mainCategoryModel);
+    private void preValidateUpdatableCategory(final MainCategoryModelRequestContext context) {
+        Assert.notNull(context.getMainCategoryModel(), categoryIsInvalidMessage);
+        Assert.notNull(context.getMainCategoryModel().getId(), categoryIsInvalidMessage);
+        validateMainCategoryModelFields(context);
     }
 
-    private void validateMainCategoryModelFields(final MainCategoryModel mainCategoryModel) {
-        Assert.notNull(mainCategoryModel.getName(), categoryIsInvalidMessage);
-        Assert.notNull(mainCategoryModel.getTransactionType(), categoryIsInvalidMessage);
+    private void validateMainCategoryModelFields(final MainCategoryModelRequestContext context) {
+        validateTransactionContext(context.getUserId(), context.getTransactionType());
+        Assert.notNull(context.getMainCategoryModel().getName(), categoryIsInvalidMessage);
+        Assert.notNull(context.getMainCategoryModel().getTransactionType(), categoryIsInvalidMessage);
+    }
+
+    private void validateTransactionContext(final Long userId, final TransactionType transactionType) {
+        Assert.notNull(userId, userIdCannotBeNull);
+        Assert.notNull(transactionType, typeCannotBeNull);
     }
 
     private MainCategoryModelResponse createResponseWithDefaultValues(final MainCategoryModel mainCategoryModel) {
@@ -112,6 +132,13 @@ public class MainCategoryModelService {
         } else {
             response.setMessage(unSuccessMessage);
         }
+    }
+
+    private TransactionContext createTransactionContext(final TransactionType transactionType, final Long userId) {
+        return TransactionContext.builder()
+            .withTransactionType(transactionType)
+            .withUserId(userId)
+            .build();
     }
 
 }

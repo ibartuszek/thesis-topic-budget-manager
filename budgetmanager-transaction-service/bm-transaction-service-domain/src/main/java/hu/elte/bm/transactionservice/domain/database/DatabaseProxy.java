@@ -13,13 +13,14 @@ import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryException;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component("databaseProxy")
 public class DatabaseProxy {
 
     private final DatabaseFacade databaseFacade;
+
     @Value("${database_proxy.unexpected_error_message}")
     private String exceptionMessage;
 
@@ -27,129 +28,129 @@ public class DatabaseProxy {
         this.databaseFacade = databaseFacade;
     }
 
-    public List<MainCategory> findAllMainCategory(final TransactionType transactionType) {
+    public List<MainCategory> findAllMainCategory(final TransactionContext context) {
         try {
-            return databaseFacade.findAllMainCategory(transactionType);
+            return databaseFacade.findAllMainCategory(context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public Optional<MainCategory> findMainCategoryById(final Long id) {
+    public Optional<MainCategory> findMainCategoryById(final Long id, final TransactionContext context) {
         try {
-            return databaseFacade.findMainCategoryById(id);
+            return databaseFacade.findMainCategoryById(id, context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public Optional<MainCategory> findMainCategoryByName(final String name, final TransactionType transactionType) {
+    public Optional<MainCategory> findMainCategoryByName(final String name, final TransactionContext context) {
         try {
-            return databaseFacade.findMainCategoryByName(name, transactionType);
+            return databaseFacade.findMainCategoryByName(name, context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public Optional<MainCategory> saveMainCategory(final MainCategory mainCategory) {
+    public Optional<MainCategory> saveMainCategory(final MainCategory mainCategory, final TransactionContext context) {
         try {
-            return databaseFacade.saveMainCategory(mainCategory);
+            return databaseFacade.saveMainCategory(mainCategory, context);
         } catch (DataAccessException exception) {
             throw new MainCategoryException(mainCategory, exceptionMessage, exception);
         }
     }
 
-    public Optional<MainCategory> updateMainCategory(final MainCategory mainCategory) {
+    public Optional<MainCategory> updateMainCategory(final MainCategory mainCategory, final TransactionContext context) {
         try {
-            return databaseFacade.updateMainCategory(mainCategory);
+            return databaseFacade.updateMainCategory(mainCategory, context);
         } catch (DataAccessException exception) {
             throw new MainCategoryException(mainCategory, exceptionMessage, exception);
         }
     }
 
-    public List<SubCategory> findAllSubCategory(final TransactionType transactionType) {
+    public List<SubCategory> findAllSubCategory(final TransactionContext context) {
         try {
-            return databaseFacade.findAllSubCategory(transactionType);
+            return databaseFacade.findAllSubCategory(context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public Optional<SubCategory> findSubCategoryById(final Long id) {
+    public Optional<SubCategory> findSubCategoryById(final Long id, final TransactionContext context) {
         try {
-            return databaseFacade.findSubCategoryById(id);
+            return databaseFacade.findSubCategoryById(id, context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public Optional<SubCategory> findSubCategoryByName(final String name, final TransactionType transactionType) {
+    public Optional<SubCategory> findSubCategoryByName(final String name, final TransactionContext context) {
         try {
-            return databaseFacade.findSubCategoryByName(name, transactionType);
+            return databaseFacade.findSubCategoryByName(name, context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public Optional<SubCategory> saveSubCategory(final SubCategory subCategory) {
+    public Optional<SubCategory> saveSubCategory(final SubCategory subCategory, final TransactionContext context) {
         try {
-            return databaseFacade.saveSubCategory(subCategory);
+            return databaseFacade.saveSubCategory(subCategory, context);
         } catch (DataAccessException exception) {
             throw new SubCategoryException(subCategory, exceptionMessage, exception);
         }
     }
 
-    public Optional<SubCategory> updateSubCategory(final SubCategory subCategory) {
+    public Optional<SubCategory> updateSubCategory(final SubCategory subCategory, final TransactionContext context) {
         try {
-            return databaseFacade.updateSubCategory(subCategory);
+            return databaseFacade.updateSubCategory(subCategory, context);
         } catch (DataAccessException exception) {
             throw new SubCategoryException(subCategory, exceptionMessage, exception);
         }
     }
 
-    public List<Transaction> findAllTransaction(final LocalDate start, final LocalDate end, final TransactionType transactionType) {
+    public List<Transaction> findAllTransaction(final LocalDate start, final LocalDate end, final TransactionContext context) {
         try {
-            return databaseFacade.findAllTransaction(start, end, transactionType);
+            return databaseFacade.findAllTransaction(start, end, context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public Optional<Transaction> findTransactionById(final Long id, final TransactionType transactionType) {
+    public Optional<Transaction> findTransactionById(final Long id, final TransactionContext context) {
         try {
-            return databaseFacade.findTransactionById(id, transactionType);
+            return databaseFacade.findTransactionById(id, context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public List<Transaction> findTransactionByTitle(final String title, final TransactionType transactionType) {
+    public List<Transaction> findTransactionByTitle(final String title, final TransactionContext context) {
         try {
-            return databaseFacade.findTransactionByTitle(title, transactionType);
+            return databaseFacade.findTransactionByTitle(title, context);
         } catch (DataAccessException exception) {
             throw new DatabaseException(exceptionMessage, exception);
         }
     }
 
-    public Optional<Transaction> saveTransaction(final Transaction transaction) {
+    public Optional<Transaction> saveTransaction(final Transaction transaction, final TransactionContext context) {
         try {
-            return databaseFacade.saveTransaction(transaction);
+            return databaseFacade.saveTransaction(transaction, context);
         } catch (DataAccessException exception) {
             throw new TransactionException(transaction, exceptionMessage, exception);
         }
     }
 
-    public Optional<Transaction> updateTransaction(final Transaction transaction) {
+    public Optional<Transaction> updateTransaction(final Transaction transaction, final TransactionContext context) {
         try {
-            return databaseFacade.updateTransaction(transaction);
+            return databaseFacade.updateTransaction(transaction, context);
         } catch (DataAccessException exception) {
             throw new TransactionException(transaction, exceptionMessage, exception);
         }
     }
 
-    public void deleteTransaction(final Transaction transaction) {
+    public void deleteTransaction(final Transaction transaction, final TransactionContext context) {
         try {
-            databaseFacade.deleteTransaction(transaction);
+            databaseFacade.deleteTransaction(transaction, context);
         } catch (DataAccessException exception) {
             throw new TransactionException(transaction, exceptionMessage, exception);
         }

@@ -5,7 +5,6 @@ import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.I
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +25,7 @@ import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionService;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
@@ -58,6 +58,7 @@ public class TransactionModelServiceTest {
     private static final String CURRENCY_FIELD_NAME = "Currency";
     private static final String TYPE_FIELD_NAME = "Type";
     private static final String DATE_FIELD_NAME = "Date";
+    private static final Long USER_ID = 1L;
 
     private TransactionModelService underTest;
 
@@ -76,30 +77,38 @@ public class TransactionModelServiceTest {
         updateUnderTestProperties();
     }
 
-    @Test
-    public void testFindAllWhenEndIsNull() {
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testFindAllWhenUserIdIsNull() {
         // GIVEN
-        TransactionModelRequestContext context = createContext(null, null);
-        EasyMock.expect(transactionService.findAllTransaction(DEFAULT_START_OF_NEW_PERIOD, INCOME)).andReturn(Collections.emptyList());
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(INCOME)).andReturn(DEFAULT_START_OF_NEW_PERIOD);
-        control.replay();
+        TransactionModelRequestContext context = createContext(END, null);
+        context.setUserId(null);
         // WHEN
-        List<TransactionModel> result = underTest.findAll(context);
+        underTest.findAll(context);
         // THEN
-        control.verify();
-        Assert.assertEquals(result, Collections.emptyList());
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testFindAllWhenTransactionTypeIsNull() {
+        // GIVEN
+        TransactionModelRequestContext context = createContext(END, null);
+        context.setTransactionType(null);
+        // WHEN
+        underTest.findAll(context);
+        // THEN
     }
 
     @Test
-    public void testFindAllWhenEndIsNotNull() {
+    public void testFindAll() {
         // GIVEN
         TransactionModelRequestContext context = createContext(END, null);
         List<Transaction> transactionList = new ArrayList<>();
         transactionList.add(createExampleTransactionBuilderWithDefaultValues().build());
         List<TransactionModel> transactionModelList = new ArrayList<>();
         transactionModelList.add(createExampleTransactionModelBuilderWithDefaultValues().build());
-        EasyMock.expect(transactionService.findAllTransaction(DEFAULT_START_OF_NEW_PERIOD, END, INCOME)).andReturn(transactionList);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(INCOME)).andReturn(DEFAULT_START_OF_NEW_PERIOD);
+        EasyMock.expect(transactionService.findAllTransaction(DEFAULT_START_OF_NEW_PERIOD, END, createTransactionContext(INCOME, context.getUserId())))
+            .andReturn(transactionList);
+        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(createTransactionContext(INCOME, context.getUserId())))
+            .andReturn(DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transformer.transformToTransactionModel(transactionList.get(0), DEFAULT_START_OF_NEW_PERIOD)).andReturn(transactionModelList.get(0));
         control.replay();
         // WHEN
@@ -110,7 +119,7 @@ public class TransactionModelServiceTest {
         Assert.assertEquals(result.get(0), transactionModelList.get(0));
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "getData")
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "invalidTransactionData")
     public void testSaveWhenTransactionModelIsInvalidViaPreValidation(final Long id, final ModelStringValue title, final ModelAmountValue amount,
         final ModelStringValue currency, final ModelStringValue type, final MainCategoryModel mainCategoryModel, final ModelDateValue date) {
         // GIVEN
@@ -130,7 +139,7 @@ public class TransactionModelServiceTest {
     }
 
     @DataProvider
-    public Object[][] getData() {
+    public Object[][] invalidTransactionData() {
         ModelStringValue title = ModelStringValue.builder().withValue(DEFAULT_TITLE).build();
         ModelAmountValue amount = ModelAmountValue.builder().withValue(DEFAULT_AMOUNT).build();
         ModelStringValue currency = ModelStringValue.builder().withValue(DEFAULT_CURRENCY.name()).build();
@@ -159,7 +168,8 @@ public class TransactionModelServiceTest {
             .build();
         TransactionModelRequestContext context = createContext(END, invalidTransactionModel);
         prepareForValidation(invalidTransactionModel, false);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
+        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(createTransactionContext(context.getTransactionType(), context.getUserId())))
+            .andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(invalidTransactionModel, DEFAULT_START_OF_NEW_PERIOD);
         control.replay();
         // WHEN
@@ -177,10 +187,12 @@ public class TransactionModelServiceTest {
         TransactionModelRequestContext context = createContext(END, transactionModel);
         Transaction transaction = createExampleTransactionBuilderWithDefaultValues().build();
         prepareForValidation(transactionModel, true);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
+        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(createTransactionContext(context.getTransactionType(), context.getUserId())))
+            .andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.save(transaction)).andReturn(Optional.empty());
+        EasyMock.expect(transactionService.save(transaction, createTransactionContext(context.getTransactionType(), context.getUserId())))
+            .andReturn(Optional.empty());
         control.replay();
         // WHEN
         TransactionModelResponse result = underTest.saveTransaction(context);
@@ -195,12 +207,13 @@ public class TransactionModelServiceTest {
         // GIVEN
         TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues().withId(null).build();
         TransactionModelRequestContext context = createContext(END, transactionModel);
+        TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
         Transaction transaction = createExampleTransactionBuilderWithDefaultValues().build();
         prepareForValidation(transactionModel, true);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
+        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(transactionContext)).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.save(transaction)).andReturn(Optional.of(transaction));
+        EasyMock.expect(transactionService.save(transaction, transactionContext)).andReturn(Optional.of(transaction));
         EasyMock.expect(transformer.transformToTransactionModel(transaction, DEFAULT_START_OF_NEW_PERIOD)).andReturn(transactionModel);
         control.replay();
         // WHEN
@@ -226,12 +239,13 @@ public class TransactionModelServiceTest {
         // GIVEN
         TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues().build();
         TransactionModelRequestContext context = createContext(END, transactionModel);
+        TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
         Transaction transaction = createExampleTransactionBuilderWithDefaultValues().build();
         prepareForValidation(transactionModel, true);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
+        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(transactionContext)).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.update(transaction, INCOME)).andReturn(Optional.empty());
+        EasyMock.expect(transactionService.update(transaction, transactionContext)).andReturn(Optional.empty());
         control.replay();
         // WHEN
         TransactionModelResponse result = underTest.updateTransaction(context);
@@ -246,12 +260,13 @@ public class TransactionModelServiceTest {
         // GIVEN
         TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues().build();
         TransactionModelRequestContext context = createContext(END, transactionModel);
+        TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
         Transaction transaction = createExampleTransactionBuilderWithDefaultValues().build();
         prepareForValidation(transactionModel, true);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
+        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(transactionContext)).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.update(transaction, INCOME)).andReturn(Optional.of(transaction));
+        EasyMock.expect(transactionService.update(transaction, transactionContext)).andReturn(Optional.of(transaction));
         EasyMock.expect(transformer.transformToTransactionModel(transaction, DEFAULT_START_OF_NEW_PERIOD)).andReturn(transactionModel);
         control.replay();
         // WHEN
@@ -277,12 +292,13 @@ public class TransactionModelServiceTest {
         // GIVEN
         TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues().build();
         TransactionModelRequestContext context = createContext(END, transactionModel);
+        TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
         Transaction transaction = createExampleTransactionBuilderWithDefaultValues().build();
         prepareForValidation(transactionModel, true);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
+        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(transactionContext)).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.delete(transaction, INCOME)).andReturn(Optional.empty());
+        EasyMock.expect(transactionService.delete(transaction, transactionContext)).andReturn(Optional.empty());
         control.replay();
         // WHEN
         TransactionModelResponse result = underTest.deleteTransaction(context);
@@ -297,12 +313,13 @@ public class TransactionModelServiceTest {
         // GIVEN
         TransactionModel transactionModel = createExampleTransactionModelBuilderWithDefaultValues().build();
         TransactionModelRequestContext context = createContext(END, transactionModel);
+        TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
         Transaction transaction = createExampleTransactionBuilderWithDefaultValues().build();
         prepareForValidation(transactionModel, true);
-        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(context.getTransactionType())).andReturn(DEFAULT_START_OF_NEW_PERIOD);
+        EasyMock.expect(transactionService.getTheFirstDateOfTheNewPeriod(transactionContext)).andReturn(DEFAULT_START_OF_NEW_PERIOD);
         transformer.populateValidationFields(transactionModel, DEFAULT_START_OF_NEW_PERIOD);
         EasyMock.expect(transformer.transformToTransaction(transactionModel)).andReturn(transaction);
-        EasyMock.expect(transactionService.delete(transaction, INCOME)).andReturn(Optional.of(transaction));
+        EasyMock.expect(transactionService.delete(transaction, transactionContext)).andReturn(Optional.of(transaction));
         EasyMock.expect(transformer.transformToTransactionModel(transaction, DEFAULT_START_OF_NEW_PERIOD)).andReturn(transactionModel);
         control.replay();
         // WHEN
@@ -356,6 +373,7 @@ public class TransactionModelServiceTest {
         context.setTransactionType(INCOME);
         context.setEnd(end);
         context.setTransactionModel(transactionModel);
+        context.setUserId(USER_ID);
         return context;
     }
 
@@ -375,6 +393,13 @@ public class TransactionModelServiceTest {
         ReflectionTestUtils.setField(underTest, "transactionCannotBeUpdated", "You cannot update this transaction, because it exists.");
         ReflectionTestUtils.setField(underTest, "transactionHasBeenDeleted", "The transaction has been deleted.");
         ReflectionTestUtils.setField(underTest, "transactionCannotBeDeleted", "You cannot delete this transaction.");
+    }
+
+    private TransactionContext createTransactionContext(final TransactionType type, final Long userId) {
+        return TransactionContext.builder()
+            .withTransactionType(type)
+            .withUserId(userId)
+            .build();
     }
 
 }

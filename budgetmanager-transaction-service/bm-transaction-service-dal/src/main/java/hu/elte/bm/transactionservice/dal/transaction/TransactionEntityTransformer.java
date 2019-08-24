@@ -31,8 +31,8 @@ public class TransactionEntityTransformer {
 
     // MainCategory and Subcategory are value classes and managed entities.
     public IncomeEntity transformToIncomeEntity(final Transaction transaction, final MainCategoryEntity mainCategoryEntity,
-        final SubCategoryEntity subCategoryEntity) {
-        IncomeEntity incomeEntity = mapper.map(transformToTransactionEntity(transaction), IncomeEntity.class);
+        final SubCategoryEntity subCategoryEntity, final Long userId) {
+        IncomeEntity incomeEntity = mapper.map(transformToTransactionEntity(transaction, userId), IncomeEntity.class);
         incomeEntity.setMainCategoryEntity(mainCategoryEntity);
         incomeEntity.setSubCategoryEntity(subCategoryEntity);
         return incomeEntity;
@@ -40,8 +40,8 @@ public class TransactionEntityTransformer {
 
     // MainCategory and Subcategory are value classes and managed entities.
     public OutcomeEntity transformToOutcomeEntity(final Transaction transaction, final MainCategoryEntity mainCategoryEntity,
-        final SubCategoryEntity subCategoryEntity) {
-        OutcomeEntity outcomeEntity = mapper.map(transformToTransactionEntity(transaction), OutcomeEntity.class);
+        final SubCategoryEntity subCategoryEntity, final Long userId) {
+        OutcomeEntity outcomeEntity = mapper.map(transformToTransactionEntity(transaction, userId), OutcomeEntity.class);
         outcomeEntity.setMainCategoryEntity(mainCategoryEntity);
         outcomeEntity.setSubCategoryEntity(subCategoryEntity);
         return outcomeEntity;
@@ -61,7 +61,7 @@ public class TransactionEntityTransformer {
             .build();
     }
 
-    private TransactionEntity transformToTransactionEntity(final Transaction transaction) {
+    private TransactionEntity transformToTransactionEntity(final Transaction transaction, final Long userId) {
         return TransactionEntity.builder()
             .withId(transaction.getId())
             .withTitle(transaction.getTitle())
@@ -73,6 +73,7 @@ public class TransactionEntityTransformer {
             .withMonthly(transaction.isMonthly())
             .withDescription(transaction.getDescription())
             .withLocked(transaction.isLocked())
+            .withUserId(userId)
             .build();
     }
 

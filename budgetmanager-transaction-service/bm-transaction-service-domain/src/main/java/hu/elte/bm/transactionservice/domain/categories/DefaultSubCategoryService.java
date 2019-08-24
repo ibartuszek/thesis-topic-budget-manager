@@ -8,12 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 
 @Service("subCategoryService")
 public class DefaultSubCategoryService implements SubCategoryService {
 
     private final DatabaseProxy databaseProxy;
+
+    @Value("${sub_category.user_id_cannot_be_null}")
+    private String userIdCannotBeNullExceptionMessage;
 
     @Value("${sub_category.sub_category_cannot_be_null}")
     private String categoryCannotBeNullExceptionMessage;
@@ -32,35 +35,42 @@ public class DefaultSubCategoryService implements SubCategoryService {
     }
 
     @Override
-    public List<SubCategory> getSubCategoryList(final TransactionType transactionType) {
-        Assert.notNull(transactionType, typeCannotBeNullExceptionMessage);
-        return databaseProxy.findAllSubCategory(transactionType);
+    public List<SubCategory> getSubCategoryList(final TransactionContext context) {
+        validate(context);
+        return databaseProxy.findAllSubCategory(context);
     }
 
     @Override
-    public Optional<SubCategory> save(final SubCategory subCategory) {
+    public Optional<SubCategory> save(final SubCategory subCategory, final TransactionContext context) {
+        validate(context);
         validate(subCategory);
-        return isSavable(subCategory) ? databaseProxy.saveSubCategory(subCategory) : Optional.empty();
+        return isSavable(subCategory, context) ? databaseProxy.saveSubCategory(subCategory, context) : Optional.empty();
+    }
+
+    @Override
+    public Optional<SubCategory> update(final SubCategory subCategory, final TransactionContext context) {
+        validateForUpdate(subCategory, context);
+        return isSavable(subCategory, context) ? databaseProxy.updateSubCategory(subCategory, context) : Optional.empty();
+    }
+
+    private void validate(final TransactionContext context) {
+        Assert.notNull(context.getUserId(), userIdCannotBeNullExceptionMessage);
+        Assert.notNull(context.getTransactionType(), typeCannotBeNullExceptionMessage);
     }
 
     private void validate(final SubCategory subCategory) {
         Assert.notNull(subCategory, categoryCannotBeNullExceptionMessage);
     }
 
-    private boolean isSavable(final SubCategory subCategory) {
-        Optional<SubCategory> subCategoryWithSameName = databaseProxy.findSubCategoryByName(subCategory.getName(), subCategory.getTransactionType());
+    private boolean isSavable(final SubCategory subCategory, final TransactionContext context) {
+        Optional<SubCategory> subCategoryWithSameName = databaseProxy.findSubCategoryByName(subCategory.getName(), context);
         return subCategoryWithSameName.isEmpty();
     }
 
-    @Override
-    public Optional<SubCategory> update(final SubCategory subCategory) {
-        validateForUpdate(subCategory);
-        return isSavable(subCategory) ? databaseProxy.updateSubCategory(subCategory) : Optional.empty();
-    }
-
-    private void validateForUpdate(final SubCategory subCategory) {
+    private void validateForUpdate(final SubCategory subCategory, final TransactionContext context) {
+        validate(context);
         validate(subCategory);
-        SubCategory originalSubCategory = databaseProxy.findSubCategoryById(subCategory.getId()).orElse(null);
+        SubCategory originalSubCategory = databaseProxy.findSubCategoryById(subCategory.getId(), context).orElse(null);
         if (originalSubCategory == null) {
             throw new SubCategoryException(subCategory, originalSubCategoryCannotBeFoundExceptionMessage);
         } else if (subCategory.getTransactionType() != originalSubCategory.getTransactionType()) {

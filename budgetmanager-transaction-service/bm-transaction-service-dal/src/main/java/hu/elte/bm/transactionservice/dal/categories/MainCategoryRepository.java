@@ -10,10 +10,12 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 public interface MainCategoryRepository extends CrudRepository<MainCategoryEntity, Long> {
 
     @Query("select c from MainCategoryEntity c "
-        + "where c.transactionType = ?1")
-    Iterable<MainCategoryEntity> findAllMainCategory(TransactionType transactionType);
+        + "where c.transactionType = ?1 and c.userId = ?2")
+    Iterable<MainCategoryEntity> findAllMainCategory(TransactionType transactionType, Long userId);
+
+    Optional<MainCategoryEntity> findByIdAndUserId(Long id, Long userId);
 
     @Query("select c from MainCategoryEntity c "
-        + "where c.name = ?1 and c.transactionType = ?2")
-    Optional<MainCategoryEntity> findByName(String name, TransactionType transactionType);
+        + "where c.name = ?1 and c.transactionType = ?2 and c.userId = ?3")
+    Optional<MainCategoryEntity> findByName(String name, TransactionType transactionType, Long userId);
 }

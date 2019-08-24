@@ -19,6 +19,7 @@ public class TransactionEntity {
     private Date endDate;
     private String description;
     private boolean locked;
+    private Long userId;
 
     public TransactionEntity() {
     }
@@ -35,6 +36,7 @@ public class TransactionEntity {
         this.endDate = builder.endDate;
         this.description = builder.description;
         this.locked = builder.locked;
+        this.userId = builder.userId;
     }
 
     public static Builder builder() {
@@ -129,6 +131,14 @@ public class TransactionEntity {
         this.locked = locked;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final Long userId) {
+        this.userId = userId;
+    }
+
     public static final class Builder {
         private Long id;
         private String title;
@@ -141,6 +151,7 @@ public class TransactionEntity {
         private Date endDate;
         private String description;
         private boolean locked;
+        private Long userId;
 
         private Builder() {
         }
@@ -197,6 +208,11 @@ public class TransactionEntity {
 
         public Builder withLocked(final boolean locked) {
             this.locked = locked;
+            return this;
+        }
+
+        public Builder withUserId(final Long userId) {
+            this.userId = userId;
             return this;
         }
 

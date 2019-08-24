@@ -12,9 +12,11 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class DefaultSubCategoryServiceTest {
@@ -24,6 +26,8 @@ public class DefaultSubCategoryServiceTest {
     private static final long INVALID_ID = 4L;
     private static final String EXPECTED_CATEGORY_NAME = "category1";
     private static final String NEW_CATEGORY_NAME = "category2";
+    private static final Long USER_ID = 1L;
+
     private DatabaseProxy databaseProxy;
     private IMocksControl control;
 
@@ -39,10 +43,11 @@ public class DefaultSubCategoryServiceTest {
     @Test
     public void testGetSubCategoryListWhenThereIsNoSubCategory() {
         // GIVEN
-        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(Collections.emptyList());
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
+        EasyMock.expect(databaseProxy.findAllSubCategory(context)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
-        List<SubCategory> result = underTest.getSubCategoryList(INCOME);
+        List<SubCategory> result = underTest.getSubCategoryList(context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Collections.emptyList());
@@ -51,22 +56,33 @@ public class DefaultSubCategoryServiceTest {
     @Test
     public void testGetSubCategoryListWhenThereAreMoreSubCategories() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
         List<SubCategory> subCategoryList = createSubCategoryList();
-        EasyMock.expect(databaseProxy.findAllSubCategory(INCOME)).andReturn(subCategoryList);
+        EasyMock.expect(databaseProxy.findAllSubCategory(context)).andReturn(subCategoryList);
         control.replay();
         // WHEN
-        List<SubCategory> result = underTest.getSubCategoryList(INCOME);
+        List<SubCategory> result = underTest.getSubCategoryList(context);
         // THEN
         control.verify();
         Assert.assertEquals(result, subCategoryList);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSaveThrowIllegalArgumentExceptionWhenGotNullCategory() {
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "dataForValidation")
+    public void testSaveWhenValidationFails(final SubCategory subCategory, final TransactionType type, final Long userId) {
         // GIVEN
         // WHEN
-        underTest.save(null);
+        underTest.save(subCategory, createTransactionContext(type, userId));
         // THEN
+    }
+
+    @DataProvider
+    private Object[][] dataForValidation() {
+        SubCategory subCategory = createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        return new Object[][] {
+            { null, INCOME, USER_ID },
+            { subCategory, null, USER_ID },
+            { subCategory, INCOME, null }
+        };
     }
 
     @Test
@@ -74,10 +90,11 @@ public class DefaultSubCategoryServiceTest {
         // GIVEN
         SubCategory subCategoryToSave = createExampleSubCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
         Optional<SubCategory> subCategoryFromRepository = Optional.of(createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findSubCategoryByName(EXPECTED_CATEGORY_NAME, INCOME)).andReturn(subCategoryFromRepository);
+        EasyMock.expect(databaseProxy.findSubCategoryByName(EXPECTED_CATEGORY_NAME, createTransactionContext(INCOME, USER_ID)))
+            .andReturn(subCategoryFromRepository);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.save(subCategoryToSave);
+        Optional<SubCategory> result = underTest.save(subCategoryToSave, createTransactionContext(INCOME, USER_ID));
         // THEN
         control.verify();
         Assert.assertEquals(result, Optional.empty());
@@ -88,33 +105,34 @@ public class DefaultSubCategoryServiceTest {
         // GIVEN
         SubCategory subCategoryToSave = createExampleSubCategory(null, EXPECTED_CATEGORY_NAME, OUTCOME);
         Optional<SubCategory> expectedSubCategory = Optional.of(createExampleSubCategory(NEW_ID, EXPECTED_CATEGORY_NAME, OUTCOME));
-        EasyMock.expect(databaseProxy.findSubCategoryByName(EXPECTED_CATEGORY_NAME, OUTCOME)).andReturn(Optional.empty());
-        EasyMock.expect(databaseProxy.saveSubCategory(subCategoryToSave)).andReturn(expectedSubCategory);
+        EasyMock.expect(databaseProxy.findSubCategoryByName(EXPECTED_CATEGORY_NAME, createTransactionContext(OUTCOME, USER_ID))).andReturn(Optional.empty());
+        EasyMock.expect(databaseProxy.saveSubCategory(subCategoryToSave, createTransactionContext(OUTCOME, USER_ID))).andReturn(expectedSubCategory);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.save(subCategoryToSave);
+        Optional<SubCategory> result = underTest.save(subCategoryToSave, createTransactionContext(OUTCOME, USER_ID));
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedSubCategory);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testUpdateThrowIllegalArgumentExceptionWhenCategoryIsNull() {
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "dataForValidation")
+    public void testUpdateWhenValidationFails(final SubCategory subCategory, final TransactionType type, final Long userId) {
         // GIVEN
         // WHEN
-        underTest.update(null);
+        underTest.update(subCategory, createTransactionContext(type, userId));
         // THEN
     }
 
     @Test(expectedExceptions = SubCategoryException.class)
     public void testUpdateWhenCategoryCannotBeFoundInRepository() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
         SubCategory subCategoryToUpdate = createExampleSubCategory(INVALID_ID, NEW_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseProxy.findSubCategoryById(INVALID_ID)).andReturn(Optional.empty());
+        EasyMock.expect(databaseProxy.findSubCategoryById(INVALID_ID, context)).andReturn(Optional.empty());
         control.replay();
         // WHEN
         try {
-            underTest.update(subCategoryToUpdate);
+            underTest.update(subCategoryToUpdate, context);
         } finally {
             // THEN
             control.verify();
@@ -124,13 +142,14 @@ public class DefaultSubCategoryServiceTest {
     @Test(expectedExceptions = SubCategoryException.class)
     public void testUpdateWhenTransactionTypeHasChanged() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
         SubCategory subCategoryToUpdate = createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
         Optional<SubCategory> subCategoryFromRepository = Optional.of(createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, OUTCOME));
-        EasyMock.expect(databaseProxy.findSubCategoryById(EXPECTED_CATEGORY_ID)).andReturn(subCategoryFromRepository);
+        EasyMock.expect(databaseProxy.findSubCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(subCategoryFromRepository);
         control.replay();
         // WHEN
         try {
-            underTest.update(subCategoryToUpdate);
+            underTest.update(subCategoryToUpdate, context);
         } finally {
             // THEN
             control.verify();
@@ -140,14 +159,15 @@ public class DefaultSubCategoryServiceTest {
     @Test
     public void testUpdateWhenThereIsOtherCategoryWithSameName() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
         SubCategory subCategoryToUpdate = createExampleSubCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
         Optional<SubCategory> subCategoryFromRepository = Optional.of(createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
         Optional<SubCategory> subCategoryWithSameName = Optional.of(createExampleSubCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findSubCategoryById(EXPECTED_CATEGORY_ID)).andReturn(subCategoryFromRepository);
-        EasyMock.expect(databaseProxy.findSubCategoryByName(NEW_CATEGORY_NAME, INCOME)).andReturn(subCategoryWithSameName);
+        EasyMock.expect(databaseProxy.findSubCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(subCategoryFromRepository);
+        EasyMock.expect(databaseProxy.findSubCategoryByName(NEW_CATEGORY_NAME, context)).andReturn(subCategoryWithSameName);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.update(subCategoryToUpdate);
+        Optional<SubCategory> result = underTest.update(subCategoryToUpdate, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Optional.empty());
@@ -156,15 +176,16 @@ public class DefaultSubCategoryServiceTest {
     @Test
     public void testUpdate() {
         // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
         SubCategory subCategoryToUpdate = createExampleSubCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
         Optional<SubCategory> subCategoryFromRepository = Optional.of(createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
         Optional<SubCategory> expectedSubCategory = Optional.of(createExampleSubCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findSubCategoryById(EXPECTED_CATEGORY_ID)).andReturn(subCategoryFromRepository);
-        EasyMock.expect(databaseProxy.findSubCategoryByName(NEW_CATEGORY_NAME, INCOME)).andReturn(Optional.empty());
-        EasyMock.expect(databaseProxy.updateSubCategory(subCategoryToUpdate)).andReturn(expectedSubCategory);
+        EasyMock.expect(databaseProxy.findSubCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(subCategoryFromRepository);
+        EasyMock.expect(databaseProxy.findSubCategoryByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
+        EasyMock.expect(databaseProxy.updateSubCategory(subCategoryToUpdate, context)).andReturn(expectedSubCategory);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.update(subCategoryToUpdate);
+        Optional<SubCategory> result = underTest.update(subCategoryToUpdate, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedSubCategory);
@@ -181,6 +202,13 @@ public class DefaultSubCategoryServiceTest {
             .withId(id)
             .withName(categoryName)
             .withTransactionType(type)
+            .build();
+    }
+
+    private TransactionContext createTransactionContext(final TransactionType transactionType, final Long userId) {
+        return TransactionContext.builder()
+            .withTransactionType(transactionType)
+            .withUserId(userId)
             .build();
     }
 

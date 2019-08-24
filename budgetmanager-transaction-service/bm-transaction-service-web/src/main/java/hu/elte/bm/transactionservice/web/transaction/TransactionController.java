@@ -27,9 +27,10 @@ public class TransactionController {
 
     @RequestMapping(value = "/bm/transactions/findAll", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public ResponseEntity<Object> getTransactions(@RequestParam(value = "type") final TransactionType type,
-            @RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate start,
-            @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate end) {
-        TransactionModelRequestContext context = createContext(type, start, end);
+        @RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate start,
+        @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate end,
+        @RequestParam(value = "userId") final Long userId) {
+        TransactionModelRequestContext context = createContext(type, start, end, userId);
         List<TransactionModel> transactionModelList = transactionModelService.findAll(context);
         return new ResponseEntity<>(transactionModelList, HttpStatus.OK);
     }
@@ -67,11 +68,12 @@ public class TransactionController {
         return response.isSuccessful() ? new ResponseEntity<>(response, HttpStatus.OK) : new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
-    private TransactionModelRequestContext createContext(final TransactionType type, final LocalDate start, final LocalDate end) {
+    private TransactionModelRequestContext createContext(final TransactionType type, final LocalDate start, final LocalDate end, final Long userId) {
         TransactionModelRequestContext context = new TransactionModelRequestContext();
         context.setTransactionType(type);
         context.setStart(start);
         context.setEnd(end);
+        context.setUserId(userId);
         return context;
     }
 

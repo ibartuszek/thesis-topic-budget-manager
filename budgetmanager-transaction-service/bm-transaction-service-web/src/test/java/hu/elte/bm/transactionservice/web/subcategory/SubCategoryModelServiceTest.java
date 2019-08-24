@@ -18,6 +18,7 @@ import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.categories.DefaultSubCategoryService;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryService;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class SubCategoryModelServiceTest {
@@ -33,6 +34,7 @@ public class SubCategoryModelServiceTest {
     private static final String CATEGORY_CANNOT_BE_UPDATED_MESSAGE = "You cannot update this category, because it exists.";
     private static final String NAME_FIELD_NAME = "Name";
     private static final String TYPE_FIELD_NAME = "Type";
+    private static final Long USER_ID = 1L;
 
     private SubCategoryModelService underTest;
     private IMocksControl control;
@@ -53,10 +55,10 @@ public class SubCategoryModelServiceTest {
         // GIVEN
         List<SubCategory> categoryList = createExampleSubCategoryList();
         List<SubCategoryModel> expectedList = createExampleSubCategoryModelList();
-        EasyMock.expect(subCategoryService.getSubCategoryList(INCOME)).andReturn(categoryList);
+        EasyMock.expect(subCategoryService.getSubCategoryList(createTransactionContext(INCOME, USER_ID))).andReturn(categoryList);
         control.replay();
         // WHEN
-        List<SubCategoryModel> result = underTest.findAll(INCOME);
+        List<SubCategoryModel> result = underTest.findAll(INCOME, USER_ID);
         // THEN
         control.verify();
         Assert.assertEquals(result.size(), expectedList.size());
@@ -69,8 +71,19 @@ public class SubCategoryModelServiceTest {
     public void testSaveWhenIdIsNotNull() {
         // GIVEN
         SubCategoryModel categoryModelToSave = createSubCategoryModelBuilderWithDefaultValues(RESERVED_ID, NEW_NAME, INCOME).build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToSave, INCOME, USER_ID);
         // WHEN
-        underTest.saveSubCategory(categoryModelToSave);
+        underTest.saveSubCategory(context);
+        // THEN
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testSaveWhenUserIdIsNull() {
+        // GIVEN
+        SubCategoryModel categoryModelToSave = createSubCategoryModelBuilderWithDefaultValues(null, NEW_NAME, INCOME).build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToSave, INCOME, null);
+        // WHEN
+        underTest.saveSubCategory(context);
         // THEN
     }
 
@@ -79,12 +92,11 @@ public class SubCategoryModelServiceTest {
         // GIVEN
         SubCategoryModel categoryModelToSave = SubCategoryModel.builder()
             .withName(null)
-            .withTransactionType(ModelStringValue.builder()
-                .withValue(INCOME.name())
-                .build())
+            .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())
             .build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToSave, INCOME, USER_ID);
         // WHEN
-        underTest.saveSubCategory(categoryModelToSave);
+        underTest.saveSubCategory(context);
         // THEN
     }
 
@@ -92,12 +104,11 @@ public class SubCategoryModelServiceTest {
     public void testSaveWhenTypeIsInvalid() {
         // GIVEN
         SubCategoryModel categoryModelToSave = SubCategoryModel.builder()
-            .withName(ModelStringValue.builder()
-                .withValue(NEW_NAME)
-                .build())
+            .withName(ModelStringValue.builder().withValue(NEW_NAME).build())
             .build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToSave, INCOME, USER_ID);
         // WHEN
-        underTest.saveSubCategory(categoryModelToSave);
+        underTest.saveSubCategory(context);
         // THEN
     }
 
@@ -105,11 +116,12 @@ public class SubCategoryModelServiceTest {
     public void testSaveWhenNameValueIsInvalid() {
         // GIVEN
         SubCategoryModel categoryModelToSave = createSubCategoryModelBuilderWithDefaultValues(null, INVALID_NAME, INCOME).build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToSave, INCOME, USER_ID);
         EasyMock.expect(validator.validate(categoryModelToSave.getName(), NAME_FIELD_NAME)).andReturn(false);
         EasyMock.expect(validator.validate(categoryModelToSave.getTransactionType(), TYPE_FIELD_NAME)).andReturn(true);
         control.replay();
         // WHEN
-        SubCategoryModelResponse result = underTest.saveSubCategory(categoryModelToSave);
+        SubCategoryModelResponse result = underTest.saveSubCategory(context);
         // THEN
         control.verify();
         Assert.assertEquals(result.getMessage(), CATEGORY_IS_INVALID_MESSAGE);
@@ -120,18 +132,15 @@ public class SubCategoryModelServiceTest {
     public void testSaveWhenTypeValueIsInvalid() {
         // GIVEN
         SubCategoryModel categoryModelToSave = SubCategoryModel.builder()
-            .withName(ModelStringValue.builder()
-                .withValue(NEW_NAME)
-                .build())
-            .withTransactionType(ModelStringValue.builder()
-                .withValue(INVALID_NAME)
-                .build())
+            .withName(ModelStringValue.builder().withValue(NEW_NAME).build())
+            .withTransactionType(ModelStringValue.builder().withValue(INVALID_NAME).build())
             .build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToSave, INCOME, USER_ID);
         EasyMock.expect(validator.validate(categoryModelToSave.getName(), NAME_FIELD_NAME)).andReturn(true);
         EasyMock.expect(validator.validate(categoryModelToSave.getTransactionType(), TYPE_FIELD_NAME)).andReturn(false);
         control.replay();
         // WHEN
-        SubCategoryModelResponse result = underTest.saveSubCategory(categoryModelToSave);
+        SubCategoryModelResponse result = underTest.saveSubCategory(context);
         // THEN
         control.verify();
         Assert.assertEquals(result.getMessage(), CATEGORY_IS_INVALID_MESSAGE);
@@ -142,13 +151,15 @@ public class SubCategoryModelServiceTest {
     public void testSaveWhenCategoryHasBeenSavedAlready() {
         // GIVEN
         SubCategoryModel categoryModelToSave = createSubCategoryModelBuilderWithDefaultValues(null, RESERVED_NAME, INCOME).build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToSave, INCOME, USER_ID);
         SubCategory categoryToSave = createSubCategoryBuilderWithDefaultValues().withId(null).build();
         EasyMock.expect(validator.validate(categoryModelToSave.getName(), NAME_FIELD_NAME)).andReturn(true);
         EasyMock.expect(validator.validate(categoryModelToSave.getTransactionType(), TYPE_FIELD_NAME)).andReturn(true);
-        EasyMock.expect(subCategoryService.save(categoryToSave)).andReturn(Optional.empty());
+        EasyMock.expect(subCategoryService.save(categoryToSave, createTransactionContext(context.getTransactionType(), context.getUserId())))
+            .andReturn(Optional.empty());
         control.replay();
         // WHEN
-        SubCategoryModelResponse result = underTest.saveSubCategory(categoryModelToSave);
+        SubCategoryModelResponse result = underTest.saveSubCategory(context);
         // THEN
         control.verify();
         Assert.assertEquals(result.getMessage(), CATEGORY_HAS_BEEN_SAVED_BEFORE_MESSAGE);
@@ -159,14 +170,16 @@ public class SubCategoryModelServiceTest {
     public void testSave() {
         // GIVEN
         SubCategoryModel categoryModelToSave = createSubCategoryModelBuilderWithDefaultValues(null, NEW_NAME, INCOME).build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToSave, INCOME, USER_ID);
         SubCategory categoryToSave = createSubCategoryBuilderWithDefaultValues().withId(null).withName(NEW_NAME).build();
         Optional<SubCategory> savedCategory = Optional.of(createSubCategoryBuilderWithDefaultValues().build());
         EasyMock.expect(validator.validate(categoryModelToSave.getName(), NAME_FIELD_NAME)).andReturn(true);
         EasyMock.expect(validator.validate(categoryModelToSave.getTransactionType(), TYPE_FIELD_NAME)).andReturn(true);
-        EasyMock.expect(subCategoryService.save(categoryToSave)).andReturn(savedCategory);
+        EasyMock.expect(subCategoryService.save(categoryToSave, createTransactionContext(context.getTransactionType(), context.getUserId())))
+            .andReturn(savedCategory);
         control.replay();
         // WHEN
-        SubCategoryModelResponse result = underTest.saveSubCategory(categoryModelToSave);
+        SubCategoryModelResponse result = underTest.saveSubCategory(context);
         // THEN
         control.verify();
         Assert.assertEquals(result.getMessage(), CATEGORY_HAS_BEEN_SAVED);
@@ -177,8 +190,9 @@ public class SubCategoryModelServiceTest {
     public void testUpdateWhenIdNotNull() {
         // GIVEN
         SubCategoryModel categoryModelToUpdate = createSubCategoryModelBuilderWithDefaultValues(null, NEW_NAME, INCOME).build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToUpdate, INCOME, USER_ID);
         // WHEN
-        underTest.updateSubCategory(categoryModelToUpdate);
+        underTest.updateSubCategory(context);
         // THEN
     }
 
@@ -186,13 +200,15 @@ public class SubCategoryModelServiceTest {
     public void testUpdateWhenCategoryCannotBeUpdated() {
         // GIVEN
         SubCategoryModel categoryModelToUpdate = createSubCategoryModelBuilderWithDefaultValues(RESERVED_ID, RESERVED_NAME, INCOME).build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToUpdate, INCOME, USER_ID);
         SubCategory categoryToUpdate = createSubCategoryBuilderWithDefaultValues().withName(RESERVED_NAME).build();
         EasyMock.expect(validator.validate(categoryModelToUpdate.getName(), NAME_FIELD_NAME)).andReturn(true);
         EasyMock.expect(validator.validate(categoryModelToUpdate.getTransactionType(), TYPE_FIELD_NAME)).andReturn(true);
-        EasyMock.expect(subCategoryService.update(categoryToUpdate)).andReturn(Optional.empty());
+        EasyMock.expect(subCategoryService.update(categoryToUpdate, createTransactionContext(context.getTransactionType(), context.getUserId())))
+            .andReturn(Optional.empty());
         control.replay();
         // WHEN
-        SubCategoryModelResponse result = underTest.updateSubCategory(categoryModelToUpdate);
+        SubCategoryModelResponse result = underTest.updateSubCategory(context);
         // THEN
         control.verify();
         Assert.assertEquals(result.getMessage(), CATEGORY_CANNOT_BE_UPDATED_MESSAGE);
@@ -203,14 +219,16 @@ public class SubCategoryModelServiceTest {
     public void testUpdate() {
         // GIVEN
         SubCategoryModel categoryModelToUpdate = createSubCategoryModelBuilderWithDefaultValues(RESERVED_ID, NEW_NAME, INCOME).build();
+        SubCategoryModelRequestContext context = createContext(categoryModelToUpdate, INCOME, USER_ID);
         SubCategory categoryToUpdate = createSubCategoryBuilderWithDefaultValues().withName(NEW_NAME).build();
         Optional<SubCategory> updatedCategory = Optional.of(createSubCategoryBuilderWithDefaultValues().build());
         EasyMock.expect(validator.validate(categoryModelToUpdate.getName(), NAME_FIELD_NAME)).andReturn(true);
         EasyMock.expect(validator.validate(categoryModelToUpdate.getTransactionType(), TYPE_FIELD_NAME)).andReturn(true);
-        EasyMock.expect(subCategoryService.update(categoryToUpdate)).andReturn(updatedCategory);
+        EasyMock.expect(subCategoryService.update(categoryToUpdate, createTransactionContext(context.getTransactionType(), context.getUserId())))
+            .andReturn(updatedCategory);
         control.replay();
         // WHEN
-        SubCategoryModelResponse result = underTest.updateSubCategory(categoryModelToUpdate);
+        SubCategoryModelResponse result = underTest.updateSubCategory(context);
         // THEN
         control.verify();
         Assert.assertEquals(result.getMessage(), CATEGORY_HAS_BEEN_UPDATED);
@@ -249,6 +267,21 @@ public class SubCategoryModelServiceTest {
         ReflectionTestUtils.setField(underTest, "categoryHasBeenSavedBeforeMessage", "The category has been saved before.");
         ReflectionTestUtils.setField(underTest, "categoryHasBeenUpdated", "The category has been updated.");
         ReflectionTestUtils.setField(underTest, "categoryCannotBeUpdatedMessage", "You cannot update this category, because it exists.");
+    }
+
+    private SubCategoryModelRequestContext createContext(final SubCategoryModel subCategoryModel, final TransactionType transactionType, final Long userId) {
+        SubCategoryModelRequestContext context = new SubCategoryModelRequestContext();
+        context.setSubCategoryModel(subCategoryModel);
+        context.setTransactionType(transactionType);
+        context.setUserId(userId);
+        return context;
+    }
+
+    private TransactionContext createTransactionContext(final TransactionType transactionType, final Long userId) {
+        return TransactionContext.builder()
+            .withTransactionType(transactionType)
+            .withUserId(userId)
+            .build();
     }
 
 }

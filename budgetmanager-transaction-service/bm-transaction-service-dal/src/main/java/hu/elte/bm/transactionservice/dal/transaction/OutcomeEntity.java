@@ -46,6 +46,8 @@ public final class OutcomeEntity {
     @Column(length = DESCRIPTION_LENGTH)
     private String description;
     private boolean locked;
+    @Column(name = "user_id")
+    private Long userId;
 
     OutcomeEntity() {
     }
@@ -136,5 +138,13 @@ public final class OutcomeEntity {
 
     public void setLocked(final boolean locked) {
         this.locked = locked;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final Long userId) {
+        this.userId = userId;
     }
 }

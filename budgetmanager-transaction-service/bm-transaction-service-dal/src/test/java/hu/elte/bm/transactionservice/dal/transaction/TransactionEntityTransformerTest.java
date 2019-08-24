@@ -34,6 +34,7 @@ public class TransactionEntityTransformerTest {
     private static final boolean LOCKED = true;
     private static final long CATEGORY_ID = 1L;
     private static final String CATEGORY_NAME = "category";
+    private static final Long USER_ID = 1L;
 
     private TransactionEntityTransformer underTest;
 
@@ -110,7 +111,7 @@ public class TransactionEntityTransformerTest {
         MainCategoryEntity mainCategoryEntity = createExampleMainCategoryEntity();
         control.replay();
         // WHEN
-        IncomeEntity result = underTest.transformToIncomeEntity(transaction, mainCategoryEntity, null);
+        IncomeEntity result = underTest.transformToIncomeEntity(transaction, mainCategoryEntity, null, USER_ID);
         // THEN
         control.verify();
         Assert.assertEquals(result.getId(), EXPECTED_ID);
@@ -136,7 +137,7 @@ public class TransactionEntityTransformerTest {
         SubCategoryEntity subCategoryEntity = createExampleSubCategoryEntity();
         control.replay();
         // WHEN
-        IncomeEntity result = underTest.transformToIncomeEntity(transaction, mainCategoryEntity, subCategoryEntity);
+        IncomeEntity result = underTest.transformToIncomeEntity(transaction, mainCategoryEntity, subCategoryEntity, USER_ID);
         // THEN
         control.verify();
         Assert.assertEquals(result.getId(), EXPECTED_ID);
@@ -168,11 +169,22 @@ public class TransactionEntityTransformerTest {
     }
 
     private MainCategoryEntity createExampleMainCategoryEntity() {
-        return new MainCategoryEntity(CATEGORY_ID, CATEGORY_NAME, INCOME, new HashSet<>());
+        return MainCategoryEntity.builder()
+            .withId(CATEGORY_ID)
+            .withName(CATEGORY_NAME)
+            .withTransactionType(INCOME)
+            .withSubCategoryEntitySet(new HashSet<>())
+            .withUserId(USER_ID)
+            .build();
     }
 
     private SubCategoryEntity createExampleSubCategoryEntity() {
-        return new SubCategoryEntity(CATEGORY_ID, CATEGORY_NAME, INCOME);
+        return SubCategoryEntity.builder()
+            .withId(CATEGORY_ID)
+            .withName(CATEGORY_NAME)
+            .withTransactionType(INCOME)
+            .withUserId(USER_ID)
+            .build();
     }
 
     private MainCategory createExampleMainCategory() {

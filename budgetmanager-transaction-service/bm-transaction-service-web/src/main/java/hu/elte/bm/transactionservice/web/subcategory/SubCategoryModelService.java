@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryService;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Service
@@ -19,6 +20,12 @@ public class SubCategoryModelService {
     private final ModelValidator validator;
     private final SubCategoryService subCategoryService;
     private final SubCategoryModelTransformer transformer;
+
+    @Value("${main_category.category_type_cannot_be_null}")
+    private String typeCannotBeNull;
+
+    @Value("${sub_category.user_id_cannot_be_null}")
+    private String userIdCannotBeNull;
 
     @Value("${sub_category.sub_category_is_invalid}")
     private String categoryIsInvalidMessage;
@@ -42,18 +49,21 @@ public class SubCategoryModelService {
         this.transformer = transformer;
     }
 
-    List<SubCategoryModel> findAll(final TransactionType type) {
-        List<SubCategory> subCategoryList = subCategoryService.getSubCategoryList(type);
+    List<SubCategoryModel> findAll(final TransactionType type, final Long userId) {
+        validateTransactionContext(userId, type);
+        List<SubCategory> subCategoryList = subCategoryService.getSubCategoryList(createTransactionContext(type, userId));
         return subCategoryList.stream()
             .map(transformer::transformToSubCategoryModel)
             .collect(Collectors.toList());
     }
 
-    SubCategoryModelResponse saveSubCategory(final SubCategoryModel subCategoryModel) {
-        preValidateSavableCategory(subCategoryModel);
-        SubCategoryModelResponse result = createResponseWithDefaultValues(subCategoryModel);
+    SubCategoryModelResponse saveSubCategory(final SubCategoryModelRequestContext context) {
+        preValidateSavableCategory(context);
+        SubCategoryModelResponse result = createResponseWithDefaultValues(context.getSubCategoryModel());
         if (isValid(result.getSubCategoryModel())) {
-            Optional<SubCategory> savedSubCategory = subCategoryService.save(transformer.transformToSubCategory(result.getSubCategoryModel()));
+            Optional<SubCategory> savedSubCategory = subCategoryService.save(
+                transformer.transformToSubCategory(result.getSubCategoryModel()),
+                createTransactionContext(context.getTransactionType(), context.getUserId()));
             updateResponse(savedSubCategory, result, categoryHasBeenSaved, categoryHasBeenSavedBeforeMessage);
         } else {
             result.setMessage(categoryIsInvalidMessage);
@@ -61,11 +71,13 @@ public class SubCategoryModelService {
         return result;
     }
 
-    SubCategoryModelResponse updateSubCategory(final SubCategoryModel subCategoryModel) {
-        preValidateUpdatableCategory(subCategoryModel);
-        SubCategoryModelResponse result = createResponseWithDefaultValues(subCategoryModel);
+    SubCategoryModelResponse updateSubCategory(final SubCategoryModelRequestContext context) {
+        preValidateUpdatableCategory(context);
+        SubCategoryModelResponse result = createResponseWithDefaultValues(context.getSubCategoryModel());
         if (isValid(result.getSubCategoryModel())) {
-            Optional<SubCategory> savedSubCategory = subCategoryService.update(transformer.transformToSubCategory(result.getSubCategoryModel()));
+            Optional<SubCategory> savedSubCategory = subCategoryService.update(
+                transformer.transformToSubCategory(result.getSubCategoryModel()),
+                createTransactionContext(context.getTransactionType(), context.getUserId()));
             updateResponse(savedSubCategory, result, categoryHasBeenUpdated, categoryCannotBeUpdatedMessage);
         } else {
             result.setMessage(categoryIsInvalidMessage);
@@ -73,21 +85,27 @@ public class SubCategoryModelService {
         return result;
     }
 
-    private void preValidateSavableCategory(final SubCategoryModel subCategoryModel) {
-        if (subCategoryModel.getId() != null) {
+    private void preValidateSavableCategory(final SubCategoryModelRequestContext context) {
+        if (context.getSubCategoryModel().getId() != null) {
             throw new IllegalArgumentException(categoryIsInvalidMessage);
         }
-        validateSubCategoryModelFields(subCategoryModel);
+        validateSubCategoryModelFields(context);
     }
 
-    private void preValidateUpdatableCategory(final SubCategoryModel subCategoryModel) {
-        Assert.notNull(subCategoryModel.getId(), categoryIsInvalidMessage);
-        validateSubCategoryModelFields(subCategoryModel);
+    private void preValidateUpdatableCategory(final SubCategoryModelRequestContext context) {
+        Assert.notNull(context.getSubCategoryModel().getId(), categoryIsInvalidMessage);
+        validateSubCategoryModelFields(context);
     }
 
-    private void validateSubCategoryModelFields(final SubCategoryModel subCategoryModel) {
-        Assert.notNull(subCategoryModel.getName(), categoryIsInvalidMessage);
-        Assert.notNull(subCategoryModel.getTransactionType(), categoryIsInvalidMessage);
+    private void validateSubCategoryModelFields(final SubCategoryModelRequestContext context) {
+        validateTransactionContext(context.getUserId(), context.getTransactionType());
+        Assert.notNull(context.getSubCategoryModel().getName(), categoryIsInvalidMessage);
+        Assert.notNull(context.getSubCategoryModel().getTransactionType(), categoryIsInvalidMessage);
+    }
+
+    private void validateTransactionContext(final Long userId, final TransactionType transactionType) {
+        Assert.notNull(userId, userIdCannotBeNull);
+        Assert.notNull(transactionType, typeCannotBeNull);
     }
 
     private SubCategoryModelResponse createResponseWithDefaultValues(final SubCategoryModel subCategoryModel) {
@@ -112,5 +130,12 @@ public class SubCategoryModelService {
         } else {
             response.setMessage(unSuccessMessage);
         }
+    }
+
+    private TransactionContext createTransactionContext(final TransactionType transactionType, final Long userId) {
+        return TransactionContext.builder()
+            .withTransactionType(transactionType)
+            .withUserId(userId)
+            .build();
     }
 }

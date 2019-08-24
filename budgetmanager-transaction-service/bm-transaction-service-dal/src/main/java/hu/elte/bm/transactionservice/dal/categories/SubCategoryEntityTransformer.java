@@ -12,10 +12,16 @@ public class SubCategoryEntityTransformer {
             .withId(subCategoryEntity.getId())
             .withName(subCategoryEntity.getName())
             .withTransactionType(subCategoryEntity.getTransactionType())
+
             .build();
     }
 
-    public SubCategoryEntity transformToSubCategoryEntity(final SubCategory subCategory) {
-        return new SubCategoryEntity(subCategory.getId(), subCategory.getName(), subCategory.getTransactionType());
+    public SubCategoryEntity transformToSubCategoryEntity(final SubCategory subCategory, final Long userId) {
+        return SubCategoryEntity.builder()
+            .withId(subCategory.getId())
+            .withName(subCategory.getName())
+            .withTransactionType(subCategory.getTransactionType())
+            .withUserId(userId)
+            .build();
     }
 }
