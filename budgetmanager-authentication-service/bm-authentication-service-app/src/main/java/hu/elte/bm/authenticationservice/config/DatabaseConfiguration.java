@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories("hu.elte.bm.authenticationservice.dal")
 @EntityScan("hu.elte.bm.authenticationservice.dal")
-@PropertySource("classpath:database-mysql.properties")
+// @PropertySource("classpath:database-mysql.properties")
+@PropertySource("classpath:database-h2.properties")
 public class DatabaseConfiguration {
 }

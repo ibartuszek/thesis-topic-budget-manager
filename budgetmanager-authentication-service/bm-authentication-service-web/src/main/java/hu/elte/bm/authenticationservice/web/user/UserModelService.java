@@ -59,14 +59,13 @@ public class UserModelService implements UserDetailsService {
     UserModelResponse findById(final Long id) {
         Optional<UserModel> userModel = userService.findUserById(id)
             .map(user -> transformer.transformToUserModel(user, maskedPasswordValue));
-        UserModelResponse result = new UserModelResponse();
-        if (userModel.isEmpty()) {
-            result.setMessage(userCannotBeFound);
-        } else {
-            result.setSuccessful(true);
-            result.setUserModel(userModel.get());
-        }
-        return result;
+        return createUserModelResponse(userModel);
+    }
+
+    UserModelResponse findByEmail(final String email) {
+        Optional<UserModel> userModel = userService.findUserByEmail(email)
+                .map(user -> transformer.transformToUserModel(user, maskedPasswordValue));
+        return createUserModelResponse(userModel);
     }
 
     UserModelResponse registerUser(final UserModel userModel) {
@@ -165,6 +164,17 @@ public class UserModelService implements UserDetailsService {
         } else {
             response.setMessage(unSuccessMessage);
         }
+    }
+
+    private UserModelResponse createUserModelResponse(final Optional<UserModel> userModel) {
+        UserModelResponse result = new UserModelResponse();
+        if (userModel.isEmpty()) {
+            result.setMessage(userCannotBeFound);
+        } else {
+            result.setSuccessful(true);
+            result.setUserModel(userModel.get());
+        }
+        return result;
     }
 
     @Override

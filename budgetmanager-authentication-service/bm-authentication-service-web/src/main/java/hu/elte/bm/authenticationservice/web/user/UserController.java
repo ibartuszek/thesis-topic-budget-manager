@@ -29,6 +29,17 @@ public class UserController {
         return response.isSuccessful() ? new ResponseEntity<>(response, HttpStatus.OK) : new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
+    @RequestMapping(value = "/bm/users/findByEmail", method = RequestMethod.GET, produces = APPLICATION_JSON)
+    public ResponseEntity<Object> findUserByEmail(@RequestParam final String email) {
+        UserModelResponse response;
+        try {
+            response = userModelService.findByEmail(email);
+        } catch (Exception e) {
+            response = createErrorResponse(e);
+        }
+        return response.isSuccessful() ? new ResponseEntity<>(response, HttpStatus.OK) : new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
     @RequestMapping(value = "/bm/users/register", method = RequestMethod.POST, produces = APPLICATION_JSON)
     public ResponseEntity<Object> registerUser(@RequestBody final UserModelRequestContext context) {
         UserModelResponse response;
