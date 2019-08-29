@@ -3,8 +3,8 @@ import Loading from '../Loading'
 
 const Settings = () => {
   return (
-    <Loading data="(Settings is under process...)"/>
+    <Loading/>
   )
-}
+};
 
 export default Settings;

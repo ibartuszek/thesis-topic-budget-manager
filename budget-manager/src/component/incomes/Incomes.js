@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {fetchMainCategories, setMainCategoriesToReady} from '../../store/actions/categoryActions';
+import {fetchMainCategories, setMainCategoriesToReady} from '../../actions/category/categoryActions';
 import Loading from '../Loading'
 
 
@@ -22,14 +22,13 @@ class Incomes extends Component {
   componentDidUpdate(oldProps) {
     const newProps = this.props;
     if (!newProps.categoryHolder.mainCategoriesAreLoaded && Object.keys(newProps.categoryHolder.incomeMainCategories).length > 0) {
-      this.props.setIncomeMainCategoriesToReady();
+      this.props.setMainCategoriesToReady();
       console.log(this.props.categoryHolder);
     }
     if (oldProps.categoryHolder.mainCategoriesAreLoaded !== newProps.categoryHolder.mainCategoriesAreLoaded) {
       this.setState({
         ...this.state,
         mainCategoriesAreLoaded: newProps.categoryHolder.mainCategoriesAreLoaded
-
       })
     }
   }
@@ -41,7 +40,7 @@ class Incomes extends Component {
         <Loading/>
       )
     } else {
-      content = <Loading data="(fetching data...)"/>
+      content = <Loading/>
     }
     return (
       <main>
@@ -57,17 +56,17 @@ const mapStateToProps = (state) => {
   return {
     categoryHolder: state.categoryHolder
   }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatch,
     ...bindActionCreators(
       {
-        fetchMainCategories: fetchMainCategories, setIncomeMainCategoriesToReady: setMainCategoriesToReady
+        fetchMainCategories: fetchMainCategories, setMainCategoriesToReady: setMainCategoriesToReady
       },
       dispatch)
   }
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Incomes)

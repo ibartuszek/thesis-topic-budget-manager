@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import logo from '../styles/icons8-loader.svg';
 
 
@@ -7,8 +7,7 @@ class Loading extends Component {
     return (
       <div className="row d-flex justify-content-center">
         <div>
-          <img src={logo} className="Loading mx-auto" alt="loading" />
-          <div className="text-center">Loading... {this.props.data}</div>
+          <img src={logo} className="Loading mx-auto" alt="loading"/>
         </div>
       </div>
     )

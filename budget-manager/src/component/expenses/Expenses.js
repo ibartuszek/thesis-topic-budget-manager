@@ -3,7 +3,7 @@ import Loading from '../Loading'
 
 const Expenses = () => {
   return (
-    <Loading data="(Expenses is under process...)"/>
+    <Loading/>
   )
 };
 

@@ -3,7 +3,7 @@ import Loading from '../Loading'
 
 const Draft = () => {
   return (
-    <Loading data="(Draft is under process...)"/>
+    <Loading/>
   )
 };
 

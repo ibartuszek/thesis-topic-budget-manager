@@ -1,16 +1,16 @@
-export function fetchMainCategories(path) {
+export function fetchMainCategories(body) {
   return function (dispatch) {
     return fetch(`/bm/mainCategories/findAll`, {
       method: 'POST',
-      body: JSON.stringify(path),
+      body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json'
       }
     }).then(
       response => response.json(),
-    ).then((incomeMainCategories) => {
-      dispatch({type: 'GET_INCOME_MAIN_CATEGORIES_SUCCESS', incomeMainCategories});
-      console.log(incomeMainCategories);
+    ).then((mainCategories) => {
+      dispatch({type: 'GET_INCOME_MAIN_CATEGORIES_SUCCESS', incomeMainCategories: mainCategories});
+      console.log(mainCategories);
     }).catch(err => {
       dispatch({type: 'GET_INCOME_MAIN_CATEGORIES_ERROR', err});
     });

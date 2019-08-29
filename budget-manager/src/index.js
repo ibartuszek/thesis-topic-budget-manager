@@ -9,10 +9,10 @@ import "./styles/style.scss";
 import "./styles/my-custom-style.css"
 import "jquery"
 import "popper.js"
-import { createStore, applyMiddleware } from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { Provider } from 'react-redux';
-import RootReducer from './store/reducers/RootReducer';
+import {Provider} from 'react-redux';
+import RootReducer from './store/RootReducer';
 
 const store = createStore(
   RootReducer,
@@ -21,6 +21,6 @@ const store = createStore(
   )
 )
 
-ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById('root'));
 
 serviceWorker.unregister();

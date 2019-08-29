@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Navbar from './component/layout/Navbar';
-import SignIn from './component/auth/SignIn';
+import LogIn from './component/auth/LogIn';
 import SignUp from './component/auth/SignUp';
 import Home from './component/home/Home';
 import Incomes from './component/incomes/Incomes';
@@ -14,16 +14,16 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Navbar />
+        <Navbar/>
         <Switch>
-          <Route exact path='/' component={Home} />
-          <Route path='/login' component={SignIn} />
-          <Route path='/signup' component={SignUp} />
-          <Route path='/incomes' component={Incomes} />
-          <Route path='/expenses' component={Expenses} />
-          <Route path='/draft' component={Draft} />
-          <Route path='/reports' component={Reports} />
-          <Route path='/settings' component={Settings} />
+          <Route exact path='/' component={Home}/>
+          <Route path='/login' component={LogIn}/>
+          <Route path='/signup' component={SignUp}/>
+          <Route path='/incomes' component={Incomes}/>
+          <Route path='/expenses' component={Expenses}/>
+          <Route path='/draft' component={Draft}/>
+          <Route path='/reports' component={Reports}/>
+          <Route path='/settings' component={Settings}/>
         </Switch>
       </div>
     </BrowserRouter>

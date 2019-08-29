@@ -1,8 +1,7 @@
 const initState = {
   incomeMainCategoriesAreLoaded: false,
   incomeSubCategoriesAreLoaded: false,
-  incomeMainCategories: [],
-  incomeSubCategories: []
+  incomeMainCategories: []
 };
 
 const CategoryReducer = (state = initState, action) => {
@@ -13,10 +12,10 @@ const CategoryReducer = (state = initState, action) => {
         incomeMainCategories: action.incomeMainCategories
       });
     case 'GET_INCOME_MAIN_CATEGORIES_ERROR':
-      console.log('get income main categories from server: error');
+      console.log('get main categories from server: error');
       return state;
     case 'INCOME_MAIN_CATEGORIES_ARE_READY':
-      console.log('income main categories are ready to use.');
+      console.log('main categories are ready to use.');
       return {
         ...state,
         mainCategoriesAreLoaded: true
