@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
+import ModelStringValue from "../layout/form/ModelStringValue";
 import {getAccessToken} from '../../actions/user/getAccessToken';
 import {getUser} from '../../actions/user/getUser';
-import ModelStringValue from "../layout/form/ModelStringValue";
 
 class LogIn extends Component {
   state = {
-    username: '',
-    password: '',
-    error: null
+    email: {
+      value: ''
+    },
+    password: {
+      value: ''
+    }
   };
 
   constructor(props) {
@@ -17,27 +20,28 @@ class LogIn extends Component {
     this.handleFieldChange = this.handleFieldChange.bind(this);
   }
 
-  handleFieldChange(id, value) {
-    this.setState({
-      [id]: value
-    });
+  handleFieldChange(id, value, errorMessage) {
+    this.setState(prevState => ({
+      [id]: {
+        ...prevState[id],
+        value: value,
+        errorMessage: errorMessage
+      }
+    }))
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    let body = {
-      username: this.state.username,
-      password: this.state.password
-    };
-    this.props.getAccessToken(body);
+    const {email, password} = this.state;
+    this.props.getAccessToken(email.value, password.value);
   };
 
   render() {
     const {userHolder, getUser} = this.props;
-    const {username, password} = this.state;
+    const {email, password} = this.state;
 
     if (userHolder.jwtToken != null && userHolder.userData == null) {
-      getUser(this.state.username, userHolder.jwtToken);
+      getUser(this.state.email.value, userHolder.jwtToken);
     }
 
     if (userHolder.userIsLoggedIn) {
@@ -50,10 +54,10 @@ class LogIn extends Component {
           <form className="form-group mb-0" onSubmit={this.handleSubmit}>
             <h1 className="mt-3 mx-auto">Sign in</h1>
             <ModelStringValue onChange={this.handleFieldChange}
-                              id="username" value={username}
-                              labelTitle="Email" placeHolder="Please write your email address." type="email"/>
+                              id="email" model={email}
+                              labelTitle="Email" type="email"/>
             <ModelStringValue onChange={this.handleFieldChange}
-                              id="password" value={password}
+                              id="password" model={password}
                               labelTitle="Password" type="password"/>
             <div className="custom-error-message-container mt-3">
               {userHolder.logInErrorMessage !== null ? <p>{userHolder.logInErrorMessage}</p> : null}
@@ -77,8 +81,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getAccessToken: (body) => dispatch(getAccessToken(body)),
-    getUser: (username, jwtToken) => dispatch(getUser(username, jwtToken))
+    getAccessToken: (username, password) => dispatch(getAccessToken(username, password)),
+    getUser: (email, jwtToken) => dispatch(getUser(email, jwtToken))
   };
 };
 

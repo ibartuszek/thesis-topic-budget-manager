@@ -1,10 +1,10 @@
 import base64 from 'react-native-base64'
 
-export function getAccessToken(body) {
+export function getAccessToken(username, password) {
   const clientId = 'testjwtclientid';
   const clientSecret = 'XY7kmzoNzl100';
   let header = createHeader(clientId, clientSecret);
-  let formData = createFromData(body.username, body.password);
+  let formData = createFromData(username, password);
 
   return function (dispatch) {
     return fetch(`oauth/token`, {
