@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
 import {connect} from "react-redux";
 import ModelStringValue from "../layout/form/ModelStringValue";
-import {getAccessToken} from "../../actions/user/getAccessToken";
-import {registerUser} from "../../actions/user/registerUser";
+import {updateUser} from "../../actions/user/updateUser";
 import {validateUserModel} from "../../actions/validation/validateUserModel";
 
-class SignUp extends Component {
+class UserSettings extends Component {
 
   state = {
     userModel: {
+      id: null,
       email: {
         value: '',
         errorMessage: null,
@@ -65,46 +64,58 @@ class SignUp extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    if (validateUserModel(this.state.userModel)) {
-      this.props.registerUser(this.state.userModel);
+    const {jwtToken, userData} = this.props.userHolder;
+    const {userModel} = this.state;
+    let password = userModel.password.value === '' ? '********' : userModel.password.value;
+    if (validateUserModel(this.state.userModel, password)) {
+      this.props.updateUser(userModel, userData['userId'], jwtToken);
     }
   };
+
+  componentDidMount() {
+    const {userData} = this.props.userHolder;
+    let userModel = {...this.state.userModel};
+    userModel.id = userData.userId;
+    userModel.email.value = userData.userName;
+    userModel.firstName.value = userData.firstName;
+    userModel.lastName.value = userData.lastName;
+    this.setState({
+      ...this.state,
+      userModel
+    });
+    console.log(this.state);
+  }
 
   render() {
     const {userHolder} = this.props;
     const {email, password, firstName, lastName} = this.state.userModel;
 
-    if (userHolder.userData != null) {
-      this.props.getAccessToken(email.value, password.value);
-    }
-
-    if (userHolder.jwtToken != null && userHolder.userIsLoggedIn) {
-      return <Redirect to='/'/>;
-    }
-
     return (
       <div className="mt-4 mx-3">
         <div className="card card-body mx-auto max-w-500 min-w-400">
           <form className="form-group mb-0" onSubmit={this.handleSubmit}>
-            <h1 className="mt-3 mx-auto">Sign up</h1>
+            <h1 className="mt-3 mx-auto">User data</h1>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="email" model={email}
-                              labelTitle="Email" placeHolder="Please write your email address." type="email"/>
+                              labelTitle="Email" placeHolder="Please write your new email address." type="email"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="password" model={password}
-                              labelTitle="Password" placeHolder="Please write your password." type="password"/>
+                              labelTitle="Password" placeHolder="Please write your new password." type="password"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="firstName" model={firstName}
-                              labelTitle="First name" placeHolder="Please write your first name." type="text"/>
+                              labelTitle="First name" placeHolder="Please write your new first name." type="text"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="lastName" model={lastName}
-                              labelTitle="Last name" placeHolder="Please write your last name." type="text"/>
+                              labelTitle="Last name" placeHolder="Please write your new last name." type="text"/>
             <div className="custom-error-message-container mt-3">
               {userHolder.errorMessage !== null ? <p>{userHolder.errorMessage}</p> : null}
             </div>
+            <div className="custom-success-message-container mt-3">
+              {userHolder.message !== null ? <p>{userHolder.message}</p> : null}
+            </div>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
-              <span className="fas fa-user-plus"/>
-              <span> Register </span>
+              <span className="fas fa-pencil-alt"/>
+              <span> Update </span>
             </button>
           </form>
         </div>
@@ -121,9 +132,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getAccessToken: (username, password) => dispatch(getAccessToken(username, password)),
-    registerUser: (model) => dispatch(registerUser(model))
+    updateUser: (model, userId, jwtToken) => dispatch(updateUser(model, userId, jwtToken))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default connect(mapStateToProps, mapDispatchToProps)(UserSettings);

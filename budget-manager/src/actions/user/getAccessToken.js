@@ -22,7 +22,7 @@ export function getAccessToken(username, password) {
       dispatch({type: 'GET_ACCESS_TOKEN_SUCCESS', jwtToken: responseBody['access_token']});
     }).catch(err => {
       console.log("GET_ACCESS_TOKEN_ERROR");
-      dispatch({type: 'GET_ACCESS_TOKEN_ERROR', logInErrorMessage: err.message});
+      dispatch({type: 'GET_ACCESS_TOKEN_ERROR', errorMessage: err.message});
     });
   }
 }

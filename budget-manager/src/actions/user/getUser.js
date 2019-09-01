@@ -1,3 +1,5 @@
+import {createUserData} from "./createUserData";
+
 export function getUser(userName, jwtToken) {
   let url = `/bm/users/findByEmail?email=` + userName;
   let header = createHeader(jwtToken);
@@ -14,10 +16,10 @@ export function getUser(userName, jwtToken) {
     ).then((response) => {
       let userData = createUserData(response['userModel']);
       console.log('LOGIN_SUCCESS');
-      dispatch({type: 'LOGIN_SUCCESS', userData: userData});
+      dispatch({type: 'LOGIN_SUCCESS', userData: userData, message: 'User is logged in.'});
     }).catch(err => {
       console.log('LOGIN_ERROR');
-      dispatch({type: 'LOGIN_ERROR', logInErrorMessage: err.message});
+      dispatch({type: 'LOGIN_ERROR', errorMessage: err.message});
     });
   }
 }
@@ -26,13 +28,4 @@ function createHeader(jwtToken) {
   let header = new Headers();
   header.set('Authorization', 'Bearer ' + jwtToken);
   return header;
-}
-
-function createUserData(responseModel) {
-  return {
-    userId: responseModel['id'],
-    userName: responseModel['email'].value,
-    firstName: responseModel['firstName'].value,
-    lastName: responseModel['lastName'].value,
-  };
 }

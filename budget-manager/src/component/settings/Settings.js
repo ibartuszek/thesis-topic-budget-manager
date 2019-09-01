@@ -1,10 +1,23 @@
 import React from 'react';
-import Loading from '../Loading'
+import {Redirect} from 'react-router-dom';
+import {connect} from "react-redux";
+import UserSettings from "./UserSettings";
 
-const Settings = () => {
+const Settings = (props) => {
+
+  if (props.userHolder == null || !props.userHolder.userIsLoggedIn) {
+    return <Redirect to='/login'/>;
+  }
+
   return (
-    <Loading/>
+    <UserSettings/>
   )
 };
 
-export default Settings;
+const mapStateToProps = (state) => {
+  return {
+    userHolder: state.userHolder
+  }
+};
+
+export default connect(mapStateToProps)(Settings);

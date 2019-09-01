@@ -60,7 +60,7 @@ class LogIn extends Component {
                               id="password" model={password}
                               labelTitle="Password" type="password"/>
             <div className="custom-error-message-container mt-3">
-              {userHolder.logInErrorMessage !== null ? <p>{userHolder.logInErrorMessage}</p> : null}
+              {userHolder.errorMessage !== null ? <p>{userHolder.errorMessage}</p> : null}
             </div>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-sign-in-alt"/>

@@ -41,6 +41,10 @@ label.input-group-addon.input-group-text {
     min-width: 400px;
 }
 
+.custom-success-message-container {
+    color: var(--success);
+}
+
 .custom-error-message-container {
     color: var(--danger);
 }

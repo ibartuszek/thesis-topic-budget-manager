@@ -1,10 +1,9 @@
-import React from 'react'
-import {NavLink} from 'react-router-dom'
+import React from 'react';
+import {NavLink} from 'react-router-dom';
 import {connect} from "react-redux";
 import {logOut} from '../../actions/user/logOut';
 
 const SignedInLinks = (props) => {
-  console.log(props);
   return (
     <div className="collapse navbar-collapse" id="mainNavbar">
       <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -61,4 +60,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(SignedInLinks)
+export default connect(null, mapDispatchToProps)(SignedInLinks);

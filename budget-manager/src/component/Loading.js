@@ -7,7 +7,7 @@ class Loading extends Component {
     return (
       <div className="row d-flex justify-content-center">
         <div>
-          <img src={logo} className="Loading mx-auto" alt="loading"/>
+          <img src={logo} className="Loading mx-auto my-5" alt="loading"/>
         </div>
       </div>
     )

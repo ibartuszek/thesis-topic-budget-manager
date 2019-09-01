@@ -2,7 +2,8 @@ const initState = {
   userIsLoggedIn: false,
   jwtToken: null,
   signUpMessage: null,
-  logInErrorMessage: null,
+  message: null,
+  errorMessage: null,
   userData: null
 };
 
@@ -11,32 +12,42 @@ const UserReducer = (state = initState, action) => {
     case 'GET_ACCESS_TOKEN_SUCCESS':
       return Object.assign({}, state, {
         jwtToken: action.jwtToken,
-        logInErrorMessage: null
+        // message: null,
+        errorMessage: null
       });
     case 'LOGIN_SUCCESS':
       return Object.assign({}, state, {
         userData: action.userData,
         userIsLoggedIn: true,
-        logInErrorMessage: null
+        message: action.message,
+        errorMessage: null
       });
     case 'LOGOUT_SUCCESS':
       return Object.assign({}, state, {
         userIsLoggedIn: false,
         jwtToken: null,
-        logInErrorMessage: null,
+        message: null,
+        errorMessage: null,
         userData: null
       });
     case 'SIGN_UP_SUCCESS':
       return Object.assign({}, state, {
         userData: action.userData,
         userIsLoggedIn: true,
-        logInErrorMessage: null
+        message: action.message,
+        errorMessage: null
+      });
+    case 'UPDATE_USER_SUCCESS':
+      return Object.assign({}, state, {
+        userData: action.userData,
+        message: action.message,
+        errorMessage: null
       });
     case 'GET_ACCESS_TOKEN_ERROR':
     case 'LOGIN_ERROR':
     case 'SIGN_UP_ERROR':
       return Object.assign({}, state, {
-        logInErrorMessage: action.logInErrorMessage,
+        errorMessage: action.errorMessage,
         userIsLoggedIn: false,
         jwtToken: null,
         userData: null
