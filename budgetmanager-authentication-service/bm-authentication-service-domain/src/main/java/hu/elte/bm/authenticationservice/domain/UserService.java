@@ -44,7 +44,7 @@ public class UserService {
 
     public Optional<User> updateUser(final User user) {
         validateUserCanBeFound(user);
-        return findUserByEmail(user.getEmail()).isEmpty() ? userDao.updateUser(user) : Optional.empty();
+        return newEmailIsNotUsedByOtherUsers(user) ? userDao.updateUser(user) : Optional.empty();
     }
 
     public Optional<User> deleteUser(final User user) {
@@ -57,6 +57,11 @@ public class UserService {
         if (findUserById(user.getId()).isEmpty()) {
             throw new UserException(userCannotBeFound, user);
         }
+    }
+
+    private boolean newEmailIsNotUsedByOtherUsers(final User user) {
+        Optional<User> userWithSameEmail = userDao.findByEmail(user.getEmail());
+        return userWithSameEmail.isEmpty() || userWithSameEmail.get().getId().equals(user.getId());
     }
 
 }

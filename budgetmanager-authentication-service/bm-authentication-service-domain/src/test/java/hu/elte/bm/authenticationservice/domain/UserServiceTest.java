@@ -15,6 +15,7 @@ public class UserServiceTest {
     private static final String INVALID_EMAIL = "invalid email";
     private static final String VALID_EMAIL = "email";
     private static final String FIRST_NAME = "first name";
+    private static final String NEW_FIRST_NAME = "new first name";
     private static final String LAST_NAME = "last name";
     private static final String PASSWORD = "password";
 
@@ -164,9 +165,9 @@ public class UserServiceTest {
     public void testUpdateWhenUserCannotBeUpdated() {
         // GIVEN
         User userToUpdate = createExampleUserBuilder().withEmail(INVALID_EMAIL).build();
-        User originalUSer = createExampleUserBuilder().build();
+        User originalUser = createExampleUserBuilder().build();
         User otherUserWithSameEmail = createExampleUserBuilder().withId(INVALID_ID).withEmail(INVALID_EMAIL).build();
-        EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUSer));
+        EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUser));
         EasyMock.expect(userDao.findByEmail(INVALID_EMAIL)).andReturn(Optional.of(otherUserWithSameEmail));
         control.replay();
         // WHEN
@@ -177,11 +178,28 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testUpdateWhenUserNotModifiedHisOrHerEmail() {
+        // GIVEN
+        User userToUpdate = createExampleUserBuilder().withEmail(VALID_EMAIL).withFirstName(NEW_FIRST_NAME).build();
+        User originalUser = createExampleUserBuilder().build();
+        EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUser));
+        EasyMock.expect(userDao.findByEmail(VALID_EMAIL)).andReturn(Optional.of(originalUser));
+        EasyMock.expect(userDao.updateUser(userToUpdate)).andReturn(Optional.of(userToUpdate));
+        control.replay();
+        // WHEN
+        Optional<User> result = underTest.updateUser(userToUpdate);
+        // THEN
+        control.verify();
+        Assert.assertTrue(result.isPresent());
+        Assert.assertEquals(result.get(), userToUpdate);
+    }
+
+    @Test
     public void testUpdate() {
         // GIVEN
         User userToUpdate = createExampleUserBuilder().withEmail(INVALID_EMAIL).build();
-        User originalUSer = createExampleUserBuilder().build();
-        EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUSer));
+        User originalUser = createExampleUserBuilder().build();
+        EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUser));
         EasyMock.expect(userDao.findByEmail(INVALID_EMAIL)).andReturn(Optional.empty());
         EasyMock.expect(userDao.updateUser(userToUpdate)).andReturn(Optional.of(userToUpdate));
         control.replay();

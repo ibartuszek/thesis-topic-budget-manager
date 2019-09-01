@@ -255,6 +255,28 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
     }
 
     @Test
+    public void testUpdateWhenEmailIsUnchanged() {
+        // GIVEN
+        UserModel userModel = createDefaultUserModelBuilder(RESERVED_ID)
+            .withEmail(ModelStringValue.builder().withValue(RESERVED_EMAIL).build())
+            .withFirstName(ModelStringValue.builder().withValue(NEW_FIRST_NAME).build())
+            .withLastName(ModelStringValue.builder().withValue(NEW_LAST_NAME).build())
+            .build();
+        UserModelRequestContext context = createContext(userModel);
+        // WHEN
+        ResponseEntity result = underTest.updateUser(context);
+        UserModelResponse response = (UserModelResponse) result.getBody();
+        // THEN
+        Assert.assertTrue(response.isSuccessful());
+        Assert.assertEquals(response.getMessage(), "User data has been updated!");
+        Assert.assertEquals(response.getUserModel().getId(), RESERVED_ID);
+        Assert.assertEquals(response.getUserModel().getEmail().getValue(), RESERVED_EMAIL);
+        Assert.assertEquals(response.getUserModel().getPassword().getValue(), MASKED_PASSWORD);
+        Assert.assertEquals(response.getUserModel().getFirstName().getValue(), NEW_FIRST_NAME);
+        Assert.assertEquals(response.getUserModel().getLastName().getValue(), NEW_LAST_NAME);
+    }
+
+    @Test
     public void testUpdate() {
         // GIVEN
         UserModel userModel = createDefaultUserModelBuilder(RESERVED_ID)
