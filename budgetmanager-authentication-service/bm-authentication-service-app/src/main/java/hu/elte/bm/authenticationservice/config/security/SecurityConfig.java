@@ -1,6 +1,8 @@
 package hu.elte.bm.authenticationservice.config.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -14,6 +16,9 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
+import hu.elte.bm.authenticationservice.domain.UserService;
+import hu.elte.bm.authenticationservice.web.filter.UserIdFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${security.jwt.validity.time}")
     private Integer refreshTokenValidity;
+
+    @Autowired
+    private UserService userService;
 
     @Bean
     @Override
@@ -71,5 +79,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         defaultTokenServices.setSupportRefreshToken(true);
         defaultTokenServices.setRefreshTokenValiditySeconds(refreshTokenValidity);
         return defaultTokenServices;
+    }
+
+    @Bean
+    public FilterRegistrationBean<UserIdFilter> userIdFilter() {
+        FilterRegistrationBean<UserIdFilter> registrationBean = new FilterRegistrationBean<>();
+
+        registrationBean.setFilter(new UserIdFilter(userService));
+        registrationBean.addUrlPatterns("/bm/*");
+
+        return registrationBean;
     }
 }
