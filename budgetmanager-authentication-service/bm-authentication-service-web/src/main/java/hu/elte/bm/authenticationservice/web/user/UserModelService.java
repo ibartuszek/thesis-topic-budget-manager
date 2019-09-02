@@ -3,6 +3,8 @@ package hu.elte.bm.authenticationservice.web.user;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -186,4 +188,7 @@ public class UserModelService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), new ArrayList<>());
     }
 
+    public UserModelResponse logoutUser(final UserModel userModel, final HttpServletRequest request) {
+        return new UserModelResponse();
+    }
 }

@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import hu.elte.bm.authenticationservice.domain.UserService;
+import hu.elte.bm.authenticationservice.web.filter.TokenFilter;
 import hu.elte.bm.authenticationservice.web.filter.UserIdFilter;
 
 @Configuration
@@ -84,10 +85,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public FilterRegistrationBean<UserIdFilter> userIdFilter() {
         FilterRegistrationBean<UserIdFilter> registrationBean = new FilterRegistrationBean<>();
-
         registrationBean.setFilter(new UserIdFilter(userService));
         registrationBean.addUrlPatterns("/bm/*");
+        return registrationBean;
+    }
 
+    @Bean
+    public FilterRegistrationBean<TokenFilter> tokenFilter() {
+        FilterRegistrationBean<TokenFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new TokenFilter());
+        registrationBean.addUrlPatterns("/bm/*");
         return registrationBean;
     }
 }

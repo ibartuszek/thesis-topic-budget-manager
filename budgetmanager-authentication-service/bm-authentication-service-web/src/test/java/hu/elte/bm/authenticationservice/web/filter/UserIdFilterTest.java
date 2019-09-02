@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import hu.elte.bm.authenticationservice.domain.User;
 import hu.elte.bm.authenticationservice.domain.UserService;
+import hu.elte.bm.authenticationservice.web.user.UserIdException;
 
 public class UserIdFilterTest {
 
@@ -36,8 +37,6 @@ public class UserIdFilterTest {
     private SecurityContext securityContext;
     private FilterChain filterChain;
     private UserService userService;
-
-    // Object userPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     @BeforeMethod
     private void setUp() {
@@ -102,7 +101,7 @@ public class UserIdFilterTest {
     }
 
     @Test
-    public void testWhenUserIdMatches() throws IOException, ServletException {
+    public void testWhenUserIdMatchesAndUserIdIsFromQueryString() throws IOException, ServletException {
         // GIVEN
         request.addParameter("userId", USER_ID.toString());
         EasyMock.expect(securityContext.getAuthentication()).andReturn(authentication);

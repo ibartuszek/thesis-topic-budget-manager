@@ -1,7 +1,13 @@
 package hu.elte.bm.authenticationservice.web.user;
 
+import javax.validation.constraints.NotNull;
+
+import hu.elte.bm.authenticationservice.web.validation.ValidUserId;
+
 public class UserModelRequestContext {
 
+    @NotNull
+    @ValidUserId
     private Long userId;
     private UserModel userModel;
 

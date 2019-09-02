@@ -1,5 +1,7 @@
 package hu.elte.bm.authenticationservice.web.user;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,7 +54,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/bm/users/update", method = RequestMethod.PUT, produces = APPLICATION_JSON)
-    public ResponseEntity<Object> updateUser(@RequestBody final UserModelRequestContext context) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody final UserModelRequestContext context) {
         UserModelResponse response;
         try {
             response = userModelService.updateUser(context.getUserModel());
@@ -67,6 +69,17 @@ public class UserController {
         UserModelResponse response;
         try {
             response = userModelService.deleteUser(context.getUserModel());
+        } catch (Exception e) {
+            response = createErrorResponse(context, e);
+        }
+        return response.isSuccessful() ? new ResponseEntity<>(response, HttpStatus.OK) : new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @RequestMapping(value = "/bm/users/logout", method = RequestMethod.POST, produces = APPLICATION_JSON)
+    public ResponseEntity<Object> logoutUser(@RequestBody final UserModelRequestContext context) {
+        UserModelResponse response;
+        try {
+            response = userModelService.logoutUser(context.getUserModel(), null);
         } catch (Exception e) {
             response = createErrorResponse(context, e);
         }

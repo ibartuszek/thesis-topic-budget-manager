@@ -14,8 +14,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import hu.elte.bm.authenticationservice.domain.User;
 import hu.elte.bm.authenticationservice.domain.UserService;
+import hu.elte.bm.authenticationservice.web.user.UserIdException;
 
 public class UserIdFilter implements Filter {
+
+    private static final String USER_ID = "userId";
+    private static final String USER_ID_CANNOT_BE_CONVERTED = "'{0}' cannot be converted into an Id!'";
+    private static final String USER_ID_NOT_MATCHES = "'{0}' from request is not match with:'{1}' from repository!";
 
     private UserService userService;
 
@@ -26,7 +31,7 @@ public class UserIdFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
         Object userPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userId = servletRequest.getParameter("userId");
+        String userId = servletRequest.getParameter(USER_ID);
         if (userId != null && userPrincipal instanceof String) {
             Long userIdFromRequest = convertUserId(userId);
             Long userIdFromRepository = getUserIdFromRepository((String) userPrincipal);
@@ -40,7 +45,7 @@ public class UserIdFilter implements Filter {
         try {
             userIdFromRequest = Long.parseLong(userId);
         } catch (NumberFormatException e) {
-            throw new UserIdException(MessageFormat.format("'{0}' cannot be converted into an Id!'", userId, e), userId);
+            throw new UserIdException(MessageFormat.format(USER_ID_CANNOT_BE_CONVERTED, userId, e), userId);
         }
         return userIdFromRequest;
     }
@@ -52,7 +57,7 @@ public class UserIdFilter implements Filter {
 
     private void validateUserId(final String userId, final Long userIdFromRequest, final Long userIdFromRepository) {
         if (!userIdFromRequest.equals(userIdFromRepository)) {
-            throw new UserIdException(MessageFormat.format("'{0}' from request is not match with:'{1}' from repository!", userId, userIdFromRepository), userId);
+            throw new UserIdException(MessageFormat.format(USER_ID_NOT_MATCHES, userId, userIdFromRepository), userId);
         }
     }
 
