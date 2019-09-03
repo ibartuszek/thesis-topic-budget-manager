@@ -2,6 +2,6 @@
 export function logOut() {
   console.log("LOGOUT_SUCCESS");
   return (dispatch) => {
-    dispatch({type: 'LOGOUT_SUCCESS', userIsLoggedIn: false, jwtToken: null});
+    dispatch({type: 'LOGOUT_SUCCESS'});
   }
 }

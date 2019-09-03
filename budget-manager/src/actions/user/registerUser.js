@@ -19,12 +19,11 @@ export function registerUser(model) {
     ).then((response) => {
       let userData = createUserData(response['userModel']);
       console.log('SIGN_UP_SUCCESS');
-      console.log(response);
-      dispatch({type: 'SIGN_UP_SUCCESS', userData: userData, message: response.message});
+      dispatch({type: 'SIGN_UP_SUCCESS', userData: userData});
     }).catch(err => {
       console.log('SIGN_UP_ERROR');
       console.log(err);
-      dispatch({type: 'SIGN_UP_ERROR', errorMessage: err.message});
+      dispatch({type: 'SIGN_UP_ERROR'});
     });
   }
 }

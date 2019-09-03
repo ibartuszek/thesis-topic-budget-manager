@@ -16,10 +16,11 @@ export function getUser(userName, jwtToken) {
     ).then((response) => {
       let userData = createUserData(response['userModel']);
       console.log('LOGIN_SUCCESS');
-      dispatch({type: 'LOGIN_SUCCESS', userData: userData, message: 'User is logged in.'});
+      dispatch({type: 'LOGIN_SUCCESS', userData: userData});
     }).catch(err => {
       console.log('LOGIN_ERROR');
-      dispatch({type: 'LOGIN_ERROR', errorMessage: err.message});
+      console.log(err.message);
+      dispatch({type: 'LOGIN_ERROR'});
     });
   }
 }

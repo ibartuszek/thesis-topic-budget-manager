@@ -1,26 +1,44 @@
-import React from 'react';
+import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
 import Loading from '../Loading'
 import {connect} from "react-redux";
+import DismissableAlert from '../DismissableAlert'
 
-const Home = (props) => {
-  const {userHolder} = props;
+class Home extends Component {
+  state = {
+    loggedOut: false
+  };
 
-  const userDataMessage =
-    userHolder.message === null ? null :
-      <div className="alert alert-success alert-dismissible fade show mx-3 my-3" role="alert">
-        {userHolder.message}
-        <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>;
+  componentDidUpdate(prevProps) {
+    const {userIsLoggedIn} = this.props.userHolder;
+    if (userIsLoggedIn !== prevProps.userHolder.userIsLoggedIn) {
+      this.setState({
+        loggedOut: !userIsLoggedIn
+      });
+    }
+  }
 
-  return (
-    <React.Fragment>
-      {userDataMessage}
-      <Loading/>
-    </React.Fragment>
-  )
-};
+  render() {
+    const {userHolder} = this.props;
+    if (this.state.loggedOut) {
+      return <Redirect to='/login'/>;
+    }
+
+    return (
+      <React.Fragment>
+        <DismissableAlert message={userHolder.logInMessage} success={true}/>
+        <DismissableAlert message={userHolder.logInErrorMessage} success={false}/>
+        <DismissableAlert message={userHolder.logOutMessage} success={true}/>
+        <DismissableAlert message={userHolder.logOutErrorMessage} success={false}/>
+        <DismissableAlert message={userHolder.signUpMessage} success={true}/>
+        <DismissableAlert message={userHolder.signUpErrorMessage} success={false}/>
+        <DismissableAlert message={userHolder.updateUserMessage} success={true}/>
+        <DismissableAlert message={userHolder.updateUserErrorMessage} success={false}/>
+        <Loading/>
+      </React.Fragment>
+    )
+  }
+}
 
 const mapStateToProps = (state) => {
   return {

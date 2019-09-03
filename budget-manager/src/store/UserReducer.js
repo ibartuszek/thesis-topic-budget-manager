@@ -1,10 +1,28 @@
 const initState = {
   userIsLoggedIn: false,
   jwtToken: null,
+  userData: null,
+  logInMessage: null,
+  logInErrorMessage: null,
+  logOutMessage: null,
+  logOutErrorMessage: null,
   signUpMessage: null,
-  message: null,
+  signUpErrorMessage: null,
+  updateUserMessage: null,
+  updateUserErrorMessage: null,
   errorMessage: null,
-  userData: null
+  message: null
+};
+
+const messages = {
+  logInMessage: "You have logged in successfully! Welcome!",
+  logInErrorMessage: "Login failed, wrong username or password!",
+  logOutMessage: "You have logged out. Please come again!",
+  signUpMessage: "Your registration was successful.",
+  signUpErrorMessage: "Your registration was not successful. This email has been used already!",
+  updateUserMessage: "Your registration was successful.",
+  updateUserErrorMessage: "Your modification was not saved. This email has been used by another user.",
+  defaultErrorMessage: "Something went wrong, please try again!",
 };
 
 const UserReducer = (state = initState, action) => {
@@ -12,46 +30,69 @@ const UserReducer = (state = initState, action) => {
     case 'GET_ACCESS_TOKEN_SUCCESS':
       return Object.assign({}, state, {
         jwtToken: action.jwtToken,
-        // message: null,
-        errorMessage: null
+      });
+    case 'GET_ACCESS_TOKEN_ERROR':
+      return Object.assign({}, state, {
+        jwtToken: null,
+        userIsLoggedIn: false,
+        logInMessage: null,
+        logInErrorMessage: messages.logInErrorMessage
       });
     case 'LOGIN_SUCCESS':
       return Object.assign({}, state, {
         userData: action.userData,
         userIsLoggedIn: true,
-        message: action.message,
-        errorMessage: null
+        logInMessage: messages.logInMessage,
+        logInErrorMessage: null
+      });
+    case 'LOGIN_ERROR':
+      return Object.assign({}, state, {
+        userData: null,
+        userIsLoggedIn: false,
+        logInMessage: null,
+        logInErrorMessage: messages.logInErrorMessage
       });
     case 'LOGOUT_SUCCESS':
       return Object.assign({}, state, {
         userIsLoggedIn: false,
         jwtToken: null,
-        message: null,
-        errorMessage: null,
+        logOutMessage: messages.logOutMessage,
+        logOutErrorMessage: null,
         userData: null
+      });
+    case 'LOGOUT_ERROR':
+      return Object.assign({}, state, {
+        userData: null,
+        userIsLoggedIn: false,
+        logOutMessage: null,
+        logOutErrorMessage: messages.defaultErrorMessage
       });
     case 'SIGN_UP_SUCCESS':
       return Object.assign({}, state, {
         userData: action.userData,
         userIsLoggedIn: true,
-        message: action.message,
-        errorMessage: null
+        signUpMessage: messages.signUpMessage,
+        signUpErrorMessage: null
+      });
+    case 'SIGN_UP_ERROR':
+      return Object.assign({}, state, {
+        userData: null,
+        userIsLoggedIn: false,
+        signUpMessage: null,
+        signUpErrorMessage: messages.signUpErrorMessage
       });
     case 'UPDATE_USER_SUCCESS':
       return Object.assign({}, state, {
         userData: action.userData,
-        message: action.message,
-        errorMessage: null
+        updateUserMessage: messages.updateUserMessage,
+        updateUserErrorMessage: null
       });
-    case 'GET_ACCESS_TOKEN_ERROR':
-    case 'LOGIN_ERROR':
-    case 'SIGN_UP_ERROR':
+    case 'UPDATE_USER_ERROR':
       return Object.assign({}, state, {
-        errorMessage: action.errorMessage,
-        userIsLoggedIn: false,
-        jwtToken: null,
-        userData: null
+        updateUserMessage: null,
+        updateUserErrorMessage: messages.updateUserErrorMessage
       });
+
     default:
       return state;
   }

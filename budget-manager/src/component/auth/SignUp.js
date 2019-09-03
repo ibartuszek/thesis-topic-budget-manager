@@ -57,7 +57,7 @@ class SignUp extends Component {
         [id]: {
           ...prevState.userModel[id],
           value: value,
-          errorMessage: errorMessage
+          signUpErrorMessage: errorMessage
         }
       }
     }))
@@ -100,7 +100,7 @@ class SignUp extends Component {
                               id="lastName" model={lastName}
                               labelTitle="Last name" placeHolder="Please write your last name." type="text"/>
             <div className="custom-error-message-container mt-3">
-              {userHolder.errorMessage !== null ? <p>{userHolder.errorMessage}</p> : null}
+              {userHolder.signUpErrorMessage !== null ? <p>{userHolder.signUpErrorMessage}</p> : null}
             </div>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-user-plus"/>

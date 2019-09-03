@@ -108,10 +108,10 @@ class UserSettings extends Component {
                               id="lastName" model={lastName}
                               labelTitle="Last name" placeHolder="Please write your new last name." type="text"/>
             <div className="custom-error-message-container mt-3">
-              {userHolder.errorMessage !== null ? <p>{userHolder.errorMessage}</p> : null}
+              {userHolder.updateUserErrorMessage !== null ? <p>{userHolder.updateUserErrorMessage}</p> : null}
             </div>
             <div className="custom-success-message-container mt-3">
-              {userHolder.message !== null ? <p>{userHolder.message}</p> : null}
+              {userHolder.updateUserMessage !== null ? <p>{userHolder.updateUserMessage}</p> : null}
             </div>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-pencil-alt"/>
