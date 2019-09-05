@@ -1,7 +1,7 @@
 import {createUserData} from "./createUserData";
 import {createUserModelBody} from "./createUserModelBody";
 
-export function registerUser(model) {
+export function registerUser(model, messages) {
   let header = new Headers();
   header.set('Content-Type', 'application/json');
   let body = JSON.stringify(createUserModelBody(model));
@@ -19,11 +19,11 @@ export function registerUser(model) {
     ).then((response) => {
       let userData = createUserData(response['userModel']);
       console.log('SIGN_UP_SUCCESS');
-      dispatch({type: 'SIGN_UP_SUCCESS', userData: userData});
+      dispatch({type: 'SIGN_UP_SUCCESS', userData: userData, messages: messages});
     }).catch(err => {
       console.log('SIGN_UP_ERROR');
       console.log(err);
-      dispatch({type: 'SIGN_UP_ERROR'});
+      dispatch({type: 'SIGN_UP_ERROR', messages: messages});
     });
   }
 }

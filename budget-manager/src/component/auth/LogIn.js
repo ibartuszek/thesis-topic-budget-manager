@@ -33,15 +33,16 @@ class LogIn extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const {email, password} = this.state;
-    this.props.getAccessToken(email.value, password.value);
+    const {messages} = this.props.logHolder;
+    this.props.getAccessToken(email.value, password.value, messages);
   };
 
   render() {
-    const {userHolder, getUser} = this.props;
+    const {userHolder, getUser, logHolder} = this.props;
     const {email, password} = this.state;
 
     if (userHolder.jwtToken != null && userHolder.userData == null) {
-      getUser(this.state.email.value, userHolder.jwtToken);
+      getUser(this.state.email.value, userHolder.jwtToken, logHolder.messages);
     }
 
     if (userHolder.userIsLoggedIn) {
@@ -60,7 +61,7 @@ class LogIn extends Component {
                               id="password" model={password}
                               labelTitle="Password" type="password"/>
             <div className="custom-error-message-container mt-3">
-              {userHolder.logInErrorMessage !== null ? <p>{userHolder.logInErrorMessage}</p> : null}
+              {userHolder.messages.logInErrorMessage !== null ? <p>{userHolder.messages.logInErrorMessage}</p> : null}
             </div>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-sign-in-alt"/>
@@ -75,14 +76,15 @@ class LogIn extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    userHolder: state.userHolder
+    userHolder: state.userHolder,
+    logHolder: state.logHolder
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getAccessToken: (username, password) => dispatch(getAccessToken(username, password)),
-    getUser: (email, jwtToken) => dispatch(getUser(email, jwtToken))
+    getAccessToken: (username, password, messages) => dispatch(getAccessToken(username, password, messages)),
+    getUser: (email, jwtToken, messages) => dispatch(getUser(email, jwtToken, messages))
   };
 };
 

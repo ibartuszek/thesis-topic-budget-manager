@@ -66,16 +66,16 @@ class SignUp extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     if (validateUserModel(this.state.userModel)) {
-      this.props.registerUser(this.state.userModel);
+      this.props.registerUser(this.state.userModel, this.props.logHolder.messages);
     }
   };
 
   render() {
-    const {userHolder} = this.props;
+    const {userHolder, logHolder} = this.props;
     const {email, password, firstName, lastName} = this.state.userModel;
 
     if (userHolder.userData != null) {
-      this.props.getAccessToken(email.value, password.value);
+      this.props.getAccessToken(email.value, password.value, logHolder.messages);
     }
 
     if (userHolder.jwtToken != null && userHolder.userIsLoggedIn) {
@@ -100,7 +100,7 @@ class SignUp extends Component {
                               id="lastName" model={lastName}
                               labelTitle="Last name" placeHolder="Please write your last name." type="text"/>
             <div className="custom-error-message-container mt-3">
-              {userHolder.signUpErrorMessage !== null ? <p>{userHolder.signUpErrorMessage}</p> : null}
+              {userHolder.messages.signUpErrorMessage !== null ? <p>{userHolder.messages.signUpErrorMessage}</p> : null}
             </div>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-user-plus"/>
@@ -115,14 +115,15 @@ class SignUp extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    userHolder: state.userHolder
+    userHolder: state.userHolder,
+    logHolder: state.logHolder
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getAccessToken: (username, password) => dispatch(getAccessToken(username, password)),
-    registerUser: (model) => dispatch(registerUser(model))
+    getAccessToken: (username, password, messages) => dispatch(getAccessToken(username, password, messages)),
+    registerUser: (model, messages) => dispatch(registerUser(model, messages))
   };
 };
 

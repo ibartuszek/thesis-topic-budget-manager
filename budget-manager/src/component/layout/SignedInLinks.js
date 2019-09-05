@@ -45,7 +45,7 @@ const SignedInLinks = (props) => {
         </li>
       </ul>
       <div className="nav-item ml-auto" onClick={() => {
-        props.logOut()
+        props.logOut(props.logHolder.messages)
       }}>
         <span className="fas fa-sign-out-alt"/>
         <span> Log Out </span>
@@ -54,10 +54,16 @@ const SignedInLinks = (props) => {
   )
 };
 
+const mapStateToProps = (state) => {
+  return {
+    logHolder: state.logHolder
+  }
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    logOut: () => dispatch(logOut())
+    logOut: (messages) => dispatch(logOut(messages))
   };
 };
 
-export default connect(null, mapDispatchToProps)(SignedInLinks);
+export default connect(mapStateToProps, mapDispatchToProps)(SignedInLinks);

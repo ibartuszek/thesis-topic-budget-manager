@@ -1,6 +1,6 @@
 import base64 from 'react-native-base64'
 
-export function getAccessToken(username, password) {
+export function getAccessToken(username, password, messages) {
   const clientId = 'testjwtclientid';
   const clientSecret = 'XY7kmzoNzl100';
   let header = createHeader(clientId, clientSecret);
@@ -23,7 +23,7 @@ export function getAccessToken(username, password) {
     }).catch(err => {
       console.log("GET_ACCESS_TOKEN_ERROR");
       console.log(err.message);
-      dispatch({type: 'GET_ACCESS_TOKEN_ERROR'});
+      dispatch({type: 'GET_ACCESS_TOKEN_ERROR', messages: messages});
     });
   }
 }

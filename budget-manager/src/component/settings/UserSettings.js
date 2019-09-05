@@ -65,10 +65,11 @@ class UserSettings extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const {jwtToken, userData} = this.props.userHolder;
+    const {messages} = this.props.logHolder;
     const {userModel} = this.state;
     let password = userModel.password.value === '' ? '********' : userModel.password.value;
     if (validateUserModel(this.state.userModel, password)) {
-      this.props.updateUser(userModel, userData['userId'], jwtToken);
+      this.props.updateUser(userModel, userData['userId'], jwtToken, messages);
     }
   };
 
@@ -83,7 +84,6 @@ class UserSettings extends Component {
       ...this.state,
       userModel
     });
-    console.log(this.state);
   }
 
   render() {
@@ -108,10 +108,10 @@ class UserSettings extends Component {
                               id="lastName" model={lastName}
                               labelTitle="Last name" placeHolder="Please write your new last name." type="text"/>
             <div className="custom-error-message-container mt-3">
-              {userHolder.updateUserErrorMessage !== null ? <p>{userHolder.updateUserErrorMessage}</p> : null}
+              {userHolder.messages.updateUserErrorMessage !== null ? <p>{userHolder.messages.updateUserErrorMessage}</p> : null}
             </div>
             <div className="custom-success-message-container mt-3">
-              {userHolder.updateUserMessage !== null ? <p>{userHolder.updateUserMessage}</p> : null}
+              {userHolder.messages.updateUserMessage !== null ? <p>{userHolder.messages.updateUserMessage}</p> : null}
             </div>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-pencil-alt"/>
@@ -126,13 +126,14 @@ class UserSettings extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    userHolder: state.userHolder
+    userHolder: state.userHolder,
+    logHolder: state.logHolder
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateUser: (model, userId, jwtToken) => dispatch(updateUser(model, userId, jwtToken))
+    updateUser: (model, userId, jwtToken, messages) => dispatch(updateUser(model, userId, jwtToken, messages))
   };
 };
 

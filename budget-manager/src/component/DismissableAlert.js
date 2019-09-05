@@ -4,33 +4,37 @@ class DismissableAlert extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
+    /*this.state = {
       showAlert: props.message != null,
       message: props.message
-    };
-    this.handleShow = this.handleShow.bind(this);
+    };*/
+    this.handleDismiss = this.handleDismiss.bind(this);
   }
 
-  handleShow = (message, showAlert) => {
-    this.setState(prevState => ({
-      showAlert: prevState.message !== message ? true : !showAlert,
-      message: message
-    }))
+  /*
+    handleDismiss = (message, showAlert) => {
+      this.setState(prevState => ({
+        showAlert: prevState.message !== message ? true : !showAlert,
+        message: message
+      }))
+    };
+  */
+  handleDismiss = (message) => {
+    this.props.onChange(message);
   };
 
   render() {
-    let {message, showAlert} = this.state;
-    let className = this.props.success ?
+    let {message} = this.props;
+    let className = message.success ?
       "alert alert-success alert-dismissible fade show mx-3 my-3" :
       "alert alert-danger alert-dismissible fade show mx-3 my-3";
-    let alert =
+    return (
       <div className={className} role="alert">
-        {message}
-        <button type="button" className="close" onClick={() => this.handleShow(message, showAlert)}>
+        {message.value}
+        <button type="button" className="close" onClick={() => this.handleDismiss(message)}>
           <span>&times;</span>
         </button>
-      </div>;
-    return showAlert ? alert : (null);
+      </div>);
   }
 }
 

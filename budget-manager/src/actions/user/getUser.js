@@ -1,6 +1,6 @@
 import {createUserData} from "./createUserData";
 
-export function getUser(userName, jwtToken) {
+export function getUser(userName, jwtToken, messages) {
   let url = `/bm/users/findByEmail?email=` + userName;
   let header = createHeader(jwtToken);
   return function (dispatch) {
@@ -16,11 +16,11 @@ export function getUser(userName, jwtToken) {
     ).then((response) => {
       let userData = createUserData(response['userModel']);
       console.log('LOGIN_SUCCESS');
-      dispatch({type: 'LOGIN_SUCCESS', userData: userData});
+      dispatch({type: 'LOGIN_SUCCESS', userData: userData, messages: messages});
     }).catch(err => {
       console.log('LOGIN_ERROR');
       console.log(err.message);
-      dispatch({type: 'LOGIN_ERROR'});
+      dispatch({type: 'LOGIN_ERROR', messages: messages});
     });
   }
 }

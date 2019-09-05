@@ -1,20 +1,22 @@
+import {addMessage} from "../actions/message/messageActions";
+
 const initState = {
   userIsLoggedIn: false,
   jwtToken: null,
   userData: null,
-  logInMessage: null,
-  logInErrorMessage: null,
-  logOutMessage: null,
-  logOutErrorMessage: null,
-  signUpMessage: null,
-  signUpErrorMessage: null,
-  updateUserMessage: null,
-  updateUserErrorMessage: null,
-  errorMessage: null,
-  message: null
+  messages: {
+    logInMessage: null,
+    logInErrorMessage: null,
+    logOutMessage: null,
+    logOutErrorMessage: null,
+    signUpMessage: null,
+    signUpErrorMessage: null,
+    updateUserMessage: null,
+    updateUserErrorMessage: null
+  }
 };
 
-const messages = {
+const defaultMessages = {
   logInMessage: "You have logged in successfully! Welcome!",
   logInErrorMessage: "Login failed, wrong username or password!",
   logOutMessage: "You have logged out. Please come again!",
@@ -26,76 +28,121 @@ const messages = {
 };
 
 const UserReducer = (state = initState, action) => {
+  let key = null;
   switch (action.type) {
     case 'GET_ACCESS_TOKEN_SUCCESS':
       return Object.assign({}, state, {
         jwtToken: action.jwtToken,
       });
     case 'GET_ACCESS_TOKEN_ERROR':
+      key = "defaultErrorMessage";
+      addMessage(action.messages, createMessage(key, false));
       return Object.assign({}, state, {
         jwtToken: null,
         userIsLoggedIn: false,
-        logInMessage: null,
-        logInErrorMessage: messages.logInErrorMessage
+        messages: {
+          logInMessage: null,
+          logInErrorMessage: defaultMessages[key]
+        }
       });
     case 'LOGIN_SUCCESS':
+      key = "logInMessage";
+      addMessage(action.messages, createMessage(key, true));
       return Object.assign({}, state, {
         userData: action.userData,
         userIsLoggedIn: true,
-        logInMessage: messages.logInMessage,
-        logInErrorMessage: null
+        messages: {
+          logInMessage: defaultMessages[key],
+          logInErrorMessage: null
+        }
       });
     case 'LOGIN_ERROR':
+      key = "logInErrorMessage";
+      addMessage(action.messages, createMessage(key, false));
       return Object.assign({}, state, {
         userData: null,
         userIsLoggedIn: false,
-        logInMessage: null,
-        logInErrorMessage: messages.logInErrorMessage
+        messages: {
+          logInMessage: null,
+          logInErrorMessage: defaultMessages[key]
+        }
       });
     case 'LOGOUT_SUCCESS':
+      key = "logOutMessage";
+      addMessage(action.messages, createMessage(key, true));
       return Object.assign({}, state, {
         userIsLoggedIn: false,
         jwtToken: null,
-        logOutMessage: messages.logOutMessage,
-        logOutErrorMessage: null,
+        messages: {
+          logOutMessage: defaultMessages[key],
+          logOutErrorMessage: null
+        },
         userData: null
       });
     case 'LOGOUT_ERROR':
+      key = "logOutErrorMessage";
+      addMessage(action.messages, createMessage(key, false));
       return Object.assign({}, state, {
         userData: null,
         userIsLoggedIn: false,
-        logOutMessage: null,
-        logOutErrorMessage: messages.defaultErrorMessage
+        messages: {
+          logOutMessage: null,
+          logOutErrorMessage: defaultMessages[key]
+        }
       });
     case 'SIGN_UP_SUCCESS':
+      key = "signUpMessage";
+      addMessage(action.messages, createMessage(key, true));
       return Object.assign({}, state, {
         userData: action.userData,
         userIsLoggedIn: true,
-        signUpMessage: messages.signUpMessage,
-        signUpErrorMessage: null
+        messages: {
+          signUpMessage: defaultMessages[key],
+          signUpErrorMessage: null
+        }
       });
     case 'SIGN_UP_ERROR':
+      key = "signUpErrorMessage";
+      addMessage(action.messages, createMessage(key, false));
       return Object.assign({}, state, {
         userData: null,
         userIsLoggedIn: false,
-        signUpMessage: null,
-        signUpErrorMessage: messages.signUpErrorMessage
+        messages: {
+          signUpMessage: null,
+          signUpErrorMessage: defaultMessages[key]
+        }
       });
     case 'UPDATE_USER_SUCCESS':
+      key = "updateUserMessage";
+      addMessage(action.messages, createMessage(key, true));
       return Object.assign({}, state, {
         userData: action.userData,
-        updateUserMessage: messages.updateUserMessage,
-        updateUserErrorMessage: null
+        messages: {
+          updateUserMessage: defaultMessages[key],
+          updateUserErrorMessage: null
+        }
       });
     case 'UPDATE_USER_ERROR':
+      key = "updateUserErrorMessage";
+      addMessage(action.messages, createMessage(key, false));
       return Object.assign({}, state, {
-        updateUserMessage: null,
-        updateUserErrorMessage: messages.updateUserErrorMessage
+        messages: {
+          updateUserMessage: null,
+          updateUserErrorMessage: defaultMessages[key]
+        }
       });
 
     default:
       return state;
   }
 };
+
+function createMessage(key, success) {
+  return {
+    key: key,
+    value: defaultMessages[key],
+    success: success
+  };
+}
 
 export default UserReducer;

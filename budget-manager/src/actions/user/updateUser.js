@@ -1,6 +1,6 @@
 import {createUserData} from "./createUserData";
 
-export function updateUser(userModel, userId, jwtToken) {
+export function updateUser(userModel, userId, jwtToken, messages) {
   let header = createHeader(jwtToken);
   let body = JSON.stringify(createBody(userModel, userId));
 
@@ -19,11 +19,11 @@ export function updateUser(userModel, userId, jwtToken) {
       let userData = createUserData(response['userModel']);
       console.log('UPDATE_USER_SUCCESS');
       console.log(response);
-      dispatch({type: 'UPDATE_USER_SUCCESS', userData: userData, message: response.message});
+      dispatch({type: 'UPDATE_USER_SUCCESS', userData: userData, messages: messages});
     }).catch(err => {
       console.log('UPDATE_USER_ERROR');
       console.log(err);
-      dispatch({type: 'UPDATE_USER_ERROR', errorMessage: err.message});
+      dispatch({type: 'UPDATE_USER_ERROR', messages: messages});
     });
   }
 }

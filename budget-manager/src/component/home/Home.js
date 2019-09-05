@@ -2,12 +2,18 @@ import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 import Loading from '../Loading'
 import {connect} from "react-redux";
-import DismissableAlert from '../DismissableAlert'
+import DismissableAlert from "../DismissableAlert";
+import {removeMessage} from "../../actions/message/messageActions";
 
 class Home extends Component {
   state = {
     loggedOut: false
   };
+
+  constructor(props) {
+    super(props);
+    this.handleDismiss = this.handleDismiss.bind(this);
+  }
 
   componentDidUpdate(prevProps) {
     const {userIsLoggedIn} = this.props.userHolder;
@@ -18,22 +24,22 @@ class Home extends Component {
     }
   }
 
+  handleDismiss(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
+  }
+
   render() {
-    const {userHolder} = this.props;
+    const {messages} = this.props.logHolder;
+
     if (this.state.loggedOut) {
       return <Redirect to='/login'/>;
     }
 
+    const messageList = messages.slice(0).reverse().map((message, i) =>
+      <DismissableAlert key={i} message={message} onChange={this.handleDismiss}/>);
     return (
       <React.Fragment>
-        <DismissableAlert message={userHolder.logInMessage} success={true}/>
-        <DismissableAlert message={userHolder.logInErrorMessage} success={false}/>
-        <DismissableAlert message={userHolder.logOutMessage} success={true}/>
-        <DismissableAlert message={userHolder.logOutErrorMessage} success={false}/>
-        <DismissableAlert message={userHolder.signUpMessage} success={true}/>
-        <DismissableAlert message={userHolder.signUpErrorMessage} success={false}/>
-        <DismissableAlert message={userHolder.updateUserMessage} success={true}/>
-        <DismissableAlert message={userHolder.updateUserErrorMessage} success={false}/>
+        {messageList}
         <Loading/>
       </React.Fragment>
     )
@@ -42,8 +48,15 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    userHolder: state.userHolder
+    userHolder: state.userHolder,
+    logHolder: state.logHolder
   }
 };
 
-export default connect(mapStateToProps)(Home);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
