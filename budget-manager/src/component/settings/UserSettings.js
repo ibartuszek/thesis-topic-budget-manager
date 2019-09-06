@@ -3,6 +3,8 @@ import {connect} from "react-redux";
 import ModelStringValue from "../layout/form/ModelStringValue";
 import {updateUser} from "../../actions/user/updateUser";
 import {validateUserModel} from "../../actions/validation/validateUserModel";
+import {createContext} from "../../actions/common/createContext";
+import {formMessages} from "../../store/MessageHolder";
 
 class UserSettings extends Component {
 
@@ -18,6 +20,14 @@ class UserSettings extends Component {
         possibleEnumValues: null
       },
       password: {
+        value: '',
+        errorMessage: null,
+        minimumLength: 8,
+        maximumLength: 16,
+        regexp: null,
+        possibleEnumValues: null
+      },
+      confirmationPassword: {
         value: '',
         errorMessage: null,
         minimumLength: 8,
@@ -64,12 +74,12 @@ class UserSettings extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const {jwtToken, userData} = this.props.userHolder;
-    const {messages} = this.props.logHolder;
+    const {userHolder, logHolder} = this.props;
     const {userModel} = this.state;
     let password = userModel.password.value === '' ? '********' : userModel.password.value;
     if (validateUserModel(this.state.userModel, password)) {
-      this.props.updateUser(userModel, userData['userId'], jwtToken, messages);
+      let context = createContext(userHolder, logHolder);
+      this.props.updateUser(context, userModel);
     }
   };
 
@@ -88,8 +98,12 @@ class UserSettings extends Component {
 
   render() {
     const {userHolder} = this.props;
-    const {email, password, firstName, lastName} = this.state.userModel;
-
+    const {email, password, confirmationPassword, firstName, lastName} = this.state.userModel;
+    const {
+      emailLabel, emailMessage, passwordLabel, passwordMessage, passwordConfirmMessage,
+      firstNameLabel, firstNameMessage, lastNameLabel, lastNameMessage
+    } = formMessages;
+    
     return (
       <div className="mt-4 mx-3">
         <div className="card card-body mx-auto max-w-500 min-w-400">
@@ -97,16 +111,19 @@ class UserSettings extends Component {
             <h1 className="mt-3 mx-auto">User data</h1>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="email" model={email}
-                              labelTitle="Email" placeHolder="Please write your new email address." type="email"/>
+                              labelTitle={emailLabel} placeHolder={emailMessage} type="email"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="password" model={password}
-                              labelTitle="Password" placeHolder="Please write your new password." type="password"/>
+                              labelTitle={passwordLabel} placeHolder={passwordMessage} type="password"/>
+            <ModelStringValue onChange={this.handleFieldChange}
+                              id="confirmationPassword" model={confirmationPassword} passwordValue={password.value}
+                              labelTitle={passwordLabel} placeHolder={passwordConfirmMessage} type="password"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="firstName" model={firstName}
-                              labelTitle="First name" placeHolder="Please write your new first name." type="text"/>
+                              labelTitle={firstNameLabel} placeHolder={firstNameMessage} type="text"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="lastName" model={lastName}
-                              labelTitle="Last name" placeHolder="Please write your new last name." type="text"/>
+                              labelTitle={lastNameLabel} placeHolder={lastNameMessage} type="text"/>
             <div className="custom-error-message-container mt-3">
               {userHolder.messages.updateUserErrorMessage !== null ? <p>{userHolder.messages.updateUserErrorMessage}</p> : null}
             </div>
@@ -133,7 +150,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateUser: (model, userId, jwtToken, messages) => dispatch(updateUser(model, userId, jwtToken, messages))
+    updateUser: (context, model) => dispatch(updateUser(context, model))
   };
 };
 

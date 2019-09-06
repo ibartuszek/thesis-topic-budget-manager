@@ -1,8 +1,9 @@
 import {createUserData} from "./createUserData";
+import {createHeaderWithJwt} from "../common/createHeader";
 
 export function getUser(userName, jwtToken, messages) {
   let url = `/bm/users/findByEmail?email=` + userName;
-  let header = createHeader(jwtToken);
+  let header = createHeaderWithJwt(jwtToken);
   return function (dispatch) {
     return fetch(url, {
       method: 'GET',
@@ -23,10 +24,4 @@ export function getUser(userName, jwtToken, messages) {
       dispatch({type: 'LOGIN_ERROR', messages: messages});
     });
   }
-}
-
-function createHeader(jwtToken) {
-  let header = new Headers();
-  header.set('Authorization', 'Bearer ' + jwtToken);
-  return header;
 }

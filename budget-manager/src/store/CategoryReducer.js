@@ -1,24 +1,45 @@
+import {addMessage, createMessage} from "../actions/message/messageActions";
+
 const initState = {
   incomeMainCategoriesAreLoaded: false,
   incomeSubCategoriesAreLoaded: false,
-  incomeMainCategories: []
+  incomeMainCategories: [],
+  incomeSubCategories: []
+};
+
+const defaultMessages = {
+  defaultErrorMessage: "Something went wrong, please try again!",
 };
 
 const CategoryReducer = (state = initState, action) => {
+  let key;
   switch (action.type) {
     case 'GET_INCOME_MAIN_CATEGORIES_SUCCESS':
-      console.log('get income main categories from server: success');
       return Object.assign({}, state, {
-        incomeMainCategories: action.incomeMainCategories
+        incomeMainCategories: action.mainCategories
       });
     case 'GET_INCOME_MAIN_CATEGORIES_ERROR':
-      console.log('get main categories from server: error');
+      key = "defaultErrorMessage";
+      addMessage(action.messages, createMessage(key, false, defaultMessages));
       return state;
     case 'INCOME_MAIN_CATEGORIES_ARE_READY':
-      console.log('main categories are ready to use.');
       return {
         ...state,
-        mainCategoriesAreLoaded: true
+        incomeMainCategoriesAreLoaded: true
+      };
+
+    case 'GET_INCOME_SUB_CATEGORIES_SUCCESS':
+      return Object.assign({}, state, {
+        incomeSubCategories: action.subCategories
+      });
+    case 'GET_INCOME_SUB_CATEGORIES_ERROR':
+      key = "defaultErrorMessage";
+      addMessage(action.messages, createMessage(key, false, defaultMessages));
+      return state;
+    case 'INCOME_SUB_CATEGORIES_ARE_READY':
+      return {
+        ...state,
+        incomeSubCategoriesAreLoaded: true
       };
     default:
       return state;

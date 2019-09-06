@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {fetchMainCategories, setMainCategoriesToReady} from '../../actions/category/categoryActions';
 import Loading from '../Loading'
+import {createContext} from "../../actions/common/createContext";
+import {fetchMainCategories, setMainCategoriesToReady} from '../../actions/category/mainCategoryActions';
+import {fetchSubCategories, setSubCategoriesToReady} from "../../actions/category/subCategoryActions";
 
 
 class Incomes extends Component {
@@ -13,29 +15,51 @@ class Incomes extends Component {
 
   state = {
     mainCategoriesAreLoaded: false,
+    subCategoriesAreLoaded: false,
   };
 
+
   componentDidMount() {
-    this.props.fetchMainCategories(this.data);
+    const {userHolder, logHolder} = this.props;
+    if (userHolder.userIsLoggedIn) {
+      let context = createContext(userHolder, logHolder);
+      this.props.fetchMainCategories(context, this.data['transactionType']);
+      this.props.fetchSubCategories(context, this.data['transactionType']);
+    }
   }
 
   componentDidUpdate(oldProps) {
     const newProps = this.props;
-    if (!newProps.categoryHolder.mainCategoriesAreLoaded && Object.keys(newProps.categoryHolder.incomeMainCategories).length > 0) {
-      this.props.setMainCategoriesToReady();
-      console.log(this.props.categoryHolder);
+    let mainCategoriesName = this.data['transactionType'].toLowerCase() + 'MainCategories';
+    let mainCategoriesAreLoadedName = this.data['transactionType'].toLowerCase() + 'MainCategoriesAreLoaded';
+    let subCategoriesName = this.data['transactionType'].toLowerCase() + 'SubCategories';
+    let subCategoriesAreLoadedName = this.data['transactionType'].toLowerCase() + 'SubCategoriesAreLoaded';
+
+    if (!newProps.categoryHolder[mainCategoriesAreLoadedName] && Object.keys(newProps.categoryHolder[mainCategoriesName]).length > 0) {
+      this.props.setMainCategoriesToReady(this.data['transactionType']);
     }
-    if (oldProps.categoryHolder.mainCategoriesAreLoaded !== newProps.categoryHolder.mainCategoriesAreLoaded) {
+    if (!this.state.mainCategoriesAreLoaded && newProps.categoryHolder[mainCategoriesAreLoadedName]) {
       this.setState({
         ...this.state,
-        mainCategoriesAreLoaded: newProps.categoryHolder.mainCategoriesAreLoaded
+        mainCategoriesAreLoaded: true
       })
     }
+
+    if (!newProps.categoryHolder[subCategoriesAreLoadedName] && Object.keys(newProps.categoryHolder[subCategoriesName]).length > 0) {
+      this.props.setSubCategoriesToReady(this.data['transactionType']);
+    }
+    if (!this.state.subCategoriesAreLoaded && newProps.categoryHolder[subCategoriesAreLoadedName]) {
+      this.setState({
+        ...this.state,
+        subCategoriesAreLoaded: true
+      })
+    }
+    console.log(this.props.categoryHolder);
   }
 
   render() {
     let content = null;
-    if (this.state.mainCategoriesAreLoaded) {
+    if (this.state.mainCategoriesAreLoaded || this.state.subCategoriesAreLoaded) {
       content = (
         <Loading/>
       )
@@ -54,6 +78,8 @@ class Incomes extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    userHolder: state.userHolder,
+    logHolder: state.logHolder,
     categoryHolder: state.categoryHolder
   }
 };
@@ -63,7 +89,10 @@ const mapDispatchToProps = (dispatch) => {
     dispatch,
     ...bindActionCreators(
       {
-        fetchMainCategories: fetchMainCategories, setMainCategoriesToReady: setMainCategoriesToReady
+        fetchMainCategories: fetchMainCategories,
+        fetchSubCategories: fetchSubCategories,
+        setMainCategoriesToReady: setMainCategoriesToReady,
+        setSubCategoriesToReady: setSubCategoriesToReady
       },
       dispatch)
   }

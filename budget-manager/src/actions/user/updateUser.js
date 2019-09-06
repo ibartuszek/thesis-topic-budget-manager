@@ -1,7 +1,9 @@
 import {createUserData} from "./createUserData";
+import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
 
-export function updateUser(userModel, userId, jwtToken, messages) {
-  let header = createHeader(jwtToken);
+export function updateUser(context, userModel) {
+  const {userId, jwtToken, messages} = context;
+  let header = createHeaderWithJwtAndJsonBody(jwtToken);
   let body = JSON.stringify(createBody(userModel, userId));
 
   return function (dispatch) {
@@ -26,13 +28,6 @@ export function updateUser(userModel, userId, jwtToken, messages) {
       dispatch({type: 'UPDATE_USER_ERROR', messages: messages});
     });
   }
-}
-
-function createHeader(jwtToken) {
-  let header = new Headers();
-  header.set('Content-Type', 'application/json');
-  header.set('Authorization', 'Bearer ' + jwtToken);
-  return header;
 }
 
 function createBody(userModel, userId) {

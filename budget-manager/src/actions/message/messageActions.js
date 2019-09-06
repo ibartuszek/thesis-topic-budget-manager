@@ -26,3 +26,11 @@ export function removeMessage(messages, message) {
     dispatch({type: 'REMOVE_MESSAGE', messages: messages});
   }
 }
+
+export function createMessage(key, success, defaultMessages) {
+  return {
+    key: key,
+    value: defaultMessages[key],
+    success: success
+  };
+}

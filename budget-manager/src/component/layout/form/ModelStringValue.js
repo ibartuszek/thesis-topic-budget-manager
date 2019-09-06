@@ -13,8 +13,8 @@ class ModelStringValue extends Component {
   };
 
   render() {
-    const {id, model, labelTitle, placeHolder, type} = this.props;
-    let errorMessage = validateModelStringValue(model, labelTitle);
+    const {id, model, labelTitle, placeHolder, type, passwordValue} = this.props;
+    let errorMessage = validateModelStringValue(model, labelTitle, passwordValue);
     return (
       <React.Fragment>
         <div className="input-group mt-3">

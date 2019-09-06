@@ -30,7 +30,7 @@ class Home extends Component {
 
   render() {
     const {messages} = this.props.logHolder;
-
+    console.log(this.props.userHolder);
     if (this.state.loggedOut) {
       return <Redirect to='/login'/>;
     }

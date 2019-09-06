@@ -1,9 +1,9 @@
-import base64 from 'react-native-base64'
+import {createHeaderWithClientSecret} from "../common/createHeader";
 
 export function getAccessToken(username, password, messages) {
   const clientId = 'testjwtclientid';
   const clientSecret = 'XY7kmzoNzl100';
-  let header = createHeader(clientId, clientSecret);
+  let header = createHeaderWithClientSecret(clientId, clientSecret);
   let formData = createFromData(username, password);
 
   return function (dispatch) {
@@ -28,12 +28,6 @@ export function getAccessToken(username, password, messages) {
   }
 }
 
-function createHeader(clientId, clientSecret) {
-  let header = new Headers();
-  header.set('Authorization', 'Basic ' + base64.encode(clientId + ':' + clientSecret));
-  header.set('content-type', 'application/x-www-form-urlencoded;UTF-8');
-  return header;
-}
 
 function createFromData(username, password) {
   let formData = [];

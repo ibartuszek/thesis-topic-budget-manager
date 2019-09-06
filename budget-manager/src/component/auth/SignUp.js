@@ -5,6 +5,7 @@ import ModelStringValue from "../layout/form/ModelStringValue";
 import {getAccessToken} from "../../actions/user/getAccessToken";
 import {registerUser} from "../../actions/user/registerUser";
 import {validateUserModel} from "../../actions/validation/validateUserModel";
+import {formMessages} from "../../store/MessageHolder"
 
 class SignUp extends Component {
 
@@ -19,6 +20,14 @@ class SignUp extends Component {
         possibleEnumValues: null
       },
       password: {
+        value: '',
+        errorMessage: null,
+        minimumLength: 8,
+        maximumLength: 16,
+        regexp: null,
+        possibleEnumValues: null
+      },
+      confirmationPassword: {
         value: '',
         errorMessage: null,
         minimumLength: 8,
@@ -60,19 +69,26 @@ class SignUp extends Component {
           signUpErrorMessage: errorMessage
         }
       }
-    }))
+    }));
   }
 
   handleSubmit = (e) => {
+    const {registerUser, userHolder, logHolder} = this.props;
+    const {userModel} = this.state;
+
     e.preventDefault();
-    if (validateUserModel(this.state.userModel)) {
-      this.props.registerUser(this.state.userModel, this.props.logHolder.messages);
+    if (userHolder.messages['passwordNotSameMessage'] === null && validateUserModel(userModel)) {
+      registerUser(userModel, logHolder.messages);
     }
   };
 
   render() {
     const {userHolder, logHolder} = this.props;
-    const {email, password, firstName, lastName} = this.state.userModel;
+    const {email, password, confirmationPassword, firstName, lastName} = this.state.userModel;
+    const {
+      emailLabel, emailMessage, passwordLabel, passwordMessage, passwordConfirmMessage,
+      firstNameLabel, firstNameMessage, lastNameLabel, lastNameMessage
+    } = formMessages;
 
     if (userHolder.userData != null) {
       this.props.getAccessToken(email.value, password.value, logHolder.messages);
@@ -89,18 +105,21 @@ class SignUp extends Component {
             <h1 className="mt-3 mx-auto">Sign up</h1>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="email" model={email}
-                              labelTitle="Email" placeHolder="Please write your email address." type="email"/>
+                              labelTitle={emailLabel} placeHolder={emailMessage} type="email"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="password" model={password}
-                              labelTitle="Password" placeHolder="Please write your password." type="password"/>
+                              labelTitle={passwordLabel} placeHolder={passwordMessage} type="password"/>
+            <ModelStringValue onChange={this.handleFieldChange}
+                              id="confirmationPassword" model={confirmationPassword} passwordValue={password.value}
+                              labelTitle={passwordLabel} placeHolder={passwordConfirmMessage} type="password"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="firstName" model={firstName}
-                              labelTitle="First name" placeHolder="Please write your first name." type="text"/>
+                              labelTitle={firstNameLabel} placeHolder={firstNameMessage} type="text"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="lastName" model={lastName}
-                              labelTitle="Last name" placeHolder="Please write your last name." type="text"/>
+                              labelTitle={lastNameLabel} placeHolder={lastNameMessage} type="text"/>
             <div className="custom-error-message-container mt-3">
-              {userHolder.messages.signUpErrorMessage !== null ? <p>{userHolder.messages.signUpErrorMessage}</p> : null}
+              {userHolder.messages['passwordNotSameMessage'] !== null ? <p>{userHolder.messages['passwordNotSameMessage']}</p> : null}
             </div>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-user-plus"/>

@@ -1,4 +1,5 @@
-import {addMessage} from "../actions/message/messageActions";
+import {addMessage, createMessage} from "../actions/message/messageActions";
+import {userMessages} from "./MessageHolder"
 
 const initState = {
   userIsLoggedIn: false,
@@ -12,19 +13,8 @@ const initState = {
     signUpMessage: null,
     signUpErrorMessage: null,
     updateUserMessage: null,
-    updateUserErrorMessage: null
+    updateUserErrorMessage: null,
   }
-};
-
-const defaultMessages = {
-  logInMessage: "You have logged in successfully! Welcome!",
-  logInErrorMessage: "Login failed, wrong username or password!",
-  logOutMessage: "You have logged out. Please come again!",
-  signUpMessage: "Your registration was successful.",
-  signUpErrorMessage: "Your registration was not successful. This email has been used already!",
-  updateUserMessage: "Your registration was successful.",
-  updateUserErrorMessage: "Your modification was not saved. This email has been used by another user.",
-  defaultErrorMessage: "Something went wrong, please try again!",
 };
 
 const UserReducer = (state = initState, action) => {
@@ -32,117 +22,126 @@ const UserReducer = (state = initState, action) => {
   switch (action.type) {
     case 'GET_ACCESS_TOKEN_SUCCESS':
       return Object.assign({}, state, {
+        ...state,
         jwtToken: action.jwtToken,
       });
     case 'GET_ACCESS_TOKEN_ERROR':
-      key = "defaultErrorMessage";
-      addMessage(action.messages, createMessage(key, false));
+      key = "logInErrorMessage";
+      addMessage(action.messages, createMessage(key, false, userMessages));
       return Object.assign({}, state, {
         jwtToken: null,
         userIsLoggedIn: false,
         messages: {
+          ...state.messages,
           logInMessage: null,
-          logInErrorMessage: defaultMessages[key]
+          logInErrorMessage: userMessages[key]
         }
       });
     case 'LOGIN_SUCCESS':
       key = "logInMessage";
-      addMessage(action.messages, createMessage(key, true));
+      addMessage(action.messages, createMessage(key, true, userMessages));
       return Object.assign({}, state, {
+        ...state,
         userData: action.userData,
         userIsLoggedIn: true,
         messages: {
-          logInMessage: defaultMessages[key],
+          ...state.messages,
+          logInMessage: userMessages[key],
           logInErrorMessage: null
         }
       });
     case 'LOGIN_ERROR':
       key = "logInErrorMessage";
-      addMessage(action.messages, createMessage(key, false));
+      addMessage(action.messages, createMessage(key, false, userMessages));
       return Object.assign({}, state, {
+        ...state,
         userData: null,
         userIsLoggedIn: false,
         messages: {
+          ...state.messages,
           logInMessage: null,
-          logInErrorMessage: defaultMessages[key]
+          logInErrorMessage: userMessages[key]
         }
       });
     case 'LOGOUT_SUCCESS':
       key = "logOutMessage";
-      addMessage(action.messages, createMessage(key, true));
+      addMessage(action.messages, createMessage(key, true, userMessages));
       return Object.assign({}, state, {
+        ...state,
         userIsLoggedIn: false,
         jwtToken: null,
         messages: {
-          logOutMessage: defaultMessages[key],
+          ...state.messages,
+          logOutMessage: userMessages[key],
           logOutErrorMessage: null
         },
         userData: null
       });
     case 'LOGOUT_ERROR':
       key = "logOutErrorMessage";
-      addMessage(action.messages, createMessage(key, false));
+      addMessage(action.messages, createMessage(key, false, userMessages));
       return Object.assign({}, state, {
+        ...state,
         userData: null,
         userIsLoggedIn: false,
         messages: {
+          ...state.messages,
           logOutMessage: null,
-          logOutErrorMessage: defaultMessages[key]
+          logOutErrorMessage: userMessages[key]
         }
       });
     case 'SIGN_UP_SUCCESS':
       key = "signUpMessage";
-      addMessage(action.messages, createMessage(key, true));
+      addMessage(action.messages, createMessage(key, true, userMessages));
       return Object.assign({}, state, {
+        ...state,
         userData: action.userData,
         userIsLoggedIn: true,
         messages: {
-          signUpMessage: defaultMessages[key],
-          signUpErrorMessage: null
+          ...state.messages,
+          signUpMessage: userMessages[key],
+          signUpErrorMessage: null,
         }
       });
     case 'SIGN_UP_ERROR':
       key = "signUpErrorMessage";
-      addMessage(action.messages, createMessage(key, false));
+      addMessage(action.messages, createMessage(key, false, userMessages));
       return Object.assign({}, state, {
+        ...state,
         userData: null,
         userIsLoggedIn: false,
         messages: {
+          ...state.messages,
           signUpMessage: null,
-          signUpErrorMessage: defaultMessages[key]
+          signUpErrorMessage: userMessages[key],
         }
       });
     case 'UPDATE_USER_SUCCESS':
       key = "updateUserMessage";
-      addMessage(action.messages, createMessage(key, true));
+      addMessage(action.messages, createMessage(key, true, userMessages));
       return Object.assign({}, state, {
+        ...state,
         userData: action.userData,
         messages: {
-          updateUserMessage: defaultMessages[key],
-          updateUserErrorMessage: null
+          ...state.messages,
+          updateUserMessage: userMessages[key],
+          updateUserErrorMessage: null,
         }
       });
     case 'UPDATE_USER_ERROR':
       key = "updateUserErrorMessage";
-      addMessage(action.messages, createMessage(key, false));
+      addMessage(action.messages, createMessage(key, false, userMessages));
       return Object.assign({}, state, {
+        ...state,
         messages: {
+          ...state,
           updateUserMessage: null,
-          updateUserErrorMessage: defaultMessages[key]
+          updateUserErrorMessage: userMessages[key],
         }
       });
-
     default:
       return state;
   }
 };
-
-function createMessage(key, success) {
-  return {
-    key: key,
-    value: defaultMessages[key],
-    success: success
-  };
-}
 
 export default UserReducer;

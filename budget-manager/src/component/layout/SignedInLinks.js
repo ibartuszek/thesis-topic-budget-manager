@@ -1,10 +1,10 @@
 import React from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, Redirect} from 'react-router-dom';
 import {connect} from "react-redux";
 import {logOut} from '../../actions/user/logOut';
 
 const SignedInLinks = (props) => {
-  return (
+  return props.userHolder.userIsLoggedIn ? (
     <div className="collapse navbar-collapse" id="mainNavbar">
       <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
         <li className="nav-item">
@@ -51,11 +51,14 @@ const SignedInLinks = (props) => {
         <span> Log Out </span>
       </div>
     </div>
+  ) : (
+    <Redirect to='/login'/>
   )
 };
 
 const mapStateToProps = (state) => {
   return {
+    userHolder: state.userHolder,
     logHolder: state.logHolder
   }
 };
