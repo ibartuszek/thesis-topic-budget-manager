@@ -1,7 +1,9 @@
 package hu.elte.bm.authenticationservice.web.user;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import hu.elte.bm.authenticationservice.web.common.ResponseModel;
 
 @RestController
 public class UserController {
@@ -76,12 +80,12 @@ public class UserController {
     }
 
     @RequestMapping(value = "/bm/users/logout", method = RequestMethod.POST, produces = APPLICATION_JSON)
-    public ResponseEntity<Object> logoutUser(@RequestBody final UserModelRequestContext context) {
-        UserModelResponse response;
+    public ResponseEntity<Object> logoutUser(@RequestParam final Long userId, HttpServletRequest request) {
+        ResponseModel response;
         try {
-            response = userModelService.logoutUser(context.getUserModel(), null);
+            response = userModelService.logoutUser(userId, request.getHeader("Authorization"));
         } catch (Exception e) {
-            response = createErrorResponse(context, e);
+            response = createErrorResponse(e);
         }
         return response.isSuccessful() ? new ResponseEntity<>(response, HttpStatus.OK) : new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }

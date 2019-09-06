@@ -28,7 +28,8 @@ public class UserServiceTest {
     public void setup() {
         control = EasyMock.createControl();
         userDao = control.createMock(UserDao.class);
-        underTest = new UserService(userDao);
+        // TODO:
+        underTest = new UserService(userDao, null);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.util.Assert;
 import hu.elte.bm.authenticationservice.domain.User;
 import hu.elte.bm.authenticationservice.domain.UserException;
 import hu.elte.bm.authenticationservice.domain.UserService;
+import hu.elte.bm.authenticationservice.web.common.ResponseModel;
 import hu.elte.bm.commonpack.validator.ModelValidator;
 
 @Service
@@ -49,6 +51,9 @@ public class UserModelService implements UserDetailsService {
 
     @Value("${user.password.masked_value:********}")
     private String maskedPasswordValue;
+
+    @Value("${user.logout}")
+    private String logout;
 
     UserModelService(final BCryptPasswordEncoder encoder, final ModelValidator validator,
         final UserService userService, final UserModelTransformer transformer) {
@@ -188,7 +193,11 @@ public class UserModelService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), new ArrayList<>());
     }
 
-    public UserModelResponse logoutUser(final UserModel userModel, final HttpServletRequest request) {
-        return new UserModelResponse();
+    public ResponseModel logoutUser(final Long userId, final String invalidToken) {
+        userService.saveTokenIntoBlackList(userId, invalidToken);
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setSuccessful(true);
+        responseModel.setMessage(logout);
+        return responseModel;
     }
 }

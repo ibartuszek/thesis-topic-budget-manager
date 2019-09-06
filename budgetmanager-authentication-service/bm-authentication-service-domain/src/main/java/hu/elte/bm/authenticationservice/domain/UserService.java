@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 public class UserService {
 
     private final UserDao userDao;
+    private final BlackListDao blackListDao;
 
     @Value("${user.id_cannot_be_null:User's id cannot be null!}")
     private String userIdCannotBeNul;
@@ -23,8 +24,9 @@ public class UserService {
     @Value("${user.user_cannot_be_found:User cannot be found in the repository!}")
     private String userCannotBeFound;
 
-    UserService(final UserDao userDao) {
+    UserService(final UserDao userDao, final BlackListDao blackListDao) {
         this.userDao = userDao;
+        this.blackListDao = blackListDao;
     }
 
     public Optional<User> findUserById(final Long id) {
@@ -62,6 +64,10 @@ public class UserService {
     private boolean newEmailIsNotUsedByOtherUsers(final User user) {
         Optional<User> userWithSameEmail = userDao.findByEmail(user.getEmail());
         return userWithSameEmail.isEmpty() || userWithSameEmail.get().getId().equals(user.getId());
+    }
+
+    public Optional<String> saveTokenIntoBlackList(final Long userId, final String invalidToken) {
+        return blackListDao.saveToken(userId, invalidToken);
     }
 
 }
