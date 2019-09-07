@@ -4,21 +4,9 @@ class DismissableAlert extends Component {
 
   constructor(props) {
     super(props);
-    /*this.state = {
-      showAlert: props.message != null,
-      message: props.message
-    };*/
     this.handleDismiss = this.handleDismiss.bind(this);
   }
 
-  /*
-    handleDismiss = (message, showAlert) => {
-      this.setState(prevState => ({
-        showAlert: prevState.message !== message ? true : !showAlert,
-        message: message
-      }))
-    };
-  */
   handleDismiss = (message) => {
     this.props.onChange(message);
   };

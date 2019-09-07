@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import ModelStringValue from "../layout/form/ModelStringValue";
 import {updateUser} from "../../actions/user/updateUser";
-import {validateUserModel} from "../../actions/validation/validateUserModel";
+import {validateModel} from "../../actions/validation/validateModel";
 import {createContext} from "../../actions/common/createContext";
-import {formMessages} from "../../store/MessageHolder";
+import {userFormMessages} from "../../store/MessageHolder";
 
 class UserSettings extends Component {
 
@@ -16,40 +16,31 @@ class UserSettings extends Component {
         errorMessage: null,
         minimumLength: 8,
         maximumLength: 50,
-        regexp: "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$",
-        possibleEnumValues: null
+        regexp: "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$"
       },
       password: {
         value: '',
         errorMessage: null,
         minimumLength: 8,
-        maximumLength: 16,
-        regexp: null,
-        possibleEnumValues: null
+        maximumLength: 16
       },
       confirmationPassword: {
         value: '',
         errorMessage: null,
         minimumLength: 8,
-        maximumLength: 16,
-        regexp: null,
-        possibleEnumValues: null
+        maximumLength: 16
       },
       firstName: {
         value: '',
         errorMessage: null,
         minimumLength: 2,
-        maximumLength: 50,
-        regexp: null,
-        possibleEnumValues: null
+        maximumLength: 50
       },
       lastName: {
         value: '',
         errorMessage: null,
         minimumLength: 2,
-        maximumLength: 50,
-        regexp: null,
-        possibleEnumValues: null
+        maximumLength: 50
       },
     }
   };
@@ -77,7 +68,7 @@ class UserSettings extends Component {
     const {userHolder, logHolder} = this.props;
     const {userModel} = this.state;
     let password = userModel.password.value === '' ? '********' : userModel.password.value;
-    if (validateUserModel(this.state.userModel, password)) {
+    if (validateModel(userModel, password)) {
       let context = createContext(userHolder, logHolder);
       this.props.updateUser(context, userModel);
     }
@@ -100,10 +91,10 @@ class UserSettings extends Component {
     const {userHolder} = this.props;
     const {email, password, confirmationPassword, firstName, lastName} = this.state.userModel;
     const {
-      emailLabel, emailMessage, passwordLabel, passwordMessage, passwordConfirmMessage,
+      emailLabel, emailMessage, passwordLabel, passwordMessageToChange, passwordConfirmMessage,
       firstNameLabel, firstNameMessage, lastNameLabel, lastNameMessage
-    } = formMessages;
-    
+    } = userFormMessages;
+
     return (
       <div className="mt-4 mx-3">
         <div className="card card-body mx-auto max-w-500 min-w-400">
@@ -114,7 +105,7 @@ class UserSettings extends Component {
                               labelTitle={emailLabel} placeHolder={emailMessage} type="email"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="password" model={password}
-                              labelTitle={passwordLabel} placeHolder={passwordMessage} type="password"/>
+                              labelTitle={passwordLabel} placeHolder={passwordMessageToChange} type="password"/>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="confirmationPassword" model={confirmationPassword} passwordValue={password.value}
                               labelTitle={passwordLabel} placeHolder={passwordConfirmMessage} type="password"/>

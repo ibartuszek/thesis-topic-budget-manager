@@ -1,16 +1,29 @@
-export const formMessages = {
+export const categoryMessages = {
+  addNewSubCategory: "New subcategory",
+  categoryNameLabel: "Name of the category",
+  categoryNameMessage: "Please write the name of the new category.",
+  categoriesUnavailableMessage: "We cannot reach the backup repository, please try it later!",
+  createMainCategorySuccess: "The category has been saved.",
+  createMainCategoryError: "The category has been saved before.",
+  subCategoryLabel: "Subcategory",
+  selectNewCategory: "Choose one to add as a new category.",
+};
+
+export const userFormMessages = {
   emailLabel: "Email",
   emailMessage: "Please write your email address.",
-  passwordLabel: "Password",
-  passwordMessage: "Please write your password.",
-  passwordConfirmMessage: "Please write your password again to confirm it.",
   firstNameLabel: "First name",
   firstNameMessage: "Please write your first name.",
   lastNameLabel: "Last name",
   lastNameMessage: "Please write your last name.",
+  passwordLabel: "Password",
+  passwordMessage: "Please write your password.",
+  passwordMessageToChange: "Please write your password to change.",
+  passwordConfirmMessage: "Please write your password again to confirm.",
 };
 
 export const userMessages = {
+  defaultErrorMessage: "Something went wrong, please try again!",
   logInMessage: "You have logged in successfully! Welcome!",
   logInErrorMessage: "Login failed, wrong username or password!",
   logOutMessage: "You have logged out. Please come again!",
@@ -18,15 +31,14 @@ export const userMessages = {
   signUpErrorMessage: "Your registration was not successful. This email has been used already!",
   updateUserMessage: "Your modification has been saved.",
   updateUserErrorMessage: "Your modification was not saved. This email has been used by another user.",
-  defaultErrorMessage: "Something went wrong, please try again!",
 };
 
 export const validationMessages = {
-  minimumMessage: "{} field must be minimum: {} character long!",
-  maximumMessage: "{} field must be maximum: {} character long!",
-  regexpMatchesMessage: "{} field must be add in a valid format!",
   enumValueMessage: "{} field must be one of them: {}!",
-  passwordNotSameMessage: "The given passwords are not the same!"
+  maximumMessage: "{} field must be maximum: {} character long!",
+  minimumMessage: "{} field must be minimum: {} character long!",
+  passwordNotSameMessage: "The given passwords are not the same!",
+  regexpMatchesMessage: "{} field must be add in a valid format!",
 };
 
 export function replaceParams(message) {

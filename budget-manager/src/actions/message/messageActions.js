@@ -1,8 +1,8 @@
 export function addMessage(messages, message) {
   let found = false;
-  for (let m in messages) {
+  for (let key in messages) {
+    let m = messages[key];
     if (m.key === message.key && m.value === message.value) {
-      m.value = message.value;
       found = true;
       break;
     }

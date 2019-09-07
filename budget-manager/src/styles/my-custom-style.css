@@ -2,6 +2,10 @@ body {
     background-color: var(--gray);
 }
 
+div.react-datepicker-wrapper div.react-datepicker__input-container {
+    display: block;
+}
+
 main {
     width: 90%;
     margin-left: auto;
@@ -13,32 +17,8 @@ label.input-group-addon.input-group-text {
     border-bottom-right-radius: 0;
 }
 
-.min-800 {
-    min-width: 800px;
-}
-
-.min-1000 {
-    min-width: 1000px;
-}
-
-.fas.fa-sort:hover {
-    cursor: pointer;
-}
-
-.my-nav-link:hover {
-    cursor: pointer;
-}
-
 .card.card-body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.max-w-500 {
-    max-width: 500px;
-}
-
-.min-w-400 {
-    min-width: 400px;
 }
 
 .custom-success-message-container {
@@ -49,21 +29,9 @@ label.input-group-addon.input-group-text {
     color: var(--danger);
 }
 
-/* DatePicker */
-.react-datepicker-wrapper {
-    flex: 1 1 auto;
+.fas.fa-sort:hover {
+    cursor: pointer;
 }
-
-div.react-datepicker-wrapper div.react-datepicker__input-container {
-    display: block;
-}
-
-#date {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-/* Loading */
 
 .Loading {
     height: 16vmin;
@@ -77,6 +45,44 @@ div.react-datepicker-wrapper div.react-datepicker__input-container {
     animation-fill-mode: none;
     animation-play-state: running;
     animation-name: Loading-spin;
+}
+
+.logout-custom-colored {
+    color: var(--light);
+}
+
+.max-w-500 {
+    max-width: 500px;
+}
+
+.min-800 {
+    min-width: 800px;
+}
+
+.min-1000 {
+    min-width: 1000px;
+}
+
+.min-w-400 {
+    min-width: 400px;
+}
+
+.my-nav-link:hover {
+    cursor: pointer;
+}
+
+.navbar-custom-colored {
+    color: var(--light);
+    background-color: var(--orange);
+}
+
+.react-datepicker-wrapper {
+    flex: 1 1 auto;
+}
+
+#date {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 @keyframes App-logo-spin {

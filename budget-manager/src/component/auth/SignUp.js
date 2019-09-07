@@ -4,8 +4,8 @@ import {connect} from "react-redux";
 import ModelStringValue from "../layout/form/ModelStringValue";
 import {getAccessToken} from "../../actions/user/getAccessToken";
 import {registerUser} from "../../actions/user/registerUser";
-import {validateUserModel} from "../../actions/validation/validateUserModel";
-import {formMessages} from "../../store/MessageHolder"
+import {validateModel} from "../../actions/validation/validateModel";
+import {userFormMessages} from "../../store/MessageHolder"
 
 class SignUp extends Component {
 
@@ -77,7 +77,7 @@ class SignUp extends Component {
     const {userModel} = this.state;
 
     e.preventDefault();
-    if (userHolder.messages['passwordNotSameMessage'] === null && validateUserModel(userModel)) {
+    if (userHolder.messages['passwordNotSameMessage'] === null && validateModel(userModel)) {
       registerUser(userModel, logHolder.messages);
     }
   };
@@ -88,7 +88,7 @@ class SignUp extends Component {
     const {
       emailLabel, emailMessage, passwordLabel, passwordMessage, passwordConfirmMessage,
       firstNameLabel, firstNameMessage, lastNameLabel, lastNameMessage
-    } = formMessages;
+    } = userFormMessages;
 
     if (userHolder.userData != null) {
       this.props.getAccessToken(email.value, password.value, logHolder.messages);

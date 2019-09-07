@@ -2,23 +2,6 @@
 @import url(https://use.fontawesome.com/releases/v5.0.10/css/all.css);
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,700);
 
-/* import only the necessary Bootstrap files */
-// @import "bootstrap/pagination";
-// @import "bootstrap/badge";
-// @import "bootstrap/jumbotron";
-// @import "bootstrap/alert";
-// @import "bootstrap/progress";
-// @import "bootstrap/media";
-// @import "bootstrap/list-group";
-// @import "bootstrap/close";
-// @import "bootstrap/toasts";
-// @import "bootstrap/modal";
-// @import "bootstrap/tooltip";
-// @import "bootstrap/popover";
-// @import "bootstrap/carousel";
-// @import "bootstrap/spinners";
-// @import "bootstrap/utilities";
-
 $font-family-base: Open Sans;
 
 // $enable-grid-classes:false;
@@ -42,17 +25,18 @@ $green: #3F7D20 !default;
 $teal: #236A62 !default;
 // $cyan:    #17a2b8 !default;
 $cyan: #427AA1 !default;
+$gray-100: #f2f1f1 !default;
+$gray-600: #b3b1af !default;
+$gray-800: #474544 !default;
 
-/*
-$primary:       $blue !default;
-$secondary:     $gray-600 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-100 !default;
-$dark:          $gray-800 !default;
-*/
+$primary: $blue !default;
+$secondary: $gray-600 !default;
+$success: $green !default;
+$info: $cyan !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $gray-100 !default;
+$dark: $gray-800 !default;
 
 $enable-gradients: true;
 $spacer: 1.2rem;
@@ -61,3 +45,22 @@ $btn-border-radius: .25rem;
 
 /* finally, import Bootstrap to set the changes! */
 // @import "bootstrap/scss/bootstrap";
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+/* import only the necessary Bootstrap files */
+// @import "bootstrap/pagination";
+// @import "bootstrap/badge";
+// @import "bootstrap/jumbotron";
+// @import "bootstrap/alert";
+// @import "bootstrap/progress";
+// @import "bootstrap/media";
+// @import "bootstrap/list-group";
+// @import "bootstrap/close";
+// @import "bootstrap/toasts";
+// @import "bootstrap/modal";
+// @import "bootstrap/tooltip";
+// @import "bootstrap/popover";
+// @import "bootstrap/carousel";
+// @import "bootstrap/spinners";
+// @import "bootstrap/utilities";

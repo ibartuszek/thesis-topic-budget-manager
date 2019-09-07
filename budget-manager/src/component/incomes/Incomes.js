@@ -3,14 +3,17 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Loading from '../Loading'
 import {createContext} from "../../actions/common/createContext";
-import {fetchMainCategories, setMainCategoriesToReady} from '../../actions/category/mainCategoryActions';
-import {fetchSubCategories, setSubCategoriesToReady} from "../../actions/category/subCategoryActions";
+import {fetchMainCategories, setMainCategoriesToReady} from '../../actions/category/fetchMainCategories';
+import {fetchSubCategories, setSubCategoriesToReady} from "../../actions/category/fetchSubCategories";
+import TransactionCard from "../transactions/TransactionCard";
 
 
 class Incomes extends Component {
 
   data = {
-    transactionType: 'INCOME'
+    transactionType: 'INCOME',
+    typeWithCapitalized: 'Income',
+    typeLowerCase: 'income'
   };
 
   state = {
@@ -54,14 +57,14 @@ class Incomes extends Component {
         subCategoriesAreLoaded: true
       })
     }
-    console.log(this.props.categoryHolder);
   }
 
   render() {
+
     let content = null;
-    if (this.state.mainCategoriesAreLoaded || this.state.subCategoriesAreLoaded) {
+    if (this.state.mainCategoriesAreLoaded && this.state.subCategoriesAreLoaded) {
       content = (
-        <Loading/>
+        <TransactionCard data={this.data}/>
       )
     } else {
       content = <Loading/>
