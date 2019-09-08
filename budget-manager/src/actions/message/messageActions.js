@@ -27,6 +27,20 @@ export function removeMessage(messages, message) {
   }
 }
 
+export function getMessage(messages, messageKey, success) {
+  let result = null;
+  for (let index = 0; index < messages.length && result === null; index++) {
+    if (messages[index].key === messageKey) {
+      result = messages[index].value;
+    }
+  }
+  return {
+    key: messageKey,
+    value: result,
+    success: success
+  };
+}
+
 export function createMessage(key, success, defaultMessages) {
   return {
     key: key,

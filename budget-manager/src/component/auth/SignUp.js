@@ -6,6 +6,8 @@ import {getAccessToken} from "../../actions/user/getAccessToken";
 import {registerUser} from "../../actions/user/registerUser";
 import {validateModel} from "../../actions/validation/validateModel";
 import {userFormMessages} from "../../store/MessageHolder"
+import AlertMessageComponent from "../AlertMessageComponent";
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
 
 class SignUp extends Component {
 
@@ -57,6 +59,7 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleDismiss = this.handleDismiss.bind(this);
   }
 
   handleFieldChange(id, value, errorMessage) {
@@ -73,14 +76,18 @@ class SignUp extends Component {
   }
 
   handleSubmit = (e) => {
-    const {registerUser, userHolder, logHolder} = this.props;
+    const {registerUser, logHolder} = this.props;
     const {userModel} = this.state;
 
     e.preventDefault();
-    if (userHolder.messages['passwordNotSameMessage'] === null && validateModel(userModel)) {
+    if (validateModel(userModel)) {
       registerUser(userModel, logHolder.messages);
     }
   };
+
+  handleDismiss(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
+  }
 
   render() {
     const {userHolder, logHolder} = this.props;
@@ -118,9 +125,7 @@ class SignUp extends Component {
             <ModelStringValue onChange={this.handleFieldChange}
                               id="lastName" model={lastName}
                               labelTitle={lastNameLabel} placeHolder={lastNameMessage} type="text"/>
-            <div className="custom-error-message-container mt-3">
-              {userHolder.messages['passwordNotSameMessage'] !== null ? <p>{userHolder.messages['passwordNotSameMessage']}</p> : null}
-            </div>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "signUpErrorMessage", false)} onChange={this.handleDismiss}/>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-user-plus"/>
               <span> Register </span>
@@ -142,7 +147,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getAccessToken: (username, password, messages) => dispatch(getAccessToken(username, password, messages)),
-    registerUser: (model, messages) => dispatch(registerUser(model, messages))
+    registerUser: (model, messages) => dispatch(registerUser(model, messages)),
+    removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
   };
 };
 

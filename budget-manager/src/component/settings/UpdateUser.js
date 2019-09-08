@@ -5,8 +5,10 @@ import {updateUser} from "../../actions/user/updateUser";
 import {validateModel} from "../../actions/validation/validateModel";
 import {createContext} from "../../actions/common/createContext";
 import {userFormMessages} from "../../store/MessageHolder";
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
+import AlertMessageComponent from "../AlertMessageComponent";
 
-class UserSettings extends Component {
+class UpdateUser extends Component {
 
   state = {
     userModel: {
@@ -48,6 +50,7 @@ class UserSettings extends Component {
   constructor(props) {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleDismiss = this.handleDismiss.bind(this);
   }
 
   handleFieldChange(id, value, errorMessage) {
@@ -65,14 +68,18 @@ class UserSettings extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const {userHolder, logHolder} = this.props;
+    const {userHolder, logHolder, updateUser} = this.props;
     const {userModel} = this.state;
     let password = userModel.password.value === '' ? '********' : userModel.password.value;
     if (validateModel(userModel, password)) {
       let context = createContext(userHolder, logHolder);
-      this.props.updateUser(context, userModel);
+      updateUser(context, userModel);
     }
   };
+
+  handleDismiss(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
+  }
 
   componentDidMount() {
     const {userData} = this.props.userHolder;
@@ -88,7 +95,7 @@ class UserSettings extends Component {
   }
 
   render() {
-    const {userHolder} = this.props;
+    const {logHolder} = this.props;
     const {email, password, confirmationPassword, firstName, lastName} = this.state.userModel;
     const {
       emailLabel, emailMessage, passwordLabel, passwordMessageToChange, passwordConfirmMessage,
@@ -115,12 +122,8 @@ class UserSettings extends Component {
             <ModelStringValue onChange={this.handleFieldChange}
                               id="lastName" model={lastName}
                               labelTitle={lastNameLabel} placeHolder={lastNameMessage} type="text"/>
-            <div className="custom-error-message-container mt-3">
-              {userHolder.messages.updateUserErrorMessage !== null ? <p>{userHolder.messages.updateUserErrorMessage}</p> : null}
-            </div>
-            <div className="custom-success-message-container mt-3">
-              {userHolder.messages.updateUserMessage !== null ? <p>{userHolder.messages.updateUserMessage}</p> : null}
-            </div>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "updateUserMessage", true)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "updateUserErrorMessage", false)} onChange={this.handleDismiss}/>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-pencil-alt"/>
               <span> Update </span>
@@ -141,8 +144,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateUser: (context, model) => dispatch(updateUser(context, model))
+    updateUser: (context, model) => dispatch(updateUser(context, model)),
+    removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserSettings);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateUser);

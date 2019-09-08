@@ -5,16 +5,6 @@ const initState = {
   userIsLoggedIn: false,
   jwtToken: null,
   userData: null,
-  messages: {
-    logInMessage: null,
-    logInErrorMessage: null,
-    logOutMessage: null,
-    logOutErrorMessage: null,
-    signUpMessage: null,
-    signUpErrorMessage: null,
-    updateUserMessage: null,
-    updateUserErrorMessage: null,
-  }
 };
 
 const UserReducer = (state = initState, action) => {
@@ -31,11 +21,6 @@ const UserReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         jwtToken: null,
         userIsLoggedIn: false,
-        messages: {
-          ...state.messages,
-          logInMessage: null,
-          logInErrorMessage: userMessages[key]
-        }
       });
     case 'LOGIN_SUCCESS':
       key = "logInMessage";
@@ -44,11 +29,6 @@ const UserReducer = (state = initState, action) => {
         ...state,
         userData: action.userData,
         userIsLoggedIn: true,
-        messages: {
-          ...state.messages,
-          logInMessage: userMessages[key],
-          logInErrorMessage: null
-        }
       });
     case 'LOGIN_ERROR':
       key = "logInErrorMessage";
@@ -57,11 +37,6 @@ const UserReducer = (state = initState, action) => {
         ...state,
         userData: null,
         userIsLoggedIn: false,
-        messages: {
-          ...state.messages,
-          logInMessage: null,
-          logInErrorMessage: userMessages[key]
-        }
       });
     case 'LOGOUT_SUCCESS':
       key = "logOutMessage";
@@ -70,11 +45,6 @@ const UserReducer = (state = initState, action) => {
         ...state,
         userIsLoggedIn: false,
         jwtToken: null,
-        messages: {
-          ...state.messages,
-          logOutMessage: userMessages[key],
-          logOutErrorMessage: null
-        },
         userData: null
       });
     case 'LOGOUT_ERROR':
@@ -84,11 +54,6 @@ const UserReducer = (state = initState, action) => {
         ...state,
         userData: null,
         userIsLoggedIn: false,
-        messages: {
-          ...state.messages,
-          logOutMessage: null,
-          logOutErrorMessage: userMessages[key]
-        }
       });
     case 'SIGN_UP_SUCCESS':
       key = "signUpMessage";
@@ -97,11 +62,6 @@ const UserReducer = (state = initState, action) => {
         ...state,
         userData: action.userData,
         userIsLoggedIn: true,
-        messages: {
-          ...state.messages,
-          signUpMessage: userMessages[key],
-          signUpErrorMessage: null,
-        }
       });
     case 'SIGN_UP_ERROR':
       key = "signUpErrorMessage";
@@ -110,11 +70,6 @@ const UserReducer = (state = initState, action) => {
         ...state,
         userData: null,
         userIsLoggedIn: false,
-        messages: {
-          ...state.messages,
-          signUpMessage: null,
-          signUpErrorMessage: userMessages[key],
-        }
       });
     case 'UPDATE_USER_SUCCESS':
       key = "updateUserMessage";
@@ -122,22 +77,12 @@ const UserReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
         userData: action.userData,
-        messages: {
-          ...state.messages,
-          updateUserMessage: userMessages[key],
-          updateUserErrorMessage: null,
-        }
       });
     case 'UPDATE_USER_ERROR':
       key = "updateUserErrorMessage";
       addMessage(action.messages, createMessage(key, false, userMessages));
       return Object.assign({}, state, {
-        ...state,
-        messages: {
-          ...state,
-          updateUserMessage: null,
-          updateUserErrorMessage: userMessages[key],
-        }
+        ...state
       });
     default:
       return state;

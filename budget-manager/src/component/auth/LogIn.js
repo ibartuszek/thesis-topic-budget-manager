@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import ModelStringValue from "../layout/form/ModelStringValue";
 import {getAccessToken} from '../../actions/user/getAccessToken';
 import {getUser} from '../../actions/user/getUser';
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
+import AlertMessageComponent from "../AlertMessageComponent";
 
 class LogIn extends Component {
   state = {
@@ -18,6 +20,7 @@ class LogIn extends Component {
   constructor(props) {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleDismiss = this.handleDismiss.bind(this);
   }
 
   handleFieldChange(id, value, errorMessage) {
@@ -36,6 +39,10 @@ class LogIn extends Component {
     const {messages} = this.props.logHolder;
     this.props.getAccessToken(email.value, password.value, messages);
   };
+
+  handleDismiss(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
+  }
 
   render() {
     const {userHolder, getUser, logHolder} = this.props;
@@ -60,9 +67,7 @@ class LogIn extends Component {
             <ModelStringValue onChange={this.handleFieldChange}
                               id="password" model={password}
                               labelTitle="Password" type="password"/>
-            <div className="custom-error-message-container mt-3">
-              {userHolder.messages.logInErrorMessage !== null ? <p>{userHolder.messages.logInErrorMessage}</p> : null}
-            </div>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "logInErrorMessage", false)} onChange={this.handleDismiss}/>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-sign-in-alt"/>
               <span> Login </span>
@@ -84,7 +89,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getAccessToken: (username, password, messages) => dispatch(getAccessToken(username, password, messages)),
-    getUser: (email, jwtToken, messages) => dispatch(getUser(email, jwtToken, messages))
+    getUser: (email, jwtToken, messages) => dispatch(getUser(email, jwtToken, messages)),
+    removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
   };
 };
 

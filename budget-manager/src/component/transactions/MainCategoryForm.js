@@ -8,6 +8,8 @@ import {categoryMessages} from "../../store/MessageHolder";
 import {addElementToArray, createCategoryListForSelect, removeElementFromArray} from "../../actions/common/listActions";
 import {createTransactionContext} from "../../actions/common/createContext";
 import {createMainCategory} from "../../actions/category/createMainCategory";
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
+import AlertMessageComponent from "../AlertMessageComponent";
 
 class MainCategoryForm extends Component {
 
@@ -36,7 +38,8 @@ class MainCategoryForm extends Component {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleAddCategory = this.handleAddCategory.bind(this);
-    this.handleRemoveCategory = this.handleRemoveCategory.bind(this)
+    this.handleRemoveCategory = this.handleRemoveCategory.bind(this);
+    this.handleDismiss = this.handleDismiss.bind(this);
   }
 
   componentDidMount() {
@@ -91,8 +94,12 @@ class MainCategoryForm extends Component {
     }
   };
 
+  handleDismiss(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
+  }
+
   render() {
-    const {target, subCategoryListName, categoryHolder} = this.props;
+    const {target, subCategoryListName, categoryHolder, logHolder} = this.props;
     const {name, subCategoryModelSet} = this.state.mainCategoryModel;
     const {addNewSubCategory, categoryNameLabel, categoryNameMessage, selectNewCategory, subCategoryLabel} = categoryMessages;
 
@@ -119,6 +126,8 @@ class MainCategoryForm extends Component {
                 <span className="fas fa-pencil-alt"/>
                 <span> Save main category </span>
               </button>
+              <AlertMessageComponent message={getMessage(logHolder.messages, "createMainCategorySuccess", true)} onChange={this.handleDismiss}/>
+              <AlertMessageComponent message={getMessage(logHolder.messages, "createMainCategoryError", false)} onChange={this.handleDismiss}/>
             </form>
           </div>
         </div>
@@ -137,7 +146,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createMainCategory: (context, model) => dispatch(createMainCategory(context, model))
+    createMainCategory: (context, model) => dispatch(createMainCategory(context, model)),
+    removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
   };
 };
 

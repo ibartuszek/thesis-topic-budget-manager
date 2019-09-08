@@ -1,7 +1,4 @@
 export function createUserModelBody(userModel) {
-
-  console.log(userModel);
-
   if (userModel.password.value === '') {
     userModel.password.value = "********";
   }
