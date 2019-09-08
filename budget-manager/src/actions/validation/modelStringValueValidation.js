@@ -19,8 +19,7 @@ function validateModelStringValueBase(model, labelTitle) {
       errorMessage = replaceParams(maximumMessage, labelTitle, model.maximumLength);
     } else if (model.regexp != null && !new RegExp(model.regexp).test(model.value)) {
       errorMessage = replaceParams(regexpMatchesMessage, labelTitle);
-    } else if (model.possibleEnumValues != null && model.possibleEnumValues.includes(model.value)) {
-      // TODO: check
+    } else if (model.possibleEnumValues != null && !model.possibleEnumValues.includes(model.value)) {
       errorMessage = replaceParams(enumValueMessage, labelTitle, model.possibleEnumValues);
     }
   }

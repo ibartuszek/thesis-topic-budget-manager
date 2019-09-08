@@ -21,6 +21,31 @@ label.input-group-addon.input-group-text {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.custom-popup {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-popup-inner {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    background: var(--light);
+}
+
+.custom-popup-inner-subcategory {
+    width: 500px;
+    margin-left: -250px;
+}
+
 .custom-success-message-container {
     color: var(--success);
 }

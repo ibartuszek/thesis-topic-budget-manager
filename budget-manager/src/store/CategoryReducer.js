@@ -1,6 +1,6 @@
 import {addMessage, createMessage} from "../actions/message/messageActions";
 import {categoryMessages} from "./MessageHolder"
-import {addElementToArray} from "../actions/common/listActions";
+import {addElementToArray, replaceElementAtArray} from "../actions/common/listActions";
 
 const initState = {
   incomeMainCategoriesAreLoaded: false,
@@ -70,6 +70,19 @@ const CategoryReducer = (state = initState, action) => {
         ...state,
         incomeSubCategoriesAreLoaded: true,
       };
+    case 'UPDATE_INCOME_SUB_CATEGORY_SUCCESS':
+      key = "updateSubCategorySuccess";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+        incomeSubCategories: replaceElementAtArray(state.incomeSubCategories, action.subCategoryModel),
+      });
+    case 'UPDATE_INCOME_SUB_CATEGORY_ERROR':
+      key = "updateSubCategoryError";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
     default:
       return state;
   }

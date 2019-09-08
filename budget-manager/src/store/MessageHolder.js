@@ -7,8 +7,10 @@ export const categoryMessages = {
   createMainCategoryError: "The category has been saved before.",
   createSubCategorySuccess: "The category has been saved.",
   createSubCategoryError: "The category has been saved before.",
-  subCategoryLabel: "Subcategory",
   selectNewCategory: "Choose one to add as a new category.",
+  subCategoryLabel: "Subcategory",
+  updateSubCategorySuccess: "The category has been modified!",
+  updateSubCategoryError: "The category exists!",
 };
 
 export const userFormMessages = {

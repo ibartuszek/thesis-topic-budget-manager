@@ -33,3 +33,8 @@ export function createCategoryListForSelect(categoriesFromRepo, categoriesFromOb
   }
   return result;
 }
+
+export function replaceElementAtArray(targetList, newObject) {
+  let newArrayWithoutElement = removeElementFromArray(targetList, newObject.id);
+  return addElementToArray(newArrayWithoutElement, newObject);
+}

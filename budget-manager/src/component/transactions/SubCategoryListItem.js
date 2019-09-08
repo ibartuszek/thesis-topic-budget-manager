@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-class CategoryListItem extends Component {
+class EnumListItem extends Component {
 
   constructor(props) {
     super(props);
@@ -11,8 +11,13 @@ class CategoryListItem extends Component {
     this.props.onChange(id);
   };
 
+  showCategoryEdit = (category) => {
+    this.props.showCategoryEdit(category);
+  };
+
   render() {
-    let {id, name, label} = this.props;
+    const {id, name, label, category} = this.props;
+
     return (
       <div className="input-group mt-3">
         <label className="input-group-addon input-group-text">{label}</label>
@@ -22,8 +27,12 @@ class CategoryListItem extends Component {
             <span>&times;</span>
           </button>
         </div>
+        <button type="button" className="close ml-3" onClick={() => this.showCategoryEdit(category)}>
+          <span className="btn btn-warning btn-sm fas fa-edit"/>
+        </button>
       </div>)
   }
+
 }
 
-export default CategoryListItem;
+export default EnumListItem;

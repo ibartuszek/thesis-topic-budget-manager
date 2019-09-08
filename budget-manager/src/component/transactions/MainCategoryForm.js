@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import CategoryListItem from "./CategoryListItem";
 import ModelSelectValue from "../layout/form/ModelSelectValue";
 import ModelStringValue from "../layout/form/ModelStringValue";
 import {validateModel} from "../../actions/validation/validateModel";
 import {categoryMessages} from "../../store/MessageHolder";
-import {addElementToArray, createCategoryListForSelect, removeElementFromArray} from "../../actions/common/listActions";
+import {addElementToArray, createCategoryListForSelect, removeElementFromArray, replaceElementAtArray} from "../../actions/common/listActions";
 import {createTransactionContext} from "../../actions/common/createContext";
 import {createMainCategory} from "../../actions/category/createMainCategory";
 import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import AlertMessageComponent from "../AlertMessageComponent";
+import SubCategoryListItem from "./SubCategoryListItem";
+import EditSubCategory from "./EditSubCategory";
 
 class MainCategoryForm extends Component {
 
@@ -31,7 +32,8 @@ class MainCategoryForm extends Component {
         ]
       },
       subCategoryModelSet: []
-    }
+    },
+    editAbleSubCategory: null
   };
 
   constructor(props) {
@@ -98,16 +100,38 @@ class MainCategoryForm extends Component {
     this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
+  showCategoryEdit = (subCategory) => {
+    this.setState({
+      editAbleSubCategory: subCategory
+    });
+  };
+
+  refreshSubCategories = (subCategory) => {
+    let newSubCategories = replaceElementAtArray(this.state.mainCategoryModel.subCategoryModelSet, subCategory);
+    this.setState(prevState => ({
+      mainCategoryModel: {
+        ...prevState.mainCategoryModel,
+        subCategoryModelSet: newSubCategories
+      }
+    }))
+  };
+
   render() {
-    const {target, subCategoryListName, categoryHolder, logHolder} = this.props;
+    const {target, subCategoryListName, categoryHolder, logHolder, transactionType} = this.props;
+    const {editAbleSubCategory} = this.state;
     const {name, subCategoryModelSet} = this.state.mainCategoryModel;
     const {addNewSubCategory, categoryNameLabel, categoryNameMessage, selectNewCategory, subCategoryLabel} = categoryMessages;
 
     const subcategories = subCategoryModelSet.map((subCategory) =>
-      <CategoryListItem key={subCategory.id} id={subCategory.id} name={subCategory.name.value}
-                        label={subCategoryLabel} onChange={this.handleRemoveCategory}/>);
+      <SubCategoryListItem key={subCategory.id} id={subCategory.id} name={subCategory.name.value}
+                           label={subCategoryLabel} category={subCategory} showCategoryEdit={this.showCategoryEdit}
+                           onChange={this.handleRemoveCategory}/>);
 
     const categoryList = createCategoryListForSelect(categoryHolder[subCategoryListName], subCategoryModelSet);
+
+    let editCategory = editAbleSubCategory === null ? null : (
+      <EditSubCategory subCategoryModel={editAbleSubCategory} transactionType={transactionType}
+                       showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.refreshSubCategories}/>);
 
     return (
       <React.Fragment>
@@ -131,6 +155,7 @@ class MainCategoryForm extends Component {
             </form>
           </div>
         </div>
+        {editCategory}
       </React.Fragment>
     )
   }
