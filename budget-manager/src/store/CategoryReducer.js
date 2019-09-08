@@ -12,15 +12,28 @@ const initState = {
 const CategoryReducer = (state = initState, action) => {
   let key;
   switch (action.type) {
-    case 'CREATE_MAIN_INCOME_CATEGORY_SUCCESS':
+    case 'CREATE_INCOME_MAIN_CATEGORY_SUCCESS':
       key = "createMainCategorySuccess";
       addMessage(action.messages, createMessage(key, true, categoryMessages));
       return Object.assign({}, state, {
         ...state,
         incomeMainCategories: addElementToArray(state.incomeMainCategories, action.mainCategoryModel),
       });
-    case 'CREATE_MAIN_INCOME_CATEGORY_ERROR':
+    case 'CREATE_INCOME_MAIN_CATEGORY_ERROR':
       key = "createMainCategoryError";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
+    case 'CREATE_INCOME_SUB_CATEGORY_SUCCESS':
+      key = "createSubCategorySuccess";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+        incomeSubCategories: addElementToArray(state.incomeSubCategories, action.subCategoryModel),
+      });
+    case 'CREATE_INCOME_SUB_CATEGORY_ERROR':
+      key = "createSubCategoryError";
       addMessage(action.messages, createMessage(key, true, categoryMessages));
       return Object.assign({}, state, {
         ...state,
@@ -36,12 +49,6 @@ const CategoryReducer = (state = initState, action) => {
       return {
         ...state,
       };
-    case 'INCOME_MAIN_CATEGORIES_ARE_READY':
-      return {
-        ...state,
-        incomeMainCategoriesAreLoaded: true,
-      };
-
     case 'GET_INCOME_SUB_CATEGORIES_SUCCESS':
       return Object.assign({}, state, {
         ...state,
@@ -52,6 +59,11 @@ const CategoryReducer = (state = initState, action) => {
       addMessage(action.messages, createMessage(key, false, categoryMessages));
       return {
         ...state,
+      };
+    case 'INCOME_MAIN_CATEGORIES_ARE_READY':
+      return {
+        ...state,
+        incomeMainCategoriesAreLoaded: true,
       };
     case 'INCOME_SUB_CATEGORIES_ARE_READY':
       return {

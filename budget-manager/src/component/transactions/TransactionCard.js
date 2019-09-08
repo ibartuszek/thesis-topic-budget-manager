@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import CardHeader from "../layout/card/CardHeader";
-import {createCardNames} from "../../actions/message/createElementIds";
 import MainCategoryForm from "./MainCategoryForm";
+import SubCategoryForm from "./SubCategoryForm";
+import {createCardNames} from "../../actions/message/createElementIds";
 
 class TransactionCard extends Component {
 
@@ -13,6 +14,8 @@ class TransactionCard extends Component {
         <MainCategoryForm transactionType={cardData.transactionType}
                           target={cardData.createMainType}
                           subCategoryListName={cardData.subCategorySetName}/>
+        <SubCategoryForm transactionType={cardData.transactionType}
+                         target={cardData.createSubType}/>
       </div>
     )
   }

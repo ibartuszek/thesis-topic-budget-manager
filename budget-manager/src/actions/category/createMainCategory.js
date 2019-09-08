@@ -18,13 +18,13 @@ export function createMainCategory(context, mainCategoryModel) {
       }
     ).then((response) => {
       let mainCategoryModel = response['mainCategoryModel'];
-      console.log('CREATE_MAIN_' + transactionType + '_CATEGORY_SUCCESS');
+      console.log('CREATE_' + transactionType + '_MAIN_CATEGORY_SUCCESS');
       console.log(response);
-      dispatch({type: 'CREATE_MAIN_' + transactionType + '_CATEGORY_SUCCESS', mainCategoryModel: mainCategoryModel, messages: messages});
+      dispatch({type: 'CREATE_' + transactionType + '_MAIN_CATEGORY_SUCCESS', mainCategoryModel: mainCategoryModel, messages: messages});
     }).catch(err => {
-      console.log('CREATE_MAIN_' + transactionType + '_CATEGORY_ERROR');
+      console.log('CREATE_' + transactionType + '_MAIN_CATEGORY_ERROR');
       console.log(err);
-      dispatch({type: 'CREATE_MAIN_' + transactionType + '_CATEGORY_ERROR', messages: messages});
+      dispatch({type: 'CREATE_' + transactionType + '_MAIN_CATEGORY_ERROR', messages: messages});
     });
   }
 }

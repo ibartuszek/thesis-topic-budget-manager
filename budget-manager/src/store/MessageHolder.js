@@ -5,6 +5,8 @@ export const categoryMessages = {
   categoriesUnavailableMessage: "We cannot reach the backup repository, please try it later!",
   createMainCategorySuccess: "The category has been saved.",
   createMainCategoryError: "The category has been saved before.",
+  createSubCategorySuccess: "The category has been saved.",
+  createSubCategoryError: "The category has been saved before.",
   subCategoryLabel: "Subcategory",
   selectNewCategory: "Choose one to add as a new category.",
 };
