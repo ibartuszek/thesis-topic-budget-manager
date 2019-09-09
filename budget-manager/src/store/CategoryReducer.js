@@ -21,7 +21,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'CREATE_INCOME_MAIN_CATEGORY_ERROR':
       key = "createMainCategoryError";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, false, categoryMessages));
       return Object.assign({}, state, {
         ...state,
       });

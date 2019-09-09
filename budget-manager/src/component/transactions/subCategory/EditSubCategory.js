@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import AlertMessageComponent from "../AlertMessageComponent";
-import ModelStringValue from "../layout/form/ModelStringValue";
-import {getMessage, removeMessage} from "../../actions/message/messageActions";
-import {validateModel} from "../../actions/validation/validateModel";
-import {createTransactionContext} from "../../actions/common/createContext";
-import {categoryMessages} from "../../store/MessageHolder";
-import {updateSubCategory} from "../../actions/category/updateSubCategory";
+import AlertMessageComponent from "../../AlertMessageComponent";
+import ModelStringValue from "../../layout/form/ModelStringValue";
+import {getMessage, removeMessage} from "../../../actions/message/messageActions";
+import {validateModel} from "../../../actions/validation/validateModel";
+import {createTransactionContext} from "../../../actions/common/createContext";
+import {categoryMessages} from "../../../store/MessageHolder";
+import {updateSubCategory} from "../../../actions/category/updateSubCategory";
 
 class EditSubCategory extends Component {
 
@@ -79,7 +79,7 @@ class EditSubCategory extends Component {
 
   render() {
     const {logHolder} = this.props;
-    const {name} = this.state.subCategoryModel;
+    const {subCategoryModel} = this.state;
     const {categoryNameLabel, categoryNameMessage} = categoryMessages;
 
     return (
@@ -88,14 +88,14 @@ class EditSubCategory extends Component {
           <form className="form-group mb-0" onSubmit={this.handleSubmit}>
             <h4 className="mt-3 mx-auto">Update supplementary category:</h4>
             <ModelStringValue onChange={this.handleFieldChange}
-                              id="name" model={name}
+                              id="name" model={subCategoryModel.name}
                               labelTitle={categoryNameLabel} placeHolder={categoryNameMessage} type="text"/>
             <div className="mx-auto mt-3 mb-2">
               <button className="btn btn-outline-success mx-3">
                 <span className="fas fa-pencil-alt"/>
                 <span> Save supplementary category </span>
               </button>
-              <button className="btn btn-outline-warning mx-3" onClick={this.showCategoryEdit}>
+              <button className="btn btn-outline-danger mx-3" onClick={this.showCategoryEdit}>
                 <span>&times;</span>
                 <span> Cancel </span>
               </button>
@@ -107,6 +107,7 @@ class EditSubCategory extends Component {
       </div>
     )
   }
+
 }
 
 const mapStateToProps = (state) => {

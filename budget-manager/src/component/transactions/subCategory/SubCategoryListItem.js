@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-class EnumListItem extends Component {
+class SubCategoryListItem extends Component {
 
   constructor(props) {
     super(props);
@@ -35,4 +35,4 @@ class EnumListItem extends Component {
 
 }
 
-export default EnumListItem;
+export default SubCategoryListItem;

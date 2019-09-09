@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import ModelStringValue from "../layout/form/ModelStringValue";
-import {validateModel} from "../../actions/validation/validateModel";
-import {categoryMessages} from "../../store/MessageHolder";
-import {createTransactionContext} from "../../actions/common/createContext";
-import {createSubCategory} from "../../actions/category/createSubCategory";
-import {getMessage, removeMessage} from "../../actions/message/messageActions";
-import AlertMessageComponent from "../AlertMessageComponent";
+import ModelStringValue from "../../layout/form/ModelStringValue";
+import {validateModel} from "../../../actions/validation/validateModel";
+import {categoryMessages} from "../../../store/MessageHolder";
+import {createTransactionContext} from "../../../actions/common/createContext";
+import {createSubCategory} from "../../../actions/category/createSubCategory";
+import {getMessage, removeMessage} from "../../../actions/message/messageActions";
+import AlertMessageComponent from "../../AlertMessageComponent";
 
 class SubCategoryForm extends Component {
 

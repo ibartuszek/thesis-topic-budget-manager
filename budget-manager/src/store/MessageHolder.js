@@ -13,6 +13,18 @@ export const categoryMessages = {
   updateSubCategoryError: "The category exists!",
 };
 
+export const transactionMessages = {
+  createTransactionSuccess: "The transaction has been saved.",
+  createTransactionError: "The transaction has been saved before.",
+  transactionAmountLabel: "Amount",
+  transactionAmountMessage: "The amount of your new transaction.",
+  transactionCurrencyLabel: "Currency",
+  transactionCurrencyMessage: "The currency of your new transaction.",
+  transactionTitleLabel: "Title",
+  transactionTitleMessage: "The title of your new transaction."
+
+};
+
 export const userFormMessages = {
   emailLabel: "Email",
   emailMessage: "Please write your email address.",
@@ -42,6 +54,8 @@ export const validationMessages = {
   maximumMessage: "{} field must be maximum: {} character long!",
   minimumMessage: "{} field must be minimum: {} character long!",
   passwordNotSameMessage: "The given passwords are not the same!",
+  positiveMessage: "{} field must be positive!",
+  positiveOrZeroMessage: "{} field cannot be negative!",
   regexpMatchesMessage: "{} field must be add in a valid format!",
 };
 
