@@ -60,11 +60,15 @@ class Incomes extends Component {
   }
 
   render() {
+    const {mainCategoriesAreLoaded, subCategoriesAreLoaded} = this.state;
+    const {categoryHolder} = this.props;
 
     let content = null;
-    if (this.state.mainCategoriesAreLoaded && this.state.subCategoriesAreLoaded) {
+    if (mainCategoriesAreLoaded && subCategoriesAreLoaded) {
+      const mainCategoryList = categoryHolder[this.data.transactionType.toLowerCase() + "MainCategories"];
+      const subCategoryList = categoryHolder[this.data.transactionType.toLowerCase() + "SubCategories"];
       content = (
-        <TransactionCard data={this.data}/>
+        <TransactionCard data={this.data} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList}/>
       )
     } else {
       content = <Loading/>

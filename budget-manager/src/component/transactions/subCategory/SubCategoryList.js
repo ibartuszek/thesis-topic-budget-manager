@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from "react-redux";
 import ModelSelectValue from "../../layout/form/ModelSelectValue";
 import {addElementToArray, createCategoryListForSelect, removeElementFromArray} from "../../../actions/common/listActions";
 import {categoryMessages} from "../../../store/MessageHolder";
@@ -41,14 +40,14 @@ class SubCategoryList extends Component {
 
   render() {
     const {subCategoryLabel, selectNewCategory, addNewSubCategory} = categoryMessages;
-    const {categoryHolder, subCategoryListName, subCategoryModelSet} = this.props;
+    const {subCategoryList, subCategoryModelSet, editable} = this.props;
 
     const subcategories = subCategoryModelSet.map((subCategory) =>
       <SubCategoryListItem key={subCategory.id} id={subCategory.id} name={subCategory.name.value} category={subCategory}
-                           label={subCategoryLabel} showCategoryEdit={this.showCategoryEdit}
+                           label={subCategoryLabel} editable={editable} showCategoryEdit={this.showCategoryEdit}
                            onChange={this.handleRemoveCategory}/>);
 
-    const categoryList = createCategoryListForSelect(categoryHolder[subCategoryListName], subCategoryModelSet);
+    const categoryList = createCategoryListForSelect(subCategoryList, subCategoryModelSet);
 
     return (
       <React.Fragment>
@@ -62,10 +61,4 @@ class SubCategoryList extends Component {
 
 }
 
-const mapStateToProps = (state) => {
-  return {
-    categoryHolder: state.categoryHolder
-  }
-};
-
-export default connect(mapStateToProps)(SubCategoryList);
+export default SubCategoryList;

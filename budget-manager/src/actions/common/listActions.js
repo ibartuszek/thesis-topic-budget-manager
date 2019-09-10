@@ -38,3 +38,16 @@ export function replaceElementAtArray(targetList, newObject) {
   let newArrayWithoutElement = removeElementFromArray(targetList, newObject.id);
   return addElementToArray(newArrayWithoutElement, newObject);
 }
+
+export function getIndexOfElementById(targetList, id) {
+  let index = 0;
+  let found = false;
+  while (index < targetList.length && !found) {
+    let element = targetList[index];
+    found = element.id === id;
+    if (!found) {
+      index++;
+    }
+  }
+  return found ? index : -1;
+}

@@ -11,9 +11,6 @@ class ModelSelectValue extends Component {
     if (isCategory && elementList[e.target.value].id !== null) {
       this.props.onChange([e.target.id], e.target.value, elementList[e.target.value]);
     } else if (!isCategory) {
-      console.log(e.target.id);
-      console.log(elementList[e.target.value]);
-
       this.props.onChange(e.target.id, elementList[e.target.value]);
     }
   };
@@ -22,7 +19,6 @@ class ModelSelectValue extends Component {
     const {id, model, labelTitle, placeHolder, elementList} = this.props;
     let isCategory = elementList[0].name !== undefined;
     let optionClass = isCategory ? "form-control text-muted" : "form-control";
-
 
     return (
       <React.Fragment>

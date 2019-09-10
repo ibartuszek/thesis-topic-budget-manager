@@ -2,16 +2,17 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import AlertMessageComponent from "../../AlertMessageComponent";
 import ModelStringValue from "../../layout/form/ModelStringValue";
+import SubCategoryList from "../subCategory/SubCategoryList";
+import {categoryMessages} from "../../../store/MessageHolder";
+import {createTransactionContext} from "../../../actions/common/createContext";
 import {getMessage, removeMessage} from "../../../actions/message/messageActions";
 import {validateModel} from "../../../actions/validation/validateModel";
-import {createTransactionContext} from "../../../actions/common/createContext";
-import {categoryMessages} from "../../../store/MessageHolder";
-import {updateSubCategory} from "../../../actions/category/updateSubCategory";
+import {updateMainCategory} from "../../../actions/category/updateMainCategory";
 
-class EditSubCategory extends Component {
+class EditMainCategory extends Component {
 
   state = {
-    subCategoryModel: {
+    mainCategoryModel: {
       id: null,
       name: {
         value: '',
@@ -26,7 +27,8 @@ class EditSubCategory extends Component {
           "INCOME",
           "OUTCOME"
         ]
-      }
+      },
+      subCategoryModelSet: []
     }
   };
 
@@ -36,20 +38,21 @@ class EditSubCategory extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
     this.showCategoryEdit = this.showCategoryEdit.bind(this);
+    this.setSubCategoryModelSet = this.setSubCategoryModelSet.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      subCategoryModel: this.props.subCategoryModel
+      mainCategoryModel: this.props.mainCategoryModel
     })
   }
 
   handleFieldChange(id, value, errorMessage) {
     this.setState(prevState => ({
-      subCategoryModel: {
-        ...prevState.subCategoryModel,
+      mainCategoryModel: {
+        ...prevState.mainCategoryModel,
         [id]: {
-          ...prevState.subCategoryModel[id],
+          ...prevState.mainCategoryModel[id],
           value: value,
           errorMessage: errorMessage
         }
@@ -59,14 +62,25 @@ class EditSubCategory extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const {userHolder, logHolder, transactionType, updateSubCategory, refreshSubCategories} = this.props;
-    const {subCategoryModel} = this.state;
-    if (validateModel(subCategoryModel)) {
+    const {userHolder, logHolder, transactionType, updateMainCategory, refreshMainCategories} = this.props;
+    const {mainCategoryModel} = this.state;
+    if (validateModel(mainCategoryModel)) {
       let context = createTransactionContext(userHolder, logHolder, transactionType);
-      updateSubCategory(context, subCategoryModel);
-      refreshSubCategories(subCategoryModel);
+      console.log(mainCategoryModel);
+      updateMainCategory(context, mainCategoryModel);
+      refreshMainCategories('mainCategory', mainCategoryModel);
     }
   };
+
+  setSubCategoryModelSet(modifiedSubCategoryModelSet) {
+    this.setState(prevState => ({
+      ...prevState,
+      mainCategoryModel: {
+        ...prevState.mainCategoryModel,
+        subCategoryModelSet: modifiedSubCategoryModelSet
+      }
+    }));
+  }
 
   showCategoryEdit() {
     this.props.showCategoryEdit(null);
@@ -77,30 +91,38 @@ class EditSubCategory extends Component {
   }
 
   render() {
-    const {logHolder} = this.props;
-    const {subCategoryModel} = this.state;
+    const {logHolder, transactionType, subCategoryList} = this.props;
+    const {name, subCategoryModelSet} = this.state.mainCategoryModel;
     const {categoryNameLabel, categoryNameMessage} = categoryMessages;
+
+    console.log("render: EditMainCategory");
+    console.log(this.props);
 
     return (
       <div className='custom-popup'>
         <div className='card card-body custom-popup-inner custom-popup-inner-subcategory'>
           <form className="form-group mb-0" onSubmit={this.handleSubmit}>
-            <h4 className="mt-3 mx-auto">Update supplementary category:</h4>
+            <h4 className="mt-3 mx-auto">Update main category:</h4>
             <ModelStringValue onChange={this.handleFieldChange}
-                              id="name" model={subCategoryModel.name}
+                              id="name" model={name}
                               labelTitle={categoryNameLabel} placeHolder={categoryNameMessage} type="text"/>
+            <SubCategoryList subCategoryModelSet={subCategoryModelSet}
+                             subCategoryList={subCategoryList}
+                             transactionType={transactionType}
+                             setSubCategoryModelSet={this.setSubCategoryModelSet}
+                             editable={false}/>
             <div className="mx-auto mt-3 mb-2">
               <button className="btn btn-outline-success mx-3">
                 <span className="fas fa-pencil-alt"/>
-                <span> Update supplementary category </span>
+                <span> Update main category </span>
               </button>
               <button className="btn btn-outline-danger mx-3" onClick={this.showCategoryEdit}>
                 <span>&times;</span>
                 <span> Close </span>
               </button>
             </div>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "updateSubCategorySuccess", true)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "updateSubCategoryError", false)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "updateMainCategorySuccess", true)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "updateMainCategoryError", false)} onChange={this.handleDismiss}/>
           </form>
         </div>
       </div>
@@ -119,9 +141,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateSubCategory: (context, model) => dispatch(updateSubCategory(context, model)),
+    updateMainCategory: (context, model) => dispatch(updateMainCategory(context, model)),
     removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditSubCategory);
+export default connect(mapStateToProps, mapDispatchToProps)(EditMainCategory);

@@ -9,6 +9,8 @@ export const categoryMessages = {
   createSubCategoryError: "The category has been saved before.",
   selectNewCategory: "Choose one to add as a new category.",
   subCategoryLabel: "Subcategory",
+  updateMainCategorySuccess: "The category has been modified!",
+  updateMainCategoryError: "The category exists!",
   updateSubCategorySuccess: "The category has been modified!",
   updateSubCategoryError: "The category exists!",
 };
@@ -20,6 +22,10 @@ export const transactionMessages = {
   transactionAmountMessage: "The amount of your new transaction.",
   transactionCurrencyLabel: "Currency",
   transactionCurrencyMessage: "The currency of your new transaction.",
+  transactionMainCategoryLabel: "Main category",
+  transactionMainCategoryMessage: "The main category of the transaction",
+  transactionSubCategoryLabel: "Supplementary category",
+  transactionSubCategoryMessage: "The supplementary category of the transaction",
   transactionTitleLabel: "Title",
   transactionTitleMessage: "The title of your new transaction."
 

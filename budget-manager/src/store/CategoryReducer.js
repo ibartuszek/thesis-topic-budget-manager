@@ -70,6 +70,19 @@ const CategoryReducer = (state = initState, action) => {
         ...state,
         incomeSubCategoriesAreLoaded: true,
       };
+    case 'UPDATE_INCOME_MAIN_CATEGORY_SUCCESS':
+      key = "updateMainCategorySuccess";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+        incomeMainCategories: replaceElementAtArray(state.incomeMainCategories, action.mainCategoryModel),
+      });
+    case 'UPDATE_INCOME_MAIN_CATEGORY_ERROR':
+      key = "updateMainCategoryError";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
     case 'UPDATE_INCOME_SUB_CATEGORY_SUCCESS':
       key = "updateSubCategorySuccess";
       addMessage(action.messages, createMessage(key, true, categoryMessages));

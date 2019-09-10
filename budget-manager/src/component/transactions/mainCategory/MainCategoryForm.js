@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import AlertMessageComponent from "../AlertMessageComponent";
-import ModelStringValue from "../layout/form/ModelStringValue";
-import {categoryMessages} from "../../store/MessageHolder";
-import {createMainCategory} from "../../actions/category/createMainCategory";
-import {createTransactionContext} from "../../actions/common/createContext";
-import {getMessage, removeMessage} from "../../actions/message/messageActions";
-import {validateModel} from "../../actions/validation/validateModel";
-import SubCategoryList from "./subCategory/SubCategoryList";
-import EditSubCategory from "./subCategory/EditSubCategory";
-import {replaceElementAtArray} from "../../actions/common/listActions";
+import AlertMessageComponent from "../../AlertMessageComponent";
+import ModelStringValue from "../../layout/form/ModelStringValue";
+import {categoryMessages} from "../../../store/MessageHolder";
+import {createMainCategory} from "../../../actions/category/createMainCategory";
+import {createTransactionContext} from "../../../actions/common/createContext";
+import {getMessage, removeMessage} from "../../../actions/message/messageActions";
+import {validateModel} from "../../../actions/validation/validateModel";
+import SubCategoryList from "../subCategory/SubCategoryList";
+import EditSubCategory from "../subCategory/EditSubCategory";
+import {replaceElementAtArray} from "../../../actions/common/listActions";
 
 class MainCategoryForm extends Component {
 
@@ -109,7 +109,7 @@ class MainCategoryForm extends Component {
   };
 
   render() {
-    const {target, subCategoryListName, logHolder, transactionType} = this.props;
+    const {target, subCategoryList, logHolder, transactionType} = this.props;
     const {editAbleSubCategory} = this.state;
     const {name, subCategoryModelSet} = this.state.mainCategoryModel;
     const {categoryNameLabel, categoryNameMessage} = categoryMessages;
@@ -129,8 +129,9 @@ class MainCategoryForm extends Component {
                                 id="name" model={name} labelTitle={categoryNameLabel}
                                 placeHolder={categoryNameMessage} type="text"/>
               <SubCategoryList subCategoryModelSet={subCategoryModelSet}
-                               subCategoryListName={subCategoryListName}
+                               subCategoryList={subCategoryList}
                                transactionType={transactionType}
+                               editable={true}
                                setSubCategoryModelSet={this.setSubCategoryModelSet}
                                showCategoryEdit={this.showCategoryEdit}/>
               <button className="btn btn-outline-success mt-3 mb-2">

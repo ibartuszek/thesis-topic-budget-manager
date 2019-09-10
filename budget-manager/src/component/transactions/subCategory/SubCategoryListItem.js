@@ -16,7 +16,13 @@ class SubCategoryListItem extends Component {
   };
 
   render() {
-    const {id, name, label, category} = this.props;
+    const {id, name, label, category, editable} = this.props;
+    const edit = !editable ? null :
+      (
+        <button type="button" className="close ml-3" onClick={() => this.showCategoryEdit(category)}>
+          <span className="btn btn-warning btn-sm fas fa-edit"/>
+        </button>
+      );
 
     return (
       <div className="input-group mt-3">
@@ -27,9 +33,7 @@ class SubCategoryListItem extends Component {
             <span>&times;</span>
           </button>
         </div>
-        <button type="button" className="close ml-3" onClick={() => this.showCategoryEdit(category)}>
-          <span className="btn btn-warning btn-sm fas fa-edit"/>
-        </button>
+        {edit}
       </div>)
   }
 

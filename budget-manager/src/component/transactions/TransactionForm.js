@@ -9,6 +9,10 @@ import {transactionMessages} from "../../store/MessageHolder";
 import moment from "moment";
 import ModelAmountValue from "../layout/form/ModelAmountValue";
 import ModelSelectValue from "../layout/form/ModelSelectValue";
+import MainCategorySelect from "./mainCategory/MainCategorySelect";
+import EditMainCategory from "./mainCategory/EditMainCategory";
+import SubCategorySelect from "./subCategory/SubCategorySelect";
+import EditSubCategory from "./subCategory/EditSubCategory";
 
 class TransactionForm extends Component {
 
@@ -43,8 +47,8 @@ class TransactionForm extends Component {
           "OUTCOME"
         ]
       },
-      mainCategory: null,
-      subCategory: null,
+      mainCategory: undefined,
+      subCategory: undefined,
       monthly: false,
       date: {
         value: null,
@@ -63,22 +67,26 @@ class TransactionForm extends Component {
   constructor(props) {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
   }
 
   componentDidMount() {
+    const {transactionType, mainCategoryList} = this.props;
+    const mainCategory = mainCategoryList.length > 0 ? mainCategoryList[0] : undefined;
     let firstPossibleDay = convertDate(moment().subtract(30, 'days'), this.state.dateFormat);
     this.setState(prevState => ({
       transactionModel: {
         ...prevState.transactionModel,
         transactionType: {
           ...prevState.transactionType,
-          value: this.props.transactionType
+          value: transactionType
         },
         date: {
           ...prevState.date,
           possibleFirstDay: firstPossibleDay
-        }
+        },
+        mainCategory: mainCategory
       }
     }))
   }
@@ -92,6 +100,15 @@ class TransactionForm extends Component {
           value: value,
           errorMessage: errorMessage
         }
+      }
+    }));
+  }
+
+  handleCategoryChange(id, value) {
+    this.setState(prevState => ({
+      transactionModel: {
+        ...prevState.transactionModel,
+        [id]: value
       }
     }));
   }
@@ -111,11 +128,13 @@ class TransactionForm extends Component {
     this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
-  showCategoryEdit = (subCategory) => {
-    console.log("ShowCategoryEdit" + subCategory);
-    /* this.setState({
-      editAbleSubCategory: subCategory
-    });*/
+  showCategoryEdit = (category) => {
+    let editAbleMainCategory = category !== null && category.subCategoryModelSet !== undefined ? category : null;
+    let editAbleSubCategory = category !== null && category.subCategoryModelSet === undefined ? category : null;
+    this.setState({
+      editAbleMainCategory: editAbleMainCategory,
+      editAbleSubCategory: editAbleSubCategory
+    })
   };
 
   refreshSubCategories = (subCategory) => {
@@ -130,17 +149,25 @@ class TransactionForm extends Component {
   };
 
   render() {
-    const {target, logHolder, transactionType} = this.props;
-    const {title, amount, currency} = this.state.transactionModel;
+    const {target, logHolder, transactionType, mainCategoryList, subCategoryList} = this.props;
+    const {editAbleMainCategory, editAbleSubCategory} = this.state;
+    const {title, amount, currency, mainCategory, subCategory} = this.state.transactionModel;
     const {
       transactionTitleLabel, transactionTitleMessage, transactionAmountLabel, transactionAmountMessage,
-      transactionCurrencyLabel, transactionCurrencyMessage
+      transactionCurrencyLabel, transactionCurrencyMessage, transactionMainCategoryLabel, transactionMainCategoryMessage,
+      transactionSubCategoryLabel, transactionSubCategoryMessage
     } = transactionMessages;
-    /*
-        let editCategory = editAbleSubCategory === null ? null : (
-          <EditSubCategory subCategoryModel={editAbleSubCategory} transactionType={transactionType}
-                           showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.refreshSubCategories}/>);
-    */
+
+    console.log("render: TransactionForm:");
+    console.log(this.props);
+
+    let editMainCategory = editAbleMainCategory === null ? null : (
+      <EditMainCategory mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryList}
+                        showCategoryEdit={this.showCategoryEdit} refreshMainCategories={this.handleCategoryChange}/>);
+
+    let editSubCategory = editAbleSubCategory === null ? null : (
+      <EditSubCategory subCategoryModel={editAbleSubCategory} transactionType={transactionType}
+                       showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.refreshSubCategories}/>);
 
     return (
       <React.Fragment>
@@ -157,6 +184,14 @@ class TransactionForm extends Component {
               <ModelSelectValue onChange={this.handleFieldChange}
                                 id="currency" model={currency} value={currency.value} elementList={currency.possibleEnumValues}
                                 labelTitle={transactionCurrencyLabel} placeHolder={transactionCurrencyMessage} type="text"/>
+              <MainCategorySelect onChange={this.handleCategoryChange} showCategoryEdit={this.showCategoryEdit}
+                                  id="mainCategory" model={mainCategory} labelTitle={transactionMainCategoryLabel}
+                                  elementList={mainCategoryList}
+                                  placeHolder={transactionMainCategoryMessage}/>
+              <SubCategorySelect onChange={this.handleCategoryChange} showCategoryEdit={this.showCategoryEdit}
+                                 id="subCategory" model={subCategory} labelTitle={transactionSubCategoryLabel}
+                                 elementList={subCategoryList}
+                                 placeHolder={transactionSubCategoryMessage}/>
               <button className="btn btn-outline-success mt-3 mb-2">
                 <span className="fas fa-pencil-alt"/>
                 <span> Save transaction </span>
@@ -166,6 +201,8 @@ class TransactionForm extends Component {
             </form>
           </div>
         </div>
+        {editMainCategory}
+        {editSubCategory}
       </React.Fragment>
     )
   }
