@@ -1,22 +1,26 @@
 package hu.elte.bm.authenticationservice.web.user;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import hu.elte.bm.authenticationservice.domain.User;
 import hu.elte.bm.authenticationservice.web.validation.ValidUserId;
 
-public class UserModelRequestContext {
+public class UserRequestContext {
 
     @NotNull
     @ValidUserId
     private Long userId;
-    private UserModel userModel;
 
-    public UserModel getUserModel() {
-        return userModel;
+    @Valid
+    private User user;
+
+    public User getUser() {
+        return user;
     }
 
-    public void setUserModel(final UserModel userModel) {
-        this.userModel = userModel;
+    public void setUser(final User user) {
+        this.user = user;
     }
 
     public Long getUserId() {

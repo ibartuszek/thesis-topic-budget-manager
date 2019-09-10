@@ -2,28 +2,26 @@ package hu.elte.bm.authenticationservice.dal;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import hu.elte.bm.authenticationservice.domain.BlackListDao;
 
 @Component("blackListDao")
 public class DefaultBlackListDao implements BlackListDao {
 
-    private static final int EXPIRATION_LIMIT_IN_DAYS = 1;
+    @Value("${security.expiration.limit.indays:1}")
+    private Integer expirationLimit;
 
     private InvalidTokenRepository invalidTokenRepository;
 
-    public DefaultBlackListDao(final InvalidTokenRepository invalidTokenRepository) {
+    DefaultBlackListDao(final InvalidTokenRepository invalidTokenRepository) {
         this.invalidTokenRepository = invalidTokenRepository;
     }
 
     @Override
-    public Optional<String> saveToken(final Long userId, final String invalidToken) {
-        invalidTokenRepository.save(InvalidTokenEntity.create(invalidToken, userId, new Date()));
-        return Optional.of(invalidToken);
+    public String saveToken(final Long userId, final String invalidToken) {
+        return invalidTokenRepository.save(InvalidTokenEntity.create(invalidToken, userId, new Date())).getInvalidToken();
     }
 
     @Override
@@ -43,7 +41,7 @@ public class DefaultBlackListDao implements BlackListDao {
         Date dt = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(dt);
-        c.add(Calendar.DATE, EXPIRATION_LIMIT_IN_DAYS);
+        c.add(Calendar.DATE, expirationLimit);
         return c.getTime();
     }
 

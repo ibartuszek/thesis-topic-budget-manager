@@ -2,6 +2,9 @@ package hu.elte.bm.authenticationservice.domain;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(builder = User.Builder.class)
 public final class User {
 
     private final Long id;
@@ -16,6 +19,16 @@ public final class User {
         this.password = builder.password;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
+    }
+
+    public static User createUserWithNewPassword(final User user, final String password) {
+        return User.builder()
+                .withId(user.getId())
+                .withPassword(password)
+                .withEmail(user.getEmail())
+                .withFirstName(user.getFirstName())
+                .withLastName(user.getLastName())
+                .build();
     }
 
     public static Builder builder() {

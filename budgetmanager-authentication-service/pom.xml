@@ -45,6 +45,7 @@
     <module>bm-authentication-service-app</module>
     <module>bm-authentication-service-dal</module>
     <module>bm-authentication-service-domain</module>
+    <module>bm-authentication-service-service</module>
     <module>bm-authentication-service-web</module>
   </modules>
 

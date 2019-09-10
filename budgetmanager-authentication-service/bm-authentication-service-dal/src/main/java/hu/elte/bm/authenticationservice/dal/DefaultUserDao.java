@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import hu.elte.bm.authenticationservice.domain.User;
-import hu.elte.bm.authenticationservice.domain.UserDao;
 
 @Service("userDao")
 public class DefaultUserDao implements UserDao {
@@ -23,32 +22,40 @@ public class DefaultUserDao implements UserDao {
     @Override
     public Optional<User> findById(final Long id) {
         return userRepository.findById(id)
-            .map(userEntityTransformer::transformToUser);
+                .map(userEntityTransformer::transformToUserWithMaskedPassword);
     }
 
     @Override
     public Optional<User> findByEmail(final String email) {
         return userRepository.findByEmail(email)
-            .map(userEntityTransformer::transformToUser);
+            .map(userEntityTransformer::transformToUserWithMaskedPassword);
+    }
+
+    @Override
+    public Optional<User> findByEmailWithPassword(final String email) {
+        return userRepository.findByEmail(email)
+                .map(userEntityTransformer::transformToUserWithRawPassword);
     }
 
     @Override
     @Transactional
-    public Optional<User> registerUser(final User user) {
+    public User registerUser(final User user) {
         UserEntity userEntity = userRepository.save(userEntityTransformer.transformToUserEntity(user));
-        return Optional.of(userEntityTransformer.transformToUser(userEntity));
+        return userEntityTransformer.transformToUserWithMaskedPassword(userEntity);
     }
 
     @Override
     @Transactional
-    public Optional<User> updateUser(final User user) {
+    public User updateUser(final User user) {
         return registerUser(user);
     }
 
     @Override
     @Transactional
-    public Optional<User> deleteUser(final User user) {
-        userRepository.delete(userEntityTransformer.transformToUserEntity(user));
-        return Optional.of(user);
+    public User deleteUser(final User user) {
+        UserEntity userEntity = userEntityTransformer.transformToUserEntity(user);
+        userRepository.delete(userEntity);
+        return userEntityTransformer.transformToUserWithMaskedPassword(userEntity);
     }
+
 }

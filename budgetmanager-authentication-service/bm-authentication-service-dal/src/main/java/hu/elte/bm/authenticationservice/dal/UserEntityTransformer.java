@@ -1,5 +1,6 @@
 package hu.elte.bm.authenticationservice.dal;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.authenticationservice.domain.User;
@@ -7,11 +8,24 @@ import hu.elte.bm.authenticationservice.domain.User;
 @Component
 public class UserEntityTransformer {
 
-    User transformToUser(final UserEntity userEntity) {
+    @Value("${user.password.masked_value:********}")
+    private String maskedPasswordValue;
+
+    User transformToUserWithRawPassword(final UserEntity userEntity) {
+        return User.builder()
+                .withId(userEntity.getId())
+                .withEmail(userEntity.getEmail())
+                .withPassword(userEntity.getPassword())
+                .withFirstName(userEntity.getFirstName())
+                .withLastName(userEntity.getLastName())
+                .build();
+    }
+
+    User transformToUserWithMaskedPassword(final UserEntity userEntity) {
         return User.builder()
             .withId(userEntity.getId())
             .withEmail(userEntity.getEmail())
-            .withPassword(userEntity.getPassword())
+            .withPassword(maskedPasswordValue)
             .withFirstName(userEntity.getFirstName())
             .withLastName(userEntity.getLastName())
             .build();

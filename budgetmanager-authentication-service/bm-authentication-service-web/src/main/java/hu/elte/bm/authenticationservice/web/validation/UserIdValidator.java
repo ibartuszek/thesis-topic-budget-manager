@@ -1,22 +1,21 @@
 package hu.elte.bm.authenticationservice.web.validation;
 
-import java.util.Optional;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.authenticationservice.domain.User;
-import hu.elte.bm.authenticationservice.domain.UserService;
+import hu.elte.bm.authenticationservice.service.UserService;
 
 @Component
 public class UserIdValidator implements ConstraintValidator<ValidUserId, Long> {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserIdValidator(final UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public void initialize(ValidUserId validUserId) {
@@ -27,15 +26,10 @@ public class UserIdValidator implements ConstraintValidator<ValidUserId, Long> {
         boolean result = false;
         Object userPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userId != null && userPrincipal instanceof String) {
-            Long userIdFromRepository = getUserIdFromRepository((String) userPrincipal);
+            Long userIdFromRepository = userService.findUserByEmail((String) userPrincipal).getId();
             result = userId.equals(userIdFromRepository);
         }
         return result;
-    }
-
-    private Long getUserIdFromRepository(final String userPrincipal) {
-        Optional<User> user = userService.findUserByEmail(userPrincipal);
-        return user.map(User::getId).orElse(null);
     }
 
 }

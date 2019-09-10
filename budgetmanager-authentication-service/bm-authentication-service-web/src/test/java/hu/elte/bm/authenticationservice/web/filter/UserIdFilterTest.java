@@ -1,7 +1,6 @@
 package hu.elte.bm.authenticationservice.web.filter;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,16 +16,16 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.authenticationservice.domain.User;
-import hu.elte.bm.authenticationservice.domain.UserService;
-import hu.elte.bm.authenticationservice.web.user.UserIdException;
+import hu.elte.bm.authenticationservice.service.UserService;
+import hu.elte.bm.authenticationservice.domain.UserIdException;
 
 public class UserIdFilterTest {
 
     private static final String EMAIL = "example@example.com";
-    private static final String INVALID_EMAIL = "invalid email";
     private static final Long USER_ID = 1L;
     private static final Long OTHER_USER_ID = 2L;
     private static final String INVALID_USER_ID = "Peter";
+
     private MockHttpServletRequest request;
     private MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -51,23 +50,6 @@ public class UserIdFilterTest {
     }
 
     @Test(expectedExceptions = UserIdException.class)
-    public void testWhenUserCannotBeFoundInRepository() throws IOException, ServletException {
-        // GIVEN
-        request.addParameter("userId", USER_ID.toString());
-        EasyMock.expect(securityContext.getAuthentication()).andReturn(authentication);
-        EasyMock.expect(authentication.getPrincipal()).andReturn(INVALID_EMAIL);
-        EasyMock.expect(userService.findUserByEmail(INVALID_EMAIL)).andReturn(Optional.empty());
-        control.replay();
-        // WHEN
-        try {
-            underTest.doFilter(request, response, filterChain);
-        } finally {
-            // THEN
-            control.verify();
-        }
-    }
-
-    @Test(expectedExceptions = UserIdException.class)
     public void testWhenUserIdCannotBeConverted() throws IOException, ServletException {
         // GIVEN
         request.addParameter("userId", INVALID_USER_ID);
@@ -89,7 +71,7 @@ public class UserIdFilterTest {
         request.addParameter("userId", OTHER_USER_ID.toString());
         EasyMock.expect(securityContext.getAuthentication()).andReturn(authentication);
         EasyMock.expect(authentication.getPrincipal()).andReturn(EMAIL);
-        EasyMock.expect(userService.findUserByEmail(EMAIL)).andReturn(Optional.of(createExampleUserWithDefaultValues()));
+        EasyMock.expect(userService.findUserByEmail(EMAIL)).andReturn(createExampleUserWithDefaultValues());
         control.replay();
         // WHEN
         try {
@@ -106,7 +88,7 @@ public class UserIdFilterTest {
         request.addParameter("userId", USER_ID.toString());
         EasyMock.expect(securityContext.getAuthentication()).andReturn(authentication);
         EasyMock.expect(authentication.getPrincipal()).andReturn(EMAIL);
-        EasyMock.expect(userService.findUserByEmail(EMAIL)).andReturn(Optional.of(createExampleUserWithDefaultValues()));
+        EasyMock.expect(userService.findUserByEmail(EMAIL)).andReturn(createExampleUserWithDefaultValues());
         filterChain.doFilter(request, response);
         control.replay();
         // WHEN

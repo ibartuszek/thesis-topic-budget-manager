@@ -3,14 +3,13 @@ package hu.elte.bm.authenticationservice.app.test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.authenticationservice.app.AbstractAuthenticationServiceApplicationTest;
+import hu.elte.bm.authenticationservice.domain.User;
 import hu.elte.bm.authenticationservice.web.user.UserController;
-import hu.elte.bm.authenticationservice.web.user.UserModel;
-import hu.elte.bm.authenticationservice.web.user.UserModelRequestContext;
-import hu.elte.bm.authenticationservice.web.user.UserModelResponse;
+import hu.elte.bm.authenticationservice.web.user.UserRequestContext;
+import hu.elte.bm.authenticationservice.web.user.UserResponse;
 import hu.elte.bm.commonpack.validator.ModelStringValue;
 
 public class UserControllerTest extends AbstractAuthenticationServiceApplicationTest {
@@ -49,27 +48,27 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
     @Test
     public void testRegisterWhenIdIsNotNull() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(RESERVED_ID).build();
-        UserModelRequestContext context = createContext(userModel);
+        User user = createDefaultUserBuilder(RESERVED_ID).build();
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.registerUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), USER_IS_INVALID);
     }
-
+/*
     @Test(dataProvider = "testDataForValidation")
-    public void testRegisterWhenValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
+    public void testRegisterWhenValidationFails(final User user, final String fieldErrorMessage, final String responseErrorMessage) {
         // GIVEN
-        UserModelRequestContext context = createContext(userModel);
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.registerUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
-        if (response.getUserModel().getEmail() != null && response.getUserModel().getEmail().getErrorMessage() != null) {
+        if (response.getUser().getEmail() != null && response.getUser().getEmail().getErrorMessage() != null) {
             Assert.assertEquals(response.getUserModel().getEmail().getErrorMessage(), fieldErrorMessage);
         }
         if (response.getUserModel().getPassword() != null && response.getUserModel().getPassword().getErrorMessage() != null) {
@@ -85,47 +84,47 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
 
     @DataProvider
     private Object[][] testDataForValidation() {
-        UserModel nullEmail = createDefaultUserModelBuilder(null)
+        UserModel nullEmail = createDefaultUserBuilder(null)
             .withEmail(null).build();
-        UserModel emailWithNullValue = createDefaultUserModelBuilder(null)
+        UserModel emailWithNullValue = createDefaultUserBuilder(null)
             .withEmail(ModelStringValue.builder().withValue(null).build()).build();
-        UserModel emailWithEmptyValue = createDefaultUserModelBuilder(null)
+        UserModel emailWithEmptyValue = createDefaultUserBuilder(null)
             .withEmail(ModelStringValue.builder().withValue(EMPTY_VALUE).build()).build();
-        UserModel emailWithTooShortValue = createDefaultUserModelBuilder(null)
+        UserModel emailWithTooShortValue = createDefaultUserBuilder(null)
             .withEmail(ModelStringValue.builder().withValue(TOO_SHORT_EMAIL).build()).build();
-        UserModel emailWithTooLongValue = createDefaultUserModelBuilder(null)
+        UserModel emailWithTooLongValue = createDefaultUserBuilder(null)
             .withEmail(ModelStringValue.builder().withValue(TOO_LONG_EMAIL).build()).build();
-        UserModel emailWithNotMatchesValue = createDefaultUserModelBuilder(null)
+        UserModel emailWithNotMatchesValue = createDefaultUserBuilder(null)
             .withEmail(ModelStringValue.builder().withValue(NOT_MATCHING_EMAIL).build()).build();
-        UserModel nullPassword = createDefaultUserModelBuilder(null)
+        UserModel nullPassword = createDefaultUserBuilder(null)
             .withPassword(null).build();
-        UserModel passwordWithNullValue = createDefaultUserModelBuilder(null)
+        UserModel passwordWithNullValue = createDefaultUserBuilder(null)
             .withPassword(ModelStringValue.builder().withValue(null).build()).build();
-        UserModel passwordWithEmptyValue = createDefaultUserModelBuilder(null)
+        UserModel passwordWithEmptyValue = createDefaultUserBuilder(null)
             .withPassword(ModelStringValue.builder().withValue(EMPTY_VALUE).build()).build();
-        UserModel passwordWithTooShortValue = createDefaultUserModelBuilder(null)
+        UserModel passwordWithTooShortValue = createDefaultUserBuilder(null)
             .withPassword(ModelStringValue.builder().withValue(TOO_SHORT_PASSWORD).build()).build();
-        UserModel passwordWithTooLongValue = createDefaultUserModelBuilder(null)
+        UserModel passwordWithTooLongValue = createDefaultUserBuilder(null)
             .withPassword(ModelStringValue.builder().withValue(TOO_LONG_PASSWORD).build()).build();
-        UserModel nullFirstName = createDefaultUserModelBuilder(null)
+        UserModel nullFirstName = createDefaultUserBuilder(null)
             .withFirstName(null).build();
-        UserModel firstNameWithNullValue = createDefaultUserModelBuilder(null)
+        UserModel firstNameWithNullValue = createDefaultUserBuilder(null)
             .withFirstName(ModelStringValue.builder().withValue(null).build()).build();
-        UserModel firstNameWithEmptyValue = createDefaultUserModelBuilder(null)
+        UserModel firstNameWithEmptyValue = createDefaultUserBuilder(null)
             .withFirstName(ModelStringValue.builder().withValue(EMPTY_VALUE).build()).build();
-        UserModel firstNameWithTooShortValue = createDefaultUserModelBuilder(null)
+        UserModel firstNameWithTooShortValue = createDefaultUserBuilder(null)
             .withFirstName(ModelStringValue.builder().withValue(TOO_SHORT_NAME).build()).build();
-        UserModel firstNameWithTooLongValue = createDefaultUserModelBuilder(null)
+        UserModel firstNameWithTooLongValue = createDefaultUserBuilder(null)
             .withFirstName(ModelStringValue.builder().withValue(TOO_LONG_NAME).build()).build();
-        UserModel nullLastName = createDefaultUserModelBuilder(null)
+        UserModel nullLastName = createDefaultUserBuilder(null)
             .withLastName(null).build();
-        UserModel lastNameWithNullValue = createDefaultUserModelBuilder(null)
+        UserModel lastNameWithNullValue = createDefaultUserBuilder(null)
             .withLastName(ModelStringValue.builder().withValue(null).build()).build();
-        UserModel lastNameWithEmptyValue = createDefaultUserModelBuilder(null)
+        UserModel lastNameWithEmptyValue = createDefaultUserBuilder(null)
             .withLastName(ModelStringValue.builder().withValue(EMPTY_VALUE).build()).build();
-        UserModel lastNameWithTooShortValue = createDefaultUserModelBuilder(null)
+        UserModel lastNameWithTooShortValue = createDefaultUserBuilder(null)
             .withLastName(ModelStringValue.builder().withValue(TOO_SHORT_NAME).build()).build();
-        UserModel lastNameWithTooLongValue = createDefaultUserModelBuilder(null)
+        UserModel lastNameWithTooLongValue = createDefaultUserBuilder(null)
             .withLastName(ModelStringValue.builder().withValue(TOO_LONG_NAME).build()).build();
 
         return new Object[][] {
@@ -152,59 +151,59 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
             { lastNameWithTooLongValue, "Last name cannot be longer than 50!", USER_IS_INVALID }
         };
     }
-
+*/
     @Test
     public void testRegisterWhenEmailIsReserved() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(null)
-            .withEmail(ModelStringValue.builder().withValue(RESERVED_EMAIL).build())
+        User user = createDefaultUserBuilder(null)
+            .withEmail(RESERVED_EMAIL)
             .build();
-        UserModelRequestContext context = createContext(userModel);
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.registerUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "This email has been used already!");
-        Assert.assertNull(response.getUserModel().getId());
+        Assert.assertNull(response.getUser().getId());
     }
 
     @Test
     public void testRegister() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(null).build();
-        UserModelRequestContext context = createContext(userModel);
+        User user = createDefaultUserBuilder(null).build();
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.registerUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "User registration is completed!");
-        Assert.assertEquals(response.getUserModel().getId(), EXPECTED_ID);
-        Assert.assertEquals(response.getUserModel().getPassword().getValue(), MASKED_PASSWORD);
+        Assert.assertEquals(response.getUser().getId(), EXPECTED_ID);
+        Assert.assertEquals(response.getUser().getPassword(), MASKED_PASSWORD);
     }
 
     @Test
     public void testUpdateWhenIdIsNull() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(null).build();
-        UserModelRequestContext context = createContext(userModel);
+        User user = createDefaultUserBuilder(null).build();
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.updateUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), USER_IS_INVALID);
     }
-
+/*
     @Test(dataProvider = "testDataForValidation")
     public void testUpdateWhenValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
         // GIVEN
         userModel.setId(RESERVED_ID);
-        UserModelRequestContext context = createContext(userModel);
+        UserRequestContext context = createContext(userModel);
         // WHEN
         ResponseEntity result = underTest.updateUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -221,105 +220,105 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
             Assert.assertEquals(response.getUserModel().getFirstName().getErrorMessage(), fieldErrorMessage);
         }
     }
-
+*/
     @Test
     public void testUpdateWhenUserCannotBeFound() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(INVALID_ID)
-            .withEmail(ModelStringValue.builder().withValue(NEW_EMAIL).build())
+        User user = createDefaultUserBuilder(INVALID_ID)
+            .withEmail(NEW_EMAIL)
             .build();
-        UserModelRequestContext context = createContext(userModel);
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.updateUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "User cannot be found in the repository!");
-        Assert.assertEquals(response.getUserModel().getId(), INVALID_ID);
+        Assert.assertEquals(response.getUser().getId(), INVALID_ID);
     }
 
     @Test
     public void testUpdateWhenEmailIsReserved() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(RESERVED_ID)
-            .withEmail(ModelStringValue.builder().withValue(OTHER_RESERVED_EMAIL).build())
+        User user = createDefaultUserBuilder(RESERVED_ID)
+            .withEmail(OTHER_RESERVED_EMAIL)
             .build();
-        UserModelRequestContext context = createContext(userModel);
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.updateUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "This email has been used already!");
-        Assert.assertEquals(response.getUserModel().getId(), RESERVED_ID);
+        Assert.assertEquals(response.getUser().getId(), RESERVED_ID);
     }
 
     @Test
     public void testUpdateWhenEmailIsUnchanged() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(RESERVED_ID)
-            .withEmail(ModelStringValue.builder().withValue(RESERVED_EMAIL).build())
-            .withFirstName(ModelStringValue.builder().withValue(NEW_FIRST_NAME).build())
-            .withLastName(ModelStringValue.builder().withValue(NEW_LAST_NAME).build())
+        User user = createDefaultUserBuilder(RESERVED_ID)
+            .withEmail(RESERVED_EMAIL)
+            .withFirstName(NEW_FIRST_NAME)
+            .withLastName(NEW_LAST_NAME)
             .build();
-        UserModelRequestContext context = createContext(userModel);
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.updateUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "User data has been updated!");
-        Assert.assertEquals(response.getUserModel().getId(), RESERVED_ID);
-        Assert.assertEquals(response.getUserModel().getEmail().getValue(), RESERVED_EMAIL);
-        Assert.assertEquals(response.getUserModel().getPassword().getValue(), MASKED_PASSWORD);
-        Assert.assertEquals(response.getUserModel().getFirstName().getValue(), NEW_FIRST_NAME);
-        Assert.assertEquals(response.getUserModel().getLastName().getValue(), NEW_LAST_NAME);
+        Assert.assertEquals(response.getUser().getId(), RESERVED_ID);
+        Assert.assertEquals(response.getUser().getEmail(), RESERVED_EMAIL);
+        Assert.assertEquals(response.getUser().getPassword(), MASKED_PASSWORD);
+        Assert.assertEquals(response.getUser().getFirstName(), NEW_FIRST_NAME);
+        Assert.assertEquals(response.getUser().getLastName(), NEW_LAST_NAME);
     }
 
     @Test
     public void testUpdate() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(RESERVED_ID)
-            .withEmail(ModelStringValue.builder().withValue(NEW_EMAIL).build())
-            .withPassword(ModelStringValue.builder().withValue(NEW_PASSWORD).build())
-            .withFirstName(ModelStringValue.builder().withValue(NEW_FIRST_NAME).build())
-            .withLastName(ModelStringValue.builder().withValue(NEW_LAST_NAME).build())
+        User user = createDefaultUserBuilder(RESERVED_ID)
+            .withEmail(NEW_EMAIL)
+            .withPassword(NEW_PASSWORD)
+            .withFirstName(NEW_FIRST_NAME)
+            .withLastName(NEW_LAST_NAME)
             .build();
-        UserModelRequestContext context = createContext(userModel);
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.updateUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "User data has been updated!");
-        Assert.assertEquals(response.getUserModel().getId(), RESERVED_ID);
-        Assert.assertEquals(response.getUserModel().getEmail().getValue(), NEW_EMAIL);
-        Assert.assertEquals(response.getUserModel().getPassword().getValue(), MASKED_PASSWORD);
-        Assert.assertEquals(response.getUserModel().getFirstName().getValue(), NEW_FIRST_NAME);
-        Assert.assertEquals(response.getUserModel().getLastName().getValue(), NEW_LAST_NAME);
+        Assert.assertEquals(response.getUser().getId(), RESERVED_ID);
+        Assert.assertEquals(response.getUser().getEmail(), NEW_EMAIL);
+        Assert.assertEquals(response.getUser().getPassword(), MASKED_PASSWORD);
+        Assert.assertEquals(response.getUser().getFirstName(), NEW_FIRST_NAME);
+        Assert.assertEquals(response.getUser().getLastName(), NEW_LAST_NAME);
     }
 
     @Test
     public void testDeleteWhenIdIsNull() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(null).build();
-        UserModelRequestContext context = createContext(userModel);
+        User user = createDefaultUserBuilder(null).build();
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.deleteUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), USER_IS_INVALID);
     }
-
+/*
     @Test(dataProvider = "testDataForValidation")
     public void testDeleteWhenValidationFails(final UserModel userModel, final String fieldErrorMessage, final String responseErrorMessage) {
         // GIVEN
         userModel.setId(RESERVED_ID);
-        UserModelRequestContext context = createContext(userModel);
+        UserRequestContext context = createContext(userModel);
         // WHEN
         ResponseEntity result = underTest.deleteUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -336,31 +335,31 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
             Assert.assertEquals(response.getUserModel().getFirstName().getErrorMessage(), fieldErrorMessage);
         }
     }
-
+*/
     @Test
     public void testDeleteWhenUserCannotBeFound() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(INVALID_ID).build();
-        UserModelRequestContext context = createContext(userModel);
+        User user = createDefaultUserBuilder(INVALID_ID).build();
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.deleteUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "User cannot be found in the repository!");
-        Assert.assertEquals(response.getUserModel().getId(), INVALID_ID);
+        Assert.assertEquals(response.getUser().getId(), INVALID_ID);
     }
 
     @Test
     public void testDelete() {
         // GIVEN
-        UserModel userModel = createDefaultUserModelBuilder(RESERVED_ID).build();
-        UserModelRequestContext context = createContext(userModel);
+        User user = createDefaultUserBuilder(RESERVED_ID).build();
+        UserRequestContext context = createContext(user);
         // WHEN
         ResponseEntity result = underTest.deleteUser(context);
-        UserModelResponse response = (UserModelResponse) result.getBody();
+        UserResponse response = (UserResponse) result.getBody();
         ResponseEntity resultForFind = underTest.findUserById(RESERVED_ID);
-        UserModelResponse responseForFind = (UserModelResponse) resultForFind.getBody();
+        UserResponse responseForFind = (UserResponse) resultForFind.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "User has been deleted!");
@@ -368,18 +367,18 @@ public class UserControllerTest extends AbstractAuthenticationServiceApplication
         Assert.assertEquals(responseForFind.getMessage(), "User cannot be found in the repository!");
     }
 
-    private UserModel.Builder createDefaultUserModelBuilder(final Long id) {
-        return UserModel.builder()
+    private User.Builder createDefaultUserBuilder(final Long id) {
+        return User.builder()
             .withId(id)
-            .withEmail(EMAIL)
-            .withPassword(PASSWORD)
-            .withFirstName(FIRST_NAME)
-            .withLastName(LAST_NAME);
+            .withEmail(DEFAULT_EMAIL)
+            .withPassword(DEFAULT_PASSWORD)
+            .withFirstName(DEFAULT_FIRST_NAME)
+            .withLastName(DEFAULT_LAST_NAME);
     }
 
-    private UserModelRequestContext createContext(final UserModel userModel) {
-        UserModelRequestContext context = new UserModelRequestContext();
-        context.setUserModel(userModel);
+    private UserRequestContext createContext(final User user) {
+        UserRequestContext context = new UserRequestContext();
+        context.setUser(user);
         return context;
     }
 

@@ -1,4 +1,4 @@
-package hu.elte.bm.authenticationservice.web.user;
+package hu.elte.bm.authenticationservice.domain;
 
 public class UserIdException  extends RuntimeException {
 

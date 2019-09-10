@@ -17,7 +17,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-import hu.elte.bm.authenticationservice.domain.UserService;
+import hu.elte.bm.authenticationservice.dal.BlackListDao;
+import hu.elte.bm.authenticationservice.service.UserService;
 import hu.elte.bm.authenticationservice.web.filter.TokenFilter;
 import hu.elte.bm.authenticationservice.web.filter.UserIdFilter;
 
@@ -40,6 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BlackListDao blackListDao;
 
     @Bean
     @Override
@@ -93,7 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public FilterRegistrationBean<TokenFilter> tokenFilter() {
         FilterRegistrationBean<TokenFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new TokenFilter());
+        registrationBean.setFilter(new TokenFilter(blackListDao));
         registrationBean.addUrlPatterns("/bm/*");
         return registrationBean;
     }

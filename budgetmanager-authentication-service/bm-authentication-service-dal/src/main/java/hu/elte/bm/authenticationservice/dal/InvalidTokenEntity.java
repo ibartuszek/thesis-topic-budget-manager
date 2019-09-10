@@ -70,4 +70,5 @@ public final class InvalidTokenEntity {
     public void setInvalidationDate(final Date invalidationDate) {
         this.invalidationDate = invalidationDate;
     }
+
 }
