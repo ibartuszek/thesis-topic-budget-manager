@@ -22,8 +22,16 @@ export const transactionMessages = {
   transactionAmountMessage: "The amount of your new transaction.",
   transactionCurrencyLabel: "Currency",
   transactionCurrencyMessage: "The currency of your new transaction.",
+  transactionDateLabel: "Date",
+  transactionDateMessage: "Click to select the date of transaction.",
+  transactionDescriptionLabel: "Description",
+  transactionDescriptionMessage: "Description of the transaction.",
+  transactionEndDateLabel: "End date",
+  transactionEndDateMessage: "Click to select the end of monthly transaction.",
   transactionMainCategoryLabel: "Main category",
   transactionMainCategoryMessage: "The main category of the transaction",
+  transactionMonthlyLabel: "Monthly transaction",
+  transactionMonthlyMessage: "",
   transactionSubCategoryLabel: "Supplementary category",
   transactionSubCategoryMessage: "The supplementary category of the transaction",
   transactionTitleLabel: "Title",
@@ -56,6 +64,8 @@ export const userMessages = {
 };
 
 export const validationMessages = {
+  dateMustBeAfter: "{} cannot be before: {}!",
+  datePatternErrorMessage: "{} must be given in {} format!",
   enumValueMessage: "{} field must be one of them: {}!",
   maximumMessage: "{} field must be maximum: {} character long!",
   minimumMessage: "{} field must be minimum: {} character long!",

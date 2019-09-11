@@ -1,6 +1,6 @@
 import moment from 'moment';
 
 export function convertDate(date, dateFormat) {
-  const format = dateFormat.toUpperCase();
-  return date === null ? null : moment(date).format(format);
+  console.log(date === null ? null : moment(date).format(dateFormat));
+  return date === null ? null : moment(date).format(dateFormat);
 }

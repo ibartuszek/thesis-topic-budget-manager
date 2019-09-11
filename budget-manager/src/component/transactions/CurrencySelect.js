@@ -10,7 +10,7 @@ class CurrencySelect extends Component {
   }
 
   handleChange(newCurrency) {
-    this.props.handleFieldChange("currency", newCurrency);
+    this.props.handleModelValueChange("currency", newCurrency);
   }
 
   render() {
