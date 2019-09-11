@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import CardHeader from "../layout/card/CardHeader";
-import MainCategoryForm from "./mainCategory/MainCategoryForm";
-import SubCategoryForm from "./subCategory/SubCategoryForm";
-import {createCardNames} from "../../actions/message/createElementIds";
+import SubCategoryCard from "./subCategory/SubCategoryCard";
 import TransactionForm from "./TransactionForm";
+import {createCardNames} from "../../actions/message/createElementIds";
+import MainCategoryCard from "./mainCategory/MainCategoryCard";
 
 class TransactionCard extends Component {
 
@@ -17,10 +17,10 @@ class TransactionCard extends Component {
     return (
       <div className="card">
         <CardHeader data={cardData}/>
-        <MainCategoryForm transactionType={cardData.transactionType}
+        <MainCategoryCard transactionType={cardData.transactionType}
                           target={cardData.createMainType}
                           subCategoryList={subCategoryList}/>
-        <SubCategoryForm transactionType={cardData.transactionType}
+        <SubCategoryCard transactionType={cardData.transactionType}
                          target={cardData.createSubType}/>
         <TransactionForm transactionType={cardData.transactionType}
                          target={cardData.createTransaction}

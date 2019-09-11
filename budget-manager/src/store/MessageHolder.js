@@ -5,14 +5,18 @@ export const categoryMessages = {
   categoriesUnavailableMessage: "We cannot reach the backup repository, please try it later!",
   createMainCategorySuccess: "The category has been saved.",
   createMainCategoryError: "The category has been saved before.",
+  createMainCategoryTitle: "Create new main category",
   createSubCategorySuccess: "The category has been saved.",
   createSubCategoryError: "The category has been saved before.",
+  createSubCategoryTitle: "Create new subcategory",
   selectNewCategory: "Choose one to add as a new category.",
   subCategoryLabel: "Subcategory",
   updateMainCategorySuccess: "The category has been modified!",
   updateMainCategoryError: "The category exists!",
+  updateMainCategoryTitle: "Update main category",
   updateSubCategorySuccess: "The category has been modified!",
   updateSubCategoryError: "The category exists!",
+  updateSubCategoryTitle: "Update subcategory",
 };
 
 export const transactionMessages = {

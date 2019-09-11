@@ -7,9 +7,9 @@ import {
   findElementById,
   findElementByName,
   removeElementFromArray
-} from "../../../actions/common/listActions";
-import {categoryMessages} from "../../../store/MessageHolder";
-import ModelSelectValue from "../../layout/form/ModelSelectValue";
+} from "../../../../actions/common/listActions";
+import {categoryMessages} from "../../../../store/MessageHolder";
+import ModelSelectValue from "../../../layout/form/ModelSelectValue";
 
 class SubCategoryList extends Component {
 
@@ -63,7 +63,6 @@ class SubCategoryList extends Component {
       <SubCategoryListItem key={index} id={subCategory.id} name={subCategory.name.value} category={subCategory}
                            label={subCategoryLabel} editable={editable} showCategoryEdit={this.showCategoryEdit}
                            onChange={this.handleRemoveCategory}/>);
-
     const categoryList = createCategoryListWithNullForSelect(subCategoryListFromRepository, subCategoriesOfMainCategory);
 
     return (

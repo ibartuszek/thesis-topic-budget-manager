@@ -4,7 +4,7 @@ export function removeElementFromArray(targetList, elementToRemove) {
     let currentObject = targetList[index];
     if (currentObject.id === elementToRemove.id) {
       found = true;
-      targetList.splice(index, 1)
+      targetList.splice(index, 1);
     }
   }
   return targetList;
@@ -47,7 +47,7 @@ export function createCategoryListWithNullForSelect(categoriesFromRepo, categori
 }
 
 export function replaceElementAtArray(targetList, newObject) {
-  let newArrayWithoutElement = removeElementFromArray(targetList, newObject.id);
+  let newArrayWithoutElement = removeElementFromArray(targetList, newObject);
   return addElementToArray(newArrayWithoutElement, newObject);
 }
 

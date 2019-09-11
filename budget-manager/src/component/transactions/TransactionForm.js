@@ -2,12 +2,10 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import AlertMessageComponent from "../AlertMessageComponent";
 import CurrencySelect from "./CurrencySelect";
-import EditMainCategory from "./mainCategory/EditMainCategory";
-import EditSubCategory from "./subCategory/EditSubCategory";
 import MainCategorySelect from "./mainCategory/MainCategorySelect";
 import ModelAmountValue from "../layout/form/ModelAmountValue";
 import ModelStringValue from "../layout/form/ModelStringValue";
-import SubCategorySelect from "./subCategory/SubCategorySelect";
+import SubCategorySelect from "./subCategory/selectSubCategory/SubCategorySelect";
 import {createMainCategory} from "../../actions/category/createMainCategory";
 import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import {transactionMessages} from "../../store/MessageHolder";
@@ -16,6 +14,8 @@ import ModelDateValue from "../layout/form/ModelDateValue";
 import {convertDate} from "../../actions/date/dateActions";
 import moment from "moment";
 import {dateProperties} from "../../store/Properties";
+import MainCategoryEditPopUp from "./mainCategory/MainCategoryEditPopUp";
+import SubCategoryEditPopUp from "./subCategory/SubCategoryEditPopUp";
 
 class TransactionForm extends Component {
 
@@ -164,12 +164,12 @@ class TransactionForm extends Component {
       );
 
     let editMainCategory = editAbleMainCategory === null ? null : (
-      <EditMainCategory mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryList}
-                        showCategoryEdit={this.showCategoryEdit} refreshMainCategories={this.handleFieldChange}/>);
+      <MainCategoryEditPopUp mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryList}
+                             showCategoryEdit={this.showCategoryEdit} refreshMainCategories={this.handleFieldChange}/>);
 
     let editSubCategory = editAbleSubCategory === null ? null : (
-      <EditSubCategory subCategoryModel={editAbleSubCategory} transactionType={transactionType}
-                       showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.handleFieldChange}/>);
+      <SubCategoryEditPopUp subCategoryModel={editAbleSubCategory} transactionType={transactionType}
+                            showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.handleFieldChange}/>);
 
     return (
       <React.Fragment>
