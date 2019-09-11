@@ -1,47 +1,42 @@
 import React, {Component} from 'react';
-import {createCategoryListForSelect, getIndexOfElementById} from "../../../actions/common/listActions";
+import ModelSelectValue from "../../layout/form/ModelSelectValue";
+import {createCategoryListWithNullForSelect, findElementByName} from "../../../actions/common/listActions";
+import {transactionMessages} from "../../../store/MessageHolder";
 
-class MainCategorySelect extends Component {
+class SubCategorySelect extends Component {
 
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = (e, elementList) => {
-    this.props.onChange(e.target.id, elementList[e.target.value]);
-  };
+  handleChange(newSubCategory) {
+    const {subCategoryList} = this.props;
+    let newCategory = findElementByName(subCategoryList, newSubCategory);
+    this.props.handleCategoryChange("subCategory", newCategory);
+  }
 
   showCategoryEdit = (category) => {
     this.props.showCategoryEdit(category);
   };
 
   render() {
-    const {id, model, labelTitle, placeHolder, elementList} = this.props;
-    let optionClass = model === undefined ? "form-control text-muted" : "form-control";
-    let subCategories = createCategoryListForSelect(elementList, []);
+    const {subCategory, subCategoryList} = this.props;
+    const {transactionSubCategoryLabel, transactionSubCategoryMessage} = transactionMessages;
+
+    let subCategorySelectList = createCategoryListWithNullForSelect(subCategoryList);
+
+    let model = subCategory === undefined || subCategory === null ? undefined : subCategory.name.value;
 
     return (
       <React.Fragment>
-        <div className="input-group mt-3">
-          <label className="input-group-addon input-group-text" htmlFor={id}>{labelTitle}</label>
-          <select className={optionClass} id={id}
-                  value={model === undefined ? getIndexOfElementById(subCategories, 0) : getIndexOfElementById(subCategories, model.id)}
-                  onChange={(e) => this.handleChange(e, subCategories)}>
-            {subCategories.map(function (element, index) {
-              return element.id === null
-                ? <option key={index} value={index} className="text-muted">{placeHolder}</option>
-                : <option key={index} value={index} className="text-unmuted">{element.name.value}</option>
-            })
-            }
-          </select>
-          <button type="button" className="close ml-3" onClick={() => this.showCategoryEdit(model)}>
-            <span className="btn btn-warning btn-sm fas fa-edit"/>
-          </button>
-        </div>
-      </React.Fragment>
-    )
+        <ModelSelectValue onChange={this.handleChange}
+                          id="subCategory" model={model} value={model} elementList={subCategorySelectList}
+                          editableObject={subCategory} showCategoryEdit={this.showCategoryEdit}
+                          labelTitle={transactionSubCategoryLabel} placeHolder={transactionSubCategoryMessage} type="text"/>
+      </React.Fragment>)
   }
+
 }
 
-export default MainCategorySelect;
+export default SubCategorySelect;

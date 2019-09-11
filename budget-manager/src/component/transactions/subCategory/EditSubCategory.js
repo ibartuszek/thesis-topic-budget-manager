@@ -64,7 +64,7 @@ class EditSubCategory extends Component {
     if (validateModel(subCategoryModel)) {
       let context = createTransactionContext(userHolder, logHolder, transactionType);
       updateSubCategory(context, subCategoryModel);
-      refreshSubCategories(subCategoryModel);
+      refreshSubCategories("subCategory", subCategoryModel);
     }
   };
 

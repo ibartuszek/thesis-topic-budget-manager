@@ -7,33 +7,40 @@ class ModelSelectValue extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = (e, elementList, isCategory) => {
-    if (isCategory && elementList[e.target.value].id !== null) {
-      this.props.onChange([e.target.id], e.target.value, elementList[e.target.value]);
-    } else if (!isCategory) {
-      this.props.onChange(e.target.id, elementList[e.target.value]);
-    }
+  handleChange = (e, elementList) => {
+    // if (elementList[e.target.value] !== null) {
+    this.props.onChange(elementList[e.target.value]);
+    // }
+  };
+
+  showCategoryEdit = (editableObject) => {
+    this.props.showCategoryEdit(editableObject);
   };
 
   render() {
-    const {id, model, labelTitle, placeHolder, elementList} = this.props;
-    let isCategory = elementList[0].name !== undefined;
-    let optionClass = isCategory ? "form-control text-muted" : "form-control";
+    const {id, model, labelTitle, placeHolder, elementList, editableObject, firstElementEnabled} = this.props;
+    let optionClass = model === undefined ? "form-control text-muted" : "form-control";
+
+    let editButton = editableObject !== undefined ? (
+      <button type="button" className="close ml-3" onClick={() => this.showCategoryEdit(editableObject)}>
+        <span className="btn btn-warning btn-sm fas fa-edit"/>
+      </button>
+    ) : null;
 
     return (
       <React.Fragment>
         <div className="input-group mt-3">
           <label className="input-group-addon input-group-text" htmlFor={id}>{labelTitle}</label>
-          <select className={optionClass} id={id} value={model === undefined ? 0 : elementList.indexOf(model.value)}
-                  onChange={(e) => this.handleChange(e, elementList, isCategory)}>
+          <select className={optionClass} id={id} value={model === undefined ? 0 : elementList.indexOf(model)}
+                  onChange={(e) => this.handleChange(e, elementList)}>
             {elementList.map(function (element, index) {
-              let currentValue = isCategory ? element.name.value : element;
-              return currentValue === null
+              return element === null
                 ? <option key={index} value={index} className="text-muted">{placeHolder}</option>
-                : <option key={index} value={index} className="text-unmuted">{currentValue}</option>
+                : <option key={index} value={index} className="text-unmuted">{element}</option>
             })
             }
           </select>
+          {editButton}
         </div>
       </React.Fragment>
     )

@@ -1,8 +1,8 @@
-export function removeElementFromArray(targetList, id) {
+export function removeElementFromArray(targetList, elementToRemove) {
   let found = false;
   for (let index = 0; index < targetList.length && !found; index++) {
-    let subCategory = targetList[index];
-    if (id === subCategory.id) {
+    let currentObject = targetList[index];
+    if (currentObject.id === elementToRemove.id) {
       found = true;
       targetList.splice(index, 1)
     }
@@ -18,19 +18,31 @@ export function addElementToArray(targetList, newObject) {
 
 export function createCategoryListForSelect(categoriesFromRepo, categoriesFromObject) {
   let result = [];
-  result.push({id: null, name: {value: null}});
+  populateResultList(result, categoriesFromRepo, categoriesFromObject);
+  return result;
+}
+
+function populateResultList(result, categoriesFromRepo, categoriesFromObject) {
   for (let i = 0; i < categoriesFromRepo.length; i++) {
     let found = false;
     let category = categoriesFromRepo[i];
-    for (let j = 0; j < categoriesFromObject.length && found === false; j++) {
-      if (category.id === categoriesFromObject[j].id) {
-        found = true;
+    if (categoriesFromObject !== undefined) {
+      for (let j = 0; j < categoriesFromObject.length && found === false; j++) {
+        if (category.id === categoriesFromObject[j].id) {
+          found = true;
+        }
       }
     }
     if (found === false) {
-      result.push(category);
+      result.push(category.name.value);
     }
   }
+}
+
+export function createCategoryListWithNullForSelect(categoriesFromRepo, categoriesFromObject) {
+  let result = [];
+  result.push(null);
+  populateResultList(result, categoriesFromRepo, categoriesFromObject);
   return result;
 }
 
@@ -50,4 +62,22 @@ export function getIndexOfElementById(targetList, id) {
     }
   }
   return found ? index : -1;
+}
+
+export function findElementByName(listFromRepo, name) {
+  let result = null;
+  for (let index = 0; index < listFromRepo.length && result === null; index++) {
+    let currentObject = listFromRepo[index];
+    result = currentObject.name.value === name ? currentObject : null;
+  }
+  return result;
+}
+
+export function findElementById(listFromRepo, id) {
+  let result = null;
+  for (let index = 0; index < listFromRepo.length && result === null; index++) {
+    let currentObject = listFromRepo[index];
+    result = currentObject.id === id ? currentObject : null;
+  }
+  return result;
 }

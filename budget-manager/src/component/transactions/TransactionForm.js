@@ -8,11 +8,11 @@ import {convertDate} from "../../actions/date/dateActions";
 import {transactionMessages} from "../../store/MessageHolder";
 import moment from "moment";
 import ModelAmountValue from "../layout/form/ModelAmountValue";
-import ModelSelectValue from "../layout/form/ModelSelectValue";
-import MainCategorySelect from "./mainCategory/MainCategorySelect";
 import EditMainCategory from "./mainCategory/EditMainCategory";
 import SubCategorySelect from "./subCategory/SubCategorySelect";
 import EditSubCategory from "./subCategory/EditSubCategory";
+import CurrencySelect from "./CurrencySelect";
+import MainCategorySelect from "./mainCategory/MainCategorySelect";
 
 class TransactionForm extends Component {
 
@@ -137,29 +137,11 @@ class TransactionForm extends Component {
     })
   };
 
-  refreshSubCategories = (subCategory) => {
-    console.log("refreshSubCategories" + subCategory);
-    /*let newSubCategories = replaceElementAtArray(this.state.mainCategoryModel.subCategoryModelSet, subCategory);
-    this.setState(prevState => ({
-      mainCategoryModel: {
-        ...prevState.mainCategoryModel,
-        subCategoryModelSet: newSubCategories
-      }
-    }))*/
-  };
-
   render() {
     const {target, logHolder, transactionType, mainCategoryList, subCategoryList} = this.props;
     const {editAbleMainCategory, editAbleSubCategory} = this.state;
     const {title, amount, currency, mainCategory, subCategory} = this.state.transactionModel;
-    const {
-      transactionTitleLabel, transactionTitleMessage, transactionAmountLabel, transactionAmountMessage,
-      transactionCurrencyLabel, transactionCurrencyMessage, transactionMainCategoryLabel, transactionMainCategoryMessage,
-      transactionSubCategoryLabel, transactionSubCategoryMessage
-    } = transactionMessages;
-
-    console.log("render: TransactionForm:");
-    console.log(this.props);
+    const {transactionTitleLabel, transactionTitleMessage, transactionAmountLabel, transactionAmountMessage} = transactionMessages;
 
     let editMainCategory = editAbleMainCategory === null ? null : (
       <EditMainCategory mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryList}
@@ -167,7 +149,10 @@ class TransactionForm extends Component {
 
     let editSubCategory = editAbleSubCategory === null ? null : (
       <EditSubCategory subCategoryModel={editAbleSubCategory} transactionType={transactionType}
-                       showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.refreshSubCategories}/>);
+                       showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.handleCategoryChange}/>);
+
+    console.log("TransactionForm");
+    console.log(this.state.transactionModel.subCategory);
 
     return (
       <React.Fragment>
@@ -181,17 +166,11 @@ class TransactionForm extends Component {
               <ModelAmountValue onChange={this.handleFieldChange}
                                 id="amount" model={amount}
                                 labelTitle={transactionAmountLabel} placeHolder={transactionAmountMessage} type="number"/>
-              <ModelSelectValue onChange={this.handleFieldChange}
-                                id="currency" model={currency} value={currency.value} elementList={currency.possibleEnumValues}
-                                labelTitle={transactionCurrencyLabel} placeHolder={transactionCurrencyMessage} type="text"/>
-              <MainCategorySelect onChange={this.handleCategoryChange} showCategoryEdit={this.showCategoryEdit}
-                                  id="mainCategory" model={mainCategory} labelTitle={transactionMainCategoryLabel}
-                                  elementList={mainCategoryList}
-                                  placeHolder={transactionMainCategoryMessage}/>
-              <SubCategorySelect onChange={this.handleCategoryChange} showCategoryEdit={this.showCategoryEdit}
-                                 id="subCategory" model={subCategory} labelTitle={transactionSubCategoryLabel}
-                                 elementList={subCategoryList}
-                                 placeHolder={transactionSubCategoryMessage}/>
+              <CurrencySelect handleFieldChange={this.handleFieldChange} currency={currency}/>
+              <MainCategorySelect handleCategoryChange={this.handleCategoryChange} showCategoryEdit={this.showCategoryEdit}
+                                  mainCategory={mainCategory} mainCategoryList={mainCategoryList}/>
+              <SubCategorySelect handleCategoryChange={this.handleCategoryChange} showCategoryEdit={this.showCategoryEdit}
+                                 subCategory={subCategory} subCategoryList={subCategoryList}/>
               <button className="btn btn-outline-success mt-3 mb-2">
                 <span className="fas fa-pencil-alt"/>
                 <span> Save transaction </span>

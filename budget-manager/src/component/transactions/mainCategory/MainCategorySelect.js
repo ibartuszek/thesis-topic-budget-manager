@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import {getIndexOfElementById} from "../../../actions/common/listActions";
+import ModelSelectValue from "../../layout/form/ModelSelectValue";
+import {createCategoryListForSelect, createCategoryListWithNullForSelect, findElementByName} from "../../../actions/common/listActions";
+import {transactionMessages} from "../../../store/MessageHolder";
 
 class MainCategorySelect extends Component {
 
@@ -8,37 +10,35 @@ class MainCategorySelect extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = (e, elementList) => {
-    this.props.onChange(e.target.id, elementList[e.target.value]);
-  };
+  handleChange(newMainCategory) {
+    const {mainCategoryList} = this.props;
+    let newCategory = findElementByName(mainCategoryList, newMainCategory);
+    this.props.handleCategoryChange("mainCategory", newCategory);
+  }
 
   showCategoryEdit = (category) => {
     this.props.showCategoryEdit(category);
   };
 
   render() {
-    const {id, model, labelTitle, placeHolder, elementList} = this.props;
+    const {mainCategory, mainCategoryList} = this.props;
+    const {transactionMainCategoryLabel, transactionMainCategoryMessage} = transactionMessages;
+
+    let mainCategorySelectList = mainCategoryList.length === 0
+      ? createCategoryListWithNullForSelect(mainCategoryList)
+      : createCategoryListForSelect(mainCategoryList);
+
+    let model = mainCategory !== undefined ? mainCategory.name.value : undefined;
 
     return (
       <React.Fragment>
-        <div className="input-group mt-3">
-          <label className="input-group-addon input-group-text" htmlFor={id}>{labelTitle}</label>
-          <select className="form-control" id={id} value={model === undefined ? 0 : getIndexOfElementById(elementList, model.id)}
-                  onChange={(e) => this.handleChange(e, elementList)}>
-            {elementList.map(function (element, index) {
-              return model === undefined
-                ? <option key={index} value={index} className="text-muted">{placeHolder}</option>
-                : <option key={index} value={index} className="text-unmuted">{element.name.value}</option>
-            })
-            }
-          </select>
-          <button type="button" className="close ml-3" onClick={() => this.showCategoryEdit(model)}>
-            <span className="btn btn-warning btn-sm fas fa-edit"/>
-          </button>
-        </div>
-      </React.Fragment>
-    )
+        <ModelSelectValue onChange={this.handleChange}
+                          id="mainCategory" model={model} value={model} elementList={mainCategorySelectList}
+                          editableObject={mainCategory} showCategoryEdit={this.showCategoryEdit}
+                          labelTitle={transactionMainCategoryLabel} placeHolder={transactionMainCategoryMessage} type="text"/>
+      </React.Fragment>)
   }
+
 }
 
 export default MainCategorySelect;

@@ -118,7 +118,6 @@ class MainCategoryForm extends Component {
       <EditSubCategory subCategoryModel={editAbleSubCategory} transactionType={transactionType}
                        showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.refreshSubCategories}/>);
 
-
     return (
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
@@ -128,8 +127,8 @@ class MainCategoryForm extends Component {
               <ModelStringValue onChange={this.handleFieldChange}
                                 id="name" model={name} labelTitle={categoryNameLabel}
                                 placeHolder={categoryNameMessage} type="text"/>
-              <SubCategoryList subCategoryModelSet={subCategoryModelSet}
-                               subCategoryList={subCategoryList}
+              <SubCategoryList subCategoriesOfMainCategory={subCategoryModelSet}
+                               subCategoryListFromRepository={subCategoryList}
                                transactionType={transactionType}
                                editable={true}
                                setSubCategoryModelSet={this.setSubCategoryModelSet}

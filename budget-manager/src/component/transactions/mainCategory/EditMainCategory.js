@@ -66,7 +66,6 @@ class EditMainCategory extends Component {
     const {mainCategoryModel} = this.state;
     if (validateModel(mainCategoryModel)) {
       let context = createTransactionContext(userHolder, logHolder, transactionType);
-      console.log(mainCategoryModel);
       updateMainCategory(context, mainCategoryModel);
       refreshMainCategories('mainCategory', mainCategoryModel);
     }
@@ -95,9 +94,6 @@ class EditMainCategory extends Component {
     const {name, subCategoryModelSet} = this.state.mainCategoryModel;
     const {categoryNameLabel, categoryNameMessage} = categoryMessages;
 
-    console.log("render: EditMainCategory");
-    console.log(this.props);
-
     return (
       <div className='custom-popup'>
         <div className='card card-body custom-popup-inner custom-popup-inner-subcategory'>
@@ -106,11 +102,11 @@ class EditMainCategory extends Component {
             <ModelStringValue onChange={this.handleFieldChange}
                               id="name" model={name}
                               labelTitle={categoryNameLabel} placeHolder={categoryNameMessage} type="text"/>
-            <SubCategoryList subCategoryModelSet={subCategoryModelSet}
-                             subCategoryList={subCategoryList}
+            <SubCategoryList subCategoriesOfMainCategory={subCategoryModelSet}
+                             subCategoryListFromRepository={subCategoryList}
                              transactionType={transactionType}
-                             setSubCategoryModelSet={this.setSubCategoryModelSet}
-                             editable={false}/>
+                             editable={false}
+                             setSubCategoryModelSet={this.setSubCategoryModelSet}/>
             <div className="mx-auto mt-3 mb-2">
               <button className="btn btn-outline-success mx-3">
                 <span className="fas fa-pencil-alt"/>

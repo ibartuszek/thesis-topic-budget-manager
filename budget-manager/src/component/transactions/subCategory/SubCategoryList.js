@@ -1,13 +1,20 @@
 import React, {Component} from 'react';
-import ModelSelectValue from "../../layout/form/ModelSelectValue";
-import {addElementToArray, createCategoryListForSelect, removeElementFromArray} from "../../../actions/common/listActions";
-import {categoryMessages} from "../../../store/MessageHolder";
+import {connect} from "react-redux";
 import SubCategoryListItem from "./SubCategoryListItem";
+import {
+  addElementToArray,
+  createCategoryListWithNullForSelect,
+  findElementById,
+  findElementByName,
+  removeElementFromArray
+} from "../../../actions/common/listActions";
+import {categoryMessages} from "../../../store/MessageHolder";
+import ModelSelectValue from "../../layout/form/ModelSelectValue";
 
 class SubCategoryList extends Component {
 
   state = {
-    subCategoryModelSet: [],
+    subCategoriesOfMainCategory: []
   };
 
   constructor(props) {
@@ -18,42 +25,52 @@ class SubCategoryList extends Component {
     this.showCategoryEdit = this.showCategoryEdit.bind(this);
   }
 
-  handleRemoveCategory(id) {
-    this.setSubCategoryModelSet(removeElementFromArray(this.props.subCategoryModelSet, id));
+  componentDidMount() {
+    this.setState({
+      subCategoriesOfMainCategory: this.props.subCategoriesOfMainCategory
+    })
   }
 
-  handleAddCategory(id, value, newCategory) {
-    this.setSubCategoryModelSet(addElementToArray(this.props.subCategoryModelSet, newCategory));
+  handleRemoveCategory(removableCategoryId) {
+    const {subCategoryListFromRepository, subCategoriesOfMainCategory} = this.props;
+    let removableCategory = findElementById(subCategoryListFromRepository, removableCategoryId);
+    let newSubCategories = removeElementFromArray(subCategoriesOfMainCategory, removableCategory);
+    this.setSubCategoryModelSet(newSubCategories);
+    this.setState({
+      subCategoriesOfMainCategory: newSubCategories
+    })
+  }
+
+  handleAddCategory(newCategoryName) {
+    const {subCategoryListFromRepository, subCategoriesOfMainCategory} = this.props;
+    let newCategory = findElementByName(subCategoryListFromRepository, newCategoryName);
+    this.setSubCategoryModelSet(addElementToArray(subCategoriesOfMainCategory, newCategory));
   }
 
   setSubCategoryModelSet(modifiedSubCategoryModelSet) {
-    this.setState({
-      subCategoryModelSet: modifiedSubCategoryModelSet
-    });
     this.props.setSubCategoryModelSet(modifiedSubCategoryModelSet);
   }
 
   showCategoryEdit = (subCategory) => {
-    console.log("showCategoryEdit");
     this.props.showCategoryEdit(subCategory);
   };
 
   render() {
     const {subCategoryLabel, selectNewCategory, addNewSubCategory} = categoryMessages;
-    const {subCategoryList, subCategoryModelSet, editable} = this.props;
+    const {subCategoryListFromRepository, subCategoriesOfMainCategory, editable} = this.props;
 
-    const subcategories = subCategoryModelSet.map((subCategory) =>
-      <SubCategoryListItem key={subCategory.id} id={subCategory.id} name={subCategory.name.value} category={subCategory}
+    const subcategories = subCategoriesOfMainCategory.map((subCategory, index) =>
+      <SubCategoryListItem key={index} id={subCategory.id} name={subCategory.name.value} category={subCategory}
                            label={subCategoryLabel} editable={editable} showCategoryEdit={this.showCategoryEdit}
                            onChange={this.handleRemoveCategory}/>);
 
-    const categoryList = createCategoryListForSelect(subCategoryList, subCategoryModelSet);
+    const categoryList = createCategoryListWithNullForSelect(subCategoryListFromRepository, subCategoriesOfMainCategory);
 
     return (
       <React.Fragment>
         {subcategories}
         <ModelSelectValue onChange={this.handleAddCategory}
-                          id="newSubCategoryModel" model={undefined} labelTitle={addNewSubCategory}
+                          id="newSubCategoryModel" value={undefined} labelTitle={addNewSubCategory}
                           placeHolder={selectNewCategory} elementList={categoryList}/>
       </React.Fragment>
     );
@@ -61,4 +78,10 @@ class SubCategoryList extends Component {
 
 }
 
-export default SubCategoryList;
+const mapStateToProps = (state) => {
+  return {
+    categoryHolder: state.categoryHolder
+  }
+};
+
+export default connect(mapStateToProps)(SubCategoryList);
