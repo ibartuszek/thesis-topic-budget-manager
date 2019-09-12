@@ -14,7 +14,7 @@ class ModelDateValue extends Component {
   }
 
   handleChange = (e, id, errorMessage) => {
-    this.props.onChange(id, convertDate(e, dateProperties.dateFormat), errorMessage);
+    this.props.onChange(id, convertDate(e), errorMessage);
   };
 
   render() {
@@ -22,7 +22,7 @@ class ModelDateValue extends Component {
 
     // TODO: check
     let date = model !== undefined && model !== null && model.value !== null ? new Date(model.value) : null;
-    const errorMessage = date !== undefined ? validateModelDateValue(model, dateProperties.dateFormat, labelTitle) : null;
+    const errorMessage = date !== undefined ? validateModelDateValue(model, labelTitle) : null;
 
     let popperModifiers = {
       offset: {

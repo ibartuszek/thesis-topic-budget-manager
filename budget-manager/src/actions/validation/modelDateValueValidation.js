@@ -1,8 +1,10 @@
 import moment from "moment";
 import {replaceParams, validationMessages} from "../../store/MessageHolder";
+import {dateProperties} from "../../store/Properties";
 
-export function validateModelDateValue(date, dateFormat, labelTitle) {
+export function validateModelDateValue(date, labelTitle) {
   const {datePatternErrorMessage, dateMustBeAfter} = validationMessages;
+  const dateFormat = dateProperties.dateFormat;
   let errorMessage = null;
   if (date !== undefined && date !== null && date.value !== null) {
     if (!moment(date.value, dateFormat, true).isValid()) {

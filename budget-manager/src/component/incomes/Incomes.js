@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Loading from '../Loading'
+import Transaction from "../transactions/Transaction";
 import {createContext} from "../../actions/common/createContext";
 import {fetchMainCategories, setMainCategoriesToReady} from '../../actions/category/fetchMainCategories';
 import {fetchSubCategories, setSubCategoriesToReady} from "../../actions/category/fetchSubCategories";
-import TransactionCard from "../transactions/TransactionCard";
 
 
 class Incomes extends Component {
@@ -68,7 +68,7 @@ class Incomes extends Component {
       const mainCategoryList = categoryHolder[this.data.transactionType.toLowerCase() + "MainCategories"];
       const subCategoryList = categoryHolder[this.data.transactionType.toLowerCase() + "SubCategories"];
       content = (
-        <TransactionCard data={this.data} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList}/>
+        <Transaction data={this.data} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList}/>
       )
     } else {
       content = <Loading/>

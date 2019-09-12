@@ -22,6 +22,7 @@ export const categoryMessages = {
 export const transactionMessages = {
   createTransactionSuccess: "The transaction has been saved.",
   createTransactionError: "The transaction has been saved before.",
+  createTransactionTitle: "Create new transaction",
   transactionAmountLabel: "Amount",
   transactionAmountMessage: "The amount of your new transaction.",
   transactionCurrencyLabel: "Currency",

@@ -1,17 +1,17 @@
 import React, {Component} from 'react';
 import CardHeader from "../layout/card/CardHeader";
-import SubCategoryCard from "./subCategory/SubCategoryCard";
-import TransactionForm from "./TransactionForm";
-import {createCardNames} from "../../actions/message/createElementIds";
 import MainCategoryCard from "./mainCategory/MainCategoryCard";
+import SubCategoryCard from "./subCategory/SubCategoryCard";
+import {createCardNames} from "../../actions/message/createElementIds";
+import TransactionCard from "./transaction/TransactionCard";
 
-class TransactionCard extends Component {
+class Transaction extends Component {
 
   render() {
     const {mainCategoryList, subCategoryList} = this.props;
     const cardData = createCardNames(this.props.data);
 
-    console.log("render: TransactionCard");
+    console.log("render: Transaction");
     console.log(this.props);
 
     return (
@@ -22,7 +22,7 @@ class TransactionCard extends Component {
                           subCategoryList={subCategoryList}/>
         <SubCategoryCard transactionType={cardData.transactionType}
                          target={cardData.createSubType}/>
-        <TransactionForm transactionType={cardData.transactionType}
+        <TransactionCard transactionType={cardData.transactionType}
                          target={cardData.createTransaction}
                          mainCategoryList={mainCategoryList}
                          subCategoryList={subCategoryList}/>
@@ -31,4 +31,4 @@ class TransactionCard extends Component {
   }
 }
 
-export default TransactionCard;
+export default Transaction;

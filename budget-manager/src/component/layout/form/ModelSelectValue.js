@@ -8,9 +8,7 @@ class ModelSelectValue extends Component {
   }
 
   handleChange = (e, elementList) => {
-    // if (elementList[e.target.value] !== null) {
     this.props.onChange(elementList[e.target.value]);
-    // }
   };
 
   showCategoryEdit = (editableObject) => {
@@ -18,7 +16,7 @@ class ModelSelectValue extends Component {
   };
 
   render() {
-    const {id, model, labelTitle, placeHolder, elementList, editableObject, firstElementEnabled} = this.props;
+    const {id, model, labelTitle, placeHolder, elementList, editableObject} = this.props;
     let optionClass = model === undefined ? "form-control text-muted" : "form-control";
 
     let editButton = editableObject !== undefined ? (
