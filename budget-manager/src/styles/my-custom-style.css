@@ -21,6 +21,10 @@ label.input-group-addon.input-group-text {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.custom-error-message-container {
+    color: var(--danger);
+}
+
 .custom-popup {
     position: fixed;
     width: 100%;
@@ -44,14 +48,26 @@ label.input-group-addon.input-group-text {
 .custom-popup-inner-subcategory {
     width: 500px;
     margin-left: -250px;
+    border-radius: 0.8em;
+}
+
+.custom-popup-inner-delete-transaction {
+    top: 25%;
+    width: 350px;
+    margin-left: -175px;
+    border-radius: 1em;
+}
+
+.custom-react-datepicker-wrapper div {
+    flex: 1 1 auto;
 }
 
 .custom-success-message-container {
     color: var(--success);
 }
 
-.custom-error-message-container {
-    color: var(--danger);
+.custom-table-column {
+    min-width: 120px;
 }
 
 .fas.fa-sort:hover {
@@ -99,10 +115,7 @@ label.input-group-addon.input-group-text {
 .navbar-custom-colored {
     color: var(--light);
     background-color: var(--orange);
-}
-
-.react-datepicker-wrapper {
-    flex: 1 1 auto;
+    /* background-color: var(--light); */
 }
 
 .text-unmuted {

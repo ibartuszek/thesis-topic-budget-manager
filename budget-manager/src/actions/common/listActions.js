@@ -16,8 +16,38 @@ export function addElementToArray(targetList, newObject) {
   return result;
 }
 
+export function replaceElementAtArray(targetList, newObject) {
+  let newArrayWithoutElement = removeElementFromArray(targetList, newObject);
+  return addElementToArray(newArrayWithoutElement, newObject);
+}
+
+export function findElementByName(listFromRepo, name) {
+  let result = null;
+  for (let index = 0; index < listFromRepo.length && result === null; index++) {
+    let currentObject = listFromRepo[index];
+    result = currentObject.name.value === name ? currentObject : null;
+  }
+  return result;
+}
+
+export function findElementById(listFromRepo, id) {
+  let result = null;
+  for (let index = 0; index < listFromRepo.length && result === null; index++) {
+    let currentObject = listFromRepo[index];
+    result = currentObject.id === id ? currentObject : null;
+  }
+  return result;
+}
+
 export function createCategoryListForSelect(categoriesFromRepo, categoriesFromObject) {
   let result = [];
+  populateResultList(result, categoriesFromRepo, categoriesFromObject);
+  return result;
+}
+
+export function createCategoryListWithNullForSelect(categoriesFromRepo, categoriesFromObject) {
+  let result = [];
+  result.push(null);
   populateResultList(result, categoriesFromRepo, categoriesFromObject);
   return result;
 }
@@ -37,47 +67,4 @@ function populateResultList(result, categoriesFromRepo, categoriesFromObject) {
       result.push(category.name.value);
     }
   }
-}
-
-export function createCategoryListWithNullForSelect(categoriesFromRepo, categoriesFromObject) {
-  let result = [];
-  result.push(null);
-  populateResultList(result, categoriesFromRepo, categoriesFromObject);
-  return result;
-}
-
-export function replaceElementAtArray(targetList, newObject) {
-  let newArrayWithoutElement = removeElementFromArray(targetList, newObject);
-  return addElementToArray(newArrayWithoutElement, newObject);
-}
-
-export function getIndexOfElementById(targetList, id) {
-  let index = 0;
-  let found = false;
-  while (index < targetList.length && !found) {
-    let element = targetList[index];
-    found = element.id === id;
-    if (!found) {
-      index++;
-    }
-  }
-  return found ? index : -1;
-}
-
-export function findElementByName(listFromRepo, name) {
-  let result = null;
-  for (let index = 0; index < listFromRepo.length && result === null; index++) {
-    let currentObject = listFromRepo[index];
-    result = currentObject.name.value === name ? currentObject : null;
-  }
-  return result;
-}
-
-export function findElementById(listFromRepo, id) {
-  let result = null;
-  for (let index = 0; index < listFromRepo.length && result === null; index++) {
-    let currentObject = listFromRepo[index];
-    result = currentObject.id === id ? currentObject : null;
-  }
-  return result;
 }

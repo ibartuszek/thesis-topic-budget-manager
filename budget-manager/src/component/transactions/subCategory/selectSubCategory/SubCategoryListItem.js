@@ -19,9 +19,9 @@ class SubCategoryListItem extends Component {
     const {id, name, label, category, editable} = this.props;
     const edit = !editable ? null :
       (
-        <button type="button" className="close ml-3" onClick={() => this.showCategoryEdit(category)}>
-          <span className="btn btn-warning btn-sm fas fa-edit"/>
-        </button>
+        <div className="my-1">
+          <button type="button" className="btn btn-warning btn-sm fas fa-edit ml-3" onClick={() => this.showCategoryEdit(category)}/>
+        </div>
       );
 
     return (

@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import AlertMessageComponent from "../../AlertMessageComponent";
 import TransactionForm from "./TransactionForm";
-import {createMainCategory} from "../../../actions/category/createMainCategory";
+import {createTransaction} from "../../../actions/transaction/createTransaction";
+import {createTransactionContext} from "../../../actions/common/createContext";
 import {getMessage, removeMessage} from "../../../actions/message/messageActions";
 import {transactionMessages} from "../../../store/MessageHolder";
 import {validateTransaction} from "../../../actions/validation/validateTransaction";
-import {createTransactionContext} from "../../../actions/common/createContext";
 
 class TransactionCard extends Component {
 
@@ -17,11 +17,10 @@ class TransactionCard extends Component {
   }
 
   handleSubmit = (transaction) => {
-    const {userHolder, logHolder, transactionType, createMainCategory} = this.props;
+    const {userHolder, logHolder, transactionType, createTransaction} = this.props;
     if (validateTransaction(transaction)) {
       let context = createTransactionContext(userHolder, logHolder, transactionType);
-      // TODO:
-      // createMainCategory(context, mainCategoryModel);
+      createTransaction(context, transaction);
     }
   };
 
@@ -58,7 +57,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createMainCategory: (context, model) => dispatch(createMainCategory(context, model)),
+    createTransaction: (context, model) => dispatch(createTransaction(context, model)),
     removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
   };
 };

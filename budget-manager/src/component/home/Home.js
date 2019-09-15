@@ -3,8 +3,8 @@ import {Redirect} from 'react-router-dom';
 import DismissableAlert from "../DismissableAlert";
 import Loading from '../Loading'
 import {connect} from "react-redux";
-import {removeMessage} from "../../actions/message/messageActions";
 import {dateProperties} from "../../store/Properties";
+import {removeMessage} from "../../actions/message/messageActions";
 import moment from "moment";
 
 class Home extends Component {

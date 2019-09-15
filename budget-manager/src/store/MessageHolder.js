@@ -23,6 +23,8 @@ export const transactionMessages = {
   createTransactionSuccess: "The transaction has been saved.",
   createTransactionError: "The transaction has been saved before.",
   createTransactionTitle: "Create new transaction",
+  deleteTransactionSuccess: "The transaction has been deleted.",
+  deleteTransactionError: "The transaction cannot be deleted.",
   transactionAmountLabel: "Amount",
   transactionAmountMessage: "The amount of your new transaction.",
   transactionCurrencyLabel: "Currency",
@@ -40,8 +42,15 @@ export const transactionMessages = {
   transactionSubCategoryLabel: "Supplementary category",
   transactionSubCategoryMessage: "The supplementary category of the transaction",
   transactionTitleLabel: "Title",
-  transactionTitleMessage: "The title of your new transaction."
-
+  transactionTitleMessage: "The title of your new transaction.",
+  transactionsEndDateLabel: "End date",
+  transactionsEndDatePlaceHolder: "Select end date",
+  transactionsStartDateLabel: "Start date",
+  transactionsStartDatePlaceHolder: "Select start date",
+  transactionsUnavailableMessage: "We cannot reach the backup repository, please try it later!",
+  updateTransactionSuccess: "The transaction has been modified!",
+  updateTransactionError: "The transaction exists!",
+  updateTransactionTitle: "Update transaction",
 };
 
 export const userFormMessages = {

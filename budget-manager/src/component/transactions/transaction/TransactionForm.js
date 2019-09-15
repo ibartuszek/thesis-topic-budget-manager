@@ -10,8 +10,8 @@ import MonthlySelect from "../MonthlySelect";
 import SubCategoryEditPopUp from "../subCategory/SubCategoryEditPopUp";
 import SubCategorySelect from "../subCategory/selectSubCategory/SubCategorySelect";
 import {dateProperties} from "../../../store/Properties";
+import {getPossibleFirstDate} from "../../../actions/date/dateActions";
 import {transactionMessages} from "../../../store/MessageHolder";
-import {convertDate} from "../../../actions/date/dateActions";
 
 class TransactionForm extends Component {
 
@@ -76,6 +76,7 @@ class TransactionForm extends Component {
     this.setFirstPossibleDay = this.setFirstPossibleDay.bind(this);
     this.handleModelValueChange = this.handleModelValueChange.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.showTransactionEdit = this.showTransactionEdit.bind(this);
   }
 
   componentDidMount() {
@@ -109,7 +110,7 @@ class TransactionForm extends Component {
   }
 
   setFirstPossibleDay() {
-    let possibleFirstDay = convertDate(moment().subtract(dateProperties.subtractToFirstDate, dateProperties.unit));
+    let possibleFirstDay = getPossibleFirstDate();
     this.setState(prevState => ({
       ...prevState,
       transactionModel: {
@@ -162,6 +163,10 @@ class TransactionForm extends Component {
     })
   };
 
+  showTransactionEdit(message) {
+    this.props.showTransactionEdit(message);
+  }
+
   render() {
     const {formTitle, mainCategoryList, subCategoryList, popup, transactionType} = this.props;
     const {editAbleMainCategory, editAbleSubCategory} = this.state;
@@ -189,6 +194,14 @@ class TransactionForm extends Component {
       <SubCategoryEditPopUp subCategoryModel={editAbleSubCategory} transactionType={transactionType}
                             showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.handleFieldChange}/>);
 
+    let closeButton = editableCategories ? null :
+      (
+        <button className="btn btn-outline-danger mx-3 mt-3 mb-2" onClick={this.showTransactionEdit}>
+          <span>&times;</span>
+          <span> Close </span>
+        </button>
+      );
+
     return (
       <React.Fragment>
         <form className="form-group mb-0" onSubmit={this.handleSubmit}>
@@ -201,9 +214,9 @@ class TransactionForm extends Component {
                             labelTitle={transactionAmountLabel} placeHolder={transactionAmountMessage} type="number"/>
           <CurrencySelect handleFieldChange={this.handleModelValueChange} currency={currency}/>
           <MainCategorySelect handleFieldChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
-                              mainCategory={mainCategory} mainCategoryList={mainCategoryList}/>
+                              mainCategory={mainCategory} mainCategoryList={mainCategoryList} editable={editableCategories}/>
           <SubCategorySelect handleFieldChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
-                             subCategory={subCategory} subCategoryList={subCategoryList}/>
+                             subCategory={subCategory} subCategoryList={subCategoryList} editable={editableCategories}/>
           <MonthlySelect handleFieldChange={this.handleFieldChange} monthly={monthly}/>
           <ModelDateValue onChange={this.handleModelValueChange}
                           id="date" model={date}
@@ -216,6 +229,7 @@ class TransactionForm extends Component {
             <span className="fas fa-pencil-alt"/>
             <span> Save transaction </span>
           </button>
+          {closeButton}
         </form>
         {editMainCategory}
         {editSubCategory}

@@ -21,7 +21,6 @@ class Incomes extends Component {
     subCategoriesAreLoaded: false,
   };
 
-
   componentDidMount() {
     const {userHolder, logHolder} = this.props;
     if (userHolder.userIsLoggedIn) {
@@ -85,9 +84,10 @@ class Incomes extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    userHolder: state.userHolder,
+    categoryHolder: state.categoryHolder,
     logHolder: state.logHolder,
-    categoryHolder: state.categoryHolder
+    transactionHolder: state.transactionHolder,
+    userHolder: state.userHolder,
   }
 };
 

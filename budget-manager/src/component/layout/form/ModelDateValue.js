@@ -33,7 +33,7 @@ class ModelDateValue extends Component {
 
     return (
       <React.Fragment>
-        <div className="input-group mt-3">
+        <div className="input-group mt-3 custom-react-datepicker-wrapper">
           <label className="input-group-addon input-group-text" htmlFor={id}>{labelTitle}</label>
           <DatePicker
             className="form-control" id={id} placeholderText={placeHolder}

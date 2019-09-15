@@ -120,11 +120,12 @@ class MainCategoryForm extends Component {
 
     let closeButton = editableSubcategories ? null :
       (
-        <button className="btn btn-outline-danger mx-3" onClick={this.showMainCategoryEdit}>
+        <button className="btn btn-outline-danger mx-3 mt-3 mb-2" onClick={this.showMainCategoryEdit}>
           <span>&times;</span>
           <span> Close </span>
         </button>
       );
+
 
     return (
       <React.Fragment>

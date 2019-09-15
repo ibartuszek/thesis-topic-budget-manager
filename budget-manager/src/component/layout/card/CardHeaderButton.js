@@ -6,7 +6,7 @@ const CardHeaderButton = (props) => {
 
   return (
     <React.Fragment>
-      <button aria-controls={target} aria-expanded="false" className="btn btn-outline-info mr-2 mt-1"
+      <button aria-controls={target} aria-expanded="false" className="btn btn-outline-info mx-3 my-2"
               data-target={dataTarget} data-toggle="collapse" type="button">
         <span className="fas fa-plus"/>
         <span> {buttonName} </span>

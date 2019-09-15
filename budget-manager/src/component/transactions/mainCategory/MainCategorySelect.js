@@ -21,7 +21,7 @@ class MainCategorySelect extends Component {
   };
 
   render() {
-    const {mainCategory, mainCategoryList} = this.props;
+    const {mainCategory, mainCategoryList, editable} = this.props;
     const {transactionMainCategoryLabel, transactionMainCategoryMessage} = transactionMessages;
 
     let mainCategorySelectList = mainCategoryList.length === 0
@@ -34,7 +34,7 @@ class MainCategorySelect extends Component {
       <React.Fragment>
         <ModelSelectValue onChange={this.handleChange}
                           id="mainCategory" model={model} value={model} elementList={mainCategorySelectList}
-                          editableObject={mainCategory} showCategoryEdit={this.showCategoryEdit}
+                          editableObject={mainCategory} editable={editable} showCategoryEdit={this.showCategoryEdit}
                           labelTitle={transactionMainCategoryLabel} placeHolder={transactionMainCategoryMessage} type="text"/>
       </React.Fragment>)
   }

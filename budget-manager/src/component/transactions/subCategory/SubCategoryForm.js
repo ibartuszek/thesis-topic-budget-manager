@@ -80,7 +80,7 @@ class SubCategoryForm extends Component {
 
     let closeButton = popup === undefined ? null :
       (
-        <button className="btn btn-outline-danger mx-3" onClick={this.showCategoryEdit}>
+        <button className="btn btn-outline-danger mx-3 mt-3 mb-2" onClick={this.showCategoryEdit}>
           <span>&times;</span>
           <span> Close </span>
         </button>
