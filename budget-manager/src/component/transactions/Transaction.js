@@ -7,36 +7,7 @@ import {createCardNames} from "../../actions/message/createElementIds";
 import TransactionTable from "./transaction/table/TransactionTable";
 
 class Transaction extends Component {
-  /*
-    state = {
-      transactionsAreLoaded: false
-    };
 
-    componentDidUpdate(oldProps) {
-      const {data} = this.props;
-      const newProps = this.props;
-
-      let transactionsName = data['transactionType'].toLowerCase() + 's';
-      let transactionsAreLoadedName = data['transactionType'].toLowerCase() + 'sAreLoaded';
-
-      if (!newProps.transactionHolder[transactionsAreLoadedName] && Object.keys(newProps.transactionHolder[transactionsName]).length > 0) {
-        // TODO:
-        // this.props.setMainCategoriesToReady(this.data['transactionType']);
-      }
-      if (!this.state.transactionsAreLoaded && newProps.transactionHolder[transactionsAreLoadedName]) {
-        this.setState({
-          ...this.state,
-          transactionsAreLoaded: true
-        })
-      }
-    }
-
-    handleSubmit = (e) => {
-      e.preventDefault();
-      console.log("Transaction handle submit");
-      // this.props.handleSubmit(this.state.transactionModel);
-    };
-  */
   render() {
     const {data, mainCategoryList, subCategoryList} = this.props;
     const cardData = createCardNames(data);
@@ -66,25 +37,4 @@ class Transaction extends Component {
   }
 }
 
-/*
-const mapStateToProps = (state) => {
-  return {
-    transactionHolder: state.transactionHolder,
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatch,
-    ...bindActionCreators(
-      {
-        fetchMainCategories: fetchMainCategories,
-        setMainCategoriesToReady: setMainCategoriesToReady,
-      },
-      dispatch)
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Transaction)
-*/
 export default Transaction

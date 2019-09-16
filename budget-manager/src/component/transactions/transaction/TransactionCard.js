@@ -30,13 +30,12 @@ class TransactionCard extends Component {
 
   render() {
     const {logHolder, mainCategoryList, subCategoryList, target, transactionType} = this.props;
-    console.log(this.props);
 
     return (
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
           <div className="card card-body">
-            <TransactionForm transactionType={transactionType} mainCategoryList={mainCategoryList} subCategoryList={subCategoryList}
+            <TransactionForm transactionType={transactionType} mainCategoryList={mainCategoryList} subCategoryListFromRepo={subCategoryList}
                              formTitle={transactionMessages.createTransactionTitle} handleSubmit={this.handleSubmit}/>
             <AlertMessageComponent message={getMessage(logHolder.messages, "createTransactionSuccess", true)} onChange={this.handleDismiss}/>
             <AlertMessageComponent message={getMessage(logHolder.messages, "createTransactionError", false)} onChange={this.handleDismiss}/>

@@ -26,11 +26,3 @@ export function fetchSubCategories(context, type) {
     });
   }
 }
-
-export function setSubCategoriesToReady(type) {
-  let successCase = type.toUpperCase() + '_SUB_CATEGORIES_ARE_READY';
-  console.log(successCase);
-  return (dispatch) => {
-    dispatch({type: successCase});
-  }
-}

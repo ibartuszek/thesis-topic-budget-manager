@@ -7,6 +7,10 @@ const initState = {
   incomeSubCategoriesAreLoaded: false,
   incomeMainCategories: [],
   incomeSubCategories: [],
+  outcomeMainCategoriesAreLoaded: false,
+  outcomeSubCategoriesAreLoaded: false,
+  outcomeMainCategories: [],
+  outcomeSubCategories: [],
 };
 
 const CategoryReducer = (state = initState, action) => {
@@ -42,6 +46,7 @@ const CategoryReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
         incomeMainCategories: action.mainCategories,
+        incomeMainCategoriesAreLoaded: true,
       });
     case 'GET_INCOME_MAIN_CATEGORIES_ERROR':
       key = "categoriesUnavailableMessage";
@@ -52,23 +57,14 @@ const CategoryReducer = (state = initState, action) => {
     case 'GET_INCOME_SUB_CATEGORIES_SUCCESS':
       return Object.assign({}, state, {
         ...state,
-        incomeSubCategories: action.subCategories
+        incomeSubCategories: action.subCategories,
+        incomeSubCategoriesAreLoaded: true,
       });
     case 'GET_INCOME_SUB_CATEGORIES_ERROR':
       key = "categoriesUnavailableMessage";
       addMessage(action.messages, createMessage(key, false, categoryMessages));
       return {
         ...state,
-      };
-    case 'INCOME_MAIN_CATEGORIES_ARE_READY':
-      return {
-        ...state,
-        incomeMainCategoriesAreLoaded: true,
-      };
-    case 'INCOME_SUB_CATEGORIES_ARE_READY':
-      return {
-        ...state,
-        incomeSubCategoriesAreLoaded: true,
       };
     case 'UPDATE_INCOME_MAIN_CATEGORY_SUCCESS':
       key = "updateMainCategorySuccess";
@@ -96,6 +92,84 @@ const CategoryReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
       });
+
+    case 'CREATE_OUTCOME_MAIN_CATEGORY_SUCCESS':
+      key = "createMainCategorySuccess";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+        outcomeMainCategories: addElementToArray(state.outcomeMainCategories, action.mainCategoryModel),
+      });
+    case 'CREATE_OUTCOME_MAIN_CATEGORY_ERROR':
+      key = "createMainCategoryError";
+      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
+    case 'CREATE_OUTCOME_SUB_CATEGORY_SUCCESS':
+      key = "createSubCategorySuccess";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+        outcomeSubCategories: addElementToArray(state.outcomeSubCategories, action.subCategoryModel),
+      });
+    case 'CREATE_OUTCOME_SUB_CATEGORY_ERROR':
+      key = "createSubCategoryError";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
+    case 'GET_OUTCOME_MAIN_CATEGORIES_SUCCESS':
+      return Object.assign({}, state, {
+        ...state,
+        outcomeMainCategories: action.mainCategories,
+        outcomeMainCategoriesAreLoaded: true,
+      });
+    case 'GET_OUTCOME_MAIN_CATEGORIES_ERROR':
+      key = "categoriesUnavailableMessage";
+      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      return {
+        ...state,
+      };
+    case 'GET_OUTCOME_SUB_CATEGORIES_SUCCESS':
+      return Object.assign({}, state, {
+        ...state,
+        outcomeSubCategories: action.subCategories,
+        outcomeSubCategoriesAreLoaded: true,
+      });
+    case 'GET_OUTCOME_SUB_CATEGORIES_ERROR':
+      key = "categoriesUnavailableMessage";
+      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      return {
+        ...state,
+      };
+    case 'UPDATE_OUTCOME_MAIN_CATEGORY_SUCCESS':
+      key = "updateMainCategorySuccess";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+        outcomeMainCategories: replaceElementAtArray(state.outcomeMainCategories, action.mainCategoryModel),
+      });
+    case 'UPDATE_OUTCOME_MAIN_CATEGORY_ERROR':
+      key = "updateMainCategoryError";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
+    case 'UPDATE_OUTCOME_SUB_CATEGORY_SUCCESS':
+      key = "updateSubCategorySuccess";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+        outcomeSubCategories: replaceElementAtArray(state.outcomeSubCategories, action.subCategoryModel),
+      });
+    case 'UPDATE_OUTCOME_SUB_CATEGORY_ERROR':
+      key = "updateSubCategoryError";
+      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
+
     default:
       return state;
   }

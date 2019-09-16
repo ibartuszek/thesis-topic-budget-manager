@@ -26,11 +26,3 @@ export function fetchMainCategories(context, type) {
     });
   }
 }
-
-export function setMainCategoriesToReady(type) {
-  let successCase = type.toUpperCase() + '_MAIN_CATEGORIES_ARE_READY';
-  console.log(successCase);
-  return (dispatch) => {
-    dispatch({type: successCase});
-  }
-}

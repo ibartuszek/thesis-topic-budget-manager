@@ -8,12 +8,12 @@ import {fetchMainCategories} from '../../actions/category/fetchMainCategories';
 import {fetchSubCategories} from "../../actions/category/fetchSubCategories";
 
 
-class Incomes extends Component {
+class Outcomes extends Component {
 
   data = {
-    transactionType: 'INCOME',
-    typeWithCapitalized: 'Income',
-    typeLowerCase: 'income'
+    transactionType: 'OUTCOME',
+    typeWithCapitalized: 'Outcome',
+    typeLowerCase: 'outcome'
   };
 
   state = {
@@ -95,4 +95,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Incomes)
+export default connect(mapStateToProps, mapDispatchToProps)(Outcomes)

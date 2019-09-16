@@ -21,7 +21,7 @@ class SubCategorySelect extends Component {
   };
 
   render() {
-    const {subCategory, subCategoryList} = this.props;
+    const {subCategory, subCategoryList, editable} = this.props;
     const {transactionSubCategoryLabel, transactionSubCategoryMessage} = transactionMessages;
 
     let subCategorySelectList = createCategoryListWithNullForSelect(subCategoryList);
@@ -32,7 +32,7 @@ class SubCategorySelect extends Component {
       <React.Fragment>
         <ModelSelectValue onChange={this.handleChange}
                           id="subCategory" model={model} value={model} elementList={subCategorySelectList}
-                          editableObject={subCategory} showCategoryEdit={this.showCategoryEdit}
+                          editableObject={subCategory} showCategoryEdit={this.showCategoryEdit} editable={editable}
                           labelTitle={transactionSubCategoryLabel} placeHolder={transactionSubCategoryMessage} type="text"/>
       </React.Fragment>)
   }

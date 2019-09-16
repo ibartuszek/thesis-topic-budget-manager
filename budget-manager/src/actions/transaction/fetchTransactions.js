@@ -30,11 +30,3 @@ export function fetchTransactions(context) {
     });
   }
 }
-
-export function setTransactionsToReady(type) {
-  let successCase = type.toUpperCase() + 'S_ARE_READY';
-  console.log(successCase);
-  return (dispatch) => {
-    dispatch({type: successCase});
-  }
-}

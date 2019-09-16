@@ -1,14 +1,14 @@
 import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import Navbar from './component/layout/Navbar';
-import LogIn from './component/auth/LogIn';
-import SignUp from './component/auth/SignUp';
 import Home from './component/home/Home';
 import Incomes from './component/incomes/Incomes';
-import Expenses from './component/expenses/Expenses';
 import Draft from './component/draft/Draft';
+import LogIn from './component/auth/LogIn';
+import Navbar from './component/layout/Navbar';
+import Outcomes from "./component/outcomes/Outcomes";
 import Reports from './component/reports/Reports';
 import Settings from './component/settings/Settings';
+import SignUp from './component/auth/SignUp';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           <Route path='/login' component={LogIn}/>
           <Route path='/signup' component={SignUp}/>
           <Route path='/incomes' component={Incomes}/>
-          <Route path='/expenses' component={Expenses}/>
+          <Route path='/expenses' component={Outcomes}/>
           <Route path='/draft' component={Draft}/>
           <Route path='/reports' component={Reports}/>
           <Route path='/settings' component={Settings}/>

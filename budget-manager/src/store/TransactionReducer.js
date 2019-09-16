@@ -5,6 +5,8 @@ import {addElementToArray, removeElementFromArray, replaceElementAtArray} from "
 const initState = {
   incomesAreLoaded: false,
   incomes: [],
+  outcomesAreLoaded: false,
+  outcomes: [],
 };
 
 const TransactionReducer = (state = initState, action) => {
@@ -40,17 +42,13 @@ const TransactionReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
         incomes: action.transactions,
+        incomesAreLoaded: true,
       });
     case 'GET_INCOMES_ERROR':
       key = "transactionsUnavailableMessage";
       addMessage(action.messages, createMessage(key, false, transactionMessages));
       return {
         ...state,
-      };
-    case 'INCOMES_ARE_READY':
-      return {
-        ...state,
-        incomesAreLoaded: true,
       };
     case 'UPDATE_INCOME_SUCCESS':
       key = "updateTransactionSuccess";
@@ -65,6 +63,59 @@ const TransactionReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
       });
+
+    case 'CREATE_OUTCOME_SUCCESS':
+      key = "createTransactionSuccess";
+      addMessage(action.messages, createMessage(key, true, transactionMessages));
+      return Object.assign({}, state, {
+        ...state,
+        outcomes: addElementToArray(state.outcomes, action.transactionModel),
+      });
+    case 'CREATE_OUTCOME_ERROR':
+      key = "createTransactionError";
+      addMessage(action.messages, createMessage(key, false, transactionMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
+    case 'DELETE_OUTCOME_SUCCESS':
+      key = "deleteTransactionSuccess";
+      addMessage(action.messages, createMessage(key, true, transactionMessages));
+      return Object.assign({}, state, {
+        ...state,
+        outcomes: removeElementFromArray(state.outcomes, action.transactionModel),
+      });
+    case 'DELETE_OUTCOME_ERROR':
+      key = "deleteTransactionError";
+      addMessage(action.messages, createMessage(key, true, transactionMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
+    case 'GET_OUTCOMES_SUCCESS':
+      return Object.assign({}, state, {
+        ...state,
+        outcomes: action.transactions,
+        outcomesAreLoaded: true,
+      });
+    case 'GET_OUTCOMES_ERROR':
+      key = "transactionsUnavailableMessage";
+      addMessage(action.messages, createMessage(key, false, transactionMessages));
+      return {
+        ...state,
+      };
+    case 'UPDATE_OUTCOME_SUCCESS':
+      key = "updateTransactionSuccess";
+      addMessage(action.messages, createMessage(key, true, transactionMessages));
+      return Object.assign({}, state, {
+        ...state,
+        outcomes: replaceElementAtArray(state.outcomes, action.transactionModel),
+      });
+    case 'UPDATE_OUTCOME_ERROR':
+      key = "updateTransactionError";
+      addMessage(action.messages, createMessage(key, true, transactionMessages));
+      return Object.assign({}, state, {
+        ...state,
+      });
+
     default:
       return state;
   }

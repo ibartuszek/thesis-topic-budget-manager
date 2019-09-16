@@ -5,7 +5,7 @@ import TransactionTableSearchBar from "./TransactionTableSearchBar";
 import Loading from "../../../Loading";
 import {getPossibleFirstDate} from "../../../../actions/date/dateActions";
 import {createContextParameters, createFetchTransactionsContext} from "../../../../actions/common/createContext";
-import {fetchTransactions, setTransactionsToReady} from "../../../../actions/transaction/fetchTransactions";
+import {fetchTransactions} from "../../../../actions/transaction/fetchTransactions";
 import {transactionMessages} from "../../../../store/MessageHolder";
 import TransactionTableBody from "./TransactionTableBody";
 
@@ -34,12 +34,8 @@ class TransactionTable extends Component {
     const {transactionType} = this.props;
     const newProps = this.props;
 
-    let transactionsName = transactionType.toLowerCase() + 's';
     let transactionsAreLoadedName = transactionType.toLowerCase() + 'sAreLoaded';
 
-    if (!newProps.transactionHolder[transactionsAreLoadedName] && Object.keys(newProps.transactionHolder[transactionsName]).length > 0) {
-      this.props.setTransactionsToReady(transactionType);
-    }
     if (!this.state.transactionsAreLoaded && newProps.transactionHolder[transactionsAreLoadedName]) {
       this.setState({
         ...this.state,
@@ -113,7 +109,6 @@ const mapDispatchToProps = (dispatch) => {
     ...bindActionCreators(
       {
         fetchTransactions: fetchTransactions,
-        setTransactionsToReady: setTransactionsToReady
       },
       dispatch)
   }

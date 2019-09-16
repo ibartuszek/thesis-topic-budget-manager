@@ -168,7 +168,7 @@ class TransactionForm extends Component {
   }
 
   render() {
-    const {formTitle, mainCategoryList, subCategoryList, popup, transactionType} = this.props;
+    const {formTitle, mainCategoryList, subCategoryListFromRepo, popup, transactionType} = this.props;
     const {editAbleMainCategory, editAbleSubCategory} = this.state;
     const {title, amount, currency, mainCategory, subCategory, monthly, date, endDate, description} = this.state.transactionModel;
     const {
@@ -186,8 +186,10 @@ class TransactionForm extends Component {
                         labelTitle={transactionEndDateLabel} placeHolder={transactionEndDateMessage}/>
       );
 
+    let subCategoryList = mainCategory !== undefined && mainCategory !== null ? mainCategory.subCategoryModelSet : [];
+
     let editMainCategory = !editableCategories || editAbleMainCategory === null ? null : (
-      <MainCategoryEditPopUp mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryList}
+      <MainCategoryEditPopUp mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryListFromRepo}
                              showCategoryEdit={this.showCategoryEdit} refreshMainCategories={this.handleFieldChange}/>);
 
     let editSubCategory = !editableCategories || editAbleSubCategory === null ? null : (
@@ -212,7 +214,7 @@ class TransactionForm extends Component {
           <ModelAmountValue onChange={this.handleModelValueChange}
                             id="amount" model={amount}
                             labelTitle={transactionAmountLabel} placeHolder={transactionAmountMessage} type="number"/>
-          <CurrencySelect handleFieldChange={this.handleModelValueChange} currency={currency}/>
+          <CurrencySelect handleModelValueChange={this.handleModelValueChange} currency={currency}/>
           <MainCategorySelect handleFieldChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
                               mainCategory={mainCategory} mainCategoryList={mainCategoryList} editable={editableCategories}/>
           <SubCategorySelect handleFieldChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
