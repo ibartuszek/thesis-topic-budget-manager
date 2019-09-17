@@ -6,6 +6,8 @@ import {getAccessToken} from '../../actions/user/getAccessToken';
 import {getUser} from '../../actions/user/getUser';
 import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import AlertMessageComponent from "../AlertMessageComponent";
+import {getAccessCookie} from "../../actions/user/cookie/getAccessCookie";
+import {setAccessToken} from "../../actions/user/setAccessToken";
 
 class LogIn extends Component {
   state = {
@@ -21,6 +23,26 @@ class LogIn extends Component {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
+  }
+
+  componentDidMount() {
+    const cookie = getAccessCookie();
+    if (cookie !== undefined && cookie !== null) {
+      this.setState({
+        email: {
+          value: cookie['userName']
+        }
+      });
+      this.props.setAccessToken(cookie['jwtToken']);
+    }
+  }
+
+  fetchUserData() {
+    const {userHolder, logHolder} = this.props;
+    const {email} = this.state;
+    if (userHolder.jwtToken !== null && email.value !== '' && !userHolder.userIsLoggedIn) {
+      this.props.getUser(this.state.email.value, userHolder.jwtToken, logHolder.messages);
+    }
   }
 
   handleFieldChange(id, value, errorMessage) {
@@ -45,16 +67,14 @@ class LogIn extends Component {
   }
 
   render() {
-    const {userHolder, getUser, logHolder} = this.props;
+    const {userHolder, logHolder} = this.props;
     const {email, password} = this.state;
-
-    if (userHolder.jwtToken != null && userHolder.userData == null) {
-      getUser(this.state.email.value, userHolder.jwtToken, logHolder.messages);
-    }
 
     if (userHolder.userIsLoggedIn) {
       return <Redirect to='/'/>;
     }
+
+    this.fetchUserData();
 
     return (
       <div className="mt-4 mx-3">
@@ -89,6 +109,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getAccessToken: (username, password, messages) => dispatch(getAccessToken(username, password, messages)),
+    setAccessToken: (accessToken) => dispatch(setAccessToken(accessToken)),
     getUser: (email, jwtToken, messages) => dispatch(getUser(email, jwtToken, messages)),
     removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
   };

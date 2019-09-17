@@ -1,5 +1,6 @@
 import {createUserData} from "./createUserData";
 import {createHeaderWithJwt} from "../common/createHeader";
+import {createAccessCookie} from "./cookie/createAccessCookie";
 
 export function getUser(userName, jwtToken, messages) {
   let url = `/bm/users/findByEmail?email=` + userName;
@@ -17,6 +18,7 @@ export function getUser(userName, jwtToken, messages) {
     ).then((response) => {
       let userData = createUserData(response['userModel']);
       console.log('LOGIN_SUCCESS');
+      createAccessCookie(userName, jwtToken);
       dispatch({type: 'LOGIN_SUCCESS', userData: userData, messages: messages});
     }).catch(err => {
       console.log('LOGIN_ERROR');
