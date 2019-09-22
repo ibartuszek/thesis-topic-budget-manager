@@ -14,7 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(scanBasePackages = "hu.elte.bm.authenticationservice")
 @PropertySource({
-    "classpath:common_constraints.properties",
     "classpath:messages.properties",
     "classpath:security.properties"
 })

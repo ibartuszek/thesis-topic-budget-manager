@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import hu.elte.bm.authenticationservice.domain.User;
 import hu.elte.bm.authenticationservice.service.UserService;
 
 @RestController
@@ -42,8 +43,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/bm/users/register", method = RequestMethod.POST, produces = APPLICATION_JSON)
-    public UserResponse registerUser(@RequestBody final UserRequestContext context) {
-        return UserResponse.createSuccessfulUserResponse(userService.registerUser(context.getUser()), userHasBeenRegistered);
+    public UserResponse registerUser(@Valid @RequestBody final User user) {
+        return UserResponse.createSuccessfulUserResponse(userService.registerUser(user), userHasBeenRegistered);
     }
 
     @RequestMapping(value = "/bm/users/update", method = RequestMethod.PUT, produces = APPLICATION_JSON)

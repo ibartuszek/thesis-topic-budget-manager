@@ -1,6 +1,18 @@
 package hu.elte.bm.authenticationservice.domain;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -8,9 +20,20 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public final class User {
 
     private final Long id;
+
+    @NotNull(message = "Email is compulsory")
+    // @NotBlank(message = "Email is compulsory")
+    @Length(min = 8, max = 50, message = "Email must be between 8 and 50 characters!")
+    @Pattern(regexp = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$", message = "Email must be given in a valid format!")
     private final String email;
+
+    @Length(min = 8, max = 16, message = "Password must be between 8 and 16 characters!")
     private final String password;
+
+    @Length(min = 2, max = 50, message = "First name must be between 2 and 50 characters!")
     private final String firstName;
+
+    @Length(min = 2, max = 50, message = "Last name must be between 2 and 50 characters!")
     private final String lastName;
 
     private User(final Builder builder) {
@@ -23,12 +46,12 @@ public final class User {
 
     public static User createUserWithNewPassword(final User user, final String password) {
         return User.builder()
-                .withId(user.getId())
-                .withPassword(password)
-                .withEmail(user.getEmail())
-                .withFirstName(user.getFirstName())
-                .withLastName(user.getLastName())
-                .build();
+            .withId(user.getId())
+            .withPassword(password)
+            .withEmail(user.getEmail())
+            .withFirstName(user.getFirstName())
+            .withLastName(user.getLastName())
+            .build();
     }
 
     public static Builder builder() {
@@ -120,7 +143,20 @@ public final class User {
         }
 
         public User build() {
-            return new User(this);
+            User result = new User(this);
+            // validate(result);
+            return result;
         }
+/*
+        private void validate(final User result) {
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<User>> violations = validator.validate(result);
+            if (!violations.isEmpty()) {
+                throw new ConstraintViolationException(
+                    new HashSet<ConstraintViolation<?>>(violations));
+            }
+        }
+*/
     }
 }

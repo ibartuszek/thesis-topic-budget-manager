@@ -29,8 +29,8 @@ public class UserService {
     @Value("${user.user_cannot_be_null:User cannot be null!}")
     private String userCannotBeNull;
 
-    @Value("${user.user_is_invalid:User is invalid!}")
-    private String userIsInvalid;
+    @Value("${user.id_must_be_null:New user's id cannot be null!}")
+    private String userIdMustBeNull;
 
     @Value("${user.password.masked_value:********}")
     private String maskedPasswordValue;
@@ -63,26 +63,28 @@ public class UserService {
 
     public User registerUser(final User user) {
         Assert.notNull(user, userCannotBeNull);
-        Assert.isNull(user.getId(), userIsInvalid);
+        Assert.isNull(user.getId(), userIdMustBeNull);
         validateEmailIsNotUsed(user.getEmail());
         return userDao.registerUser(User.createUserWithNewPassword(user, encoder.encode(user.getPassword())));
     }
 
     public User updateUser(final User user) {
-        Assert.notNull(user, userCannotBeNull);
-        Assert.notNull(user.getId(), userIsInvalid);
-        Optional<User> userFromRepository = userDao.findById(user.getId());
-        validateUserFromRepository(userFromRepository.isEmpty());
-        validateEmailIsNotUsedByOtherUsers(user, userFromRepository.get());
+        User userFromRepository = getValidatedUserFromRepository(user);
+        validateEmailIsNotUsedByOtherUsers(user, userFromRepository);
         User userToUpdate = maskedPasswordValue.equals(user.getPassword()) ? user : User.createUserWithNewPassword(user, encoder.encode(user.getPassword()));
         return userDao.updateUser(userToUpdate);
     }
 
-    public User deleteUser(final User user) {
+    private User getValidatedUserFromRepository(final User user) {
         Assert.notNull(user, userCannotBeNull);
-        Assert.notNull(user.getId(), userIsInvalid);
+        Assert.notNull(user.getId(), userIdCannotBeNul);
         Optional<User> userFromRepository = userDao.findById(user.getId());
         validateUserFromRepository(userFromRepository.isEmpty());
+        return userFromRepository.get();
+    }
+
+    public User deleteUser(final User user) {
+        getValidatedUserFromRepository(user);
         return userDao.deleteUser(user);
     }
 

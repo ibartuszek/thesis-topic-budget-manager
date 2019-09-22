@@ -4,8 +4,6 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorContextImpl;
-import org.junit.After;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -83,9 +81,9 @@ public class UserIdValidatorTest {
 
     private User createUser() {
         return User.builder()
-                .withId(ID)
-                .withEmail(EMAIL)
-                .build();
+            .withId(ID)
+            .withEmail(EMAIL)
+            .build();
     }
 
 }

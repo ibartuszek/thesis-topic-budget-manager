@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory;
 
-import hu.elte.bm.commonpack.validator.ModelValidator;
-
 @Configuration
 public class PublicBeans {
 
@@ -22,15 +20,10 @@ public class PublicBeans {
     }
 
     @Bean
-    public ModelValidator modelValidator() {
-        return new ModelValidator();
-    }
-
-    @Bean
     public Validator validator(final AutowireCapableBeanFactory autowireCapableBeanFactory) {
         ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
-                .configure().constraintValidatorFactory(new SpringConstraintValidatorFactory(autowireCapableBeanFactory))
-                .buildValidatorFactory();
+            .configure().constraintValidatorFactory(new SpringConstraintValidatorFactory(autowireCapableBeanFactory))
+            .buildValidatorFactory();
         return validatorFactory.getValidator();
     }
 }
