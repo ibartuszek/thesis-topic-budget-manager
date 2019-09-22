@@ -14,9 +14,9 @@ const SignedOutLinks = () => {
       </ul>
       <ul className="navbar-nav mr-3 ml-auto mt-lg-0">
         <li className="nav-item mx-3">
-          <NavLink className="nav-link" exact to="/signup">
+          <NavLink className="nav-link" exact to="/register">
             <span className="fas fa-user-plus"/>
-            <span> Signup </span>
+            <span> Register </span>
           </NavLink>
         </li>
         <li className="nav-item mx-3">

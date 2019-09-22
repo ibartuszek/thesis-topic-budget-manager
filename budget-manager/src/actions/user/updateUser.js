@@ -1,5 +1,6 @@
 import {createUserData} from "./createUserData";
 import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
+import {createUserModelBody} from "./createUserModelBody";
 
 export function updateUser(context, userModel) {
   const {userId, jwtToken, messages} = context;
@@ -31,11 +32,8 @@ export function updateUser(context, userModel) {
 }
 
 function createBody(userModel, userId) {
-  if (userModel.password.value === '') {
-    userModel.password.value = '********'
-  }
   let body = {};
-  body.userModel = userModel;
+  body.userModel = createUserModelBody(userModel);
   body.userId = userId;
   return body;
 }

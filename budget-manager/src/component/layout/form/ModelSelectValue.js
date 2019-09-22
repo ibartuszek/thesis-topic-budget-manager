@@ -17,9 +17,10 @@ class ModelSelectValue extends Component {
 
   render() {
     const {id, model, labelTitle, placeHolder, elementList, editable, editableObject} = this.props;
-    let optionClass = model === undefined ? "form-control text-muted" : "form-control";
+    let muted = model === undefined ? " text-muted" : "";
+    let optionClass = editable !== undefined ? "form-control custom-form-control-select" + muted : "form-control" + muted;
 
-    let editButton = editable !== undefined && editable !== null ? (
+    let editButton = editable !== undefined && editable !== null && editable ? (
       <div className="my-1">
         <button type="button" className="btn btn-warning btn-sm fas fa-edit ml-3" onClick={() => this.showCategoryEdit(editableObject)}/>
       </div>

@@ -8,7 +8,7 @@ import Navbar from './component/layout/Navbar';
 import Outcomes from "./component/outcomes/Outcomes";
 import Reports from './component/reports/Reports';
 import Settings from './component/settings/Settings';
-import SignUp from './component/auth/SignUp';
+import Register from './component/auth/SignUp';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
         <Switch>
           <Route exact path='/' component={Home}/>
           <Route path='/login' component={LogIn}/>
-          <Route path='/signup' component={SignUp}/>
+          <Route path='/register' component={Register}/>
           <Route path='/incomes' component={Incomes}/>
           <Route path='/expenses' component={Outcomes}/>
           <Route path='/draft' component={Draft}/>

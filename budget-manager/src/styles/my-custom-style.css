@@ -25,6 +25,10 @@ label.input-group-addon.input-group-text {
     color: var(--danger);
 }
 
+.custom-form-control-select {
+    height: 2.5rem;
+}
+
 .custom-popup {
     position: fixed;
     width: 100%;
@@ -42,13 +46,11 @@ label.input-group-addon.input-group-text {
     position: absolute;
     top: 10%;
     left: 50%;
-    background: var(--light);
-}
-
-.custom-popup-inner-subcategory {
+    max-height: 600px;
     width: 500px;
     margin-left: -250px;
     border-radius: 0.8em;
+    background: var(--light);
 }
 
 .custom-popup-inner-delete-transaction {

@@ -88,7 +88,7 @@ class TransactionTableBody extends Component {
               <span className="fas fa-sort" onClick={() => this.sortTable('mainCategory', data)}> Main type </span>
             </th>
             <th className="custom-table-column">
-              <span className="fas fa-sort" onClick={() => this.sortTable('subCategory', data)}> Subtype </span>
+              <span> Subtype </span>
             </th>
             <th className="custom-table-column">
               <span className="fas fa-sort" onClick={() => this.sortTable('monthly', data)}> Monthly </span>
@@ -97,10 +97,10 @@ class TransactionTableBody extends Component {
               <span className="fas fa-sort" onClick={() => this.sortTable('date', data)}> Date </span>
             </th>
             <th className="custom-table-column">
-              <span className="fas fa-sort" onClick={() => this.sortTable('endDate', data)}> End date </span>
+              <span> End date </span>
             </th>
             <th className="custom-table-column">
-              <span className="fas fa-sort" onClick={() => this.sortTable('description', data)}> Description </span>
+              <span> Description </span>
             </th>
             <th className="remove-button-cell invisible ml-3">
               <button className="btn btn-danger btn-sm fas fa-trash-alt"/>

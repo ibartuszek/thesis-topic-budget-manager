@@ -155,8 +155,8 @@ class TransactionForm extends Component {
   };
 
   showCategoryEdit = (category) => {
-    let editAbleMainCategory = category !== null && category.subCategoryModelSet !== undefined ? category : null;
-    let editAbleSubCategory = category !== null && category.subCategoryModelSet === undefined ? category : null;
+    let editAbleMainCategory = category !== null && category !== undefined && category.subCategoryModelSet !== undefined ? category : null;
+    let editAbleSubCategory = category !== null && category !== undefined && category.subCategoryModelSet === undefined ? category : null;
     this.setState({
       editAbleMainCategory: editAbleMainCategory,
       editAbleSubCategory: editAbleSubCategory

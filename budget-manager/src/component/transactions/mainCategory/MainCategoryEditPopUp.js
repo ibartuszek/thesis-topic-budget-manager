@@ -40,7 +40,7 @@ class MainCategoryEditPopUp extends Component {
 
     return (
       <div className='custom-popup'>
-        <div className='card card-body custom-popup-inner custom-popup-inner-subcategory'>
+        <div className='card card-body custom-popup-inner'>
           <MainCategoryForm transactionType={transactionType} subCategoryList={subCategoryList} mainCategoryModel={mainCategoryModel}
                             formTitle={categoryMessages.updateMainCategoryTitle} popup={true}
                             handleSubmit={this.handleSubmit} showMainCategoryEdit={this.showMainCategoryEdit}/>

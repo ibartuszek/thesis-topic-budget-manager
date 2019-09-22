@@ -6,9 +6,6 @@ export function createTransaction(context, transactionModel) {
   let header = createHeaderWithJwtAndJsonBody(jwtToken);
   let body = JSON.stringify(createBody(transactionModel, userId, transactionType));
 
-  console.log(header);
-  console.log(body);
-
   return function (dispatch) {
     return fetch(`/bm/transactions/create`, {
       method: 'POST',

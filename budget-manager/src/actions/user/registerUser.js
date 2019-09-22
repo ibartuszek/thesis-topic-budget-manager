@@ -4,7 +4,7 @@ import {createUserModelBody} from "./createUserModelBody";
 export function registerUser(model, messages) {
   let header = new Headers();
   header.set('Content-Type', 'application/json');
-  let body = JSON.stringify(createUserModelBody(model));
+  let body = createBody(model);
   return function (dispatch) {
     return fetch(`/bm/users/register`, {
       method: 'POST',
@@ -28,3 +28,9 @@ export function registerUser(model, messages) {
   }
 }
 
+function createBody(model) {
+  let bodyObject = {
+    userModel: createUserModelBody(model)
+  };
+  return JSON.stringify(bodyObject);
+}

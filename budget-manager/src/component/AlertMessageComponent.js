@@ -16,7 +16,7 @@ class AlertMessageComponent extends Component {
     const {message} = this.props;
     let messageClassName = message.success ? "alert-success" : "alert-danger";
     let alertMessageComponent = message.value === null ? null
-      : (<div className={"alert " + messageClassName + " my-4"} role="alert">
+      : (<div className={"alert " + messageClassName + " my-3"} role="alert">
         {message.value}
         <button type="button" className="close" onClick={() => this.handleDismiss(message)}>
           <span>&times;</span>

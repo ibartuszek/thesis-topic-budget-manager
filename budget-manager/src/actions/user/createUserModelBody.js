@@ -1,23 +1,26 @@
+import base64 from "react-native-base64";
+
 export function createUserModelBody(userModel) {
+  let password;
   if (userModel.password.value === '') {
-    userModel.password.value = "********";
+    password = "********";
+  } else {
+    password = base64.encode(userModel.password.value);
   }
 
   return {
-    userModel: {
-      id: userModel['id'],
-      email: {
-        value: userModel['email']['value']
-      },
-      password: {
-        value: userModel['password']['value']
-      },
-      firstName: {
-        value: userModel['firstName']['value']
-      },
-      lastName: {
-        value: userModel['lastName']['value']
-      }
+    id: userModel['id'],
+    email: {
+      value: userModel['email']['value']
+    },
+    password: {
+      value: password
+    },
+    firstName: {
+      value: userModel['firstName']['value']
+    },
+    lastName: {
+      value: userModel['lastName']['value']
     }
   };
 }

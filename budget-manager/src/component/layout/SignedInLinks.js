@@ -1,10 +1,10 @@
 import React from 'react';
-import {NavLink, Redirect} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {connect} from "react-redux";
 import {logOut} from '../../actions/user/logOut';
 
 const SignedInLinks = (props) => {
-  return props.userHolder.userIsLoggedIn ? (
+  return (
     <div className="collapse navbar-collapse mt-1" id="mainNavbar">
       <ul className="navbar-nav mr-auto mt-lg-0">
         <li className="nav-item mx-3">
@@ -28,13 +28,13 @@ const SignedInLinks = (props) => {
         <li className="nav-item mx-3">
           <NavLink className="nav-link" to="/draft">
             <span className="fas fa-pencil-alt"/>
-            <span> Draft </span>
+            <span> Create statistics </span>
           </NavLink>
         </li>
         <li className="nav-item mx-3">
           <NavLink className="nav-link" to="/reports">
             <span className="fas fa-balance-scale"/>
-            <span> Reports </span>
+            <span> Statistics </span>
           </NavLink>
         </li>
         <li className="nav-item mx-3">
@@ -45,20 +45,17 @@ const SignedInLinks = (props) => {
         </li>
       </ul>
       <div className="nav-item logout-custom-colored ml-auto mr-3" onClick={() => {
-        props.logOut(props.logHolder.messages)
+        props.logOut(props.logHolder.messages);
       }}>
         <span className="fas fa-sign-out-alt"/>
         <span> Log Out </span>
       </div>
     </div>
-  ) : (
-    <Redirect to='/login'/>
   )
 };
 
 const mapStateToProps = (state) => {
   return {
-    userHolder: state.userHolder,
     logHolder: state.logHolder
   }
 };

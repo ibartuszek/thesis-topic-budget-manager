@@ -39,7 +39,7 @@ class SubCategoryEditPopUp extends Component {
 
     return (
       <div className='custom-popup'>
-        <div className='card card-body custom-popup-inner custom-popup-inner-subcategory'>
+        <div className='card card-body custom-popup-inner'>
           <SubCategoryForm transactionType={transactionType}
                            subCategoryModel={subCategoryModel}
                            formTitle={categoryMessages.updateSubCategoryTitle}

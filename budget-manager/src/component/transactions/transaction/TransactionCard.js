@@ -50,7 +50,7 @@ const mapStateToProps = (state) => {
   return {
     userHolder: state.userHolder,
     logHolder: state.logHolder,
-    categoryHolder: state.categoryHolder
+    transactionHolder: state.transactionHolder,
   }
 };
 

@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 import {connect} from "react-redux";
+import AlertMessageComponent from "../AlertMessageComponent";
 import ModelStringValue from "../layout/form/ModelStringValue";
 import {getAccessToken} from "../../actions/user/getAccessToken";
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import {registerUser} from "../../actions/user/registerUser";
 import {validateModel} from "../../actions/validation/validateModel";
 import {userFormMessages} from "../../store/MessageHolder"
-import AlertMessageComponent from "../AlertMessageComponent";
-import {getMessage, removeMessage} from "../../actions/message/messageActions";
 
 class SignUp extends Component {
 
@@ -109,7 +109,7 @@ class SignUp extends Component {
       <div className="mt-4 mx-3">
         <div className="card card-body mx-auto max-w-500 min-w-400">
           <form className="form-group mb-0" onSubmit={this.handleSubmit}>
-            <h1 className="mt-3 mx-auto">Sign up</h1>
+            <h1 className="mt-3 mx-auto">Sign Up</h1>
             <ModelStringValue onChange={this.handleFieldChange}
                               id="email" model={email}
                               labelTitle={emailLabel} placeHolder={emailMessage} type="email"/>
@@ -128,7 +128,7 @@ class SignUp extends Component {
             <AlertMessageComponent message={getMessage(logHolder.messages, "signUpErrorMessage", false)} onChange={this.handleDismiss}/>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">
               <span className="fas fa-user-plus"/>
-              <span> Register </span>
+              <span> Sign up </span>
             </button>
           </form>
         </div>

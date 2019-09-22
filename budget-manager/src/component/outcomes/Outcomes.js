@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Redirect} from "react-router-dom";
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Loading from '../Loading'
@@ -52,7 +53,11 @@ class Outcomes extends Component {
 
   render() {
     const {mainCategoriesAreLoaded, subCategoriesAreLoaded} = this.state;
-    const {categoryHolder} = this.props;
+    const {categoryHolder, userHolder} = this.props;
+
+    if (userHolder == null || !userHolder.userIsLoggedIn) {
+      return <Redirect to='/login'/>;
+    }
 
     let content = null;
     if (mainCategoriesAreLoaded && subCategoriesAreLoaded) {
