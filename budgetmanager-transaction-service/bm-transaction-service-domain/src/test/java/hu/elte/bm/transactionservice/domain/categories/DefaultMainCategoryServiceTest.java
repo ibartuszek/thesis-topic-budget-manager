@@ -13,6 +13,7 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -37,11 +38,16 @@ public class DefaultMainCategoryServiceTest {
 
     private DefaultMainCategoryService underTest;
 
-    @BeforeMethod
+    @BeforeClass
     public void setup() {
         control = EasyMock.createStrictControl();
         databaseProxy = control.createMock(DatabaseProxy.class);
         underTest = new DefaultMainCategoryService(databaseProxy);
+    }
+
+    @BeforeMethod
+    public void reset() {
+        control.reset();
     }
 
     @Test
@@ -225,6 +231,24 @@ public class DefaultMainCategoryServiceTest {
         Optional<MainCategory> copyNewMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
         EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(originalMainCategory);
         EasyMock.expect(databaseProxy.findMainCategoryByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
+        EasyMock.expect(databaseProxy.updateMainCategory(mainCategoryToUpdate, context)).andReturn(copyNewMainCategory);
+        control.replay();
+        // WHEN
+        Optional<MainCategory> result = underTest.update(mainCategoryToUpdate, context);
+        // THEN
+        control.verify();
+        Assert.assertEquals(result, copyNewMainCategory);
+    }
+
+    @Test
+    public void testUpdateWhen() {
+        // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        Optional<MainCategory> copyNewMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
+        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(originalMainCategory);
+        EasyMock.expect(databaseProxy.findMainCategoryByName(EXPECTED_CATEGORY_NAME, context)).andReturn(originalMainCategory);
         EasyMock.expect(databaseProxy.updateMainCategory(mainCategoryToUpdate, context)).andReturn(copyNewMainCategory);
         control.replay();
         // WHEN

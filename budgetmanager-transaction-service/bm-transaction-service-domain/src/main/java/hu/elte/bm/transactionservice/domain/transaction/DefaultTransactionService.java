@@ -113,6 +113,7 @@ public class DefaultTransactionService implements TransactionService {
     private boolean isSavable(final Transaction transaction, final TransactionContext context) {
         List<Transaction> transactionList = dataBaseProxy.findTransactionByTitle(transaction.getTitle(), context);
         return transactionList.stream()
+            .filter(t1 -> !t1.getId().equals(transaction.getId()))
             .filter(t1 -> t1.getDate().equals(transaction.getDate()))
             .filter(t1 -> t1.getMainCategory().equals(transaction.getMainCategory()))
             .filter(Predicate.not(Transaction::isLocked))

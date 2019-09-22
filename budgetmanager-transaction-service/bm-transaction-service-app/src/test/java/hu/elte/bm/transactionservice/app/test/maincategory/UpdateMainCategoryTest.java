@@ -18,6 +18,10 @@ import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 
 public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
 
+    private static final long NEW_SUBCATEGORY_ID = 3L;
+    private static final String NEW_SUBCATEGORY_NAME = "supplementary category 3";
+    private static final int EXPECTED_SUBCATEGORY_SET_SIZE = 3;
+
     @Test(dataProvider = "dataForMainCategoryModelValidation")
     public void testUpdateCategoryWhenMainCategoryModelValidationFails(final MainCategoryModel mainCategoryModel,
         final String responseErrorMessage, final String fieldErrorMessage) {
@@ -109,6 +113,21 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
     }
 
     @Test
+    public void testUpdateCategoryWhenCategoryHasNewSubCategory() {
+        // GIVEN
+        MainCategoryModel mainCategoryToUpdate =
+            createMainCategoryModelBuilder(EXISTING_INCOME_ID, RESERVED_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
+        mainCategoryToUpdate.getSubCategoryModelSet().add(createSubCategoryModel(NEW_SUBCATEGORY_ID, NEW_SUBCATEGORY_NAME, INCOME));
+        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        // WHEN
+        ResponseEntity result = getMainCategoryController().updateMainCategory(context);
+        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        // THEN
+        Assert.assertTrue(response.isSuccessful());
+        Assert.assertEquals(response.getMainCategoryModel().getSubCategoryModelSet().size(), EXPECTED_SUBCATEGORY_SET_SIZE);
+    }
+
+    @Test
     public void testUpdateCategoryWhenCategoryCannotBeFoundInTheRepository() {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate = createMainCategoryModelBuilder(INVALID_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
@@ -137,7 +156,7 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
     }
 
     @Test
-    public void testUpdateCategorySaveWhenCategoryHasNewNameAndOtherTypeHasThisName() {
+    public void testUpdateCategoryWhenCategoryHasNewNameAndOtherTypeHasThisName() {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate =
             createMainCategoryModelBuilder(EXISTING_OUTCOME_ID, RESERVED_CATEGORY_NAME, OUTCOME, createSubCategoryModelSet()).build();
@@ -152,7 +171,7 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
     }
 
     @Test
-    public void testUpdateCategorySaveWhenCategoryHasNewNameAndItIsReserved() {
+    public void testUpdateCategoryWhenCategoryHasNewNameAndItIsReserved() {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate =
             createMainCategoryModelBuilder(EXISTING_INCOME_ID, OTHER_RESERVED_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();

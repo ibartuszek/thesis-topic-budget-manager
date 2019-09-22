@@ -72,7 +72,7 @@ public class DefaultMainCategoryService implements MainCategoryService {
 
     private boolean thereIsNoCategoryWithSameName(final MainCategory mainCategory, final TransactionContext context) {
         Optional<MainCategory> mainCategoryWithSameName = databaseProxy.findMainCategoryByName(mainCategory.getName(), context);
-        return mainCategoryWithSameName.isEmpty();
+        return mainCategoryWithSameName.isEmpty() || mainCategoryWithSameName.get().getId().equals(mainCategory.getId());
     }
 
     @Override

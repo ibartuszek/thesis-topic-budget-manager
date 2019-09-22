@@ -14,6 +14,7 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -45,12 +46,17 @@ public class DefaultTransactionServiceTest {
     private IMocksControl control;
     private DatabaseProxy databaseProxy;
 
-    @BeforeMethod
+    @BeforeClass
     public void setup() {
         control = EasyMock.createControl();
         databaseProxy = control.createMock(DatabaseProxy.class);
         underTest = new DefaultTransactionService(databaseProxy);
         ReflectionTestUtils.setField(underTest, "cannotBeNullExceptionMessage", "{0} cannot be null!");
+    }
+
+    @BeforeMethod
+    public void reset() {
+        control.reset();
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForFindAllValidation")
@@ -272,6 +278,7 @@ public class DefaultTransactionServiceTest {
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         Transaction transactionWithSameTitle = createExampleTransactionBuilder()
             .withId(ID_2)
+            .withTitle(NEW_TITLE)
             .withDate(LocalDate.now().minusDays(1))
             .build();
         List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
@@ -309,6 +316,7 @@ public class DefaultTransactionServiceTest {
         Optional<Transaction> result = underTest.delete(transaction, context);
         // THEN
         control.verify();
+        Assert.assertTrue(result.isPresent());
         Assert.assertEquals(result.get(), transaction);
     }
 
