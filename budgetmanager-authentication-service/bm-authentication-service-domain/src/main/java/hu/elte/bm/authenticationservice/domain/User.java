@@ -1,14 +1,8 @@
 package hu.elte.bm.authenticationservice.domain;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -19,21 +13,31 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(builder = User.Builder.class)
 public final class User {
 
+    private static final int MINIMUM_EMAIL_LENGTH = 8;
+    private static final int MAXIMUM_EMAIL_LENGTH = 50;
+    private static final String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+    private static final int MINIMUM_PASSWORD_LENGTH = 8;
+    private static final int MAXIMUM_PASSWORD_LENGTH = 16;
+    private static final int MINIMUM_NAME_LENGTH = 2;
+    private static final int MAXIMUM_NAME_LENGTH = 50;
     private final Long id;
 
-    @NotNull(message = "Email is compulsory")
-    // @NotBlank(message = "Email is compulsory")
-    @Length(min = 8, max = 50, message = "Email must be between 8 and 50 characters!")
-    @Pattern(regexp = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$", message = "Email must be given in a valid format!")
+    @NotNull(message = "Email is compulsory!")
+    // @NotEmpty(message = "Email is compulsory!")
+    @Length(min = MINIMUM_EMAIL_LENGTH, max = MAXIMUM_EMAIL_LENGTH, message = "Email must be between 8 and 50 characters!")
+    @Pattern(regexp = EMAIL_REGEX, message = "Email must be given in a valid format!")
     private final String email;
 
-    @Length(min = 8, max = 16, message = "Password must be between 8 and 16 characters!")
+    @NotEmpty(message = "Password is compulsory!")
+    @Length(min = MINIMUM_PASSWORD_LENGTH, max = MAXIMUM_PASSWORD_LENGTH, message = "Password must be between 8 and 16 characters!")
     private final String password;
 
-    @Length(min = 2, max = 50, message = "First name must be between 2 and 50 characters!")
+    @NotEmpty(message = "First name is compulsory!")
+    @Length(min = MINIMUM_NAME_LENGTH, max = MAXIMUM_NAME_LENGTH, message = "First name must be between 2 and 50 characters!")
     private final String firstName;
 
-    @Length(min = 2, max = 50, message = "Last name must be between 2 and 50 characters!")
+    @NotEmpty(message = "Last name is compulsory!")
+    @Length(min = MINIMUM_NAME_LENGTH, max = MAXIMUM_NAME_LENGTH, message = "Last name must be between 2 and 50 characters!")
     private final String lastName;
 
     private User(final Builder builder) {
@@ -143,20 +147,7 @@ public final class User {
         }
 
         public User build() {
-            User result = new User(this);
-            // validate(result);
-            return result;
+            return new User(this);
         }
-/*
-        private void validate(final User result) {
-            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-            Validator validator = factory.getValidator();
-            Set<ConstraintViolation<User>> violations = validator.validate(result);
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(
-                    new HashSet<ConstraintViolation<?>>(violations));
-            }
-        }
-*/
     }
 }

@@ -79,7 +79,10 @@ public class UserService {
         Assert.notNull(user, userCannotBeNull);
         Assert.notNull(user.getId(), userIdCannotBeNul);
         Optional<User> userFromRepository = userDao.findById(user.getId());
-        validateUserFromRepository(userFromRepository.isEmpty());
+        // User should be present!
+        if (userFromRepository.isEmpty()) {
+            throw new IllegalArgumentException(userCannotBeFound);
+        }
         return userFromRepository.get();
     }
 

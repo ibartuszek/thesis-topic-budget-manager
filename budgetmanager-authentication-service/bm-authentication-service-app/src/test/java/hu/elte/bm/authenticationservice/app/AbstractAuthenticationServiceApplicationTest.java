@@ -17,6 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 public abstract class AbstractAuthenticationServiceApplicationTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    protected MockMvc mvc;
+    private MockMvc mvc;
 
+    public MockMvc getMvc() {
+        return mvc;
+    }
 }

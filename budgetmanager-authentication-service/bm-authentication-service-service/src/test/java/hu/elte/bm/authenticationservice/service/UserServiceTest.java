@@ -132,8 +132,8 @@ public class UserServiceTest {
     public void testRegisterUserWhenUserIdIsNotNull() {
         // GIVEN
         User userToSave = createExampleUserBuilder()
-                .withId(VALID_ID)
-                .build();
+            .withId(VALID_ID)
+            .build();
         // WHEN
         underTest.registerUser(userToSave);
         // THEN
@@ -143,12 +143,12 @@ public class UserServiceTest {
     public void testRegisterUserWhenUserIsExisted() {
         // GIVEN
         User userToSave = createExampleUserBuilder()
-                .withId(null)
-                .withEmail(RESERVED_EMAIL)
-                .build();
+            .withId(null)
+            .withEmail(RESERVED_EMAIL)
+            .build();
         User userFromRepository = createExampleUserBuilder()
-                .withEmail(RESERVED_EMAIL)
-                .build();
+            .withEmail(RESERVED_EMAIL)
+            .build();
         EasyMock.expect(userDao.findByEmail(RESERVED_EMAIL)).andReturn(Optional.of(userFromRepository));
         control.replay();
         // WHEN
@@ -164,15 +164,15 @@ public class UserServiceTest {
     public void testRegisterUser() {
         // GIVEN
         User userToSave = createExampleUserBuilder()
-                .withId(null)
-                .build();
+            .withId(null)
+            .build();
         User userToSaveWithEncodedPassword = createExampleUserBuilder()
-                .withId(null)
-                .withPassword(ENCODED_NEW_PASSWORD)
-                .build();
+            .withId(null)
+            .withPassword(ENCODED_NEW_PASSWORD)
+            .build();
         User userFromRepository = createExampleUserBuilder()
-                .withPassword(MASKED_PASSWORD)
-                .build();
+            .withPassword(MASKED_PASSWORD)
+            .build();
         EasyMock.expect(userDao.findByEmail(DEFAULT_EMAIL)).andReturn(Optional.empty());
         EasyMock.expect(encoder.encode(userToSave.getPassword())).andReturn(ENCODED_NEW_PASSWORD);
         EasyMock.expect(userDao.registerUser(userToSaveWithEncodedPassword)).andReturn(userFromRepository);
@@ -198,19 +198,19 @@ public class UserServiceTest {
     public void testUpdateWhenUserIdIsNull() {
         // GIVEN
         User userToUpdate = createExampleUserBuilder()
-                .withId(null)
-                .build();
+            .withId(null)
+            .build();
         // WHEN
         underTest.updateUser(userToUpdate);
         // THEN
     }
 
-    @Test(expectedExceptions = UserCannotBeFoundException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateWhenUserCannotBeFound() {
         // GIVEN
         User userToUpdate = createExampleUserBuilder()
-                .withId(INVALID_ID)
-                .build();
+            .withId(INVALID_ID)
+            .build();
         EasyMock.expect(userDao.findById(INVALID_ID)).andReturn(Optional.empty());
         control.replay();
         // WHEN
@@ -226,14 +226,14 @@ public class UserServiceTest {
     public void testUpdateWhenEmailIsReserved() {
         // GIVEN
         User userToUpdate = createExampleUserBuilder()
-                .withEmail(RESERVED_EMAIL)
-                .build();
+            .withEmail(RESERVED_EMAIL)
+            .build();
         User originalUser = createExampleUserBuilder()
-                .build();
+            .build();
         User otherUserWithSameEmail = createExampleUserBuilder()
-                .withId(INVALID_ID)
-                .withEmail(RESERVED_EMAIL)
-                .build();
+            .withId(INVALID_ID)
+            .withEmail(RESERVED_EMAIL)
+            .build();
         EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUser));
         EasyMock.expect(userDao.findByEmail(RESERVED_EMAIL)).andReturn(Optional.of(otherUserWithSameEmail));
         control.replay();
@@ -250,17 +250,17 @@ public class UserServiceTest {
     public void testUpdateWhenUserNotModifiedHisOrHerEmailAndPassword() {
         // GIVEN
         User userToUpdate = createExampleUserBuilder()
-                .withPassword(MASKED_PASSWORD)
-                .withFirstName(NEW_FIRST_NAME)
-                .withFirstName(NEW_LAST_NAME)
-                .build();
+            .withPassword(MASKED_PASSWORD)
+            .withFirstName(NEW_FIRST_NAME)
+            .withFirstName(NEW_LAST_NAME)
+            .build();
         User originalUser = createExampleUserBuilder()
-                .build();
+            .build();
         User expectedUser = createExampleUserBuilder()
-                .withPassword(MASKED_PASSWORD)
-                .withFirstName(NEW_FIRST_NAME)
-                .withFirstName(NEW_LAST_NAME)
-                .build();
+            .withPassword(MASKED_PASSWORD)
+            .withFirstName(NEW_FIRST_NAME)
+            .withFirstName(NEW_LAST_NAME)
+            .build();
         EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUser));
         EasyMock.expect(userDao.updateUser(userToUpdate)).andReturn(expectedUser);
         control.replay();
@@ -275,15 +275,15 @@ public class UserServiceTest {
     public void testUpdateWhenUserModifiedHisOrHerEmail() {
         // GIVEN
         User userToUpdate = createExampleUserBuilder()
-                .withEmail(NEW_EMAIL)
-                .withPassword(MASKED_PASSWORD)
-                .build();
+            .withEmail(NEW_EMAIL)
+            .withPassword(MASKED_PASSWORD)
+            .build();
         User originalUser = createExampleUserBuilder()
-                .build();
+            .build();
         User expectedUser = createExampleUserBuilder()
-                .withEmail(NEW_EMAIL)
-                .withPassword(MASKED_PASSWORD)
-                .build();
+            .withEmail(NEW_EMAIL)
+            .withPassword(MASKED_PASSWORD)
+            .build();
         EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUser));
         EasyMock.expect(userDao.findByEmail(NEW_EMAIL)).andReturn(Optional.empty());
         EasyMock.expect(userDao.updateUser(userToUpdate)).andReturn(expectedUser);
@@ -299,13 +299,13 @@ public class UserServiceTest {
     public void testUpdateWhenUserModifiedHisOrHerPassword() {
         // GIVEN
         User userToUpdate = createExampleUserBuilder()
-                .withPassword(NEW_PASSWORD)
-                .build();
+            .withPassword(NEW_PASSWORD)
+            .build();
         User originalUser = createExampleUserBuilder()
-                .build();
+            .build();
         User expectedUser = createExampleUserBuilder()
-                .withPassword(MASKED_PASSWORD)
-                .build();
+            .withPassword(MASKED_PASSWORD)
+            .build();
         Capture<User> userCapture = EasyMock.newCapture();
         EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUser));
         EasyMock.expect(encoder.encode(NEW_PASSWORD)).andReturn(ENCODED_NEW_PASSWORD);
@@ -324,7 +324,7 @@ public class UserServiceTest {
     public void testDelete() {
         // GIVEN
         User userToDelete = createExampleUserBuilder()
-                .build();
+            .build();
         User originalUSer = createExampleUserBuilder().build();
         EasyMock.expect(userDao.findById(VALID_ID)).andReturn(Optional.of(originalUSer));
         EasyMock.expect(userDao.deleteUser(userToDelete)).andReturn(userToDelete);
@@ -350,11 +350,11 @@ public class UserServiceTest {
 
     private User.Builder createExampleUserBuilder() {
         return User.builder()
-                .withId(VALID_ID)
-                .withEmail(DEFAULT_EMAIL)
-                .withPassword(NEW_PASSWORD)
-                .withFirstName(DEFAULT_FIRST_NAME)
-                .withLastName(DEFAULT_LAST_NAME);
+            .withId(VALID_ID)
+            .withEmail(DEFAULT_EMAIL)
+            .withPassword(NEW_PASSWORD)
+            .withFirstName(DEFAULT_FIRST_NAME)
+            .withLastName(DEFAULT_LAST_NAME);
     }
 
 }
