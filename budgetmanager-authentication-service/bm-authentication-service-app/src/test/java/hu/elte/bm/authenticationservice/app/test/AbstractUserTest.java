@@ -1,13 +1,11 @@
 package hu.elte.bm.authenticationservice.app.test;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.JacksonJsonParser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.testng.annotations.BeforeClass;
@@ -81,37 +79,37 @@ public class AbstractUserTest extends AbstractAuthenticationServiceApplicationTe
         JsonObject tooShortLastName = createRequestBody("lastName", TOO_SHORT_NAME);
         JsonObject tooLongLastName = createRequestBody("lastName", TOO_SHORT_NAME);
 
-        return new Object[][] {
-            { nullEmail, "Email is compulsory!" },
-            { emptyEmail, "Email must be between 8 and 50 characters!" }, // not valid format???
-            { tooShortEmail, "Email must be between 8 and 50 characters!" },
-            { tooLongEmail, "Email must be between 8 and 50 characters!" },
-            { notMatchingEmail, "Email must be given in a valid format!" },
+        return new Object[][]{
+                {nullEmail},
+                {emptyEmail},
+                {tooShortEmail},
+                {tooLongEmail},
+                {notMatchingEmail},
 
-            //            { nullPassword, "Password is compulsory" },
-            //            { emptyPassword, "Password must be between 8 and 16 characters!" },
-            //            { tooShortPassword, "Password must be between 8 and 16 characters!" },
-            //            { tooLongPassword, "Password must be between 8 and 16 characters!" },
-            //
-            //            { nullFirstName, "First name is compulsory" },
-            //            { emptyFirstName, "First name must be between 2 and 50 characters!" },
-            //            { tooShortFirstName, "First name must be between 2 and 50 characters!" },
-            //            { tooLongFirstName, "First name must be between 2 and 50 characters!" },
-            //
-            //            { nullLastName, "Last name is compulsory" },
-            //            { emptyLastName, "Last name must be between 2 and 50 characters!" },
-            //            { tooShortLastName, "Last name must be between 2 and 50 characters!" },
-            //            { tooLongLastName, "Last name must be between 2 and 50 characters!" }
+                {nullPassword},
+                {emptyPassword},
+                {tooShortPassword},
+                {tooLongPassword},
+
+                {nullFirstName},
+                {emptyFirstName},
+                {tooShortFirstName},
+                {tooLongFirstName},
+
+                {nullLastName},
+                {emptyLastName},
+                {tooShortLastName},
+                {tooLongLastName}
         };
     }
 
     User.Builder createDefaultUserBuilder(final Long id) {
         return User.builder()
-            .withId(id)
-            .withEmail(DEFAULT_EMAIL)
-            .withPassword(DEFAULT_PASSWORD)
-            .withFirstName(DEFAULT_FIRST_NAME)
-            .withLastName(DEFAULT_LAST_NAME);
+                .withId(id)
+                .withEmail(DEFAULT_EMAIL)
+                .withPassword(DEFAULT_PASSWORD)
+                .withFirstName(DEFAULT_FIRST_NAME)
+                .withLastName(DEFAULT_LAST_NAME);
     }
 
     String createRequestBody(final Object object) {
@@ -140,12 +138,12 @@ public class AbstractUserTest extends AbstractAuthenticationServiceApplicationTe
         params.add("username", USER_NAME);
         params.add("password", USER_PASSWORD);
 
-        ResultActions result = getMvc().perform(post(OAUTH_URL)
-            .params(params)
-            .with(httpBasic(clientId, clientSecret))
-            .accept("application/json;charset=UTF-8"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json;charset=UTF-8"));
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(OAUTH_URL)
+                .params(params)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic(clientId, clientSecret))
+                .accept("application/json;charset=UTF-8"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"));
 
         String resultString = result.andReturn().getResponse().getContentAsString();
 
@@ -159,7 +157,6 @@ public class AbstractUserTest extends AbstractAuthenticationServiceApplicationTe
         jsonObject.remove(keyToReplace);
         jsonObject.add(keyToReplace, new Gson().toJsonTree(newValue));
         return jsonObject;
-        // return new Gson().toJson(jsonObject);
     }
 
 }

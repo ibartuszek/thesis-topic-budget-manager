@@ -43,7 +43,7 @@ public class UserUpdateTest extends AbstractUserTest {
     }
 
     @Test(dataProvider = "testDataForValidation")
-    public void testUpdateWhenValidationFails(final JsonObject user, final String responseErrorMessage) throws Exception {
+    public void testUpdateWhenValidationFails(final JsonObject user) throws Exception {
         // GIVEN
         user.add("id", new Gson().toJsonTree(USER_ID));
 
@@ -54,8 +54,7 @@ public class UserUpdateTest extends AbstractUserTest {
             .content(createRequestBody(USER_ID, user)));
 
         // THEN
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andExpect(MockMvcResultMatchers.content().string(responseErrorMessage));
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test

@@ -3,7 +3,6 @@ package hu.elte.bm.authenticationservice.domain;
 import java.util.Objects;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
@@ -22,21 +21,20 @@ public final class User {
     private static final int MAXIMUM_NAME_LENGTH = 50;
     private final Long id;
 
-    @NotNull(message = "Email is compulsory!")
-    // @NotEmpty(message = "Email is compulsory!")
+    @NotEmpty(message = "Email cannot be empty!")
     @Length(min = MINIMUM_EMAIL_LENGTH, max = MAXIMUM_EMAIL_LENGTH, message = "Email must be between 8 and 50 characters!")
     @Pattern(regexp = EMAIL_REGEX, message = "Email must be given in a valid format!")
     private final String email;
 
-    @NotEmpty(message = "Password is compulsory!")
+    @NotEmpty(message = "Password cannot be empty!")
     @Length(min = MINIMUM_PASSWORD_LENGTH, max = MAXIMUM_PASSWORD_LENGTH, message = "Password must be between 8 and 16 characters!")
     private final String password;
 
-    @NotEmpty(message = "First name is compulsory!")
+    @NotEmpty(message = "First name cannot be empty!")
     @Length(min = MINIMUM_NAME_LENGTH, max = MAXIMUM_NAME_LENGTH, message = "First name must be between 2 and 50 characters!")
     private final String firstName;
 
-    @NotEmpty(message = "Last name is compulsory!")
+    @NotEmpty(message = "Last name cannot be empty!")
     @Length(min = MINIMUM_NAME_LENGTH, max = MAXIMUM_NAME_LENGTH, message = "Last name must be between 2 and 50 characters!")
     private final String lastName;
 
@@ -50,12 +48,12 @@ public final class User {
 
     public static User createUserWithNewPassword(final User user, final String password) {
         return User.builder()
-            .withId(user.getId())
-            .withPassword(password)
-            .withEmail(user.getEmail())
-            .withFirstName(user.getFirstName())
-            .withLastName(user.getLastName())
-            .build();
+                .withId(user.getId())
+                .withPassword(password)
+                .withEmail(user.getEmail())
+                .withFirstName(user.getFirstName())
+                .withLastName(user.getLastName())
+                .build();
     }
 
     public static Builder builder() {
@@ -92,8 +90,8 @@ public final class User {
         }
         User user = (User) o;
         return Objects.equals(email, user.email)
-            && Objects.equals(firstName, user.firstName)
-            && Objects.equals(lastName, user.lastName);
+                && Objects.equals(firstName, user.firstName)
+                && Objects.equals(lastName, user.lastName);
     }
 
     @Override
@@ -104,11 +102,11 @@ public final class User {
     @Override
     public String toString() {
         return "User{"
-            + "id=" + id
-            + ", email='" + email + '\''
-            + ", firstName='" + firstName + '\''
-            + ", lastName='" + lastName + '\''
-            + '}';
+                + "id=" + id
+                + ", email='" + email + '\''
+                + ", firstName='" + firstName + '\''
+                + ", lastName='" + lastName + '\''
+                + '}';
     }
 
     public static final class Builder {

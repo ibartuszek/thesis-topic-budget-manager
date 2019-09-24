@@ -34,7 +34,7 @@ public class UserRegisterTest extends AbstractUserTest {
     }
 
     @Test(dataProvider = "testDataForValidation")
-    public void testRegisterWhenValidationFails(final JsonObject user, final String responseErrorMessage) throws Exception {
+    public void testRegisterWhenValidationFails(final JsonObject user) throws Exception {
         // GIVEN
 
         // WHEN
@@ -43,8 +43,7 @@ public class UserRegisterTest extends AbstractUserTest {
             .content(createRequestBody(user)));
 
         // THEN
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andExpect(MockMvcResultMatchers.content().string(responseErrorMessage));
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test

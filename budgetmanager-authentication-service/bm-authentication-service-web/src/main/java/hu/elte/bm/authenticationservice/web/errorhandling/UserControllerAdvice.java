@@ -26,7 +26,6 @@ public class UserControllerAdvice extends ResponseEntityExceptionHandler {
         WebRequest request) {
         String bodyOfResponse = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         return new ResponseEntity<>(bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
-        // return this.handleExceptionInternal(ex, (Object)null, headers, status, request);
     }
 
     @ExceptionHandler(UserEmailIsReservedException.class)
