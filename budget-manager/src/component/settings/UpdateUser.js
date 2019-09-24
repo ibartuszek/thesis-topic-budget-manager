@@ -7,50 +7,27 @@ import {createContext} from "../../actions/common/createContext";
 import {userFormMessages} from "../../store/MessageHolder";
 import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import AlertMessageComponent from "../AlertMessageComponent";
+import {createUserEmptyUser} from "../../actions/user/createUser";
 
 class UpdateUser extends Component {
 
   state = {
-    userModel: {
-      id: null,
-      email: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 8,
-        maximumLength: 50,
-        regexp: "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$"
-      },
-      password: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 8,
-        maximumLength: 16
-      },
-      confirmationPassword: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 8,
-        maximumLength: 16
-      },
-      firstName: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 2,
-        maximumLength: 50
-      },
-      lastName: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 2,
-        maximumLength: 50
-      },
-    }
+    userModel: createUserEmptyUser()
   };
 
   constructor(props) {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
+  }
+
+  componentDidMount() {
+    const {userData} = this.props.userHolder;
+    let userModel = userData;
+    this.setState({
+      ...this.state,
+      userModel
+    });
   }
 
   handleFieldChange(id, value, errorMessage) {
@@ -79,19 +56,6 @@ class UpdateUser extends Component {
 
   handleDismiss(message) {
     this.props.removeMessage(this.props.logHolder.messages, message);
-  }
-
-  componentDidMount() {
-    const {userData} = this.props.userHolder;
-    let userModel = {...this.state.userModel};
-    userModel.id = userData.userId;
-    userModel.email.value = userData.userName;
-    userModel.firstName.value = userData.firstName;
-    userModel.lastName.value = userData.lastName;
-    this.setState({
-      ...this.state,
-      userModel
-    });
   }
 
   render() {

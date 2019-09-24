@@ -3,6 +3,7 @@ import {Redirect} from 'react-router-dom';
 import {connect} from "react-redux";
 import AlertMessageComponent from "../AlertMessageComponent";
 import ModelStringValue from "../layout/form/ModelStringValue";
+import {createUserEmptyUser} from "../../actions/user/createUser";
 import {getAccessToken} from "../../actions/user/getAccessToken";
 import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import {registerUser} from "../../actions/user/registerUser";
@@ -12,48 +13,7 @@ import {userFormMessages} from "../../store/MessageHolder"
 class SignUp extends Component {
 
   state = {
-    userModel: {
-      email: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 8,
-        maximumLength: 50,
-        regexp: "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$",
-        possibleEnumValues: null
-      },
-      password: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 8,
-        maximumLength: 16,
-        regexp: null,
-        possibleEnumValues: null
-      },
-      confirmationPassword: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 8,
-        maximumLength: 16,
-        regexp: null,
-        possibleEnumValues: null
-      },
-      firstName: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 2,
-        maximumLength: 50,
-        regexp: null,
-        possibleEnumValues: null
-      },
-      lastName: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 2,
-        maximumLength: 50,
-        regexp: null,
-        possibleEnumValues: null
-      },
-    }
+    userModel: createUserEmptyUser()
   };
 
   constructor(props) {

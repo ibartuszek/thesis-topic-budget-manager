@@ -1,6 +1,5 @@
-import {createUserData} from "./createUserData";
+import {createUserFromResponse, createUserToRequest} from "./createUser";
 import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
-import {createUserModelBody} from "./createUserModelBody";
 
 export function updateUser(context, userModel) {
   const {userId, jwtToken, messages} = context;
@@ -19,7 +18,7 @@ export function updateUser(context, userModel) {
         return response.json();
       }
     ).then((response) => {
-      let userData = createUserData(response['userModel']);
+      let userData = createUserFromResponse(response['user']);
       console.log('UPDATE_USER_SUCCESS');
       console.log(response);
       dispatch({type: 'UPDATE_USER_SUCCESS', userData: userData, messages: messages});
@@ -33,7 +32,7 @@ export function updateUser(context, userModel) {
 
 function createBody(userModel, userId) {
   let body = {};
-  body.userModel = createUserModelBody(userModel);
+  body.user = createUserToRequest(userModel);
   body.userId = userId;
   return body;
 }
