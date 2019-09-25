@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.categories;
+package hu.elte.bm.transactionservice.service.category;
 
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.OUTCOME;
@@ -18,9 +18,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
+import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
+import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.service.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 public class DefaultMainCategoryServiceTest {
 

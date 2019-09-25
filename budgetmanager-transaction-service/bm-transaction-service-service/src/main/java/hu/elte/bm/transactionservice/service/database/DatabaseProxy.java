@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.database;
+package hu.elte.bm.transactionservice.service.database;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,8 +13,8 @@ import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryException;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 @Component("databaseProxy")
 public class DatabaseProxy {

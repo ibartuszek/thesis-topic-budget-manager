@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.transaction;
+package hu.elte.bm.transactionservice.service.transaction;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.service.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
 
 @Service("transactionService")
 public class DefaultTransactionService implements TransactionService {

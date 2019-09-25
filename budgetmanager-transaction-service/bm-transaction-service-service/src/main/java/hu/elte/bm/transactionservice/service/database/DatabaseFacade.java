@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.database;
+package hu.elte.bm.transactionservice.service.database;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.Optional;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 public interface DatabaseFacade {
 

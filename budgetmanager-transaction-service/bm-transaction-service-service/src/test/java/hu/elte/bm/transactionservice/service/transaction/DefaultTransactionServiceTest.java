@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.transaction;
+package hu.elte.bm.transactionservice.service.transaction;
 
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.OUTCOME;
@@ -22,7 +22,10 @@ import org.testng.annotations.Test;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.service.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class DefaultTransactionServiceTest {
 

@@ -10,7 +10,7 @@
   </parent>
   <groupId>hu.elte.bm.transaction-service</groupId>
   <artifactId>budgetmanager-transaction-service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>budgetmanager-transaction-service</name>
   <packaging>pom</packaging>
   <description>Thesis topic at ELTE IK</description>
@@ -19,6 +19,7 @@
     <module>bm-transaction-service-app</module>
     <module>bm-transaction-service-dal</module>
     <module>bm-transaction-service-domain</module>
+    <module>bm-transaction-service-service</module>
     <module>bm-transaction-service-web</module>
   </modules>
 
@@ -27,6 +28,7 @@
     <main.basedir>${basedir}</main.basedir>
 
     <java.version>11</java.version>
+    <budget-manager-common-pack.version>0.0.1-SNAPSHOT</budget-manager-common-pack.version>
     <checkstyle.version>8.22</checkstyle.version>
     <dozer.version>5.5.1</dozer.version>
     <easymock.version>4.0.2</easymock.version>
@@ -48,7 +50,7 @@
     <dependency>
       <groupId>hu.elte.bm.common-pack</groupId>
       <artifactId>budgetmanager-common-pack</artifactId>
-      <version>${version}</version>
+      <version>${budget-manager-common-pack.version}</version>
       <exclusions>
         <exclusion>
           <groupId>org.springframework</groupId>

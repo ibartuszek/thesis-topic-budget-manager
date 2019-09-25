@@ -15,9 +15,9 @@ import hu.elte.bm.transactionservice.dal.transaction.IncomeDao;
 import hu.elte.bm.transactionservice.dal.transaction.OutcomeDao;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.database.DatabaseFacade;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
+import hu.elte.bm.transactionservice.service.database.DatabaseFacade;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 @Service("databaseFacade")
 public class DefaultDatabaseFacade implements DatabaseFacade {

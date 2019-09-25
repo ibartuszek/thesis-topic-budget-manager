@@ -24,8 +24,8 @@ import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 public class IncomeDaoTest {
 

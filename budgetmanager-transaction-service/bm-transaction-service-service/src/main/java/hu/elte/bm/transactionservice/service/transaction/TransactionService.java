@@ -1,8 +1,10 @@
-package hu.elte.bm.transactionservice.domain.transaction;
+package hu.elte.bm.transactionservice.service.transaction;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 
 public interface TransactionService {
 

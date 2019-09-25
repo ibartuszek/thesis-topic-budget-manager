@@ -1,6 +1,8 @@
-package hu.elte.bm.transactionservice.domain.transaction;
+package hu.elte.bm.transactionservice.service.transaction;
 
 import java.util.Objects;
+
+import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public final class TransactionContext {
 

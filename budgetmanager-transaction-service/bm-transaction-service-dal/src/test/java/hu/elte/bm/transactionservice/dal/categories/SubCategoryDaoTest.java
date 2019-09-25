@@ -15,8 +15,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 public class SubCategoryDaoTest {
 

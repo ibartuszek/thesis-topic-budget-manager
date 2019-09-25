@@ -10,9 +10,9 @@ import org.springframework.util.Assert;
 
 import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryService;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.service.category.SubCategoryService;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 @Service
 public class SubCategoryModelService {

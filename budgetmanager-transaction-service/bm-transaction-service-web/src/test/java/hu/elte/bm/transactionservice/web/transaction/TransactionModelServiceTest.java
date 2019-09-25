@@ -25,9 +25,9 @@ import hu.elte.bm.commonpack.validator.ModelValidator;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionService;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
+import hu.elte.bm.transactionservice.service.transaction.TransactionService;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 
 public class TransactionModelServiceTest {

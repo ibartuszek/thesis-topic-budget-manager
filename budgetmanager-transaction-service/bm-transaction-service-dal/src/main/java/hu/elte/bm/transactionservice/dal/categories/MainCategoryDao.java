@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 @Component
 public class MainCategoryDao {

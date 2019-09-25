@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.categories;
+package hu.elte.bm.transactionservice.service.category;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import hu.elte.bm.transactionservice.domain.database.DatabaseProxy;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
+import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
+import hu.elte.bm.transactionservice.service.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 @Service("mainCategoryService")
 public class DefaultMainCategoryService implements MainCategoryService {

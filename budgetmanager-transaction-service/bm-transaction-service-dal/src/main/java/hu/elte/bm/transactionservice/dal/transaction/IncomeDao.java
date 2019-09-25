@@ -16,7 +16,7 @@ import hu.elte.bm.transactionservice.dal.categories.MainCategoryRepository;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryRepository;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionContext;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 @Component
 public class IncomeDao {

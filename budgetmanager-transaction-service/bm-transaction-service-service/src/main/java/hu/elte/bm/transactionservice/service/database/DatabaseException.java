@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.domain.database;
+package hu.elte.bm.transactionservice.service.database;
 
 public class DatabaseException extends RuntimeException {
 
