@@ -9,8 +9,7 @@ import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.subcategory.SubCategoryController;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelRequestContext;
+import hu.elte.bm.transactionservice.web.subcategory.SubCategoryRequestContext;
 
 public class AbstractSubCategoryTest extends AbstractTransactionServiceApplicationTest {
 
@@ -68,10 +67,10 @@ public class AbstractSubCategoryTest extends AbstractTransactionServiceApplicati
 
     @DataProvider
     public Object[][] dataForContextValidation() {
-        SubCategoryModelRequestContext contextWithoutUserId = new SubCategoryModelRequestContext();
+        SubCategoryRequestContext contextWithoutUserId = new SubCategoryRequestContext();
         contextWithoutUserId.setUserId(null);
         contextWithoutUserId.setTransactionType(INCOME);
-        SubCategoryModelRequestContext contextWithoutTransactionType = new SubCategoryModelRequestContext();
+        SubCategoryRequestContext contextWithoutTransactionType = new SubCategoryRequestContext();
         contextWithoutTransactionType.setUserId(USER_ID);
         contextWithoutTransactionType.setTransactionType(null);
 
@@ -81,10 +80,10 @@ public class AbstractSubCategoryTest extends AbstractTransactionServiceApplicati
         };
     }
 
-    SubCategoryModelRequestContext createContext(final TransactionType type, final SubCategoryModel subCategoryModel) {
-        SubCategoryModelRequestContext context = new SubCategoryModelRequestContext();
+    SubCategoryRequestContext createContext(final TransactionType type, final SubCategoryModel subCategoryModel) {
+        SubCategoryRequestContext context = new SubCategoryRequestContext();
         context.setTransactionType(type);
-        context.setSubCategoryModel(subCategoryModel);
+        context.setSubCategory(subCategoryModel);
         context.setUserId(USER_ID);
         return context;
     }

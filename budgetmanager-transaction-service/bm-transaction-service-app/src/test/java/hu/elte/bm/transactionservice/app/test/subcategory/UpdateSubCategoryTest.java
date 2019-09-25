@@ -7,9 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelRequestContext;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelResponse;
+import hu.elte.bm.transactionservice.web.subcategory.SubCategoryRequestContext;
+import hu.elte.bm.transactionservice.web.subcategory.SubCategoryResponse;
 
 public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
 
@@ -18,10 +17,10 @@ public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
         subCategoryModel.setId(EXISTING_INCOME_ID);
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModel);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModel);
         // WHEN
         ResponseEntity result = getSubCategoryController().updateSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -34,13 +33,13 @@ public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testUpdateCategoryWhenContextValidationFails(final SubCategoryModelRequestContext context, final String errorMessage) {
+    public void testUpdateCategoryWhenContextValidationFails(final SubCategoryRequestContext context, final String errorMessage) {
         // GIVEN
         SubCategoryModel subCategoryToUpdate = createSubCategoryModelBuilder(EXISTING_INCOME_ID, NEW_CATEGORY_NAME, INCOME).build();
-        context.setSubCategoryModel(subCategoryToUpdate);
+        context.setSubCategory(subCategoryToUpdate);
         // WHEN
         ResponseEntity result = getSubCategoryController().updateSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), errorMessage);
@@ -50,10 +49,10 @@ public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
     public void testUpdateCategoryWhenCategoryIdIsNull() {
         // GIVEN
         SubCategoryModel subCategoryModelToUpdate = createSubCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME).build();
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
         // WHEN
         ResponseEntity result = getSubCategoryController().updateSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_NEW_CATEGORY_IS_INVALID);
@@ -63,10 +62,10 @@ public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
     public void testUpdateCategoryWhenCategoryCannotBeFoundInRepository() {
         // GIVEN
         SubCategoryModel subCategoryModelToUpdate = createSubCategoryModelBuilder(INVALID_ID, NEW_CATEGORY_NAME, INCOME).build();
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
         // WHEN
         ResponseEntity result = getSubCategoryController().updateSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "Original subCategory cannot be found in the repository!");
@@ -76,10 +75,10 @@ public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
     public void testUpdateCategoryWhenCategoryTypeHasChanged() {
         // GIVEN
         SubCategoryModel subCategoryModelToUpdate = createSubCategoryModelBuilder(EXISTING_INCOME_ID, NEW_CATEGORY_NAME, OUTCOME).build();
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
         // WHEN
         ResponseEntity result = getSubCategoryController().updateSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "Transaction type cannot be changed!");
@@ -89,10 +88,10 @@ public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
     public void testUpdateCategoryWhenCategoryHasNewName() {
         // GIVEN
         SubCategoryModel subCategoryModelToUpdate = createSubCategoryModelBuilder(EXISTING_INCOME_ID, NEW_CATEGORY_NAME, INCOME).build();
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
         // WHEN
         ResponseEntity result = getSubCategoryController().updateSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_CATEGORY_HAS_BEEN_UPDATED);
@@ -104,10 +103,10 @@ public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
     public void testUpdateCategoryWhenCategoryHasNewNameAndOtherTypeHasThisName() {
         // GIVEN
         SubCategoryModel subCategoryModelToUpdate = createSubCategoryModelBuilder(EXISTING_OUTCOME_ID, RESERVED_CATEGORY_NAME, OUTCOME).build();
-        SubCategoryModelRequestContext context = createContext(OUTCOME, subCategoryModelToUpdate);
+        SubCategoryRequestContext context = createContext(OUTCOME, subCategoryModelToUpdate);
         // WHEN
         ResponseEntity result = getSubCategoryController().updateSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_CATEGORY_HAS_BEEN_UPDATED);
@@ -119,10 +118,10 @@ public class UpdateSubCategoryTest extends AbstractSubCategoryTest {
     public void testUpdateCategorySaveWhenCategoryHasNewNameAndItIsReserved() {
         // GIVEN
         SubCategoryModel subCategoryModelToUpdate = createSubCategoryModelBuilder(EXISTING_INCOME_ID, OTHER_RESERVED_CATEGORY_NAME, INCOME).build();
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModelToUpdate);
         // WHEN
         ResponseEntity result = getSubCategoryController().updateSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "You cannot update this category, because it exists.");

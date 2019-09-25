@@ -14,7 +14,6 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelRequestContext;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelResponse;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 
 public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
 

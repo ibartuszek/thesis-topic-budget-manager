@@ -12,8 +12,6 @@ import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer;
 
 @Component
 public class MainCategoryModelTransformer {

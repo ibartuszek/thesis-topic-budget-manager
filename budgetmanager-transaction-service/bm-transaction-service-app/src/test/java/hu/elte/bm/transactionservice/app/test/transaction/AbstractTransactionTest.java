@@ -15,7 +15,6 @@ import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTe
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 import hu.elte.bm.transactionservice.web.transaction.TransactionController;
 import hu.elte.bm.transactionservice.web.transaction.TransactionModel;
 import hu.elte.bm.transactionservice.web.transaction.TransactionModelRequestContext;

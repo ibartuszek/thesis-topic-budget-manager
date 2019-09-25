@@ -4,7 +4,6 @@ import hu.elte.bm.commonpack.validator.ModelAmountValue;
 import hu.elte.bm.commonpack.validator.ModelDateValue;
 import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 
 public final class TransactionModel {
 

@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryDao;
-import hu.elte.bm.transactionservice.dal.categories.SubCategoryDao;
 import hu.elte.bm.transactionservice.dal.transaction.IncomeDao;
 import hu.elte.bm.transactionservice.dal.transaction.OutcomeDao;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.service.database.DatabaseFacade;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
@@ -24,9 +22,6 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
 
     @Autowired
     private MainCategoryDao mainCategoryDao;
-
-    @Autowired
-    private SubCategoryDao subCategoryDao;
 
     @Autowired
     private IncomeDao incomeDao;
@@ -57,31 +52,6 @@ public class DefaultDatabaseFacade implements DatabaseFacade {
     @Override
     public Optional<MainCategory> updateMainCategory(final MainCategory mainCategory, final TransactionContext context) {
         return mainCategoryDao.update(mainCategory, context);
-    }
-
-    @Override
-    public List<SubCategory> findAllSubCategory(final TransactionContext context) {
-        return subCategoryDao.findAll(context);
-    }
-
-    @Override
-    public Optional<SubCategory> findSubCategoryById(final Long id, final TransactionContext context) {
-        return subCategoryDao.findById(id, context);
-    }
-
-    @Override
-    public Optional<SubCategory> findSubCategoryByName(final String name, final TransactionContext context) {
-        return subCategoryDao.findByName(name, context);
-    }
-
-    @Override
-    public Optional<SubCategory> saveSubCategory(final SubCategory subCategory, final TransactionContext context) {
-        return subCategoryDao.save(subCategory, context);
-    }
-
-    @Override
-    public Optional<SubCategory> updateSubCategory(final SubCategory subCategory, final TransactionContext context) {
-        return subCategoryDao.update(subCategory, context);
     }
 
     @Override

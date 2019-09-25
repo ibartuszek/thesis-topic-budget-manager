@@ -5,6 +5,11 @@ public class ResponseModel {
     private String message;
     private boolean successful;
 
+    public ResponseModel(final String message, final boolean successful) {
+        this.message = message;
+        this.successful = successful;
+    }
+
     public String getMessage() {
         return message;
     }

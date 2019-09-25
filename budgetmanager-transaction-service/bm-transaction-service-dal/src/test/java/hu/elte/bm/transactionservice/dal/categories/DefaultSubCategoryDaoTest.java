@@ -11,6 +11,8 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -18,7 +20,7 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
-public class SubCategoryDaoTest {
+public class DefaultSubCategoryDaoTest {
 
     private static final long EXISTING_ID = 1L;
     private static final long NEW_ID = 2L;
@@ -27,16 +29,26 @@ public class SubCategoryDaoTest {
     private static final Long USER_ID = 1L;
     private final SubCategoryEntityTransformer subCategoryEntityTransformer = new SubCategoryEntityTransformer();
 
-    private SubCategoryDao underTest;
+    private DefaultSubCategoryDao underTest;
 
     private IMocksControl control;
     private SubCategoryRepository subCategoryRepository;
 
-    @BeforeMethod
+    @BeforeClass
     public void setup() {
         control = EasyMock.createStrictControl();
         subCategoryRepository = control.createMock(SubCategoryRepository.class);
-        underTest = new SubCategoryDao(subCategoryRepository, subCategoryEntityTransformer);
+        underTest = new DefaultSubCategoryDao(subCategoryRepository, subCategoryEntityTransformer);
+    }
+
+    @BeforeMethod
+    public void beforeMethod() {
+        control.reset();
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+        control.verify();
     }
 
     @Test
@@ -48,7 +60,6 @@ public class SubCategoryDaoTest {
         // WHEN
         List<SubCategory> result = underTest.findAll(context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, Collections.emptyList());
     }
 
@@ -63,7 +74,6 @@ public class SubCategoryDaoTest {
         // WHEN
         List<SubCategory> result = underTest.findAll(context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedList);
     }
 
@@ -76,7 +86,6 @@ public class SubCategoryDaoTest {
         // WHEN
         Optional<SubCategory> result = underTest.findById(NEW_ID, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, Optional.empty());
     }
 
@@ -91,7 +100,6 @@ public class SubCategoryDaoTest {
         // WHEN
         Optional<SubCategory> result = underTest.findById(EXISTING_ID, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedSubCategory);
     }
 
@@ -104,7 +112,6 @@ public class SubCategoryDaoTest {
         // WHEN
         Optional<SubCategory> result = underTest.findByName(NEW_CATEGORY_NAME, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, Optional.empty());
     }
 
@@ -119,7 +126,6 @@ public class SubCategoryDaoTest {
         // WHEN
         Optional<SubCategory> result = underTest.findByName(EXISTING_CATEGORY_NAME, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedSubCategory);
     }
 
@@ -129,14 +135,13 @@ public class SubCategoryDaoTest {
         TransactionContext context = createTransactionContext(INCOME);
         SubCategory subCategoryToSave = createSubCategory(null, NEW_CATEGORY_NAME, INCOME);
         SubCategoryEntity subCategoryFromRepository = createSubCategoryEntity(NEW_ID, NEW_CATEGORY_NAME, INCOME);
-        Optional<SubCategory> expectedSubCategory = Optional.of(createSubCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME));
+        SubCategory expectedSubCategory = createSubCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME);
         Capture<SubCategoryEntity> capture = Capture.newInstance();
         EasyMock.expect(subCategoryRepository.save(EasyMock.capture(capture))).andReturn(subCategoryFromRepository);
         control.replay();
         // WHEN
-        Optional<SubCategory> result = underTest.save(subCategoryToSave, context);
+        SubCategory result = underTest.save(subCategoryToSave, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedSubCategory);
         SubCategoryEntity capturedCategory = capture.getValue();
         Assert.assertEquals(capturedCategory.getId(), subCategoryToSave.getId());
@@ -152,7 +157,7 @@ public class SubCategoryDaoTest {
 
     private SubCategoryEntity createSubCategoryEntity(final Long id, final String categoryName, final TransactionType type) {
         return SubCategoryEntity.builder()
-            .withUserId(id)
+            .withId(id)
             .withName(categoryName)
             .withTransactionType(type)
             .withUserId(USER_ID)

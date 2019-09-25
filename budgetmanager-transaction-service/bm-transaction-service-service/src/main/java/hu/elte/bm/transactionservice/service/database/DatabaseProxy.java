@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
-import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryException;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
@@ -65,46 +63,6 @@ public class DatabaseProxy {
             return databaseFacade.updateMainCategory(mainCategory, context);
         } catch (DataAccessException exception) {
             throw new MainCategoryException(mainCategory, exceptionMessage, exception);
-        }
-    }
-
-    public List<SubCategory> findAllSubCategory(final TransactionContext context) {
-        try {
-            return databaseFacade.findAllSubCategory(context);
-        } catch (DataAccessException exception) {
-            throw new DatabaseException(exceptionMessage, exception);
-        }
-    }
-
-    public Optional<SubCategory> findSubCategoryById(final Long id, final TransactionContext context) {
-        try {
-            return databaseFacade.findSubCategoryById(id, context);
-        } catch (DataAccessException exception) {
-            throw new DatabaseException(exceptionMessage, exception);
-        }
-    }
-
-    public Optional<SubCategory> findSubCategoryByName(final String name, final TransactionContext context) {
-        try {
-            return databaseFacade.findSubCategoryByName(name, context);
-        } catch (DataAccessException exception) {
-            throw new DatabaseException(exceptionMessage, exception);
-        }
-    }
-
-    public Optional<SubCategory> saveSubCategory(final SubCategory subCategory, final TransactionContext context) {
-        try {
-            return databaseFacade.saveSubCategory(subCategory, context);
-        } catch (DataAccessException exception) {
-            throw new SubCategoryException(subCategory, exceptionMessage, exception);
-        }
-    }
-
-    public Optional<SubCategory> updateSubCategory(final SubCategory subCategory, final TransactionContext context) {
-        try {
-            return databaseFacade.updateSubCategory(subCategory, context);
-        } catch (DataAccessException exception) {
-            throw new SubCategoryException(subCategory, exceptionMessage, exception);
         }
     }
 

@@ -14,7 +14,6 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryController;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelRequestContext;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
 
 public abstract class AbstractMainCategoryTest extends AbstractTransactionServiceApplicationTest {
 

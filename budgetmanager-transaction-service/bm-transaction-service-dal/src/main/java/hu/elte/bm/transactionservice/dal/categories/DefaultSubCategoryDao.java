@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+import hu.elte.bm.transactionservice.service.database.SubCategoryDao;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 @Component
-public class SubCategoryDao {
+public class DefaultSubCategoryDao implements SubCategoryDao {
 
     private final SubCategoryRepository subCategoryRepository;
 
     private final SubCategoryEntityTransformer subCategoryEntityTransformer;
 
-    SubCategoryDao(final SubCategoryRepository subCategoryRepository, final SubCategoryEntityTransformer subCategoryEntityTransformer) {
+    DefaultSubCategoryDao(final SubCategoryRepository subCategoryRepository, final SubCategoryEntityTransformer subCategoryEntityTransformer) {
         this.subCategoryRepository = subCategoryRepository;
         this.subCategoryEntityTransformer = subCategoryEntityTransformer;
     }
@@ -38,13 +41,14 @@ public class SubCategoryDao {
         return Optional.ofNullable(result);
     }
 
-    public Optional<SubCategory> save(final SubCategory subCategory, final TransactionContext context) {
+    @Transactional
+    public SubCategory save(final SubCategory subCategory, final TransactionContext context) {
         SubCategoryEntity subCategoryEntity = subCategoryEntityTransformer.transformToSubCategoryEntity(subCategory, context.getUserId());
         SubCategoryEntity response = subCategoryRepository.save(subCategoryEntity);
-        return Optional.ofNullable(subCategoryEntityTransformer.transformToSubCategory(response));
+        return subCategoryEntityTransformer.transformToSubCategory(response);
     }
 
-    public Optional<SubCategory> update(final SubCategory subCategory, final TransactionContext context) {
+    public SubCategory update(final SubCategory subCategory, final TransactionContext context) {
         return save(subCategory, context);
     }
 

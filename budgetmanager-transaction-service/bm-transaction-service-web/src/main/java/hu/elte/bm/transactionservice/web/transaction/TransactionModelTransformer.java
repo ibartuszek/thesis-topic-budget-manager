@@ -15,8 +15,6 @@ import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelTransformer;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelTransformer;
 
 @Component
 public class TransactionModelTransformer {

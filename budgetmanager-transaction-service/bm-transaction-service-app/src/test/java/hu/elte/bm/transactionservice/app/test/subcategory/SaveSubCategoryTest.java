@@ -7,9 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModel;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelRequestContext;
-import hu.elte.bm.transactionservice.web.subcategory.SubCategoryModelResponse;
+import hu.elte.bm.transactionservice.web.subcategory.SubCategoryRequestContext;
+import hu.elte.bm.transactionservice.web.subcategory.SubCategoryResponse;
 
 public class SaveSubCategoryTest extends AbstractSubCategoryTest {
 
@@ -17,10 +16,10 @@ public class SaveSubCategoryTest extends AbstractSubCategoryTest {
     public void testSaveCategoryWhenCategoryValidationFails(final SubCategoryModel subCategoryModel,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModel);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModel);
         // WHEN
         ResponseEntity result = getSubCategoryController().createSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -33,13 +32,13 @@ public class SaveSubCategoryTest extends AbstractSubCategoryTest {
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testSaveCategoryWhenContextValidationFails(final SubCategoryModelRequestContext context, final String errorMessage) {
+    public void testSaveCategoryWhenContextValidationFails(final SubCategoryRequestContext context, final String errorMessage) {
         // GIVEN
         SubCategoryModel subCategoryToSave = createSubCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME).build();
-        context.setSubCategoryModel(subCategoryToSave);
+        context.setSubCategory(subCategoryToSave);
         // WHEN
         ResponseEntity result = getSubCategoryController().createSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), errorMessage);
@@ -49,10 +48,10 @@ public class SaveSubCategoryTest extends AbstractSubCategoryTest {
     public void testSaveCategoryWhenIdIsNotNull() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = createSubCategoryModelBuilder(NEW_ID, NEW_CATEGORY_NAME, INCOME).build();
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModelToSave);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = getSubCategoryController().createSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_NEW_CATEGORY_IS_INVALID);
@@ -62,10 +61,10 @@ public class SaveSubCategoryTest extends AbstractSubCategoryTest {
     public void testSaveCategoryWhenCategoryHasNewName() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = createSubCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME).build();
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModelToSave);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = getSubCategoryController().createSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_CATEGORY_HAS_BEEN_SAVED);
@@ -77,10 +76,10 @@ public class SaveSubCategoryTest extends AbstractSubCategoryTest {
     public void testSaveCategoryWhenThereIsOneWithSameNameWithDifferentCategory() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = createSubCategoryModelBuilder(null, RESERVED_CATEGORY_NAME, OUTCOME).build();
-        SubCategoryModelRequestContext context = createContext(OUTCOME, subCategoryModelToSave);
+        SubCategoryRequestContext context = createContext(OUTCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = getSubCategoryController().createSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_CATEGORY_HAS_BEEN_SAVED);
@@ -92,10 +91,10 @@ public class SaveSubCategoryTest extends AbstractSubCategoryTest {
     public void testSaveCategoryWhenThereIsOneWithSameNameWithSameCategory() {
         // GIVEN
         SubCategoryModel subCategoryModelToSave = createSubCategoryModelBuilder(null, RESERVED_CATEGORY_NAME, INCOME).build();
-        SubCategoryModelRequestContext context = createContext(INCOME, subCategoryModelToSave);
+        SubCategoryRequestContext context = createContext(INCOME, subCategoryModelToSave);
         // WHEN
         ResponseEntity result = getSubCategoryController().createSubCategory(context);
-        SubCategoryModelResponse response = (SubCategoryModelResponse) result.getBody();
+        SubCategoryResponse response = (SubCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "The category has been saved before.");

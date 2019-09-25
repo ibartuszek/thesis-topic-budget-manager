@@ -1,60 +1,58 @@
 package hu.elte.bm.transactionservice.web.subcategory;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.service.category.SubCategoryService;
+import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
 @RestController
 public class SubCategoryController {
 
-    private final SubCategoryModelService subCategoryModelService;
+    @Value("${sub_category.sub_category_has_been_saved}")
+    private String categoryHasBeenSaved;
 
-    public SubCategoryController(final SubCategoryModelService subCategoryModelService) {
-        this.subCategoryModelService = subCategoryModelService;
+    @Value("${sub_category.sub_category_has_been_updated}")
+    private String categoryHasBeenUpdated;
+
+    private final SubCategoryService subCategoryService;
+
+    public SubCategoryController(final SubCategoryService subCategoryService) {
+        this.subCategoryService = subCategoryService;
     }
 
     @RequestMapping(value = "/bm/subCategories/findAll", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Object> getSubCategories(@RequestParam final TransactionType type, @RequestParam final Long userId) {
-        List<SubCategoryModel> subCategoryModelList = subCategoryModelService.findAll(type, userId);
-        return new ResponseEntity<>(subCategoryModelList, HttpStatus.OK);
+    public SubCategoryListResponse getSubCategories(@RequestParam final TransactionType type, @RequestParam final Long userId) {
+        return SubCategoryListResponse.createSuccessfulSubCategoryResponse(subCategoryService.getSubCategoryList(createTransactionContext(type, userId)));
     }
 
     @RequestMapping(value = "/bm/subCategories/create", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Object> createSubCategory(@RequestBody final SubCategoryModelRequestContext context) {
-        SubCategoryModelResponse response;
-        try {
-            response = subCategoryModelService.saveSubCategory(context);
-        } catch (Exception e) {
-            response = createErrorResponse(context, e);
-        }
-        return response.isSuccessful() ? new ResponseEntity<>(response, HttpStatus.OK) : new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    public SubCategoryResponse createSubCategory(@RequestBody final SubCategoryRequestContext context) {
+        SubCategory subCategory = subCategoryService.save(context.getSubCategory(), createTransactionContext(context));
+        return SubCategoryResponse.createSuccessfulSubCategoryResponse(subCategory, categoryHasBeenSaved);
     }
 
     @RequestMapping(value = "/bm/subCategories/update", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<Object> updateSubCategory(@RequestBody final SubCategoryModelRequestContext context) {
-        SubCategoryModelResponse response;
-        try {
-            response = subCategoryModelService.updateSubCategory(context);
-        } catch (Exception e) {
-            response = createErrorResponse(context, e);
-        }
-        return response.isSuccessful() ? new ResponseEntity<>(response, HttpStatus.OK) : new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    public SubCategoryResponse updateSubCategory(@RequestBody final SubCategoryRequestContext context) {
+        SubCategory subCategory = subCategoryService.update(context.getSubCategory(), createTransactionContext(context));
+        return SubCategoryResponse.createSuccessfulSubCategoryResponse(subCategory, categoryHasBeenUpdated);
     }
 
-    private SubCategoryModelResponse createErrorResponse(final SubCategoryModelRequestContext context, final Exception e) {
-        SubCategoryModelResponse response = new SubCategoryModelResponse();
-        response.setSubCategoryModel(context.getSubCategoryModel());
-        response.setSuccessful(false);
-        response.setMessage(e.getMessage());
-        return response;
+    private TransactionContext createTransactionContext(final SubCategoryRequestContext context) {
+        return createTransactionContext(context.getTransactionType(), context.getUserId());
+    }
+
+    private TransactionContext createTransactionContext(final TransactionType transactionType, final Long userId) {
+        return TransactionContext.builder()
+                .withTransactionType(transactionType)
+                .withUserId(userId)
+                .build();
     }
 
 }
