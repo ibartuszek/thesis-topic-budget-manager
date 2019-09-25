@@ -13,6 +13,8 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,28 +23,38 @@ import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
-public class MainCategoryDaoTest {
+public class DefaultMainCategoryDaoTest {
 
     private static final long EXISTING_ID = 1L;
     private static final long NEW_ID = 2L;
     private static final String EXISTING_CATEGORY_NAME = "category name 1";
     private static final String NEW_CATEGORY_NAME = "category name";
     private static final Long USER_ID = 1L;
-    private final MainCategoryEntityTransformer mainCategoryEntityTransformer =
-        new MainCategoryEntityTransformer(new SubCategoryEntityTransformer());
 
-    private MainCategoryDao underTest;
+    private DefaultMainCategoryDao underTest;
 
     private IMocksControl control;
     private MainCategoryRepository mainCategoryRepository;
     private SubCategoryRepository subCategoryRepository;
 
-    @BeforeMethod
+    @BeforeClass
     public void setup() {
         control = EasyMock.createStrictControl();
         mainCategoryRepository = control.createMock(MainCategoryRepository.class);
         subCategoryRepository = control.createMock(SubCategoryRepository.class);
-        underTest = new MainCategoryDao(mainCategoryRepository, subCategoryRepository, mainCategoryEntityTransformer);
+        MainCategoryEntityTransformer mainCategoryEntityTransformer =
+            new MainCategoryEntityTransformer(new SubCategoryEntityTransformer());
+        underTest = new DefaultMainCategoryDao(mainCategoryRepository, subCategoryRepository, mainCategoryEntityTransformer);
+    }
+
+    @BeforeMethod
+    public void beforeMethod() {
+        control.reset();
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+        control.verify();
     }
 
     @Test
@@ -54,7 +66,6 @@ public class MainCategoryDaoTest {
         // WHEN
         List<MainCategory> result = underTest.findAll(context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, Collections.emptyList());
     }
 
@@ -69,7 +80,6 @@ public class MainCategoryDaoTest {
         // WHEN
         List<MainCategory> result = underTest.findAll(context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedList);
     }
 
@@ -82,7 +92,6 @@ public class MainCategoryDaoTest {
         // WHEN
         Optional<MainCategory> result = underTest.findById(NEW_ID, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, Optional.empty());
     }
 
@@ -97,7 +106,6 @@ public class MainCategoryDaoTest {
         // WHEN
         Optional<MainCategory> result = underTest.findById(EXISTING_ID, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedMainCategory);
     }
 
@@ -110,7 +118,6 @@ public class MainCategoryDaoTest {
         // WHEN
         Optional<MainCategory> result = underTest.findByName(NEW_CATEGORY_NAME, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, Optional.empty());
     }
 
@@ -125,7 +132,6 @@ public class MainCategoryDaoTest {
         // WHEN
         Optional<MainCategory> result = underTest.findByName(EXISTING_CATEGORY_NAME, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedSubCategory);
     }
 
@@ -135,16 +141,15 @@ public class MainCategoryDaoTest {
         TransactionContext context = createTransactionContext(INCOME);
         MainCategory mainCategoryToSave = createMainCategory(null, NEW_CATEGORY_NAME, INCOME, createSubCategorySet());
         MainCategoryEntity mainCategoryFromRepository = createMainCategoryEntity(NEW_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryEntitySet());
-        Optional<MainCategory> expectedMainCategory = Optional.of(createMainCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME, createSubCategorySet()));
+        MainCategory expectedMainCategory = createMainCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME, createSubCategorySet());
         Capture<MainCategoryEntity> capture = Capture.newInstance();
         EasyMock.expect(subCategoryRepository.findByIdAndUserId(EXISTING_ID, USER_ID)).andReturn(
             Optional.ofNullable(mainCategoryFromRepository.getSubCategoryEntitySet().iterator().next()));
         EasyMock.expect(mainCategoryRepository.save(EasyMock.capture(capture))).andReturn(mainCategoryFromRepository);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.save(mainCategoryToSave, context);
+        MainCategory result = underTest.save(mainCategoryToSave, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedMainCategory);
         MainCategoryEntity capturedCategory = capture.getValue();
         Assert.assertEquals(capturedCategory.getId(), mainCategoryToSave.getId());

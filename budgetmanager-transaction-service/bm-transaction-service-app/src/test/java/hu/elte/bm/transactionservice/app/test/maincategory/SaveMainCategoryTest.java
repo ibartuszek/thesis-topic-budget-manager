@@ -10,9 +10,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelRequestContext;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelResponse;
+import hu.elte.bm.transactionservice.web.maincategory.MainCategoryRequestContext;
+import hu.elte.bm.transactionservice.web.maincategory.MainCategoryResponse;
 
 public class SaveMainCategoryTest extends AbstractMainCategoryTest {
 
@@ -20,10 +19,10 @@ public class SaveMainCategoryTest extends AbstractMainCategoryTest {
     public void testSaveCategoryWhenMainCategoryModelValidationFails(final MainCategoryModel mainCategoryModel,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        MainCategoryModelRequestContext context = createContext(INCOME, mainCategoryModel);
+        MainCategoryRequestContext context = createContext(INCOME, mainCategoryModel);
         // WHEN
         ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -36,13 +35,13 @@ public class SaveMainCategoryTest extends AbstractMainCategoryTest {
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testSaveCategoryWhenContextValidationFails(final MainCategoryModelRequestContext context, final String errorMessage) {
+    public void testSaveCategoryWhenContextValidationFails(final MainCategoryRequestContext context, final String errorMessage) {
         // GIVEN
         MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME, new HashSet<>()).build();
-        context.setMainCategoryModel(mainCategoryToSave);
+        context.setMainCategory(mainCategoryToSave);
         // WHEN
         ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), errorMessage);
@@ -53,10 +52,10 @@ public class SaveMainCategoryTest extends AbstractMainCategoryTest {
         // GIVEN
         MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
         mainCategoryToSave.getSubCategoryModelSet().add(createSubCategoryModel(null, "illegal supplementary category", INCOME));
-        MainCategoryModelRequestContext context = createContext(INCOME, mainCategoryToSave);
+        MainCategoryRequestContext context = createContext(INCOME, mainCategoryToSave);
         // WHEN
         ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "A subCategory does not have id!");
@@ -66,10 +65,10 @@ public class SaveMainCategoryTest extends AbstractMainCategoryTest {
     public void testSaveCategoryWhenCategoryIdIsNotNull() {
         // GIVEN
         MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(INVALID_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
         // WHEN
         ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_NEW_CATEGORY_IS_INVALID);
@@ -79,10 +78,10 @@ public class SaveMainCategoryTest extends AbstractMainCategoryTest {
     public void testSaveCategoryWhenCategoryHasNewName() {
         // GIVEN
         MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
         // WHEN
         ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_CATEGORY_HAS_BEEN_SAVED);
@@ -94,10 +93,10 @@ public class SaveMainCategoryTest extends AbstractMainCategoryTest {
     public void testSaveCategoryWhenThereIsOneWithSameNameWithDifferentCategory() {
         // GIVEN
         MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, RESERVED_CATEGORY_NAME, OUTCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(OUTCOME, mainCategoryToSave);
+        MainCategoryRequestContext context = createContext(OUTCOME, mainCategoryToSave);
         // WHEN
         ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_CATEGORY_HAS_BEEN_SAVED);
@@ -109,10 +108,10 @@ public class SaveMainCategoryTest extends AbstractMainCategoryTest {
     public void testSaveCategoryWhenThereIsOneWithSameNameWithSameCategory() {
         // GIVEN
         MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, RESERVED_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
         // WHEN
         ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "The category has been saved before.");

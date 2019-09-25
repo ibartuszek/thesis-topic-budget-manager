@@ -9,10 +9,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hu.elte.bm.transactionservice.dal.categories.MainCategoryDao;
 import hu.elte.bm.transactionservice.dal.transaction.IncomeDao;
 import hu.elte.bm.transactionservice.dal.transaction.OutcomeDao;
-import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.service.database.DatabaseFacade;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
@@ -21,38 +19,10 @@ import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 public class DefaultDatabaseFacade implements DatabaseFacade {
 
     @Autowired
-    private MainCategoryDao mainCategoryDao;
-
-    @Autowired
     private IncomeDao incomeDao;
 
     @Autowired
     private OutcomeDao outcomeDao;
-
-    @Override
-    public List<MainCategory> findAllMainCategory(final TransactionContext context) {
-        return mainCategoryDao.findAll(context);
-    }
-
-    @Override
-    public Optional<MainCategory> findMainCategoryById(final Long id, final TransactionContext context) {
-        return mainCategoryDao.findById(id, context);
-    }
-
-    @Override
-    public Optional<MainCategory> findMainCategoryByName(final String name, final TransactionContext context) {
-        return mainCategoryDao.findByName(name, context);
-    }
-
-    @Override
-    public Optional<MainCategory> saveMainCategory(final MainCategory mainCategory, final TransactionContext context) {
-        return mainCategoryDao.save(mainCategory, context);
-    }
-
-    @Override
-    public Optional<MainCategory> updateMainCategory(final MainCategory mainCategory, final TransactionContext context) {
-        return mainCategoryDao.update(mainCategory, context);
-    }
 
     @Override
     public List<Transaction> findAllTransaction(final LocalDate start, final LocalDate end, final TransactionContext context) {

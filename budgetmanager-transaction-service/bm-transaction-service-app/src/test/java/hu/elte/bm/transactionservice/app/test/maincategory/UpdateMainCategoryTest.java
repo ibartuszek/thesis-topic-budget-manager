@@ -11,9 +11,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelRequestContext;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelResponse;
+import hu.elte.bm.transactionservice.web.maincategory.MainCategoryRequestContext;
+import hu.elte.bm.transactionservice.web.maincategory.MainCategoryResponse;
 
 public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
 
@@ -26,10 +25,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
         mainCategoryModel.setId(EXISTING_INCOME_ID);
-        MainCategoryModelRequestContext context = createContext(INCOME, mainCategoryModel);
+        MainCategoryRequestContext context = createContext(INCOME, mainCategoryModel);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -42,13 +41,13 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testUpdateCategoryWhenContextValidationFails(final MainCategoryModelRequestContext context, final String errorMessage) {
+    public void testUpdateCategoryWhenContextValidationFails(final MainCategoryRequestContext context, final String errorMessage) {
         // GIVEN
         MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(EXISTING_INCOME_ID, NEW_CATEGORY_NAME, INCOME, new HashSet<>()).build();
-        context.setMainCategoryModel(mainCategoryToSave);
+        context.setMainCategory(mainCategoryToSave);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), errorMessage);
@@ -58,10 +57,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
     public void testUpdateCategoryWhenCategoryIdIsNull() {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate = createMainCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_NEW_CATEGORY_IS_INVALID);
@@ -72,10 +71,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate =
             createMainCategoryModelBuilder(EXISTING_INCOME_ID, NEW_CATEGORY_NAME, OUTCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "Transaction type cannot be changed!");
@@ -87,10 +86,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
         MainCategoryModel mainCategoryToUpdate =
             createMainCategoryModelBuilder(EXISTING_INCOME_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
         mainCategoryToUpdate.getSubCategoryModelSet().add(createSubCategoryModel(null, "illegal supplementary category", INCOME));
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "A subCategory does not have id!");
@@ -102,10 +101,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
         Set<SubCategoryModel> modifiedSet = new HashSet<>();
         modifiedSet.add(createSubCategoryModel(1L, "supplementary category 1", INCOME));
         MainCategoryModel mainCategoryToUpdate = createMainCategoryModelBuilder(EXISTING_INCOME_ID, NEW_CATEGORY_NAME, INCOME, modifiedSet).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "New mainCategory does not contain all original subCategory!");
@@ -117,10 +116,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
         MainCategoryModel mainCategoryToUpdate =
             createMainCategoryModelBuilder(EXISTING_INCOME_ID, RESERVED_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
         mainCategoryToUpdate.getSubCategoryModelSet().add(createSubCategoryModel(NEW_SUBCATEGORY_ID, NEW_SUBCATEGORY_NAME, INCOME));
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMainCategoryModel().getSubCategoryModelSet().size(), EXPECTED_SUBCATEGORY_SET_SIZE);
@@ -130,10 +129,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
     public void testUpdateCategoryWhenCategoryCannotBeFoundInTheRepository() {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate = createMainCategoryModelBuilder(INVALID_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "Original mainCategory cannot be found in the repository!");
@@ -144,10 +143,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate =
             createMainCategoryModelBuilder(EXISTING_INCOME_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMainCategoryModel().getId(), EXISTING_INCOME_ID);
@@ -159,10 +158,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate =
             createMainCategoryModelBuilder(EXISTING_OUTCOME_ID, RESERVED_CATEGORY_NAME, OUTCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(OUTCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(OUTCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMainCategoryModel().getId(), EXISTING_OUTCOME_ID);
@@ -174,10 +173,10 @@ public class UpdateMainCategoryTest extends AbstractMainCategoryTest {
         // GIVEN
         MainCategoryModel mainCategoryToUpdate =
             createMainCategoryModelBuilder(EXISTING_INCOME_ID, OTHER_RESERVED_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryModelRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
+        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToUpdate);
         // WHEN
         ResponseEntity result = getMainCategoryController().updateMainCategory(context);
-        MainCategoryModelResponse response = (MainCategoryModelResponse) result.getBody();
+        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "You cannot update this category, because it exists.");

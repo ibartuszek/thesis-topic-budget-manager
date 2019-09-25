@@ -18,26 +18,32 @@ public class SubCategoryService {
 
     private final SubCategoryDao subCategoryDao;
 
-    @Value("${sub_category.user_id_cannot_be_null}")
-    private String userIdCannotBeNullExceptionMessage;
+    @Value("${sub_category.sub_category_cannot_be_found}")
+    private String categoryCannotBeFound;
 
     @Value("${sub_category.sub_category_cannot_be_null}")
-    private String categoryCannotBeNullExceptionMessage;
-
-    @Value("{sub_category.sub_category_id_cannot_be_null}")
-    private String categoryIdCannotBeNullExceptionMessage;
+    private String categoryCannotBeNull;
 
     @Value("${sub_category.sub_category_has_been_saved_before}")
-    private String categoryHasBeenSavedBeforeMessage;
+    private String categoryHasBeenSavedBefore;
 
-    @Value("${sub_category.category_type_cannot_be_null}")
-    private String typeCannotBeNullExceptionMessage;
+    @Value("${sub_category.sub_category_id_cannot_be_null}")
+    private String categoryIdCannotBeNull;
 
-    @Value("${sub_category.sub_category_cannot_be_found}")
-    private String originalSubCategoryCannotBeFoundExceptionMessage;
+    @Value("${sub_category.sub_category_id_must_be_null}")
+    private String categoryIdMustBeNull;
+
+    @Value("${sub_category.sub_category_not_changed}")
+    private String categoryNotChanged;
 
     @Value("${sub_category.transaction_type_cannot_be_changed}")
-    private String transactionTypeCannotBeChangedExceptionMessage;
+    private String typeCannotBeChanged;
+
+    @Value("${sub_category.category_type_cannot_be_null}")
+    private String typeCannotBeNull;
+
+    @Value("${sub_category.user_id_cannot_be_null}")
+    private String userIdCannotBeNull;
 
     SubCategoryService(final SubCategoryDao subCategoryDao) {
         this.subCategoryDao = subCategoryDao;
@@ -63,29 +69,35 @@ public class SubCategoryService {
     }
 
     private void validate(final TransactionContext context) {
-        Assert.notNull(context.getUserId(), userIdCannotBeNullExceptionMessage);
-        Assert.notNull(context.getTransactionType(), typeCannotBeNullExceptionMessage);
+        Assert.notNull(context.getUserId(), userIdCannotBeNull);
+        Assert.notNull(context.getTransactionType(), typeCannotBeNull);
     }
 
     private void validateSavableSubCategory(final SubCategory subCategory) {
-        Assert.notNull(subCategory, categoryCannotBeNullExceptionMessage);
-        Assert.isNull(subCategory.getId(), categoryIdCannotBeNullExceptionMessage);
+        Assert.notNull(subCategory, categoryCannotBeNull);
+        Assert.isNull(subCategory.getId(), categoryIdCannotBeNull);
     }
 
     private void validateSubCategoryIsNotReserved(final SubCategory subCategory, final TransactionContext context) {
-        if (subCategoryDao.findByName(subCategory.getName(), context).isPresent()) {
-            throw new SubCategoryConflictException(subCategory, categoryHasBeenSavedBeforeMessage);
+        // Only name can be changed with update!!! If there is any new updatable parameter it should be updated!
+        Optional<SubCategory> subCategoryWithSameName = subCategoryDao.findByName(subCategory.getName(), context);
+        if (subCategoryWithSameName.isPresent()) {
+            if (!subCategoryWithSameName.get().getId().equals(subCategory.getId())) {
+                throw new SubCategoryConflictException(subCategory, categoryHasBeenSavedBefore);
+            } else {
+                throw new IllegalArgumentException(categoryNotChanged);
+            }
         }
     }
 
     private void validateUpdatableSubCategory(final SubCategory subCategory, final TransactionContext context) {
-        Assert.notNull(subCategory, categoryCannotBeNullExceptionMessage);
-        Assert.notNull(subCategory.getId(), categoryIdCannotBeNullExceptionMessage);
+        Assert.notNull(subCategory, categoryCannotBeNull);
+        Assert.notNull(subCategory.getId(), categoryIdCannotBeNull);
         Optional<SubCategory> originalSubCategory = subCategoryDao.findById(subCategory.getId(), context);
         if (originalSubCategory.isEmpty()) {
-            throw new SubCategoryNotFoundException(originalSubCategoryCannotBeFoundExceptionMessage, subCategory);
+            throw new SubCategoryNotFoundException(categoryCannotBeFound, subCategory);
         } else if (subCategory.getTransactionType() != originalSubCategory.get().getTransactionType()) {
-            throw new IllegalArgumentException(transactionTypeCannotBeChangedExceptionMessage);
+            throw new IllegalArgumentException(typeCannotBeChanged);
         }
     }
 

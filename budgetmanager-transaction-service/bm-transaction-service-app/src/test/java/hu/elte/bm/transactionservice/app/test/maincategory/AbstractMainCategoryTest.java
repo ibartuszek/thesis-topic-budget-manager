@@ -12,8 +12,7 @@ import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryController;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModelRequestContext;
+import hu.elte.bm.transactionservice.web.maincategory.MainCategoryRequestContext;
 
 public abstract class AbstractMainCategoryTest extends AbstractTransactionServiceApplicationTest {
 
@@ -69,10 +68,10 @@ public abstract class AbstractMainCategoryTest extends AbstractTransactionServic
 
     @DataProvider
     public Object[][] dataForContextValidation() {
-        MainCategoryModelRequestContext contextWithoutUserId = new MainCategoryModelRequestContext();
+        MainCategoryRequestContext contextWithoutUserId = new MainCategoryRequestContext();
         contextWithoutUserId.setUserId(null);
         contextWithoutUserId.setTransactionType(INCOME);
-        MainCategoryModelRequestContext contextWithoutTransactionType = new MainCategoryModelRequestContext();
+        MainCategoryRequestContext contextWithoutTransactionType = new MainCategoryRequestContext();
         contextWithoutTransactionType.setUserId(USER_ID);
         contextWithoutTransactionType.setTransactionType(null);
 
@@ -89,10 +88,10 @@ public abstract class AbstractMainCategoryTest extends AbstractTransactionServic
         return subCategorySet;
     }
 
-    MainCategoryModelRequestContext createContext(final TransactionType type, final MainCategoryModel mainCategoryModel) {
-        MainCategoryModelRequestContext context = new MainCategoryModelRequestContext();
+    MainCategoryRequestContext createContext(final TransactionType type, final MainCategoryModel mainCategoryModel) {
+        MainCategoryRequestContext context = new MainCategoryRequestContext();
         context.setTransactionType(type);
-        context.setMainCategoryModel(mainCategoryModel);
+        context.setMainCategory(mainCategoryModel);
         context.setUserId(USER_ID);
         return context;
     }

@@ -28,7 +28,6 @@ import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.service.transaction.TransactionService;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 
 public class TransactionModelServiceTest {
 

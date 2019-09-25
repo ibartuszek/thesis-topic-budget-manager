@@ -92,10 +92,10 @@ public class DefaultSubCategoryServiceTest {
     @DataProvider
     private Object[][] dataForValidation() {
         SubCategory subCategory = createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
-        return new Object[][]{
-                {null, INCOME, USER_ID},
-                {subCategory, null, USER_ID},
-                {subCategory, INCOME, null}
+        return new Object[][] {
+            { null, INCOME, USER_ID },
+            { subCategory, null, USER_ID },
+            { subCategory, INCOME, null }
         };
     }
 
@@ -115,7 +115,7 @@ public class DefaultSubCategoryServiceTest {
         SubCategory subCategoryToSave = createExampleSubCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
         Optional<SubCategory> subCategoryFromRepository = Optional.of(createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
         EasyMock.expect(subCategoryDao.findByName(EXPECTED_CATEGORY_NAME, createTransactionContext(INCOME, USER_ID)))
-                .andReturn(subCategoryFromRepository);
+            .andReturn(subCategoryFromRepository);
         control.replay();
         // WHEN
         underTest.save(subCategoryToSave, createTransactionContext(INCOME, USER_ID));
@@ -195,6 +195,20 @@ public class DefaultSubCategoryServiceTest {
         // THEN
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testUpdateWhenSubCategoryNotChanged() {
+        // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
+        SubCategory subCategoryToUpdate = createExampleSubCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
+        Optional<SubCategory> subCategoryFromRepository = Optional.of(createExampleSubCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        EasyMock.expect(subCategoryDao.findById(EXPECTED_CATEGORY_ID, context)).andReturn(subCategoryFromRepository);
+        EasyMock.expect(subCategoryDao.findByName(NEW_CATEGORY_NAME, context)).andReturn(subCategoryFromRepository);
+        control.replay();
+        // WHEN
+        underTest.update(subCategoryToUpdate, context);
+        // THEN
+    }
+
     @Test
     public void testUpdate() {
         // GIVEN
@@ -220,17 +234,17 @@ public class DefaultSubCategoryServiceTest {
 
     private SubCategory createExampleSubCategory(final Long id, final String categoryName, final TransactionType type) {
         return SubCategory.builder()
-                .withId(id)
-                .withName(categoryName)
-                .withTransactionType(type)
-                .build();
+            .withId(id)
+            .withName(categoryName)
+            .withTransactionType(type)
+            .build();
     }
 
     private TransactionContext createTransactionContext(final TransactionType transactionType, final Long userId) {
         return TransactionContext.builder()
-                .withTransactionType(transactionType)
-                .withUserId(userId)
-                .build();
+            .withTransactionType(transactionType)
+            .withUserId(userId)
+            .build();
     }
 
 }

@@ -3,7 +3,6 @@ package hu.elte.bm.transactionservice.web.transaction;
 import hu.elte.bm.commonpack.validator.ModelAmountValue;
 import hu.elte.bm.commonpack.validator.ModelDateValue;
 import hu.elte.bm.commonpack.validator.ModelStringValue;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 
 public final class TransactionModel {
 

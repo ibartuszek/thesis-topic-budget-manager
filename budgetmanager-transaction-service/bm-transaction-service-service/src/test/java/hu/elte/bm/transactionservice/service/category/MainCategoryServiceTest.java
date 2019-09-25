@@ -13,19 +13,21 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.categories.MainCategoryException;
+import hu.elte.bm.transactionservice.domain.categories.MainCategoryConflictException;
+import hu.elte.bm.transactionservice.domain.categories.MainCategoryNotFoundException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.service.database.DatabaseProxy;
+import hu.elte.bm.transactionservice.service.database.MainCategoryDao;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
-public class DefaultMainCategoryServiceTest {
+public class MainCategoryServiceTest {
 
     private static final long EXPECTED_CATEGORY_ID = 1L;
     private static final long NEW_ID = 3L;
@@ -36,33 +38,37 @@ public class DefaultMainCategoryServiceTest {
     private static final String NEW_CATEGORY_NAME = "category3";
     private static final Long USER_ID = 1L;
 
-    private DatabaseProxy databaseProxy;
+    private MainCategoryDao mainCategoryDao;
     private IMocksControl control;
 
-    private DefaultMainCategoryService underTest;
+    private MainCategoryService underTest;
 
     @BeforeClass
     public void setup() {
         control = EasyMock.createStrictControl();
-        databaseProxy = control.createMock(DatabaseProxy.class);
-        underTest = new DefaultMainCategoryService(databaseProxy);
+        mainCategoryDao = control.createMock(MainCategoryDao.class);
+        underTest = new MainCategoryService(mainCategoryDao);
     }
 
     @BeforeMethod
-    public void reset() {
+    public void beforeMethod() {
         control.reset();
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+        control.verify();
     }
 
     @Test
     public void testGetMainCategoryListWhenThereIsNoCategory() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        EasyMock.expect(databaseProxy.findAllMainCategory(context)).andReturn(Collections.emptyList());
+        EasyMock.expect(mainCategoryDao.findAll(context)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
         List<MainCategory> result = underTest.getMainCategoryList(context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, Collections.emptyList());
     }
 
@@ -71,18 +77,18 @@ public class DefaultMainCategoryServiceTest {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         List<MainCategory> mainCategoryList = createMainCategoryList();
-        EasyMock.expect(databaseProxy.findAllMainCategory(context)).andReturn(mainCategoryList);
+        EasyMock.expect(mainCategoryDao.findAll(context)).andReturn(mainCategoryList);
         control.replay();
         // WHEN
         List<MainCategory> result = underTest.getMainCategoryList(context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, mainCategoryList);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForValidation")
     public void testSaveWhenValidationFails(final MainCategory mainCategory, final TransactionType type, final Long userId) {
         // GIVEN
+        control.replay();
         // WHEN
         underTest.save(mainCategory, createTransactionContext(type, userId));
         // THEN
@@ -98,29 +104,38 @@ public class DefaultMainCategoryServiceTest {
         };
     }
 
-    @Test(expectedExceptions = MainCategoryException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testSaveWhenCategoryHasId() {
+        // GIVEN
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(INVALID_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        control.replay();
+        // WHEN
+        underTest.save(mainCategoryToUpdate, createTransactionContext(INCOME, USER_ID));
+        // THEN
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSaveWhenThereIsOneSubCategoryWithoutId() {
         // GIVEN
         MainCategory mainCategoryToSave = createExampleMainCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
         mainCategoryToSave.getSubCategorySet().add(createSubCategory(null, NEW_CATEGORY_NAME, INCOME));
+        control.replay();
         // WHEN
         underTest.save(mainCategoryToSave, createTransactionContext(INCOME, USER_ID));
         // THEN
     }
 
-    @Test
+    @Test(expectedExceptions = MainCategoryConflictException.class)
     public void testSaveWhenCategoryWithSameNameAndTypeFoundInRepository() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         MainCategory mainCategoryToSave = createExampleMainCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
         Optional<MainCategory> mainCategoryFromRepository = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findMainCategoryByName(EXPECTED_CATEGORY_NAME, context)).andReturn(mainCategoryFromRepository);
+        EasyMock.expect(mainCategoryDao.findByName(EXPECTED_CATEGORY_NAME, context)).andReturn(mainCategoryFromRepository);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.save(mainCategoryToSave, context);
+        underTest.save(mainCategoryToSave, context);
         // THEN
-        control.verify();
-        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -128,101 +143,112 @@ public class DefaultMainCategoryServiceTest {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         MainCategory mainCategoryToSave = createExampleMainCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
-        Optional<MainCategory> expectedMainCategory = Optional.of(createExampleMainCategory(NEW_ID, EXPECTED_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findMainCategoryByName(EXPECTED_CATEGORY_NAME, context)).andReturn(Optional.empty());
-        EasyMock.expect(databaseProxy.saveMainCategory(mainCategoryToSave, context)).andReturn(expectedMainCategory);
+        MainCategory expectedMainCategory = createExampleMainCategory(NEW_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        EasyMock.expect(mainCategoryDao.findByName(EXPECTED_CATEGORY_NAME, context)).andReturn(Optional.empty());
+        EasyMock.expect(mainCategoryDao.save(mainCategoryToSave, context)).andReturn(expectedMainCategory);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.save(mainCategoryToSave, context);
+        MainCategory result = underTest.save(mainCategoryToSave, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedMainCategory);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForValidation")
     public void testUpdateWhenValidationFails(final MainCategory mainCategory, final TransactionType type, final Long userId) {
         // GIVEN
+        control.replay();
         // WHEN
         underTest.update(mainCategory, createTransactionContext(type, userId));
         // THEN
     }
 
-    @Test(expectedExceptions = MainCategoryException.class)
-    public void testUpdateWhenThereIsOneSubCategoryWithoutId() {
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testUpdateWhenCategoryDoesNotHaveId() {
         // GIVEN
         MainCategory mainCategoryToUpdate = createExampleMainCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
-        mainCategoryToUpdate.getSubCategorySet().add(createSubCategory(null, NEW_CATEGORY_NAME, INCOME));
+        control.replay();
         // WHEN
         underTest.update(mainCategoryToUpdate, createTransactionContext(INCOME, USER_ID));
         // THEN
     }
 
-    @Test(expectedExceptions = MainCategoryException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testUpdateWhenThereIsOneSubCategoryWithoutId() {
+        // GIVEN
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        mainCategoryToUpdate.getSubCategorySet().add(createSubCategory(null, NEW_CATEGORY_NAME, INCOME));
+        control.replay();
+        // WHEN
+        underTest.update(mainCategoryToUpdate, createTransactionContext(INCOME, USER_ID));
+        // THEN
+    }
+
+    @Test(expectedExceptions = MainCategoryConflictException.class)
+    public void testUpdateWhenCategoryWithSameNameAndTypeFoundInRepository() {
+        // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        Optional<MainCategory> mainCategoryFromRepository = Optional.of(createExampleMainCategory(OTHER_ID, EXPECTED_CATEGORY_NAME, INCOME));
+        EasyMock.expect(mainCategoryDao.findByName(EXPECTED_CATEGORY_NAME, context)).andReturn(mainCategoryFromRepository);
+        control.replay();
+        // WHEN
+        underTest.update(mainCategoryToUpdate, context);
+        // THEN
+    }
+
+    @Test(expectedExceptions = MainCategoryNotFoundException.class)
     public void testUpdateWhenCategoryCannotBeFoundById() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         MainCategory mainCategoryToUpdate = createExampleMainCategory(INVALID_ID, NEW_CATEGORY_NAME, INCOME);
-        EasyMock.expect(databaseProxy.findMainCategoryById(INVALID_ID, context)).andReturn(Optional.empty());
+        EasyMock.expect(mainCategoryDao.findByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
+        EasyMock.expect(mainCategoryDao.findById(INVALID_ID, context)).andReturn(Optional.empty());
         control.replay();
         // WHEN
-        try {
-            underTest.update(mainCategoryToUpdate, context);
-        } finally {
-            // THEN
-            control.verify();
-        }
+        underTest.update(mainCategoryToUpdate, context);
+        // THEN
     }
 
-    @Test(expectedExceptions = MainCategoryException.class)
+    @Test(expectedExceptions = MainCategoryNotFoundException.class)
+    public void testUpdateWhenCategoryCannotBeFound() {
+        // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
+        MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
+        EasyMock.expect(mainCategoryDao.findByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
+        EasyMock.expect(mainCategoryDao.findById(EXPECTED_CATEGORY_ID, context)).andReturn(Optional.empty());
+        control.replay();
+        // WHEN
+        underTest.update(mainCategoryToUpdate, context);
+        // THEN
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateWhenCategoryTypeHasChanged() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
         Optional<MainCategory> mainCategoryFromRepository = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, OUTCOME));
-        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(mainCategoryFromRepository);
+        EasyMock.expect(mainCategoryDao.findByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
+        EasyMock.expect(mainCategoryDao.findById(EXPECTED_CATEGORY_ID, context)).andReturn(mainCategoryFromRepository);
         control.replay();
         // WHEN
-        try {
-            underTest.update(mainCategoryToUpdate, context);
-        } finally {
-            // THEN
-            control.verify();
-        }
+        underTest.update(mainCategoryToUpdate, context);
+        // THEN
     }
 
-    @Test(expectedExceptions = MainCategoryException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateWhenCategoryContainsLessSubCategory() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
         mainCategoryToUpdate.getSubCategorySet().remove(createSubCategory(OTHER_ID, OTHER_CATEGORY_NAME, INCOME));
         Optional<MainCategory> mainCategoryFromRepository = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(mainCategoryFromRepository);
+        EasyMock.expect(mainCategoryDao.findByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
+        EasyMock.expect(mainCategoryDao.findById(EXPECTED_CATEGORY_ID, context)).andReturn(mainCategoryFromRepository);
         control.replay();
         // WHEN
-        try {
-            underTest.update(mainCategoryToUpdate, context);
-        } finally {
-            // THEN
-            control.verify();
-        }
-    }
-
-    @Test
-    public void testUpdateWhenCategoryWithSameNameAndTypeFoundInRepository() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        MainCategory mainCategoryToUpdate = createExampleMainCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME);
-        Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(NEW_ID, EXPECTED_CATEGORY_NAME, INCOME));
-        Optional<MainCategory> sameMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findMainCategoryById(NEW_ID, context)).andReturn(originalMainCategory);
-        EasyMock.expect(databaseProxy.findMainCategoryByName(NEW_CATEGORY_NAME, context)).andReturn(sameMainCategory);
-        control.replay();
-        // WHEN
-        Optional<MainCategory> result = underTest.update(mainCategoryToUpdate, context);
+        underTest.update(mainCategoryToUpdate, context);
         // THEN
-        control.verify();
-        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -231,15 +257,14 @@ public class DefaultMainCategoryServiceTest {
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
         Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
-        Optional<MainCategory> copyNewMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(originalMainCategory);
-        EasyMock.expect(databaseProxy.findMainCategoryByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
-        EasyMock.expect(databaseProxy.updateMainCategory(mainCategoryToUpdate, context)).andReturn(copyNewMainCategory);
+        MainCategory copyNewMainCategory = createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME);
+        EasyMock.expect(mainCategoryDao.findByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
+        EasyMock.expect(mainCategoryDao.findById(EXPECTED_CATEGORY_ID, context)).andReturn(originalMainCategory);
+        EasyMock.expect(mainCategoryDao.update(mainCategoryToUpdate, context)).andReturn(copyNewMainCategory);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.update(mainCategoryToUpdate, context);
+        MainCategory result = underTest.update(mainCategoryToUpdate, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, copyNewMainCategory);
     }
 
@@ -248,16 +273,16 @@ public class DefaultMainCategoryServiceTest {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        mainCategoryToUpdate.getSubCategorySet().add(createSubCategory(NEW_ID, NEW_CATEGORY_NAME, INCOME));
         Optional<MainCategory> originalMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME));
-        Optional<MainCategory> copyNewMainCategory = Optional.of(createExampleMainCategory(EXPECTED_CATEGORY_ID, NEW_CATEGORY_NAME, INCOME));
-        EasyMock.expect(databaseProxy.findMainCategoryById(EXPECTED_CATEGORY_ID, context)).andReturn(originalMainCategory);
-        EasyMock.expect(databaseProxy.findMainCategoryByName(EXPECTED_CATEGORY_NAME, context)).andReturn(originalMainCategory);
-        EasyMock.expect(databaseProxy.updateMainCategory(mainCategoryToUpdate, context)).andReturn(copyNewMainCategory);
+        MainCategory copyNewMainCategory = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
+        EasyMock.expect(mainCategoryDao.findByName(EXPECTED_CATEGORY_NAME, context)).andReturn(originalMainCategory);
+        EasyMock.expect(mainCategoryDao.findById(EXPECTED_CATEGORY_ID, context)).andReturn(originalMainCategory);
+        EasyMock.expect(mainCategoryDao.update(mainCategoryToUpdate, context)).andReturn(copyNewMainCategory);
         control.replay();
         // WHEN
-        Optional<MainCategory> result = underTest.update(mainCategoryToUpdate, context);
+        MainCategory result = underTest.update(mainCategoryToUpdate, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, copyNewMainCategory);
     }
 

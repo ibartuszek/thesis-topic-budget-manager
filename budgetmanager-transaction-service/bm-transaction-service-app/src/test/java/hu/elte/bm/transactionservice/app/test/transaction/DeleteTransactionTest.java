@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryModel;
 import hu.elte.bm.transactionservice.web.transaction.TransactionModel;
 import hu.elte.bm.transactionservice.web.transaction.TransactionModelRequestContext;
 import hu.elte.bm.transactionservice.web.transaction.TransactionModelResponse;

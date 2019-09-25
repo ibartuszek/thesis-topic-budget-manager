@@ -1,9 +1,9 @@
 package hu.elte.bm.transactionservice.web.subcategory;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.web.common.RequestModelContext;
+import hu.elte.bm.transactionservice.web.common.RequestContext;
 
-public class SubCategoryRequestContext extends RequestModelContext {
+public class SubCategoryRequestContext extends RequestContext {
 
     private SubCategory subCategory;
 

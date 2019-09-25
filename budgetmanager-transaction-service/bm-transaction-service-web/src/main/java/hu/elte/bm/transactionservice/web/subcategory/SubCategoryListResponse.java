@@ -13,12 +13,8 @@ public final class SubCategoryListResponse extends ResponseModel {
         super(message, successful);
     }
 
-    public List<SubCategory> getSubCategoryList() {
-        return subCategoryList;
-    }
-
-    public void setSubCategoryList(final List<SubCategory> subCategoryList) {
-        this.subCategoryList = subCategoryList;
+    static SubCategoryListResponse createSuccessfulSubCategoryResponse(final List<SubCategory> subCategoryList) {
+        return createSuccessfulSubCategoryResponse(subCategoryList, null);
     }
 
     static SubCategoryListResponse createSuccessfulSubCategoryResponse(final List<SubCategory> subCategoryList, final String message) {
@@ -27,9 +23,12 @@ public final class SubCategoryListResponse extends ResponseModel {
         return response;
     }
 
-    static SubCategoryListResponse createSuccessfulSubCategoryResponse(final List<SubCategory> subCategoryList) {
-        SubCategoryListResponse response = new SubCategoryListResponse(null, true);
-        response.setSubCategoryList(subCategoryList);
-        return response;
+    public List<SubCategory> getSubCategoryList() {
+        return subCategoryList;
     }
+
+    public void setSubCategoryList(final List<SubCategory> subCategoryList) {
+        this.subCategoryList = subCategoryList;
+    }
+
 }

@@ -2,7 +2,7 @@ package hu.elte.bm.transactionservice.web.common;
 
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
-public class RequestModelContext {
+public class RequestContext {
 
     private TransactionType transactionType;
 

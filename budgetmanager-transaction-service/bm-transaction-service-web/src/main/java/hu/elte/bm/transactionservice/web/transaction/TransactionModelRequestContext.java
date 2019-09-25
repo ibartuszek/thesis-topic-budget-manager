@@ -2,9 +2,9 @@ package hu.elte.bm.transactionservice.web.transaction;
 
 import java.time.LocalDate;
 
-import hu.elte.bm.transactionservice.web.common.RequestModelContext;
+import hu.elte.bm.transactionservice.web.common.RequestContext;
 
-public class TransactionModelRequestContext extends RequestModelContext {
+public class TransactionModelRequestContext extends RequestContext {
 
     private LocalDate start;
     private LocalDate end;
