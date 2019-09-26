@@ -11,7 +11,6 @@ import hu.elte.bm.commonpack.validator.ModelAmountValue;
 import hu.elte.bm.commonpack.validator.ModelDateValue;
 import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.Currency;
-import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 @Component
@@ -35,7 +34,7 @@ public class TransactionModelTransformer {
         this.subCategoryModelTransformer = subCategoryModelTransformer;
     }
 
-    TransactionModel transformToTransactionModel(final Transaction transaction, final LocalDate firstPossibleDay) {
+    Transaction transformToTransactionModel(final hu.elte.bm.transactionservice.domain.transaction.Transaction transaction, final LocalDate firstPossibleDay) {
         ModelStringValue title = ModelStringValue.builder()
             .withValue(transaction.getTitle())
             .build();
@@ -63,7 +62,7 @@ public class TransactionModelTransformer {
             .withValue(transaction.getDescription())
             .build();
 
-        TransactionModel transactionModel = TransactionModel.builder()
+        Transaction transactionModel = Transaction.builder()
             .withId(transaction.getId())
             .withTitle(title)
             .withAmount(amount)
@@ -81,36 +80,36 @@ public class TransactionModelTransformer {
         return transactionModel;
     }
 
-    Transaction transformToTransaction(final TransactionModel transactionModel) {
-        return Transaction.builder()
-            .withId(transactionModel.getId())
-            .withTitle(transactionModel.getTitle().getValue())
-            .withAmount(transactionModel.getAmount().getValue())
-            .withCurrency(Currency.valueOf(transactionModel.getCurrency().getValue()))
-            .withTransactionType(TransactionType.valueOf(transactionModel.getTransactionType().getValue()))
-            .withMainCategory(mainCategoryModelTransformer.transformToMainCategory(transactionModel.getMainCategory()))
-            .withSubCategory(transactionModel.getSubCategory() == null ? null
-                : subCategoryModelTransformer.transformToSubCategory(transactionModel.getSubCategory()))
-            .withDate(transactionModel.getDate().getValue())
-            .withEndDate(transactionModel.getEndDate() == null ? null : transactionModel.getEndDate().getValue())
-            .withDescription(transactionModel.getDescription() == null ? null : transactionModel.getDescription().getValue())
-            .withMonthly(transactionModel.isMonthly())
-            .withLocked(transactionModel.isLocked())
+    hu.elte.bm.transactionservice.domain.transaction.Transaction transformToTransaction(final Transaction transaction) {
+        return hu.elte.bm.transactionservice.domain.transaction.Transaction.builder()
+            .withId(transaction.getId())
+            .withTitle(transaction.getTitle().getValue())
+            .withAmount(transaction.getAmount().getValue())
+            .withCurrency(Currency.valueOf(transaction.getCurrency().getValue()))
+            .withTransactionType(TransactionType.valueOf(transaction.getTransactionType().getValue()))
+            .withMainCategory(mainCategoryModelTransformer.transformToMainCategory(transaction.getMainCategory()))
+            .withSubCategory(transaction.getSubCategory() == null ? null
+                : subCategoryModelTransformer.transformToSubCategory(transaction.getSubCategory()))
+            .withDate(transaction.getDate().getValue())
+            .withEndDate(transaction.getEndDate() == null ? null : transaction.getEndDate().getValue())
+            .withDescription(transaction.getDescription() == null ? null : transaction.getDescription().getValue())
+            .withMonthly(transaction.isMonthly())
+            .withLocked(transaction.isLocked())
             .build();
     }
 
-    void populateValidationFields(final TransactionModel transactionModel, final LocalDate firstPossibleDay) {
-        transactionModel.getTitle().setMaximumLength(transactionTitleMaximumLength);
-        transactionModel.getAmount().setPositive(true);
-        transactionModel.getCurrency().setPossibleEnumValues(Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet()));
-        transactionModel.getTransactionType()
+    void populateValidationFields(final Transaction transaction, final LocalDate firstPossibleDay) {
+        transaction.getTitle().setMaximumLength(transactionTitleMaximumLength);
+        transaction.getAmount().setPositive(true);
+        transaction.getCurrency().setPossibleEnumValues(Arrays.stream(Currency.values()).map(Currency::name).collect(Collectors.toSet()));
+        transaction.getTransactionType()
             .setPossibleEnumValues(Arrays.stream(TransactionType.values()).map(TransactionType::name).collect(Collectors.toSet()));
-        transactionModel.getDate().setPossibleFirstDay(firstPossibleDay);
-        if (transactionModel.getDescription() != null) {
-            transactionModel.getDescription().setMaximumLength(transactionDescriptionMaximumLength);
+        transaction.getDate().setPossibleFirstDay(firstPossibleDay);
+        if (transaction.getDescription() != null) {
+            transaction.getDescription().setMaximumLength(transactionDescriptionMaximumLength);
         }
-        if (transactionModel.getEndDate() != null) {
-            transactionModel.getEndDate().setPossibleFirstDay(transactionModel.getDate().getValue().plusDays(minimumDaysToAddToStartDate));
+        if (transaction.getEndDate() != null) {
+            transaction.getEndDate().setPossibleFirstDay(transaction.getDate().getValue().plusDays(minimumDaysToAddToStartDate));
         }
     }
 

@@ -115,7 +115,7 @@ public class MainCategoryService {
     private void validateForUpdate(final MainCategory mainCategory, final TransactionContext context) {
         Optional<MainCategory> originalMainCategory = mainCategoryDao.findById(mainCategory.getId(), context);
         if (originalMainCategory.isEmpty()) {
-            throw new MainCategoryNotFoundException(categoryCannotBeFound, mainCategory);
+            throw new MainCategoryNotFoundException(mainCategory, categoryCannotBeFound);
         } else if (mainCategory.getTransactionType() != originalMainCategory.get().getTransactionType()) {
             throw new IllegalArgumentException(typeCannotBeChanged);
         } else if (!mainCategory.getSubCategorySet().containsAll(originalMainCategory.get().getSubCategorySet())) {

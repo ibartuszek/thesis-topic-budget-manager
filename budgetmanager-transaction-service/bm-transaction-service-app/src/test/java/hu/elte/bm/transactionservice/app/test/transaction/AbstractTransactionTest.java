@@ -15,8 +15,7 @@ import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTe
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.transaction.TransactionController;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModel;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModelRequestContext;
+import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
 
 public abstract class AbstractTransactionTest extends AbstractTransactionServiceApplicationTest {
 
@@ -67,13 +66,13 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     @DataProvider
     public Object[][] dataForTransactionModelValidationOfTitle() {
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel modelWithNullTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTitle(null).build();
-        TransactionModel modelWithNullValueTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullValueTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTitle(ModelStringValue.builder().build()).build();
-        TransactionModel modelWithEmptyTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithEmptyTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTitle(ModelStringValue.builder().withValue(EMPTY_STRING).build()).build();
-        TransactionModel modelWithTooLongTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithTooLongTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTitle(ModelStringValue.builder().withValue(TOO_LONG_TITLE).build()).build();
 
         return new Object[][] {
@@ -88,11 +87,11 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     public Object[][] dataForTransactionModelValidationOfAmount() {
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
 
-        TransactionModel modelWithNullAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withAmount(null).build();
-        TransactionModel modelWithNullValueAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullValueAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withAmount(ModelAmountValue.builder().build()).build();
-        TransactionModel modelWithNotPositiveAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNotPositiveAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withAmount(ModelAmountValue.builder().withValue(ZERO).build()).build();
 
         return new Object[][] {
@@ -105,11 +104,11 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     @DataProvider
     public Object[][] dataForTransactionModelValidationOfCurrency() {
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel modelWithNullCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withCurrency(null).build();
-        TransactionModel modelWithNullValueCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullValueCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withCurrency(ModelStringValue.builder().build()).build();
-        TransactionModel modelWithInvalidCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithInvalidCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withCurrency(ModelStringValue.builder().withValue(INVALID_CURRENCY).build()).build();
 
         return new Object[][] {
@@ -122,11 +121,11 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     @DataProvider
     public Object[][] dataForTransactionModelValidationOfType() {
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel modelWitNullType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTransactionType(null).build();
-        TransactionModel modelWitNullValueType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullValueType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTransactionType(ModelStringValue.builder().build()).build();
-        TransactionModel modelWitInvalidType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitInvalidType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build()).build();
 
         return new Object[][] {
@@ -147,12 +146,12 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
         SubCategoryModel subCategoryWithNullId = createSubCategoryModel(null, EXISTING_MAIN_CATEGORY_NAME_2, INCOME);
         mainCategoryModelWithInvalidSubCategory.getSubCategoryModelSet().add(subCategoryWithNullId);
 
-        TransactionModel modelWitNullMainCategory = createTransactionBuilderWithDefaultValues(null).build();
-        TransactionModel modelWitNullMainCategoryId = createTransactionBuilderWithDefaultValues(mainCategoryModelWithNullId).build();
-        TransactionModel modelWitNullMainCategoryWithInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModelWithInvalidSubCategory)
+        Transaction modelWitNullMainCategory = createTransactionBuilderWithDefaultValues(null).build();
+        Transaction modelWitNullMainCategoryId = createTransactionBuilderWithDefaultValues(mainCategoryModelWithNullId).build();
+        Transaction modelWitNullMainCategoryWithInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModelWithInvalidSubCategory)
             .build();
 
-        TransactionModel modelWitInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withSubCategory(subCategoryWithNullId).build();
 
         return new Object[][] {
@@ -167,16 +166,16 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     @DataProvider
     public Object[][] dataForTransactionModelValidationOfDates() {
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel modelWitNullDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDate(null).build();
-        TransactionModel modelWitNullValueDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullValueDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDate(ModelDateValue.builder().build()).build();
-        TransactionModel modelWitDateBeforeTheDeadLine = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitDateBeforeTheDeadLine = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDate(ModelDateValue.builder().withValue(BEFORE_THE_DEADLINE_DATE).build()).build();
 
-        TransactionModel modelWitNullValueEndDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullValueEndDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withEndDate(ModelDateValue.builder().build()).build();
-        TransactionModel modelWitEndDateBeforeDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitEndDateBeforeDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withEndDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build()).build();
 
         return new Object[][] {
@@ -194,11 +193,11 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     @DataProvider
     public Object[][] dataForTransactionModelValidationOfDescription() {
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel modelWithNullValueDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullValueDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDescription(ModelStringValue.builder().build()).build();
-        TransactionModel modelWithEmptyDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithEmptyDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDescription(ModelStringValue.builder().withValue(EMPTY_STRING).build()).build();
-        TransactionModel modelWithTooLongDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithTooLongDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDescription(ModelStringValue.builder().withValue(TOO_LONG_DESCRIPTION).build()).build();
 
         return new Object[][] {
@@ -219,61 +218,61 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
         SubCategoryModel subCategoryWithNullId = createSubCategoryModel(null, EXISTING_MAIN_CATEGORY_NAME_2, INCOME);
         mainCategoryModelWithInvalidSubCategory.getSubCategoryModelSet().add(subCategoryWithNullId);
 
-        TransactionModel modelWithNullTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTitle(null).build();
-        TransactionModel modelWithNullValueTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullValueTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTitle(ModelStringValue.builder().build()).build();
-        TransactionModel modelWithEmptyTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithEmptyTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTitle(ModelStringValue.builder().withValue(EMPTY_STRING).build()).build();
-        TransactionModel modelWithTooLongTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithTooLongTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTitle(ModelStringValue.builder().withValue(TOO_LONG_TITLE).build()).build();
 
-        TransactionModel modelWithNullAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withAmount(null).build();
-        TransactionModel modelWithNullValueAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullValueAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withAmount(ModelAmountValue.builder().build()).build();
-        TransactionModel modelWithNotPositiveAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNotPositiveAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withAmount(ModelAmountValue.builder().withValue(ZERO).build()).build();
 
-        TransactionModel modelWithNullCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withCurrency(null).build();
-        TransactionModel modelWithNullValueCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullValueCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withCurrency(ModelStringValue.builder().build()).build();
-        TransactionModel modelWithInvalidCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithInvalidCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withCurrency(ModelStringValue.builder().withValue(INVALID_CURRENCY).build()).build();
 
-        TransactionModel modelWitNullType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTransactionType(null).build();
-        TransactionModel modelWitNullValueType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullValueType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTransactionType(ModelStringValue.builder().build()).build();
-        TransactionModel modelWitInvalidType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitInvalidType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build()).build();
 
-        TransactionModel modelWitNullMainCategory = createTransactionBuilderWithDefaultValues(null).build();
-        TransactionModel modelWitNullMainCategoryId = createTransactionBuilderWithDefaultValues(mainCategoryModelWithNullId).build();
-        TransactionModel modelWitNullMainCategoryWithInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModelWithInvalidSubCategory)
+        Transaction modelWitNullMainCategory = createTransactionBuilderWithDefaultValues(null).build();
+        Transaction modelWitNullMainCategoryId = createTransactionBuilderWithDefaultValues(mainCategoryModelWithNullId).build();
+        Transaction modelWitNullMainCategoryWithInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModelWithInvalidSubCategory)
             .build();
 
-        TransactionModel modelWitInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withSubCategory(subCategoryWithNullId).build();
 
-        TransactionModel modelWitNullDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDate(null).build();
-        TransactionModel modelWitNullValueDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullValueDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDate(ModelDateValue.builder().build()).build();
-        TransactionModel modelWitDateBeforeTheDeadLine = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitDateBeforeTheDeadLine = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDate(ModelDateValue.builder().withValue(BEFORE_THE_DEADLINE_DATE).build()).build();
 
-        TransactionModel modelWitNullValueEndDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitNullValueEndDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withEndDate(ModelDateValue.builder().build()).build();
-        TransactionModel modelWitEndDateBeforeDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWitEndDateBeforeDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withEndDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build()).build();
 
-        TransactionModel modelWithNullValueDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithNullValueDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDescription(ModelStringValue.builder().build()).build();
-        TransactionModel modelWithEmptyDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithEmptyDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDescription(ModelStringValue.builder().withValue(EMPTY_STRING).build()).build();
-        TransactionModel modelWithTooLongDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction modelWithTooLongDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withDescription(ModelStringValue.builder().withValue(TOO_LONG_DESCRIPTION).build()).build();
 
         return new Object[][] {
@@ -318,10 +317,10 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
 
     @DataProvider
     public Object[][] dataForContextValidation() {
-        TransactionModelRequestContext contextWithoutUserId = new TransactionModelRequestContext();
+        TransactionRequestContext contextWithoutUserId = new TransactionRequestContext();
         contextWithoutUserId.setUserId(null);
         contextWithoutUserId.setTransactionType(INCOME);
-        TransactionModelRequestContext contextWithoutTransactionType = new TransactionModelRequestContext();
+        TransactionRequestContext contextWithoutTransactionType = new TransactionRequestContext();
         contextWithoutTransactionType.setUserId(USER_ID);
         contextWithoutTransactionType.setTransactionType(null);
 
@@ -331,16 +330,16 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
         };
     }
 
-    TransactionModelRequestContext createContext(final TransactionType type, final TransactionModel transactionModel) {
-        TransactionModelRequestContext context = new TransactionModelRequestContext();
+    TransactionRequestContext createContext(final TransactionType type, final Transaction transaction) {
+        TransactionRequestContext context = new TransactionRequestContext();
         context.setTransactionType(type);
-        context.setTransactionModel(transactionModel);
+        context.setTransaction(transaction);
         context.setUserId(USER_ID);
         return context;
     }
 
-    TransactionModel.Builder createTransactionBuilderWithDefaultValues(final MainCategoryModel mainCategoryModel) {
-        return TransactionModel.builder()
+    Transaction.Builder createTransactionBuilderWithDefaultValues(final MainCategoryModel mainCategoryModel) {
+        return Transaction.builder()
             .withId(EXPECTED_ID)
             .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
             .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())
@@ -350,8 +349,8 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
             .withMainCategory(mainCategoryModel);
     }
 
-    TransactionModel.Builder createTransactionBuilderWithValuesForUpdate(final MainCategoryModel mainCategoryModel) {
-        return TransactionModel.builder()
+    Transaction.Builder createTransactionBuilderWithValuesForUpdate(final MainCategoryModel mainCategoryModel) {
+        return Transaction.builder()
             .withId(RESERVED_ID)
             .withTitle(ModelStringValue.builder().withValue(RESERVED_TITLE).build())
             .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())

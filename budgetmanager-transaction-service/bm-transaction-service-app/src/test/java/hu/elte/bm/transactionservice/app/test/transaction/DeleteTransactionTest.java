@@ -6,21 +6,20 @@ import org.testng.annotations.Test;
 
 import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModel;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModelRequestContext;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModelResponse;
+import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
+import hu.elte.bm.transactionservice.web.transaction.TransactionResponse;
 
 public class DeleteTransactionTest extends AbstractTransactionTest {
 
     @Test(dataProvider = "dataForTransactionModelValidationOfTitle")
-    public void testDeleteWhenTransactionModelTitleValidationFails(final TransactionModel transactionModel,
+    public void testDeleteWhenTransactionModelTitleValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -31,14 +30,14 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfAmount")
-    public void testDeleteWhenTransactionModelAmountValidationFails(final TransactionModel transactionModel,
+    public void testDeleteWhenTransactionModelAmountValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -49,14 +48,14 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfCurrency")
-    public void testDeleteWhenTransactionModelCurrencyValidationFails(final TransactionModel transactionModel,
+    public void testDeleteWhenTransactionModelCurrencyValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -67,14 +66,14 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfType")
-    public void testDeleteWhenTransactionModelTypeValidationFails(final TransactionModel transactionModel,
+    public void testDeleteWhenTransactionModelTypeValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -85,14 +84,14 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfDates")
-    public void testDeleteWhenTransactionModelDateValidationsFails(final TransactionModel transactionModel,
+    public void testDeleteWhenTransactionModelDateValidationsFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -107,14 +106,14 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfDescription")
-    public void testDeleteWhenTransactionModelDescriptionValidationFails(final TransactionModel transactionModel,
+    public void testDeleteWhenTransactionModelDescriptionValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -125,14 +124,14 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testDeleteCategoryWhenContextValidationFails(final TransactionModelRequestContext context, final String errorMessage) {
+    public void testDeleteCategoryWhenContextValidationFails(final TransactionRequestContext context, final String errorMessage) {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionModelToDelete = createTransactionBuilderWithDefaultValues(mainCategoryModel).build();
-        context.setTransactionModel(transactionModelToDelete);
+        Transaction transactionToDelete = createTransactionBuilderWithDefaultValues(mainCategoryModel).build();
+        context.setTransaction(transactionToDelete);
         // WHEN
         ResponseEntity result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), errorMessage);
@@ -142,11 +141,11 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     public void testDeleteWhenTransactionDoesNotHaveId() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).withId(null).build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
+        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).withId(null).build();
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_NEW_TRANSACTION_IS_INVALID);
@@ -156,14 +155,14 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     public void testDeleteWhenTransactionCannotBeFound() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
             .withId(INVALID_ID)
             .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_IN_THE_REPOSITORY);
@@ -173,14 +172,14 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     public void testDeleteWhenTransactionIsLocked() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
             .withId(LOCKED_ID)
             .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "Transaction is locked, cannot be deleted!");
@@ -190,11 +189,11 @@ public class DeleteTransactionTest extends AbstractTransactionTest {
     public void testDelete() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
+        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).build();
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "The transaction has been deleted.");

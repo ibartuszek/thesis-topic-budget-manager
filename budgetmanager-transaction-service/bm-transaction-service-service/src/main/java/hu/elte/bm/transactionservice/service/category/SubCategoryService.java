@@ -95,7 +95,7 @@ public class SubCategoryService {
         Assert.notNull(subCategory.getId(), categoryIdCannotBeNull);
         Optional<SubCategory> originalSubCategory = subCategoryDao.findById(subCategory.getId(), context);
         if (originalSubCategory.isEmpty()) {
-            throw new SubCategoryNotFoundException(categoryCannotBeFound, subCategory);
+            throw new SubCategoryNotFoundException(subCategory, categoryCannotBeFound);
         } else if (subCategory.getTransactionType() != originalSubCategory.get().getTransactionType()) {
             throw new IllegalArgumentException(typeCannotBeChanged);
         }

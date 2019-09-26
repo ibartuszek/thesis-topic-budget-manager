@@ -2,13 +2,14 @@ package hu.elte.bm.transactionservice.web.transaction;
 
 import java.time.LocalDate;
 
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.web.common.RequestContext;
 
-public class TransactionModelRequestContext extends RequestContext {
+public class TransactionRequestContext extends RequestContext {
 
     private LocalDate start;
     private LocalDate end;
-    private TransactionModel transactionModel;
+    private Transaction transaction;
 
     public LocalDate getStart() {
         return start;
@@ -26,11 +27,11 @@ public class TransactionModelRequestContext extends RequestContext {
         this.end = end;
     }
 
-    public TransactionModel getTransactionModel() {
-        return transactionModel;
+    public Transaction getTransaction() {
+        return transaction;
     }
 
-    public void setTransactionModel(final TransactionModel transactionModel) {
-        this.transactionModel = transactionModel;
+    public void setTransaction(final Transaction transaction) {
+        this.transaction = transaction;
     }
 }

@@ -7,21 +7,20 @@ import org.testng.annotations.Test;
 import hu.elte.bm.commonpack.validator.ModelDateValue;
 import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModel;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModelRequestContext;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModelResponse;
+import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
+import hu.elte.bm.transactionservice.web.transaction.TransactionResponse;
 
 public class UpdateTransactionTest extends AbstractTransactionTest {
 
     @Test(dataProvider = "dataForTransactionModelValidationOfTitle")
-    public void testUpdateWhenTransactionModelTitleValidationFails(final TransactionModel transactionModel,
+    public void testUpdateWhenTransactionModelTitleValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -32,14 +31,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfAmount")
-    public void testUpdateWhenTransactionModelAmountValidationFails(final TransactionModel transactionModel,
+    public void testUpdateWhenTransactionModelAmountValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -50,14 +49,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfCurrency")
-    public void testUpdateWhenTransactionModelCurrencyValidationFails(final TransactionModel transactionModel,
+    public void testUpdateWhenTransactionModelCurrencyValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -68,14 +67,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfType")
-    public void testUpdateWhenTransactionModelTypeValidationFails(final TransactionModel transactionModel,
+    public void testUpdateWhenTransactionModelTypeValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -86,14 +85,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfDates")
-    public void testUpdateWhenTransactionModelDateValidationsFails(final TransactionModel transactionModel,
+    public void testUpdateWhenTransactionModelDateValidationsFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -108,14 +107,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfDescription")
-    public void testUpdateWhenTransactionModelDescriptionValidationFails(final TransactionModel transactionModel,
+    public void testUpdateWhenTransactionModelDescriptionValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -126,14 +125,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testUpdateCategoryWhenContextValidationFails(final TransactionModelRequestContext context, final String errorMessage) {
+    public void testUpdateCategoryWhenContextValidationFails(final TransactionRequestContext context, final String errorMessage) {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionModelToUpdate = createTransactionBuilderWithDefaultValues(mainCategoryModel).build();
-        context.setTransactionModel(transactionModelToUpdate);
+        Transaction transactionToUpdate = createTransactionBuilderWithDefaultValues(mainCategoryModel).build();
+        context.setTransaction(transactionToUpdate);
         // WHEN
         ResponseEntity result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), errorMessage);
@@ -143,11 +142,11 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     public void testUpdateWhenTransactionDoesNotHaveId() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).withId(null).build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).withId(null).build();
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_NEW_TRANSACTION_IS_INVALID);
@@ -157,14 +156,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     public void testUpdateWhenTransactionCannotBeFound() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
             .withId(INVALID_ID)
             .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_IN_THE_REPOSITORY);
@@ -174,14 +173,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     public void testUpdateWhenTransactionIsLocked() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
             .withId(LOCKED_ID)
             .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "Transaction is locked, cannot be changed!");
@@ -191,14 +190,14 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     public void testUpdateWhenTransactionTypeChanged() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
             .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
             .withTransactionType(ModelStringValue.builder().withValue(TransactionType.OUTCOME.name()).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "Transaction type cannot be changed!");
@@ -208,15 +207,15 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     public void testUpdateWhenThereIsOneTransactionWithSameDateAndNameAndMainCategoryAndSubCategory() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
             .withTitle(ModelStringValue.builder().withValue(RESERVED_TITLE_2).build())
             .withSubCategory(mainCategoryModel.getSubCategoryModelSet().iterator().next())
             .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "You cannot update this transaction, because it exists.");
@@ -226,13 +225,13 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
     public void testUpdate() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
             .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "The transaction has been updated.");

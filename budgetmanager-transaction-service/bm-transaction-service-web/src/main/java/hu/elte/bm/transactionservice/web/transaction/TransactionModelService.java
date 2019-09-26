@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import hu.elte.bm.commonpack.validator.ModelValidator;
-import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
-import hu.elte.bm.transactionservice.service.transaction.TransactionService;
 
 @Service
 public class TransactionModelService {
@@ -22,29 +20,22 @@ public class TransactionModelService {
     private final TransactionService transactionService;
     private final TransactionModelTransformer transformer;
 
-    @Value("${transaction.user_id_cannot_be_null}")
-    private String userIdCannotBeNull;
 
-    @Value("${transaction.category_type_cannot_be_null}")
-    private String categoryCannotBeNull;
 
     @Value("${transaction.transaction_is_invalid}")
     private String transactionIsInvalid;
 
-    @Value("${transaction.transaction_has_been_saved}")
-    private String transactionHasBeenSaved;
+
 
     @Value("${transaction.transaction_has_been_saved_before}")
     private String transactionHasBeenSavedBefore;
 
-    @Value("${transaction.transaction_has_been_updated}")
-    private String transactionHasBeenUpdated;
+
 
     @Value("${transaction.transaction_cannot_be_updated}")
     private String transactionCannotBeUpdated;
 
-    @Value("${transaction.transaction_has_been_deleted}")
-    private String transactionHasBeenDeleted;
+
 
     @Value("${transaction.transaction_cannot_be_deleted}")
     private String transactionCannotBeDeleted;
@@ -56,23 +47,23 @@ public class TransactionModelService {
         this.transformer = transformer;
     }
 
-    List<TransactionModel> findAll(final TransactionModelRequestContext context) {
+    List<Transaction> findAll(final TransactionRequestContext context) {
         validateTransactionContext(context.getUserId(), context.getTransactionType());
         TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
-        List<Transaction> transactionList = transactionService.findAllTransaction(context.getStart(), context.getEnd(), transactionContext);
+        List<hu.elte.bm.transactionservice.domain.transaction.Transaction> transactionList = transactionService.findAll(context.getStart(), context.getEnd(), transactionContext);
         LocalDate firstPossibleDay = transactionService.getTheFirstDateOfTheNewPeriod(transactionContext);
         return transactionList.stream()
             .map(transaction -> transformer.transformToTransactionModel(transaction, firstPossibleDay))
             .collect(Collectors.toList());
     }
 
-    TransactionModelResponse saveTransaction(final TransactionModelRequestContext context) {
+    TransactionResponse saveTransaction(final TransactionRequestContext context) {
         preValidateSavableTransaction(context);
-        TransactionModelResponse result = createResponseWithDefaultValues(context);
-        if (isValid(result.getTransactionModel())) {
+        TransactionResponse result = createResponseWithDefaultValues(context);
+        if (isValid(result.getTransaction())) {
             TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
-            Optional<Transaction> savedTransaction = transactionService.save(
-                transformer.transformToTransaction(result.getTransactionModel()), transactionContext);
+            Optional<hu.elte.bm.transactionservice.domain.transaction.Transaction> savedTransaction = transactionService.save(
+                transformer.transformToTransaction(result.getTransaction()), transactionContext);
             updateResponse(savedTransaction, result, transactionHasBeenSaved, transactionHasBeenSavedBefore);
         } else {
             result.setMessage(transactionIsInvalid);
@@ -80,13 +71,13 @@ public class TransactionModelService {
         return result;
     }
 
-    TransactionModelResponse updateTransaction(final TransactionModelRequestContext context) {
+    TransactionResponse updateTransaction(final TransactionRequestContext context) {
         preValidateUpdatableCategory(context);
-        TransactionModelResponse result = createResponseWithDefaultValues(context);
-        if (isValid(result.getTransactionModel())) {
+        TransactionResponse result = createResponseWithDefaultValues(context);
+        if (isValid(result.getTransaction())) {
             TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
-            Optional<Transaction> updatedTransaction = transactionService.update(
-                transformer.transformToTransaction(result.getTransactionModel()), transactionContext);
+            Optional<hu.elte.bm.transactionservice.domain.transaction.Transaction> updatedTransaction = transactionService.update(
+                transformer.transformToTransaction(result.getTransaction()), transactionContext);
             updateResponse(updatedTransaction, result, transactionHasBeenUpdated, transactionCannotBeUpdated);
         } else {
             result.setMessage(transactionIsInvalid);
@@ -94,13 +85,13 @@ public class TransactionModelService {
         return result;
     }
 
-    TransactionModelResponse deleteTransaction(final TransactionModelRequestContext context) {
+    TransactionResponse deleteTransaction(final TransactionRequestContext context) {
         preValidateUpdatableCategory(context);
-        TransactionModelResponse result = createResponseWithDefaultValues(context);
-        if (isValid(result.getTransactionModel())) {
+        TransactionResponse result = createResponseWithDefaultValues(context);
+        if (isValid(result.getTransaction())) {
             TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
-            Optional<Transaction> deletedTransaction = transactionService.delete(
-                transformer.transformToTransaction(result.getTransactionModel()), transactionContext);
+            Optional<hu.elte.bm.transactionservice.domain.transaction.Transaction> deletedTransaction = transactionService.delete(
+                transformer.transformToTransaction(result.getTransaction()), transactionContext);
             updateResponse(deletedTransaction, result, transactionHasBeenDeleted, transactionCannotBeDeleted);
         } else {
             result.setMessage(transactionIsInvalid);
@@ -108,26 +99,26 @@ public class TransactionModelService {
         return result;
     }
 
-    private void preValidateSavableTransaction(final TransactionModelRequestContext context) {
-        if (context.getTransactionModel().getId() != null) {
+    private void preValidateSavableTransaction(final TransactionRequestContext context) {
+        if (context.getTransaction().getId() != null) {
             throw new IllegalArgumentException(transactionIsInvalid);
         }
         validateTransactionModelFields(context);
     }
 
-    private void preValidateUpdatableCategory(final TransactionModelRequestContext context) {
-        Assert.notNull(context.getTransactionModel().getId(), transactionIsInvalid);
+    private void preValidateUpdatableCategory(final TransactionRequestContext context) {
+        Assert.notNull(context.getTransaction().getId(), transactionIsInvalid);
         validateTransactionModelFields(context);
     }
 
-    private void validateTransactionModelFields(final TransactionModelRequestContext context) {
+    private void validateTransactionModelFields(final TransactionRequestContext context) {
         validateTransactionContext(context.getUserId(), context.getTransactionType());
-        Assert.notNull(context.getTransactionModel().getTitle(), transactionIsInvalid);
-        Assert.notNull(context.getTransactionModel().getAmount(), transactionIsInvalid);
-        Assert.notNull(context.getTransactionModel().getCurrency(), transactionIsInvalid);
-        Assert.notNull(context.getTransactionModel().getTransactionType(), transactionIsInvalid);
-        Assert.notNull(context.getTransactionModel().getMainCategory(), transactionIsInvalid);
-        Assert.notNull(context.getTransactionModel().getDate(), transactionIsInvalid);
+        Assert.notNull(context.getTransaction().getTitle(), transactionIsInvalid);
+        Assert.notNull(context.getTransaction().getAmount(), transactionIsInvalid);
+        Assert.notNull(context.getTransaction().getCurrency(), transactionIsInvalid);
+        Assert.notNull(context.getTransaction().getTransactionType(), transactionIsInvalid);
+        Assert.notNull(context.getTransaction().getMainCategory(), transactionIsInvalid);
+        Assert.notNull(context.getTransaction().getDate(), transactionIsInvalid);
     }
 
     private void validateTransactionContext(final Long userId, final TransactionType transactionType) {
@@ -135,37 +126,37 @@ public class TransactionModelService {
         Assert.notNull(transactionType, categoryCannotBeNull);
     }
 
-    private TransactionModelResponse createResponseWithDefaultValues(final TransactionModelRequestContext context) {
-        TransactionModel transactionModel = context.getTransactionModel();
+    private TransactionResponse createResponseWithDefaultValues(final TransactionRequestContext context) {
+        Transaction transaction = context.getTransaction();
         TransactionContext transactionContext = createTransactionContext(context.getTransactionType(), context.getUserId());
         LocalDate firstPossibleDay = transactionService.getTheFirstDateOfTheNewPeriod(transactionContext);
-        transformer.populateValidationFields(transactionModel, firstPossibleDay);
-        TransactionModelResponse result = new TransactionModelResponse();
-        result.setTransactionModel(transactionModel);
+        transformer.populateValidationFields(transaction, firstPossibleDay);
+        TransactionResponse result = new TransactionResponse();
+        result.setTransaction(transaction);
         result.setFirstPossibleDay(firstPossibleDay);
         return result;
     }
 
-    private boolean isValid(final TransactionModel transactionModel) {
-        boolean compulsoryFields = validateCompulsoryFields(transactionModel);
-        boolean endDate = transactionModel.getEndDate() == null || validator.validate(transactionModel.getEndDate(), "End date");
-        boolean description = transactionModel.getDescription() == null || validator.validate(transactionModel.getDescription(), "Description");
+    private boolean isValid(final Transaction transaction) {
+        boolean compulsoryFields = validateCompulsoryFields(transaction);
+        boolean endDate = transaction.getEndDate() == null || validator.validate(transaction.getEndDate(), "End date");
+        boolean description = transaction.getDescription() == null || validator.validate(transaction.getDescription(), "Description");
         return compulsoryFields && endDate && description;
     }
 
-    private boolean validateCompulsoryFields(final TransactionModel transactionModel) {
-        boolean title = validator.validate(transactionModel.getTitle(), "Title");
-        boolean amount = validator.validate(transactionModel.getAmount(), "Amount");
-        boolean currency = validator.validate(transactionModel.getCurrency(), "Currency");
-        boolean type = validator.validate(transactionModel.getTransactionType(), "Type");
-        boolean date = validator.validate(transactionModel.getDate(), "Date");
+    private boolean validateCompulsoryFields(final Transaction transaction) {
+        boolean title = validator.validate(transaction.getTitle(), "Title");
+        boolean amount = validator.validate(transaction.getAmount(), "Amount");
+        boolean currency = validator.validate(transaction.getCurrency(), "Currency");
+        boolean type = validator.validate(transaction.getTransactionType(), "Type");
+        boolean date = validator.validate(transaction.getDate(), "Date");
         return title && amount && currency && type && date;
     }
 
-    private void updateResponse(final Optional<Transaction> transaction,
-        final TransactionModelResponse response, final String successMessage, final String unSuccessMessage) {
+    private void updateResponse(final Optional<hu.elte.bm.transactionservice.domain.transaction.Transaction> transaction,
+        final TransactionResponse response, final String successMessage, final String unSuccessMessage) {
         if (transaction.isPresent()) {
-            response.setTransactionModel(transformer.transformToTransactionModel(transaction.get(), response.getFirstPossibleDay()));
+            response.setTransaction(transformer.transformToTransactionModel(transaction.get(), response.getFirstPossibleDay()));
             response.setSuccessful(true);
             response.setMessage(successMessage);
         } else {

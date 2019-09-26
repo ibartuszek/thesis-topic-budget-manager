@@ -9,22 +9,21 @@ import org.testng.annotations.Test;
 import hu.elte.bm.commonpack.validator.ModelDateValue;
 import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModel;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModelRequestContext;
-import hu.elte.bm.transactionservice.web.transaction.TransactionModelResponse;
+import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
+import hu.elte.bm.transactionservice.web.transaction.TransactionResponse;
 
 public class SaveTransactionTest extends AbstractTransactionTest {
 
     @Test(dataProvider = "dataForTransactionModelValidationOfTitle")
-    public void testSaveWhenTransactionModelTitleValidationFails(final TransactionModel transactionModel,
+    public void testSaveWhenTransactionModelTitleValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        transactionModel.setId(null);
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        transaction.setId(null);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -35,15 +34,15 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfAmount")
-    public void testSaveWhenTransactionModelAmountValidationFails(final TransactionModel transactionModel,
+    public void testSaveWhenTransactionModelAmountValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        transactionModel.setId(null);
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        transaction.setId(null);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -54,15 +53,15 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfCurrency")
-    public void testSaveWhenTransactionModelCurrencyValidationFails(final TransactionModel transactionModel,
+    public void testSaveWhenTransactionModelCurrencyValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        transactionModel.setId(null);
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        transaction.setId(null);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -73,15 +72,15 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfType")
-    public void testSaveWhenTransactionModelTypeValidationFails(final TransactionModel transactionModel,
+    public void testSaveWhenTransactionModelTypeValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        transactionModel.setId(null);
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        transaction.setId(null);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -92,15 +91,15 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfDates")
-    public void testSaveWhenTransactionModelDateValidationsFails(final TransactionModel transactionModel,
+    public void testSaveWhenTransactionModelDateValidationsFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        transactionModel.setId(null);
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        transaction.setId(null);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -115,15 +114,15 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForTransactionModelValidationOfDescription")
-    public void testSaveWhenTransactionModelDescriptionValidationFails(final TransactionModel transactionModel,
+    public void testSaveWhenTransactionModelDescriptionValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
         // GIVEN
-        transactionModel.setId(null);
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModel);
+        transaction.setId(null);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
-        TransactionModel responseModel = response.getTransactionModel();
+        TransactionResponse response = (TransactionResponse) result.getBody();
+        Transaction responseModel = response.getTransaction();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), responseErrorMessage);
@@ -134,14 +133,14 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testSaveCategoryWhenContextValidationFails(final TransactionModelRequestContext context, final String errorMessage) {
+    public void testSaveCategoryWhenContextValidationFails(final TransactionRequestContext context, final String errorMessage) {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel).withId(null).build();
-        context.setTransactionModel(transactionModelToSave);
+        Transaction transactionToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel).withId(null).build();
+        context.setTransaction(transactionToSave);
         // WHEN
         ResponseEntity result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), errorMessage);
@@ -151,13 +150,13 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     public void testSaveWhenIdIsNotNull() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction transactionToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withId(RESERVED_ID)
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToSave);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_NEW_TRANSACTION_IS_INVALID);
@@ -167,52 +166,52 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     public void testSaveWhenThereIsOneWithSameDateAndType() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createMainCategoryModel(EXISTING_MAIN_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME);
-        TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction transactionToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withId(null)
             .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToSave);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_TRANSACTION_HAS_BEEN_SAVED);
-        Assert.assertEquals(response.getTransactionModel().getId(), EXPECTED_ID);
+        Assert.assertEquals(response.getTransaction().getId(), EXPECTED_ID);
     }
 
     @Test
     public void testSaveWhenThereIsOneWithSameDateAndTypeAndTitle() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createMainCategoryModel(EXISTING_MAIN_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME);
-        TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction transactionToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withId(null)
             .withTitle(ModelStringValue.builder().withValue(RESERVED_TITLE).build())
             .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToSave);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_TRANSACTION_HAS_BEEN_SAVED);
-        Assert.assertEquals(response.getTransactionModel().getId(), EXPECTED_ID);
+        Assert.assertEquals(response.getTransaction().getId(), EXPECTED_ID);
     }
 
     @Test
     public void testSaveWhenThereIsOneWithSameDateAndTypeAndTitleAndMainCategory() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction transactionToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withId(null)
             .withTitle(ModelStringValue.builder().withValue(RESERVED_TITLE).build())
             .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToSave);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertFalse(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "The transaction has been saved before.");
@@ -222,7 +221,7 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     public void testSaveWhenOptionalFieldsPresent() {
         // GIVEN
         MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        TransactionModel transactionModelToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
+        Transaction transactionToSave = createTransactionBuilderWithDefaultValues(mainCategoryModel)
             .withId(null)
             .withSubCategory(mainCategoryModel.getSubCategoryModelSet().iterator().next())
             .withEndDate(ModelDateValue.builder().withValue(EXPECTED_END_DATE).build())
@@ -230,14 +229,14 @@ public class SaveTransactionTest extends AbstractTransactionTest {
             .withMonthly(true)
             .withLocked(true)
             .build();
-        TransactionModelRequestContext context = createContext(TransactionType.INCOME, transactionModelToSave);
+        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToSave);
         // WHEN
         ResponseEntity<Object> result = getTransactionController().createTransaction(context);
-        TransactionModelResponse response = (TransactionModelResponse) result.getBody();
+        TransactionResponse response = (TransactionResponse) result.getBody();
         // THEN
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), THE_TRANSACTION_HAS_BEEN_SAVED);
-        Assert.assertEquals(response.getTransactionModel().getId(), EXPECTED_ID);
+        Assert.assertEquals(response.getTransaction().getId(), EXPECTED_ID);
     }
 
 }

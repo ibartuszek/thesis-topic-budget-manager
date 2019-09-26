@@ -12,8 +12,10 @@ import java.util.Optional;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
+import org.junit.After;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -22,10 +24,12 @@ import org.testng.annotations.Test;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.service.database.DatabaseProxy;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionException;
+import hu.elte.bm.transactionservice.domain.transaction.TransactionConflictException;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
+import hu.elte.bm.transactionservice.service.database.IncomeDao;
+import hu.elte.bm.transactionservice.service.database.OutcomeDao;
+import hu.elte.bm.transactionservice.service.database.TransactionDaoProxy;
 
 public class DefaultTransactionServiceTest {
 
@@ -45,16 +49,17 @@ public class DefaultTransactionServiceTest {
     private static final Long USER_ID = 1L;
     private static final LocalDate START = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
 
-    private DefaultTransactionService underTest;
+    private TransactionService underTest;
     private IMocksControl control;
-    private DatabaseProxy databaseProxy;
+    private TransactionDaoProxy transactionDaoProxy;
 
     @BeforeClass
     public void setup() {
         control = EasyMock.createControl();
-        databaseProxy = control.createMock(DatabaseProxy.class);
-        underTest = new DefaultTransactionService(databaseProxy);
-        ReflectionTestUtils.setField(underTest, "cannotBeNullExceptionMessage", "{0} cannot be null!");
+        transactionDaoProxy = control.createMock(TransactionDaoProxy.class);
+        underTest = new TransactionService(transactionDaoProxy);
+        // TODO: delete
+        // ReflectionTestUtils.setField(underTest, "cannotBeNullExceptionMessage", "{0} cannot be null!");
     }
 
     @BeforeMethod
@@ -62,20 +67,26 @@ public class DefaultTransactionServiceTest {
         control.reset();
     }
 
+    @AfterMethod
+    public void verify() {
+        control.verify();
+    }
+
     @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForFindAllValidation")
     public void testFindAllTransactionWhenStartIsNull(final LocalDate start, final TransactionType type, final Long userId) {
         // GIVEN
+        control.replay();
         // WHEN
-        underTest.findAllTransaction(start, null, createTransactionContext(type, userId));
+        underTest.getTransactionList(start, null, createTransactionContext(type, userId));
         // THEN
     }
 
     @DataProvider
     public Object[][] testDataForFindAllValidation() {
-        return new Object[][] {
-            { null, INCOME, USER_ID },
-            { START, null, USER_ID },
-            { START, INCOME, null },
+        return new Object[][]{
+                {null, INCOME, USER_ID},
+                {START, null, USER_ID},
+                {START, INCOME, null},
         };
     }
 
@@ -83,10 +94,10 @@ public class DefaultTransactionServiceTest {
     public void testFindAllTransactionWhenDatabaseSendsEmptyList() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        EasyMock.expect(databaseProxy.findAllTransaction(START, LocalDate.now(), context)).andReturn(Collections.emptyList());
+        EasyMock.expect(transactionDaoProxy.getTransactionList(START, LocalDate.now(), context)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
-        List<Transaction> result = underTest.findAllTransaction(START, null, context);
+        List<Transaction> result = underTest.getTransactionList(START, null, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, Collections.emptyList());
@@ -97,10 +108,10 @@ public class DefaultTransactionServiceTest {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         List<Transaction> expectedTransactionList = createExampleTransActionList();
-        EasyMock.expect(databaseProxy.findAllTransaction(START, LocalDate.now(), context)).andReturn(expectedTransactionList);
+        EasyMock.expect(transactionDaoProxy.getTransactionList(START, LocalDate.now(), context)).andReturn(expectedTransactionList);
         control.replay();
         // WHEN
-        List<Transaction> result = underTest.findAllTransaction(START, null, context);
+        List<Transaction> result = underTest.getTransactionList(START, null, context);
         // THEN
         control.verify();
         Assert.assertEquals(result, expectedTransactionList);
@@ -109,6 +120,7 @@ public class DefaultTransactionServiceTest {
     @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForPreValidation")
     public void testSaveWhenValidationFails(final Transaction transaction, final TransactionType type, final Long userId) {
         // GIVEN
+        control.replay();
         // WHEN
         underTest.save(transaction, createTransactionContext(type, userId));
         // THEN
@@ -117,17 +129,18 @@ public class DefaultTransactionServiceTest {
     @DataProvider
     public Object[][] testDataForPreValidation() {
         Transaction transaction = createExampleTransactionBuilder().build();
-        return new Object[][] {
-            { null, INCOME, USER_ID },
-            { transaction, null, USER_ID },
-            { transaction, INCOME, null }
+        return new Object[][]{
+                {null, INCOME, USER_ID},
+                {transaction, null, USER_ID},
+                {transaction, INCOME, null}
         };
     }
 
-    @Test(expectedExceptions = TransactionException.class, dataProvider = "testDataForValidation")
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForValidation")
     public void testSaveWhenValidationFails(final Transaction.Builder builder) {
         // GIVEN
         Transaction transaction = builder.withId(null).build();
+        control.replay();
         // WHEN
         underTest.save(transaction, createTransactionContext(INCOME, USER_ID));
         // THEN
@@ -136,39 +149,37 @@ public class DefaultTransactionServiceTest {
     @DataProvider
     public Object[][] testDataForValidation() {
         Transaction.Builder builderWithMainCategoryWithoutId = Transaction.builder()
-            .withMainCategory(createExampleMainCategoryBuilderWithDefaultValues().withId(null).build());
+                .withMainCategory(createExampleMainCategoryBuilderWithDefaultValues().withId(null).build());
 
         MainCategory mainCategoryWithSubCategoryWithoutId = createExampleMainCategoryBuilderWithDefaultValues().build();
         mainCategoryWithSubCategoryWithoutId.getSubCategorySet().add(createExampleSubCategory(null, CATEGORY_NAME, INCOME));
         Transaction.Builder builderWithMainCategoryWithSubcategoryWithoutId = Transaction.builder()
-            .withMainCategory(mainCategoryWithSubCategoryWithoutId);
+                .withMainCategory(mainCategoryWithSubCategoryWithoutId);
 
         Transaction.Builder builderWithSubCategoryWithoutId = createExampleTransactionBuilder()
-            .withSubCategory(createExampleSubCategory(null, CATEGORY_NAME, INCOME));
+                .withSubCategory(createExampleSubCategory(null, CATEGORY_NAME, INCOME));
 
-        return new Object[][] {
-            { builderWithMainCategoryWithoutId },
-            { builderWithMainCategoryWithSubcategoryWithoutId },
-            { builderWithSubCategoryWithoutId }
+        return new Object[][]{
+                {builderWithMainCategoryWithoutId},
+                {builderWithMainCategoryWithSubcategoryWithoutId},
+                {builderWithSubCategoryWithoutId}
         };
     }
 
-    @Test
+    @Test(expectedExceptions = TransactionConflictException.class)
     public void testSaveWhenThereIsOneTransactionWithSameNameAndDate() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
         listOfTransactionsWithSameTitle.add(createExampleTransactionBuilder().build());
         Transaction transaction = createExampleTransactionBuilder()
-            .withId(null)
-            .build();
-        EasyMock.expect(databaseProxy.findTransactionByTitle(transaction.getTitle(), context)).andReturn(listOfTransactionsWithSameTitle);
+                .withId(null)
+                .build();
+        EasyMock.expect(transactionDaoProxy.findByTitle(transaction.getTitle(), context)).andReturn(listOfTransactionsWithSameTitle);
         control.replay();
         // WHEN
-        Optional<Transaction> result = underTest.save(transaction, context);
+        underTest.save(transaction, context);
         // THEN
-        control.verify();
-        Assert.assertEquals(result, Optional.empty());
     }
 
     @Test
@@ -176,219 +187,219 @@ public class DefaultTransactionServiceTest {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         Transaction transactionWithSameTitle = createExampleTransactionBuilder()
-            .withDate(LocalDate.now().minusDays(1))
-            .build();
+                .withDate(LocalDate.now().minusDays(1))
+                .build();
         List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
         listOfTransactionsWithSameTitle.add(transactionWithSameTitle);
         Transaction transaction = createExampleTransactionBuilder()
-            .withId(null)
-            .build();
-        Optional<Transaction> expectedTransAction = Optional.of(createExampleTransactionBuilder()
-            .withId(NEW_ID)
-            .build());
-        EasyMock.expect(databaseProxy.findTransactionByTitle(transaction.getTitle(), context)).andReturn(listOfTransactionsWithSameTitle);
-        EasyMock.expect(databaseProxy.saveTransaction(transaction, context)).andReturn(expectedTransAction);
+                .withId(null)
+                .build();
+        Transaction expectedTransAction = createExampleTransactionBuilder()
+                .withId(NEW_ID)
+                .build();
+        EasyMock.expect(transactionDaoProxy.findByTitle(transaction.getTitle(), context)).andReturn(listOfTransactionsWithSameTitle);
+        EasyMock.expect(transactionDaoProxy.save(transaction, context)).andReturn(expectedTransAction);
         control.replay();
         // WHEN
-        Optional<Transaction> result = underTest.save(transaction, context);
+        Transaction result = underTest.save(transaction, context);
         // THEN
-        control.verify();
         Assert.assertEquals(result, expectedTransAction);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForPreValidation")
-    public void testUpdateWhenValidationFails(final Transaction transaction, final TransactionType type, final Long userId) {
-        // GIVEN
-        // WHEN
-        underTest.update(transaction, createTransactionContext(type, userId));
-        // THEN
-    }
+    /*
+        @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForPreValidation")
+        public void testUpdateWhenValidationFails(final Transaction transaction, final TransactionType type, final Long userId) {
+            // GIVEN
+            // WHEN
+            underTest.update(transaction, createTransactionContext(type, userId));
+            // THEN
+        }
 
-    @Test(expectedExceptions = TransactionException.class, dataProvider = "testDataForValidation")
-    public void testUpdateWhenValidationFails(final Transaction.Builder builder) {
-        // GIVEN
-        Transaction transaction = builder.build();
-        // WHEN
-        underTest.update(transaction, createTransactionContext(INCOME, USER_ID));
-        // THEN
-    }
+        @Test(expectedExceptions = TransactionConflictException.class, dataProvider = "testDataForValidation")
+        public void testUpdateWhenValidationFails(final Transaction.Builder builder) {
+            // GIVEN
+            Transaction transaction = builder.build();
+            // WHEN
+            underTest.update(transaction, createTransactionContext(INCOME, USER_ID));
+            // THEN
+        }
 
-    @Test(expectedExceptions = TransactionException.class)
-    public void testUpdateWhenOriginalTransactionCannotBeFound() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        Transaction transaction = createExampleTransactionBuilder()
-            .withTitle(NEW_TITLE)
-            .build();
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context)).andReturn(Optional.empty());
-        control.replay();
-        // WHEN
-        try {
-            underTest.update(transaction, context);
-        } finally {
+        @Test(expectedExceptions = TransactionConflictException.class)
+        public void testUpdateWhenOriginalTransactionCannotBeFound() {
+            // GIVEN
+            TransactionContext context = createTransactionContext(INCOME, USER_ID);
+            Transaction transaction = createExampleTransactionBuilder()
+                .withTitle(NEW_TITLE)
+                .build();
+            EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context)).andReturn(Optional.empty());
+            control.replay();
+            // WHEN
+            try {
+                underTest.update(transaction, context);
+            } finally {
+                // THEN
+                control.verify();
+            }
+        }
+
+        @Test(expectedExceptions = TransactionConflictException.class)
+        public void testUpdateWhenOriginalTransactionIsLocked() {
+            // GIVEN
+            TransactionContext context = createTransactionContext(INCOME, USER_ID);
+            Transaction transaction = createExampleTransactionBuilder()
+                .withTitle(NEW_TITLE)
+                .build();
+            Optional<Transaction> originalTransaction = Optional.ofNullable(createExampleTransactionBuilder()
+                .withLocked(true)
+                .build());
+            EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context))
+                .andReturn(originalTransaction);
+            control.replay();
+            // WHEN
+            try {
+                underTest.update(transaction, context);
+            } finally {
+                // THEN
+                control.verify();
+            }
+        }
+
+        @Test(expectedExceptions = TransactionConflictException.class)
+        public void testUpdateWhenTransactionTypeHasChanged() {
+            // GIVEN
+            TransactionContext context = createTransactionContext(INCOME, USER_ID);
+            Transaction transaction = createExampleTransactionBuilder()
+                .withTitle(NEW_TITLE)
+                .build();
+            Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder()
+                .withTransactionType(OUTCOME)
+                .build());
+            EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context))
+                .andReturn(transactionFromRepository);
+            control.replay();
+            // WHEN
+            try {
+                underTest.update(transaction, context);
+            } finally {
+                // THEN
+                control.verify();
+            }
+        }
+
+        @Test
+        public void testUpdate() {
+            // GIVEN
+            TransactionContext context = createTransactionContext(INCOME, USER_ID);
+            Transaction transactionWithSameTitle = createExampleTransactionBuilder()
+                .withId(ID_2)
+                .withTitle(NEW_TITLE)
+                .withDate(LocalDate.now().minusDays(1))
+                .build();
+            List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
+            listOfTransactionsWithSameTitle.add(transactionWithSameTitle);
+            Transaction transaction = createExampleTransactionBuilder()
+                .withTitle(NEW_TITLE)
+                .build();
+            Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder().build());
+            Optional<Transaction> expectedTransaction = Optional.ofNullable(createExampleTransactionBuilder()
+                .withTitle(NEW_TITLE)
+                .build());
+            EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context))
+                .andReturn(transactionFromRepository);
+            EasyMock.expect(databaseProxy.findTransactionByTitle(transaction.getTitle(), context)).andReturn(listOfTransactionsWithSameTitle);
+            EasyMock.expect(databaseProxy.updateTransaction(transaction, context)).andReturn(expectedTransaction);
+            control.replay();
+            // WHEN
+            Optional<Transaction> result = underTest.update(transaction, context);
             // THEN
             control.verify();
+            Assert.assertEquals(result, expectedTransaction);
         }
-    }
 
-    @Test(expectedExceptions = TransactionException.class)
-    public void testUpdateWhenOriginalTransactionIsLocked() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        Transaction transaction = createExampleTransactionBuilder()
-            .withTitle(NEW_TITLE)
-            .build();
-        Optional<Transaction> originalTransaction = Optional.ofNullable(createExampleTransactionBuilder()
-            .withLocked(true)
-            .build());
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context))
-            .andReturn(originalTransaction);
-        control.replay();
-        // WHEN
-        try {
-            underTest.update(transaction, context);
-        } finally {
+        @Test
+        public void testDelete() {
+            // GIVEN
+            TransactionContext context = createTransactionContext(INCOME, USER_ID);
+            Transaction transaction = createExampleTransactionBuilder().build();
+            Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder().build());
+            EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context))
+                .andReturn(transactionFromRepository);
+            databaseProxy.deleteTransaction(transaction, context);
+            control.replay();
+            // WHEN
+            Optional<Transaction> result = underTest.delete(transaction, context);
             // THEN
             control.verify();
+            Assert.assertTrue(result.isPresent());
+            Assert.assertEquals(result.get(), transaction);
         }
-    }
 
-    @Test(expectedExceptions = TransactionException.class)
-    public void testUpdateWhenTransactionTypeHasChanged() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        Transaction transaction = createExampleTransactionBuilder()
-            .withTitle(NEW_TITLE)
-            .build();
-        Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder()
-            .withTransactionType(OUTCOME)
-            .build());
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context))
-            .andReturn(transactionFromRepository);
-        control.replay();
-        // WHEN
-        try {
-            underTest.update(transaction, context);
-        } finally {
+        @Test
+        public void testGetTheFirstDateOfTheNewPeriodWhenRepositoryReturnsWithEmptyList() {
+            // GIVEN
+            TransactionContext context = createTransactionContext(INCOME, USER_ID);
+            List<Transaction> transactionList = Collections.emptyList();
+            LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
+            LocalDate end = LocalDate.now();
+            EasyMock.expect(databaseProxy.findAllTransaction(start, end, context)).andReturn(transactionList);
+            control.replay();
+            // WHEN
+            LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
             // THEN
             control.verify();
+            Assert.assertEquals(result, start);
         }
-    }
 
-    @Test
-    public void testUpdate() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        Transaction transactionWithSameTitle = createExampleTransactionBuilder()
-            .withId(ID_2)
-            .withTitle(NEW_TITLE)
-            .withDate(LocalDate.now().minusDays(1))
-            .build();
-        List<Transaction> listOfTransactionsWithSameTitle = new ArrayList<>();
-        listOfTransactionsWithSameTitle.add(transactionWithSameTitle);
-        Transaction transaction = createExampleTransactionBuilder()
-            .withTitle(NEW_TITLE)
-            .build();
-        Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder().build());
-        Optional<Transaction> expectedTransaction = Optional.ofNullable(createExampleTransactionBuilder()
-            .withTitle(NEW_TITLE)
-            .build());
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context))
-            .andReturn(transactionFromRepository);
-        EasyMock.expect(databaseProxy.findTransactionByTitle(transaction.getTitle(), context)).andReturn(listOfTransactionsWithSameTitle);
-        EasyMock.expect(databaseProxy.updateTransaction(transaction, context)).andReturn(expectedTransaction);
-        control.replay();
-        // WHEN
-        Optional<Transaction> result = underTest.update(transaction, context);
-        // THEN
-        control.verify();
-        Assert.assertEquals(result, expectedTransaction);
-    }
+        @Test
+        public void testGetTheFirstDateOfTheNewPeriodWhenThereCannotBeFoundALockedDate() {
+            // GIVEN
+            TransactionContext context = createTransactionContext(INCOME, USER_ID);
+            List<Transaction> transactionList = new ArrayList<>();
+            transactionList.add(createExampleTransactionBuilder().withDate(LocalDate.now()).build());
+            transactionList.add(createExampleTransactionBuilder().withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT)).build());
+            LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
+            LocalDate end = LocalDate.now();
+            EasyMock.expect(databaseProxy.findAllTransaction(start, end, context)).andReturn(transactionList);
+            control.replay();
+            // WHEN
+            LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
+            // THEN
+            control.verify();
+            Assert.assertEquals(result, start);
+        }
 
-    @Test
-    public void testDelete() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        Transaction transaction = createExampleTransactionBuilder().build();
-        Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder().build());
-        EasyMock.expect(databaseProxy.findTransactionById(transaction.getId(), context))
-            .andReturn(transactionFromRepository);
-        databaseProxy.deleteTransaction(transaction, context);
-        control.replay();
-        // WHEN
-        Optional<Transaction> result = underTest.delete(transaction, context);
-        // THEN
-        control.verify();
-        Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(result.get(), transaction);
-    }
-
-    @Test
-    public void testGetTheFirstDateOfTheNewPeriodWhenRepositoryReturnsWithEmptyList() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        List<Transaction> transactionList = Collections.emptyList();
-        LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
-        LocalDate end = LocalDate.now();
-        EasyMock.expect(databaseProxy.findAllTransaction(start, end, context)).andReturn(transactionList);
-        control.replay();
-        // WHEN
-        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
-        // THEN
-        control.verify();
-        Assert.assertEquals(result, start);
-    }
-
-    @Test
-    public void testGetTheFirstDateOfTheNewPeriodWhenThereCannotBeFoundALockedDate() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        List<Transaction> transactionList = new ArrayList<>();
-        transactionList.add(createExampleTransactionBuilder().withDate(LocalDate.now()).build());
-        transactionList.add(createExampleTransactionBuilder().withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT)).build());
-        LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
-        LocalDate end = LocalDate.now();
-        EasyMock.expect(databaseProxy.findAllTransaction(start, end, context)).andReturn(transactionList);
-        control.replay();
-        // WHEN
-        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
-        // THEN
-        control.verify();
-        Assert.assertEquals(result, start);
-    }
-
-    @Test
-    public void testGetTheFirstDateOfTheNewPeriodWhenThereCanBeFoundALockedDate() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        List<Transaction> transactionList = createExampleListForEndOfLastPeriodWithCalls();
-        LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
-        LocalDate end = LocalDate.now();
-        EasyMock.expect(databaseProxy.findAllTransaction(start, end, context)).andReturn(transactionList);
-        control.replay();
-        // WHEN
-        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
-        // THEN
-        control.verify();
-        Assert.assertEquals(result, EXPECTED_LAST_DATE.plusDays(1));
-    }
-
+        @Test
+        public void testGetTheFirstDateOfTheNewPeriodWhenThereCanBeFoundALockedDate() {
+            // GIVEN
+            TransactionContext context = createTransactionContext(INCOME, USER_ID);
+            List<Transaction> transactionList = createExampleListForEndOfLastPeriodWithCalls();
+            LocalDate start = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
+            LocalDate end = LocalDate.now();
+            EasyMock.expect(databaseProxy.findAllTransaction(start, end, context)).andReturn(transactionList);
+            control.replay();
+            // WHEN
+            LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
+            // THEN
+            control.verify();
+            Assert.assertEquals(result, EXPECTED_LAST_DATE.plusDays(1));
+        }
+    */
     private List<Transaction> createExampleListForEndOfLastPeriodWithCalls() {
         List<Transaction> transactionList = new ArrayList<>();
         transactionList.add(createExampleTransactionBuilder()
-            .withId(EXPECTED_ID)
-            .withLocked(true)
-            .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT))
-            .build());
+                .withId(EXPECTED_ID)
+                .withLocked(true)
+                .withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT))
+                .build());
         transactionList.add(createExampleTransactionBuilder()
-            .withId(ID_2)
-            .withLocked(true)
-            .withDate(EXPECTED_LAST_DATE)
-            .build());
+                .withId(ID_2)
+                .withLocked(true)
+                .withDate(EXPECTED_LAST_DATE)
+                .build());
         transactionList.add(createExampleTransactionBuilder()
-            .withId(ID_3)
-            .withDate(AFTER_EXPECTED_LAST_DATE)
-            .build());
+                .withId(ID_3)
+                .withDate(AFTER_EXPECTED_LAST_DATE)
+                .build());
         return transactionList;
     }
 
@@ -400,36 +411,36 @@ public class DefaultTransactionServiceTest {
 
     private Transaction.Builder createExampleTransactionBuilder() {
         return Transaction.builder()
-            .withId(EXPECTED_ID)
-            .withTitle(EXPECTED_TITLE)
-            .withAmount(AMOUNT)
-            .withCurrency(CURRENCY)
-            .withTransactionType(INCOME)
-            .withMainCategory(createExampleMainCategoryBuilderWithDefaultValues().build())
-            .withDate(LocalDate.now());
+                .withId(EXPECTED_ID)
+                .withTitle(EXPECTED_TITLE)
+                .withAmount(AMOUNT)
+                .withCurrency(CURRENCY)
+                .withTransactionType(INCOME)
+                .withMainCategory(createExampleMainCategoryBuilderWithDefaultValues().build())
+                .withDate(LocalDate.now());
     }
 
     private MainCategory.Builder createExampleMainCategoryBuilderWithDefaultValues() {
         return MainCategory.builder()
-            .withId(CATEGORY_ID)
-            .withName(CATEGORY_NAME)
-            .withTransactionType(INCOME)
-            .withSubCategorySet(new HashSet<>());
+                .withId(CATEGORY_ID)
+                .withName(CATEGORY_NAME)
+                .withTransactionType(INCOME)
+                .withSubCategorySet(new HashSet<>());
     }
 
     private SubCategory createExampleSubCategory(final Long id, final String name, final TransactionType type) {
         return SubCategory.builder()
-            .withId(id)
-            .withName(name)
-            .withTransactionType(type)
-            .build();
+                .withId(id)
+                .withName(name)
+                .withTransactionType(type)
+                .build();
     }
 
     private TransactionContext createTransactionContext(final TransactionType type, final Long userId) {
         return TransactionContext.builder()
-            .withTransactionType(type)
-            .withUserId(userId)
-            .build();
+                .withTransactionType(type)
+                .withUserId(userId)
+                .build();
     }
 
 }
