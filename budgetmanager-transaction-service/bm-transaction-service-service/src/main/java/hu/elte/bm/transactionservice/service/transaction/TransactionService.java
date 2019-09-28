@@ -1,7 +1,6 @@
 package hu.elte.bm.transactionservice.service.transaction;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -11,27 +10,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionConflictException;
-import hu.elte.bm.transactionservice.service.database.IncomeDao;
-import hu.elte.bm.transactionservice.service.database.OutcomeDao;
 import hu.elte.bm.transactionservice.service.database.TransactionDaoProxy;
 
 @Service("transactionService")
 public class TransactionService {
 
     private final TransactionDaoProxy transactionDaoProxy;
-
-    @Value("${transaction.days_to_subtract_to_calculate_first_day_of_new_period}")
-    private long daysToSubtract = 30L;
+    private final TransactionDateValidator dateValidator;
 
     @Value("${transaction.beginning_of_the_search_cannot_be_null}")
     private String beginningOfSearchCannotBeNull;
-
-    // TODO: delete
-    @Value("${transaction.date_before_the_beginning}")
-    String dateBeforeThePeriodExceptionMessage;
 
     @Value("${transaction.main_category_id_cannot_be_null}")
     private String mainCategoryCannotBeNull;
@@ -60,6 +50,9 @@ public class TransactionService {
     @Value("${transaction.transaction_has_been_saved_before}")
     private String transactionHasBeenSavedBefore;
 
+    @Value("${transaction.transaction_not_changed}")
+    private String transactionNotChanged;
+
     @Value("${transaction.transaction_type_cannot_be_changed}")
     private String typeCannotBeChange;
 
@@ -69,8 +62,9 @@ public class TransactionService {
     @Value("${transaction.user_id_cannot_be_null}")
     private String userIdCannotBeNull;
 
-    TransactionService(final TransactionDaoProxy transactionDaoProxy) {
+    TransactionService(final TransactionDaoProxy transactionDaoProxy, final TransactionDateValidator dateValidator) {
         this.transactionDaoProxy = transactionDaoProxy;
+        this.dateValidator = dateValidator;
     }
 
     public List<Transaction> getTransactionList(final LocalDate start, final LocalDate end, final TransactionContext context) {
@@ -88,25 +82,18 @@ public class TransactionService {
 
     public Transaction update(final Transaction transaction, final TransactionContext context) {
         validate(context);
-        validateForUpdate(transaction, context, transactionIsLockedExceptionForUpdate);
+        validateForUpdate(transaction, context);
         return transactionDaoProxy.update(transaction, context);
     }
 
     public Transaction delete(final Transaction transaction, final TransactionContext context) {
         validate(context);
-        validateForUpdate(transaction, context, transactionIsLockedForDelete);
+        validateForDelete(transaction, context);
         return transactionDaoProxy.delete(transaction, context);
     }
 
     public LocalDate getTheFirstDateOfTheNewPeriod(final TransactionContext context) {
-        LocalDate start = LocalDate.now().minusDays(daysToSubtract);
-        List<Transaction> transactionList = transactionDaoProxy.getTransactionListBothTypes(start, LocalDate.now(), context.getUserId());
-        return transactionList.stream()
-                .filter(Transaction::isLocked)
-                .max(Comparator.comparing(Transaction::getDate))
-                .map(Transaction::getDate)
-                .map(localDate -> localDate.plusDays(1L))
-                .orElseGet(() -> LocalDate.now().minusDays(daysToSubtract));
+        return dateValidator.getTheFirstDateOfTheNewPeriod(context);
     }
 
     private void validate(final TransactionContext context) {
@@ -117,14 +104,11 @@ public class TransactionService {
     private void validateForSave(final Transaction transaction, final TransactionContext context) {
         Assert.notNull(transaction, transactionCannotBeNull);
         Assert.isNull(transaction.getId(), transactionIdMustBeNull);
-        validateFields(transaction);
+        validateFields(transaction, context);
         transactionIsNotReserved(transaction, context);
     }
 
-    private void validateFields(final Transaction transaction) {
-        // TODO:
-        // Possible first date should be validated in a separate validator
-        // LocalDate possibleFirstDate = getTheFirstDateOfTheNewPeriod(context);
+    private void validateFields(final Transaction transaction, final TransactionContext context) {
         if (transaction.getMainCategory().getId() == null) {
             throw new IllegalArgumentException(mainCategoryCannotBeNull);
         } else if (!hasValidSubCategories(transaction.getMainCategory())) {
@@ -132,11 +116,12 @@ public class TransactionService {
         } else if (transaction.getSubCategory() != null && transaction.getSubCategory().getId() == null) {
             throw new IllegalArgumentException(subCategoryIdCannotBeNull);
         }
+        dateValidator.validate(transaction, context);
     }
 
     private boolean hasValidSubCategories(final MainCategory mainCategory) {
         return mainCategory.getSubCategorySet().stream()
-                .noneMatch(subCategory -> subCategory.getId() == null);
+            .noneMatch(subCategory -> subCategory.getId() == null);
     }
 
     private void transactionIsNotReserved(final Transaction transaction, final TransactionContext context) {
@@ -148,30 +133,50 @@ public class TransactionService {
 
     private boolean isSavable(final List<Transaction> transactionList, final Transaction transaction) {
         return transactionList.stream()
-                .filter(t1 -> !t1.getId().equals(transaction.getId()))
-                .filter(t1 -> t1.getDate().equals(transaction.getDate()))
-                .filter(t1 -> t1.getMainCategory().equals(transaction.getMainCategory()))
-                .filter(Predicate.not(Transaction::isLocked))
-                .findAny().isEmpty();
+            .filter(t1 -> !t1.getId().equals(transaction.getId()))
+            .filter(t1 -> t1.getDate().equals(transaction.getDate()))
+            .filter(t1 -> t1.getMainCategory().equals(transaction.getMainCategory()))
+            .filter(Predicate.not(Transaction::isLocked))
+            .findAny().isEmpty();
     }
 
-    private void validateForUpdate(final Transaction transaction, final TransactionContext context, final String lockedExceptionMessage) {
+    private void validateForUpdate(final Transaction transaction, final TransactionContext context) {
         Assert.notNull(transaction, transactionCannotBeNull);
         Assert.notNull(transaction.getId(), transactionIdCannotBeNull);
-        validateFields(transaction);
-        validateAgainstOriginalTransaction(transaction, context, lockedExceptionMessage);
+        validateFields(transaction, context);
+        Transaction originalTransaction = getOriginalTransaction(transaction, context);
+        validateTransactionIsNotLocked(originalTransaction, transactionIsLockedExceptionForUpdate);
+        validateAgainstOriginalTransaction(transaction, originalTransaction);
         transactionIsNotReserved(transaction, context);
     }
 
-    private void validateAgainstOriginalTransaction(final Transaction transaction, final TransactionContext context, final String lockedExceptionMessage) {
+    private Transaction getOriginalTransaction(final Transaction transaction, final TransactionContext context) {
         Optional<Transaction> transactionFromRepository = transactionDaoProxy.findById(transaction.getId(), context);
         if (transactionFromRepository.isEmpty()) {
             throw new IllegalArgumentException(originalTransactionCannotBeFound);
-        } else if (transactionFromRepository.get().isLocked()) {
-            throw new IllegalArgumentException(lockedExceptionMessage);
-        } else if (transaction.getTransactionType() != transactionFromRepository.get().getTransactionType()) {
-            throw new IllegalArgumentException(typeCannotBeChange);
         }
+        return transactionFromRepository.get();
+    }
+
+    private void validateTransactionIsNotLocked(final Transaction originalTransaction, final String lockedMessage) {
+        if (originalTransaction.isLocked()) {
+            throw new IllegalArgumentException(transactionIsLockedExceptionForUpdate);
+        }
+    }
+
+    private void validateAgainstOriginalTransaction(final Transaction transaction, final Transaction originalTransaction) {
+        if (transaction.getTransactionType() != originalTransaction.getTransactionType()) {
+            throw new IllegalArgumentException(typeCannotBeChange);
+        } else if (transaction.equals(originalTransaction)) {
+            throw new IllegalArgumentException(transactionNotChanged);
+        }
+    }
+
+    private void validateForDelete(final Transaction transaction, final TransactionContext context) {
+        Assert.notNull(transaction, transactionCannotBeNull);
+        Assert.notNull(transaction.getId(), transactionIdCannotBeNull);
+        Transaction originalTransaction = getOriginalTransaction(transaction, context);
+        validateTransactionIsNotLocked(originalTransaction, transactionIsLockedForDelete);
     }
 
 }

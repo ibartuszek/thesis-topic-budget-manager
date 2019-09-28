@@ -51,8 +51,6 @@ public class TransactionDaoProxy {
         return isIncome(context) ? incomeDao.delete(transaction, context.getUserId()) : outcomeDao.delete(transaction, context.getUserId());
     }
 
-
-
     private boolean isIncome(final TransactionContext context) {
         return context.getTransactionType().equals(TransactionType.INCOME);
     }

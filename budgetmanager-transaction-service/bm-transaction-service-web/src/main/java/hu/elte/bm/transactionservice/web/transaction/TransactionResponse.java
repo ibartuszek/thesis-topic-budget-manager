@@ -15,6 +15,18 @@ public final class TransactionResponse extends ResponseModel {
         super(message, successful);
     }
 
+    static TransactionResponse createSuccessfulTransactionResponse(final Transaction transaction, final LocalDate firstPossibleDay, final String message) {
+        TransactionResponse response = createSuccessfulTransactionResponse(transaction, message);
+        response.setFirstPossibleDay(firstPossibleDay);
+        return response;
+    }
+
+    static TransactionResponse createSuccessfulTransactionResponse(final Transaction transaction, final String message) {
+        TransactionResponse response = new TransactionResponse(message, true);
+        response.setTransaction(transaction);
+        return response;
+    }
+
     public Transaction getTransaction() {
         return transaction;
     }
@@ -30,17 +42,4 @@ public final class TransactionResponse extends ResponseModel {
     public void setFirstPossibleDay(final LocalDate firstPossibleDay) {
         this.firstPossibleDay = firstPossibleDay;
     }
-
-    static TransactionResponse createSuccessfulTransactionResponse(final Transaction transaction, final LocalDate firstPossibleDay, final String message) {
-        TransactionResponse response = createSuccessfulTransactionResponse(transaction, message);
-        response.setFirstPossibleDay(firstPossibleDay);
-        return response;
-    }
-
-    static TransactionResponse createSuccessfulTransactionResponse(final Transaction transaction, final String message) {
-        TransactionResponse response = new TransactionResponse(message, true);
-        response.setTransaction(transaction);
-        return response;
-    }
-    
 }

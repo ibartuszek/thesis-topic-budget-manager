@@ -9,7 +9,6 @@ import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryConflictException;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryNotFoundException;
 import hu.elte.bm.transactionservice.service.database.SubCategoryDao;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
@@ -95,7 +94,7 @@ public class SubCategoryService {
         Assert.notNull(subCategory.getId(), categoryIdCannotBeNull);
         Optional<SubCategory> originalSubCategory = subCategoryDao.findById(subCategory.getId(), context);
         if (originalSubCategory.isEmpty()) {
-            throw new SubCategoryNotFoundException(subCategory, categoryCannotBeFound);
+            throw new IllegalArgumentException(categoryCannotBeFound);
         } else if (subCategory.getTransactionType() != originalSubCategory.get().getTransactionType()) {
             throw new IllegalArgumentException(typeCannotBeChanged);
         }

@@ -21,7 +21,6 @@ import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.MainCategoryConflictException;
-import hu.elte.bm.transactionservice.domain.categories.MainCategoryNotFoundException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.database.MainCategoryDao;
@@ -196,20 +195,7 @@ public class MainCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = MainCategoryNotFoundException.class)
-    public void testUpdateWhenCategoryCannotBeFoundById() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        MainCategory mainCategoryToUpdate = createExampleMainCategory(INVALID_ID, NEW_CATEGORY_NAME, INCOME);
-        EasyMock.expect(mainCategoryDao.findByName(NEW_CATEGORY_NAME, context)).andReturn(Optional.empty());
-        EasyMock.expect(mainCategoryDao.findById(INVALID_ID, context)).andReturn(Optional.empty());
-        control.replay();
-        // WHEN
-        underTest.update(mainCategoryToUpdate, context);
-        // THEN
-    }
-
-    @Test(expectedExceptions = MainCategoryNotFoundException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateWhenCategoryCannotBeFound() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);

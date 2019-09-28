@@ -10,7 +10,6 @@ import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.MainCategoryConflictException;
-import hu.elte.bm.transactionservice.domain.categories.MainCategoryNotFoundException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.service.database.MainCategoryDao;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
@@ -115,7 +114,7 @@ public class MainCategoryService {
     private void validateForUpdate(final MainCategory mainCategory, final TransactionContext context) {
         Optional<MainCategory> originalMainCategory = mainCategoryDao.findById(mainCategory.getId(), context);
         if (originalMainCategory.isEmpty()) {
-            throw new MainCategoryNotFoundException(mainCategory, categoryCannotBeFound);
+            throw new IllegalArgumentException(categoryCannotBeFound);
         } else if (mainCategory.getTransactionType() != originalMainCategory.get().getTransactionType()) {
             throw new IllegalArgumentException(typeCannotBeChanged);
         } else if (!mainCategory.getSubCategorySet().containsAll(originalMainCategory.get().getSubCategorySet())) {

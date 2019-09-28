@@ -104,7 +104,7 @@ public final class Transaction {
             && currency == that.currency
             && transactionType == that.transactionType
             && mainCategory.equals(that.mainCategory)
-            && subCategory.equals(that.subCategory)
+            && (subCategory == null || subCategory.equals(that.subCategory))
             && date.equals(that.date);
     }
 

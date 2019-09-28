@@ -19,12 +19,11 @@ import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategoryConflictException;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryNotFoundException;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.database.SubCategoryDao;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
-public class DefaultSubCategoryServiceTest {
+public class SubCategoryServiceTest {
 
     private static final long EXPECTED_CATEGORY_ID = 1L;
     private static final long NEW_ID = 3L;
@@ -155,7 +154,7 @@ public class DefaultSubCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = SubCategoryNotFoundException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateWhenCategoryCannotBeFoundInRepository() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
