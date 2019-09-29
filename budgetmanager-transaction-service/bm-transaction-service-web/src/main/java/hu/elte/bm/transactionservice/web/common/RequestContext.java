@@ -1,11 +1,15 @@
 package hu.elte.bm.transactionservice.web.common;
 
+import javax.validation.constraints.NotNull;
+
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 public class RequestContext {
 
+    @NotNull(message = "Category type cannot be null!")
     private TransactionType transactionType;
 
+    @NotNull(message = "User id cannot be null!")
     private Long userId;
 
     public TransactionType getTransactionType() {

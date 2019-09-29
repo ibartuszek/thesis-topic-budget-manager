@@ -5,116 +5,137 @@ import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.O
 
 import java.util.HashSet;
 
-import org.springframework.http.ResponseEntity;
-import org.testng.Assert;
+import org.hamcrest.Matchers;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testng.annotations.Test;
 
+import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.maincategory.MainCategoryRequestContext;
-import hu.elte.bm.transactionservice.web.maincategory.MainCategoryResponse;
 
 public class SaveMainCategoryTest extends AbstractMainCategoryTest {
 
+    private static final String URL = "/bm/mainCategories/create";
+
     @Test(dataProvider = "dataForMainCategoryModelValidation")
-    public void testSaveCategoryWhenMainCategoryModelValidationFails(final MainCategoryModel mainCategoryModel,
-        final String responseErrorMessage, final String fieldErrorMessage) {
+    public void testSaveCategoryWhenMainCategoryModelValidationFails(final MainCategory mainCategory, final String errorMessage) throws Exception {
         // GIVEN
-        MainCategoryRequestContext context = createContext(INCOME, mainCategoryModel);
+        MainCategoryRequestContext context = createContext(INCOME, mainCategory);
+
         // WHEN
-        ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-        if (response.getMainCategoryModel().getName() != null && response.getMainCategoryModel().getName().getErrorMessage() != null) {
-            Assert.assertEquals(response.getMainCategoryModel().getName().getErrorMessage(), fieldErrorMessage);
-        }
-        if (response.getMainCategoryModel().getTransactionType() != null && response.getMainCategoryModel().getTransactionType().getErrorMessage() != null) {
-            Assert.assertEquals(response.getMainCategoryModel().getTransactionType().getErrorMessage(), fieldErrorMessage);
-        }
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.content().string(errorMessage));
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testSaveCategoryWhenContextValidationFails(final MainCategoryRequestContext context, final String errorMessage) {
+    public void testSaveCategoryWhenContextValidationFails(final MainCategoryRequestContext context, final String errorMessage) throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME, new HashSet<>()).build();
+        MainCategory mainCategoryToSave = createMainCategoryBuilder(null, NEW_CATEGORY_NAME, INCOME, new HashSet<>()).build();
         context.setMainCategory(mainCategoryToSave);
+
         // WHEN
-        ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), errorMessage);
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.content().string(errorMessage));
     }
 
     @Test
-    public void testSaveCategoryWhenCategoryHasASubCategoryWithoutId() {
+    public void testSaveCategoryWhenCategoryHasASubCategoryWithoutId() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        mainCategoryToSave.getSubCategoryModelSet().add(createSubCategoryModel(null, "illegal supplementary category", INCOME));
+        MainCategory mainCategoryToSave = createMainCategoryBuilder(null, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
+        mainCategoryToSave.getSubCategorySet().add(createSubCategory(null, "illegal supplementary category", INCOME));
         MainCategoryRequestContext context = createContext(INCOME, mainCategoryToSave);
+
         // WHEN
-        ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), "A subCategory does not have id!");
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.content().string("A subCategory does not have id!"));
     }
 
     @Test
-    public void testSaveCategoryWhenCategoryIdIsNotNull() {
+    public void testSaveCategoryWhenCategoryIdIsNotNull() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(INVALID_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        MainCategory mainCategoryToSave = createMainCategoryBuilder(INVALID_ID, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
+        MainCategoryRequestContext context = createContext(INCOME, mainCategoryToSave);
+
         // WHEN
-        ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), THE_NEW_CATEGORY_IS_INVALID);
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.content().string("New mainCategory id must be null!"));
     }
 
     @Test
-    public void testSaveCategoryWhenCategoryHasNewName() {
+    public void testSaveCategoryWhenCategoryHasNewName() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
-        MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+        MainCategory mainCategoryToSave = createMainCategoryBuilder(null, NEW_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
+        MainCategoryRequestContext context = createContext(INCOME, mainCategoryToSave);
+
         // WHEN
-        ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), THE_CATEGORY_HAS_BEEN_SAVED);
-        Assert.assertEquals(response.getMainCategoryModel().getId(), NEW_ID);
-        Assert.assertEquals(response.getMainCategoryModel().getName().getValue(), NEW_CATEGORY_NAME);
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(THE_CATEGORY_HAS_BEEN_SAVED)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.mainCategory.id", Matchers.is(NEW_ID.intValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.mainCategory.name", Matchers.is(NEW_CATEGORY_NAME)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.mainCategory.transactionType", Matchers.is(INCOME.name())));
     }
 
     @Test
-    public void testSaveCategoryWhenThereIsOneWithSameNameWithDifferentCategory() {
+    public void testSaveCategoryWhenThereIsOneWithSameNameWithDifferentCategory() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, RESERVED_CATEGORY_NAME, OUTCOME, createSubCategoryModelSet()).build();
+        MainCategory mainCategoryToSave = createMainCategoryBuilder(null, RESERVED_CATEGORY_NAME, OUTCOME, createSubCategoryModelSet()).build();
         MainCategoryRequestContext context = createContext(OUTCOME, mainCategoryToSave);
+
         // WHEN
-        ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), THE_CATEGORY_HAS_BEEN_SAVED);
-        Assert.assertEquals(response.getMainCategoryModel().getId(), NEW_ID);
-        Assert.assertEquals(response.getMainCategoryModel().getName().getValue(), RESERVED_CATEGORY_NAME);
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(THE_CATEGORY_HAS_BEEN_SAVED)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.mainCategory.id", Matchers.is(NEW_ID.intValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.mainCategory.name", Matchers.is(RESERVED_CATEGORY_NAME)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.mainCategory.transactionType", Matchers.is(OUTCOME.name())));
     }
 
     @Test
-    public void testSaveCategoryWhenThereIsOneWithSameNameWithSameCategory() {
+    public void testSaveCategoryWhenThereIsOneWithSameNameWithSameCategory() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryToSave = createMainCategoryModelBuilder(null, RESERVED_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
+        MainCategory mainCategoryToSave = createMainCategoryBuilder(null, RESERVED_CATEGORY_NAME, INCOME, createSubCategoryModelSet()).build();
         MainCategoryRequestContext context = createContext(TransactionType.INCOME, mainCategoryToSave);
+
         // WHEN
-        ResponseEntity result = getMainCategoryController().createMainCategory(context);
-        MainCategoryResponse response = (MainCategoryResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), "The category has been saved before.");
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
+            .andExpect(MockMvcResultMatchers.content().string("The category has been saved before!"));
     }
 
 }

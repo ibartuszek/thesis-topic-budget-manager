@@ -2,6 +2,9 @@ package hu.elte.bm.transactionservice.web.maincategory;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,19 +35,19 @@ public class MainCategoryController {
     }
 
     @RequestMapping(value = "/bm/mainCategories/findAll", method = RequestMethod.GET, produces = "application/json")
-    public MainCategoryListResponse getSubCategories(@RequestParam final TransactionType type, @RequestParam final Long userId) {
+    public MainCategoryListResponse getSubCategories(@NotNull @RequestParam final TransactionType type, @NotNull @RequestParam final Long userId) {
         List<MainCategory> mainCategoryList = mainCategoryService.getMainCategoryList(transformer.transform(type, userId));
         return MainCategoryListResponse.createSuccessfulSubCategoryResponse(mainCategoryList);
     }
 
     @RequestMapping(value = "/bm/mainCategories/create", method = RequestMethod.POST, produces = "application/json")
-    public MainCategoryResponse createMainCategory(@RequestBody final MainCategoryRequestContext context) {
+    public MainCategoryResponse createMainCategory(@Valid @RequestBody final MainCategoryRequestContext context) {
         MainCategory mainCategory = mainCategoryService.save(context.getMainCategory(), transformer.transform(context));
         return MainCategoryResponse.createSuccessfulSubCategoryResponse(mainCategory, categoryHasBeenSaved);
     }
 
     @RequestMapping(value = "/bm/mainCategories/update", method = RequestMethod.PUT, produces = "application/json")
-    public MainCategoryResponse updateMainCategory(@RequestBody final MainCategoryRequestContext context) {
+    public MainCategoryResponse updateMainCategory(@Valid @RequestBody final MainCategoryRequestContext context) {
         MainCategory mainCategory = mainCategoryService.update(context.getMainCategory(), transformer.transform(context));
         return MainCategoryResponse.createSuccessfulSubCategoryResponse(mainCategory, categoryHasBeenSaved);
     }

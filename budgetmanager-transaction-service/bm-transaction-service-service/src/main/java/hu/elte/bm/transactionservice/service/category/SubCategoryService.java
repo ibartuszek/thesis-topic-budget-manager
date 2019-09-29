@@ -74,7 +74,7 @@ public class SubCategoryService {
 
     private void validateSavableSubCategory(final SubCategory subCategory) {
         Assert.notNull(subCategory, categoryCannotBeNull);
-        Assert.isNull(subCategory.getId(), categoryIdCannotBeNull);
+        Assert.isNull(subCategory.getId(), categoryIdMustBeNull);
     }
 
     private void validateSubCategoryIsNotReserved(final SubCategory subCategory, final TransactionContext context) {

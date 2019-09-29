@@ -2,6 +2,9 @@ package hu.elte.bm.transactionservice.web.subcategory;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,19 +35,19 @@ public class SubCategoryController {
     }
 
     @RequestMapping(value = "/bm/subCategories/findAll", method = RequestMethod.GET, produces = "application/json")
-    public SubCategoryListResponse getSubCategories(@RequestParam final TransactionType type, @RequestParam final Long userId) {
+    public SubCategoryListResponse getSubCategories(@NotNull @RequestParam final TransactionType type, @NotNull @RequestParam final Long userId) {
         List<SubCategory> subCategoryList = subCategoryService.getSubCategoryList(transformer.transform(type, userId));
         return SubCategoryListResponse.createSuccessfulSubCategoryResponse(subCategoryList);
     }
 
     @RequestMapping(value = "/bm/subCategories/create", method = RequestMethod.POST, produces = "application/json")
-    public SubCategoryResponse createSubCategory(@RequestBody final SubCategoryRequestContext context) {
+    public SubCategoryResponse createSubCategory(@Valid @RequestBody final SubCategoryRequestContext context) {
         SubCategory subCategory = subCategoryService.save(context.getSubCategory(), transformer.transform(context));
         return SubCategoryResponse.createSuccessfulSubCategoryResponse(subCategory, categoryHasBeenSaved);
     }
 
     @RequestMapping(value = "/bm/subCategories/update", method = RequestMethod.PUT, produces = "application/json")
-    public SubCategoryResponse updateSubCategory(@RequestBody final SubCategoryRequestContext context) {
+    public SubCategoryResponse updateSubCategory(@Valid @RequestBody final SubCategoryRequestContext context) {
         SubCategory subCategory = subCategoryService.update(context.getSubCategory(), transformer.transform(context));
         return SubCategoryResponse.createSuccessfulSubCategoryResponse(subCategory, categoryHasBeenUpdated);
     }

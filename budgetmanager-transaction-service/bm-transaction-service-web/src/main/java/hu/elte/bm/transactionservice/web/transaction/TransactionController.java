@@ -3,6 +3,9 @@ package hu.elte.bm.transactionservice.web.transaction;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,16 +44,16 @@ public class TransactionController {
 
     @RequestMapping(value = "/bm/transactions/findAll", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public TransactionListResponse getTransactions(
-        @RequestParam(value = "type") final TransactionType type,
-        @RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate start,
-        @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate end,
-        @RequestParam(value = "userId") final Long userId) {
+        @NotNull @RequestParam(value = "type") final TransactionType type,
+        @NotNull @RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate start,
+        @NotNull @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate end,
+        @NotNull @RequestParam(value = "userId") final Long userId) {
         List<Transaction> transactionList = transactionService.getTransactionList(start, end, transformer.transform(type, userId));
         return TransactionListResponse.createSuccessfulSubCategoryResponse(transactionList);
     }
 
     @RequestMapping(value = "/bm/transactions/create", method = RequestMethod.POST, produces = APPLICATION_JSON)
-    public TransactionResponse createTransaction(@RequestBody final TransactionRequestContext context) {
+    public TransactionResponse createTransaction(@Valid @RequestBody final TransactionRequestContext context) {
         TransactionContext transactionContext = transformer.transform(context);
         Transaction transaction = transactionService.save(context.getTransaction(), transactionContext);
         LocalDate firstPossibleDay = transactionService.getTheFirstDateOfTheNewPeriod(transactionContext);
@@ -58,7 +61,7 @@ public class TransactionController {
     }
 
     @RequestMapping(value = "/bm/transactions/update", method = RequestMethod.PUT, produces = APPLICATION_JSON)
-    public TransactionResponse updateTransaction(@RequestBody final TransactionRequestContext context) {
+    public TransactionResponse updateTransaction(@Valid @RequestBody final TransactionRequestContext context) {
         TransactionContext transactionContext = transformer.transform(context);
         Transaction transaction = transactionService.update(context.getTransaction(), transactionContext);
         LocalDate firstPossibleDay = transactionService.getTheFirstDateOfTheNewPeriod(transactionContext);
@@ -66,7 +69,7 @@ public class TransactionController {
     }
 
     @RequestMapping(value = "/bm/transactions/delete", method = RequestMethod.DELETE, produces = APPLICATION_JSON)
-    public TransactionResponse deleteTransaction(@RequestBody final TransactionRequestContext context) {
+    public TransactionResponse deleteTransaction(@Valid @RequestBody final TransactionRequestContext context) {
         TransactionContext transactionContext = transformer.transform(context);
         Transaction transaction = transactionService.delete(context.getTransaction(), transactionContext);
         LocalDate firstPossibleDay = transactionService.getTheFirstDateOfTheNewPeriod(transactionContext);

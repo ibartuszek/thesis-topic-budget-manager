@@ -3,15 +3,28 @@ package hu.elte.bm.transactionservice.domain.categories;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
 /**
  * MainCategory represents the main category of the transaction (income or outcome).
  */
+@JsonDeserialize(builder = MainCategory.Builder.class)
 public final class MainCategory {
 
+    private static final int MAXIMUM_NAME_LENGTH = 50;
+
     private final Long id;
+    @NotEmpty(message = "Name cannot be empty!")
+    @Length(max = MAXIMUM_NAME_LENGTH, message = "Name must be shorter than 50 characters!")
     private final String name;
+    @NotNull(message = "Type cannot be null!")
     private final TransactionType transactionType;
     private final Set<SubCategory> subCategorySet;
 

@@ -1,17 +1,7 @@
 package hu.elte.bm.transactionservice.app.test.transaction;
 
-import org.springframework.http.ResponseEntity;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import hu.elte.bm.commonpack.validator.ModelDateValue;
-import hu.elte.bm.commonpack.validator.ModelStringValue;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
-import hu.elte.bm.transactionservice.web.transaction.TransactionResponse;
-
 public class UpdateTransactionTest extends AbstractTransactionTest {
-
+/*
     @Test(dataProvider = "dataForTransactionModelValidationOfTitle")
     public void testUpdateWhenTransactionModelTitleValidationFails(final Transaction transaction,
         final String responseErrorMessage, final String fieldErrorMessage) {
@@ -236,5 +226,5 @@ public class UpdateTransactionTest extends AbstractTransactionTest {
         Assert.assertTrue(response.isSuccessful());
         Assert.assertEquals(response.getMessage(), "The transaction has been updated.");
     }
-
+*/
 }

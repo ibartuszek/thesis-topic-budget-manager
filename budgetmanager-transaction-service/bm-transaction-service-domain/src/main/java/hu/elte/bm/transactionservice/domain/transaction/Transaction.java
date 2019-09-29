@@ -3,22 +3,45 @@ package hu.elte.bm.transactionservice.domain.transaction;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 
+@JsonDeserialize(builder = Transaction.Builder.class)
 public final class Transaction {
 
+    private static final int MAXIMUM_TITLE_LENGTH = 50;
+    private static final int MAXIMUM_DESCRIPTION_LENGTH = 100;
+
     private final Long id;
+    @NotEmpty(message = "Title cannot be empty!")
+    @Length(max = MAXIMUM_TITLE_LENGTH, message = "Title must be shorter than 50 characters!")
     private final String title;
+    @Positive(message = "Amount must be positive!")
     private final double amount;
+    @NotNull(message = "Currency cannot be null!")
     private final Currency currency;
+    @NotNull(message = "Type cannot be null!")
     private final TransactionType transactionType;
+    @NotNull(message = "Main category cannot be null!")
+    @Valid
     private final MainCategory mainCategory;
+    @Valid
     private final SubCategory subCategory;
     private final boolean monthly;
+    @NotNull(message = "Date cannot be null!")
     private final LocalDate date;
     private final LocalDate endDate;
+    @Length(min = 1, max = MAXIMUM_DESCRIPTION_LENGTH, message = "Description must be shorter than 100 characters!")
     private final String description;
     private final boolean locked;
 

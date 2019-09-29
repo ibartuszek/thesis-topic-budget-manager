@@ -1,10 +1,13 @@
 package hu.elte.bm.transactionservice.web.subcategory;
 
+import javax.validation.Valid;
+
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.web.common.RequestContext;
 
 public class SubCategoryRequestContext extends RequestContext {
 
+    @Valid
     private SubCategory subCategory;
 
     public SubCategory getSubCategory() {

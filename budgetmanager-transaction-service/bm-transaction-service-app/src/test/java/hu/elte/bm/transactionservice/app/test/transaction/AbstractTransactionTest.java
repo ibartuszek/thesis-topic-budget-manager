@@ -2,19 +2,16 @@ package hu.elte.bm.transactionservice.app.test.transaction;
 
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
 
-import java.text.MessageFormat;
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 
-import hu.elte.bm.commonpack.validator.ModelAmountValue;
-import hu.elte.bm.commonpack.validator.ModelDateValue;
-import hu.elte.bm.commonpack.validator.ModelStringValue;
 import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTest;
 import hu.elte.bm.transactionservice.domain.Currency;
+import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
-import hu.elte.bm.transactionservice.web.transaction.TransactionController;
 import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
 
 public abstract class AbstractTransactionTest extends AbstractTransactionServiceApplicationTest {
@@ -55,265 +52,86 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     private static final String THE_ID_OF_SUB_CATEGORY_CANNOT_BE_NULL = "The Id of subCategory cannot be null!";
     private static final String EXISTING_SUB_CATEGORY_NAME_1 = "supplementary category 1";
     private static final String EXISTING_SUB_CATEGORY_NAME_2 = "supplementary category 2";
+    private static final boolean MONTHLY = true;
+    private static final boolean NOT_MONTHLY = false;
 
-    @Autowired
-    private TransactionController transactionController;
-
-    TransactionController getTransactionController() {
-        return transactionController;
-    }
-
-    @DataProvider
-    public Object[][] dataForTransactionModelValidationOfTitle() {
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction modelWithNullTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTitle(null).build();
-        Transaction modelWithNullValueTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().build()).build();
-        Transaction modelWithEmptyTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().withValue(EMPTY_STRING).build()).build();
-        Transaction modelWithTooLongTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().withValue(TOO_LONG_TITLE).build()).build();
-
-        return new Object[][] {
-            { modelWithNullTitle, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWithNullValueTitle, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWithEmptyTitle, THE_NEW_TRANSACTION_IS_INVALID, "Title cannot be empty!" },
-            { modelWithTooLongTitle, THE_NEW_TRANSACTION_IS_INVALID, "Title cannot be longer than 50!" },
-        };
-    }
-
-    @DataProvider
-    public Object[][] dataForTransactionModelValidationOfAmount() {
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-
-        Transaction modelWithNullAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withAmount(null).build();
-        Transaction modelWithNullValueAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withAmount(ModelAmountValue.builder().build()).build();
-        Transaction modelWithNotPositiveAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withAmount(ModelAmountValue.builder().withValue(ZERO).build()).build();
-
-        return new Object[][] {
-            { modelWithNullAmount, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWithNullValueAmount, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWithNotPositiveAmount, THE_NEW_TRANSACTION_IS_INVALID, "Amount must be positive number!" },
-        };
-    }
-
-    @DataProvider
-    public Object[][] dataForTransactionModelValidationOfCurrency() {
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction modelWithNullCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withCurrency(null).build();
-        Transaction modelWithNullValueCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withCurrency(ModelStringValue.builder().build()).build();
-        Transaction modelWithInvalidCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withCurrency(ModelStringValue.builder().withValue(INVALID_CURRENCY).build()).build();
-
-        return new Object[][] {
-            { modelWithNullCurrency, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWithNullValueCurrency, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWithInvalidCurrency, THE_NEW_TRANSACTION_IS_INVALID, "Currency must be one of them: [EUR, USD, HUF]!" },
-        };
-    }
-
-    @DataProvider
-    public Object[][] dataForTransactionModelValidationOfType() {
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction modelWitNullType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTransactionType(null).build();
-        Transaction modelWitNullValueType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTransactionType(ModelStringValue.builder().build()).build();
-        Transaction modelWitInvalidType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build()).build();
-
-        return new Object[][] {
-            { modelWitNullType, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWitNullValueType, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWitInvalidType, THE_NEW_TRANSACTION_IS_INVALID, "Type must be one of them: [INCOME, OUTCOME]!" },
-        };
-    }
-
-    @DataProvider
-    public Object[][] dataForTransactionModelValidationOfCategories() {
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-
-        MainCategoryModel mainCategoryModelWithNullId = createMainCategoryModel(null, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
-        mainCategoryModelWithNullId.getSubCategoryModelSet().add(createSubCategoryModel(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
-
-        MainCategoryModel mainCategoryModelWithInvalidSubCategory = createMainCategoryModel(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
-        SubCategoryModel subCategoryWithNullId = createSubCategoryModel(null, EXISTING_MAIN_CATEGORY_NAME_2, INCOME);
-        mainCategoryModelWithInvalidSubCategory.getSubCategoryModelSet().add(subCategoryWithNullId);
-
-        Transaction modelWitNullMainCategory = createTransactionBuilderWithDefaultValues(null).build();
-        Transaction modelWitNullMainCategoryId = createTransactionBuilderWithDefaultValues(mainCategoryModelWithNullId).build();
-        Transaction modelWitNullMainCategoryWithInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModelWithInvalidSubCategory)
-            .build();
-
-        Transaction modelWitInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withSubCategory(subCategoryWithNullId).build();
-
-        return new Object[][] {
-            { modelWitNullMainCategory, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWitNullMainCategoryId, "The Id of mainCategory cannot be null!", null },
-            { modelWitNullMainCategoryWithInvalidSubCategory, THE_ID_OF_SUB_CATEGORY_CANNOT_BE_NULL, null },
-
-            { modelWitInvalidSubCategory, THE_ID_OF_SUB_CATEGORY_CANNOT_BE_NULL, null },
-        };
-    }
-
-    @DataProvider
-    public Object[][] dataForTransactionModelValidationOfDates() {
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction modelWitNullDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDate(null).build();
-        Transaction modelWitNullValueDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDate(ModelDateValue.builder().build()).build();
-        Transaction modelWitDateBeforeTheDeadLine = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDate(ModelDateValue.builder().withValue(BEFORE_THE_DEADLINE_DATE).build()).build();
-
-        Transaction modelWitNullValueEndDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withEndDate(ModelDateValue.builder().build()).build();
-        Transaction modelWitEndDateBeforeDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withEndDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build()).build();
-
-        return new Object[][] {
-            { modelWitNullDate, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWitNullValueDate, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWitDateBeforeTheDeadLine, THE_NEW_TRANSACTION_IS_INVALID,
-                MessageFormat.format("Date cannot be before {0}!", FIRST_DATE_OF_THE_PERIOD) },
-
-            { modelWitNullValueEndDate, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWitEndDateBeforeDate, THE_NEW_TRANSACTION_IS_INVALID,
-                MessageFormat.format("End date cannot be before {0}!", EXPECTED_DATE.plusDays(1)) },
-        };
-    }
-
-    @DataProvider
-    public Object[][] dataForTransactionModelValidationOfDescription() {
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction modelWithNullValueDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDescription(ModelStringValue.builder().build()).build();
-        Transaction modelWithEmptyDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDescription(ModelStringValue.builder().withValue(EMPTY_STRING).build()).build();
-        Transaction modelWithTooLongDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDescription(ModelStringValue.builder().withValue(TOO_LONG_DESCRIPTION).build()).build();
-
-        return new Object[][] {
-            { modelWithNullValueDescription, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWithEmptyDescription, THE_NEW_TRANSACTION_IS_INVALID, "Description cannot be empty!" },
-            { modelWithTooLongDescription, THE_NEW_TRANSACTION_IS_INVALID, "Description cannot be longer than 100!" },
-        };
-    }
-    /*
     @DataProvider
     public Object[][] dataForTransactionModelValidation() {
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
+        MainCategory mainCategory = createDefaultMainCategory();
+        MainCategory mainCategoryWithNullId = createMainCategory(null, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
+        MainCategory mainCategoryWithInvalidSubCategory = createMainCategory(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
+        SubCategory subCategoryWithNullId = createSubCategory(null, EXISTING_MAIN_CATEGORY_NAME_2, INCOME);
+        mainCategoryWithInvalidSubCategory.getSubCategorySet().add(subCategoryWithNullId);
 
-        MainCategoryModel mainCategoryModelWithNullId = createMainCategoryModel(null, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
-        mainCategoryModelWithNullId.getSubCategoryModelSet().add(createSubCategoryModel(EXISTING_SUB_CATEGORY_ID_2, EXISTING_MAIN_CATEGORY_NAME_2, INCOME));
+        Transaction.Builder withNullTitle = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withTitle(null);
+        Transaction.Builder withEmptyTitle = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withTitle(EMPTY_STRING);
+        Transaction.Builder withTooLongTitle = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withTitle(TOO_LONG_TITLE);
 
-        MainCategoryModel mainCategoryModelWithInvalidSubCategory = createMainCategoryModel(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
-        SubCategoryModel subCategoryWithNullId = createSubCategoryModel(null, EXISTING_MAIN_CATEGORY_NAME_2, INCOME);
-        mainCategoryModelWithInvalidSubCategory.getSubCategoryModelSet().add(subCategoryWithNullId);
+        Transaction.Builder withNotPositiveAmount = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withAmount(ZERO);
 
-        Transaction modelWithNullTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTitle(null).build();
-        Transaction modelWithNullValueTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().build()).build();
-        Transaction modelWithEmptyTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().withValue(EMPTY_STRING).build()).build();
-        Transaction modelWithTooLongTitle = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().withValue(TOO_LONG_TITLE).build()).build();
+        Transaction.Builder withNullCurrency = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withCurrency(null);
 
-        Transaction modelWithNullAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withAmount(null).build();
-        Transaction modelWithNullValueAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withAmount(ModelAmountValue.builder().build()).build();
-        Transaction modelWithNotPositiveAmount = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withAmount(ModelAmountValue.builder().withValue(ZERO).build()).build();
+        Transaction.Builder witNullType = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withTransactionType(null);
 
-        Transaction modelWithNullCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withCurrency(null).build();
-        Transaction modelWithNullValueCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withCurrency(ModelStringValue.builder().build()).build();
-        Transaction modelWithInvalidCurrency = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withCurrency(ModelStringValue.builder().withValue(INVALID_CURRENCY).build()).build();
+        Transaction.Builder witNullMainCategory = createTransactionBuilderWithDefaultValues(null);
+        Transaction.Builder witNullMainCategoryId = createTransactionBuilderWithDefaultValues(mainCategoryWithNullId);
+        Transaction.Builder witNullMainCategoryWithInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryWithInvalidSubCategory);
 
-        Transaction modelWitNullType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTransactionType(null).build();
-        Transaction modelWitNullValueType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTransactionType(ModelStringValue.builder().build()).build();
-        Transaction modelWitInvalidType = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withTransactionType(ModelStringValue.builder().withValue(INVALID_TYPE).build()).build();
+        Transaction.Builder witInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withSubCategory(subCategoryWithNullId);
 
-        Transaction modelWitNullMainCategory = createTransactionBuilderWithDefaultValues(null).build();
-        Transaction modelWitNullMainCategoryId = createTransactionBuilderWithDefaultValues(mainCategoryModelWithNullId).build();
-        Transaction modelWitNullMainCategoryWithInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModelWithInvalidSubCategory)
-            .build();
+        Transaction.Builder witNullDate = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withDate(null);
+        Transaction.Builder witDateBeforeTheDeadLine = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withDate(BEFORE_THE_DEADLINE_DATE);
 
-        Transaction modelWitInvalidSubCategory = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withSubCategory(subCategoryWithNullId).build();
+        Transaction.Builder witEndDateBeforeDate = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withMonthly(MONTHLY)
+            .withEndDate(EXPECTED_DATE);
 
-        Transaction modelWitNullDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDate(null).build();
-        Transaction modelWitNullValueDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDate(ModelDateValue.builder().build()).build();
-        Transaction modelWitDateBeforeTheDeadLine = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDate(ModelDateValue.builder().withValue(BEFORE_THE_DEADLINE_DATE).build()).build();
+        Transaction.Builder witEndDateButNotMonthly = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withMonthly(NOT_MONTHLY)
+            .withEndDate(FIRST_DATE_OF_THE_PERIOD);
 
-        Transaction modelWitNullValueEndDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withEndDate(ModelDateValue.builder().build()).build();
-        Transaction modelWitEndDateBeforeDate = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withEndDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build()).build();
-
-        Transaction modelWithNullValueDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDescription(ModelStringValue.builder().build()).build();
-        Transaction modelWithEmptyDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDescription(ModelStringValue.builder().withValue(EMPTY_STRING).build()).build();
-        Transaction modelWithTooLongDescription = createTransactionBuilderWithDefaultValues(mainCategoryModel)
-            .withDescription(ModelStringValue.builder().withValue(TOO_LONG_DESCRIPTION).build()).build();
+        Transaction.Builder withEmptyDescription = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withDescription(EMPTY_STRING);
+        Transaction.Builder withTooLongDescription = createTransactionBuilderWithDefaultValues(mainCategory)
+            .withDescription(TOO_LONG_DESCRIPTION);
 
         return new Object[][] {
-            { modelWithNullTitle, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWithNullValueTitle, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWithEmptyTitle, THE_NEW_TRANSACTION_IS_INVALID, "Title cannot be empty!" },
-            { modelWithTooLongTitle, THE_NEW_TRANSACTION_IS_INVALID, "Title cannot be longer than 50!" },
+            { withNullTitle, "Title cannot be empty!" },
+            { withEmptyTitle, "Title cannot be empty!" },
+            { withTooLongTitle, "Title must be shorter than 50 characters!" },
 
-            { modelWithNullAmount, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWithNullValueAmount, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWithNotPositiveAmount, THE_NEW_TRANSACTION_IS_INVALID, "Amount must be positive number!" },
+            { withNotPositiveAmount, "Amount must be positive!" },
 
-            { modelWithNullCurrency, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWithNullValueCurrency, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWithInvalidCurrency, THE_NEW_TRANSACTION_IS_INVALID, "Currency must be one of them: [EUR, USD, HUF]!" },
+            { withNullCurrency, "Currency cannot be null!" },
 
-            { modelWitNullType, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWitNullValueType, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWitInvalidType, THE_NEW_TRANSACTION_IS_INVALID, "Type must be one of them: [INCOME, OUTCOME]!" },
+            { witNullType, "Type cannot be null!" },
 
-            { modelWitNullMainCategory, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWitNullMainCategoryId, "The Id of mainCategory cannot be null!", null },
-            { modelWitNullMainCategoryWithInvalidSubCategory, THE_ID_OF_SUB_CATEGORY_CANNOT_BE_NULL, null },
+            { witNullMainCategory, "Main category cannot be null!" },
+            { witNullMainCategoryId, "The Id of mainCategory cannot be null!" },
+            { witNullMainCategoryWithInvalidSubCategory, "The Id of subCategory cannot be null!" },
 
-            { modelWitInvalidSubCategory, THE_ID_OF_SUB_CATEGORY_CANNOT_BE_NULL, null },
+            { witInvalidSubCategory, "The Id of subCategory cannot be null!" },
 
-            { modelWitNullDate, THE_NEW_TRANSACTION_IS_INVALID, null },
-            { modelWitNullValueDate, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWitDateBeforeTheDeadLine, THE_NEW_TRANSACTION_IS_INVALID,
-                MessageFormat.format("Date cannot be before {0}!", FIRST_DATE_OF_THE_PERIOD) },
+            { witNullDate, "Date cannot be null!" },
+            { witDateBeforeTheDeadLine, "The date of transaction cannot be before the beginning of the period!" },
 
-            { modelWitNullValueEndDate, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWitEndDateBeforeDate, THE_NEW_TRANSACTION_IS_INVALID,
-                MessageFormat.format("End date cannot be before {0}!", EXPECTED_DATE.plusDays(1)) },
+            { witEndDateBeforeDate, "End of the periodical transaction cannot be before its start!" },
+            { witEndDateButNotMonthly, "Only periodical transactions have end date!" },
 
-            { modelWithNullValueDescription, VALIDATED_FIELD_VALUE_CANNOT_BE_NULL, null },
-            { modelWithEmptyDescription, THE_NEW_TRANSACTION_IS_INVALID, "Description cannot be empty!" },
-            { modelWithTooLongDescription, THE_NEW_TRANSACTION_IS_INVALID, "Description cannot be longer than 100!" },
+            { withEmptyDescription, "Description must be shorter than 100 characters!" },
+            { withTooLongDescription, "Description must be shorter than 100 characters!" }
+
         };
     }
-    */
 
     @DataProvider
     public Object[][] dataForContextValidation() {
@@ -338,33 +156,33 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
         return context;
     }
 
-    Transaction.Builder createTransactionBuilderWithDefaultValues(final MainCategoryModel mainCategoryModel) {
+    Transaction.Builder createTransactionBuilderWithDefaultValues(final MainCategory mainCategory) {
         return Transaction.builder()
             .withId(EXPECTED_ID)
-            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
-            .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())
-            .withAmount(ModelAmountValue.builder().withValue(EXPECTED_AMOUNT).build())
-            .withCurrency(ModelStringValue.builder().withValue(EXPECTED_CURRENCY.name()).build())
-            .withDate(ModelDateValue.builder().withValue(EXPECTED_DATE).build())
-            .withMainCategory(mainCategoryModel);
+            .withTitle(EXPECTED_TITLE)
+            .withTransactionType(INCOME)
+            .withAmount(EXPECTED_AMOUNT)
+            .withCurrency(EXPECTED_CURRENCY)
+            .withDate(EXPECTED_DATE)
+            .withMainCategory(mainCategory);
     }
 
-    Transaction.Builder createTransactionBuilderWithValuesForUpdate(final MainCategoryModel mainCategoryModel) {
+    Transaction.Builder createTransactionBuilderWithValuesForUpdate(final MainCategory mainCategory) {
         return Transaction.builder()
             .withId(RESERVED_ID)
-            .withTitle(ModelStringValue.builder().withValue(RESERVED_TITLE).build())
-            .withTransactionType(ModelStringValue.builder().withValue(INCOME.name()).build())
-            .withAmount(ModelAmountValue.builder().withValue(RESERVED_AMOUNT).build())
-            .withCurrency(ModelStringValue.builder().withValue(EXPECTED_CURRENCY.name()).build())
-            .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
-            .withMainCategory(mainCategoryModel);
+            .withTitle(RESERVED_TITLE)
+            .withTransactionType(INCOME)
+            .withAmount(RESERVED_AMOUNT)
+            .withCurrency(EXPECTED_CURRENCY)
+            .withDate(RESERVED_DATE)
+            .withMainCategory(mainCategory);
     }
 
-    MainCategoryModel createDefaultMainCategory() {
-        MainCategoryModel mainCategoryModel = createMainCategoryModel(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
-        mainCategoryModel.getSubCategoryModelSet().add(createSubCategoryModel(EXISTING_SUB_CATEGORY_ID_1, EXISTING_SUB_CATEGORY_NAME_1, INCOME));
-        mainCategoryModel.getSubCategoryModelSet().add(createSubCategoryModel(EXISTING_SUB_CATEGORY_ID_2, EXISTING_SUB_CATEGORY_NAME_2, INCOME));
-        return mainCategoryModel;
+    MainCategory createDefaultMainCategory() {
+        MainCategory mainCategory = createMainCategory(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
+        mainCategory.getSubCategorySet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_1, EXISTING_SUB_CATEGORY_NAME_1, INCOME));
+        mainCategory.getSubCategorySet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_SUB_CATEGORY_NAME_2, INCOME));
+        return mainCategory;
     }
 
 }
