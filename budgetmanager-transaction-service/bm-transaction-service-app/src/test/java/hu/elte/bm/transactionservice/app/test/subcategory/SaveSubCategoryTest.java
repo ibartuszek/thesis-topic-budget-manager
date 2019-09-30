@@ -116,7 +116,7 @@ public class SaveSubCategoryTest extends AbstractSubCategoryTest {
 
         // THEN
         result.andExpect(MockMvcResultMatchers.status().isConflict())
-            .andExpect(MockMvcResultMatchers.content().string("The category has been saved before."));
+            .andExpect(MockMvcResultMatchers.content().string("The category has been saved before!"));
     }
 
 }

@@ -1,193 +1,127 @@
 package hu.elte.bm.transactionservice.app.test.transaction;
 
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
+
+import org.hamcrest.Matchers;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testng.annotations.Test;
+
+import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
+
 public class DeleteTransactionTest extends AbstractTransactionTest {
-/*
-    @Test(dataProvider = "dataForTransactionModelValidationOfTitle")
-    public void testDeleteWhenTransactionModelTitleValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
 
-        if (responseModel.getTitle() != null && responseModel.getTitle().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getTitle().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfAmount")
-    public void testDeleteWhenTransactionModelAmountValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getAmount() != null && responseModel.getAmount().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getAmount().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfCurrency")
-    public void testDeleteWhenTransactionModelCurrencyValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getCurrency() != null && responseModel.getCurrency().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getCurrency().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfType")
-    public void testDeleteWhenTransactionModelTypeValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getTransactionType() != null && responseModel.getTransactionType().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getTransactionType().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfDates")
-    public void testDeleteWhenTransactionModelDateValidationsFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getDate() != null && responseModel.getDate().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getDate().getErrorMessage(), fieldErrorMessage);
-        }
-
-        if (responseModel.getEndDate() != null && responseModel.getEndDate().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getEndDate().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfDescription")
-    public void testDeleteWhenTransactionModelDescriptionValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getDescription() != null && responseModel.getDescription().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getDescription().getErrorMessage(), fieldErrorMessage);
-        }
-    }
+    private static final String URL = "/bm/transactions/delete";
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testDeleteCategoryWhenContextValidationFails(final TransactionRequestContext context, final String errorMessage) {
+    public void testDeleteCategoryWhenContextValidationFails(final TransactionRequestContext context, final String errorMessage) throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToDelete = createTransactionBuilderWithDefaultValues(mainCategoryModel).build();
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToDelete = createTransactionBuilderWithDefaultValues(mainCategory).build();
         context.setTransaction(transactionToDelete);
+
         // WHEN
-        ResponseEntity result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.delete(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), errorMessage);
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string(errorMessage));
     }
 
     @Test
-    public void testDeleteWhenTransactionDoesNotHaveId() {
+    public void testDeleteWhenTransactionIsNull() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).withId(null).build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
+        TransactionRequestContext context = createContext(INCOME, null);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.delete(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), THE_NEW_TRANSACTION_IS_INVALID);
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Transaction cannot be null!"));
     }
 
     @Test
-    public void testDeleteWhenTransactionCannotBeFound() {
+    public void testDeleteWhenTransactionDoesNotHaveId() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategory).withId(null).build();
+        TransactionRequestContext context = createContext(INCOME, transactionToDelete);
+
+        // WHEN
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.delete(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
+        // THEN
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Transaction id cannot be null!"));
+    }
+
+    @Test
+    public void testDeleteWhenTransactionCannotBeFound() throws Exception {
+        // GIVEN
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategory)
             .withId(INVALID_ID)
-            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
+            .withTitle(EXPECTED_TITLE)
             .build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
+        TransactionRequestContext context = createContext(INCOME, transactionToDelete);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.delete(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_IN_THE_REPOSITORY);
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Original transaction cannot be found in the repository!"));
     }
 
     @Test
-    public void testDeleteWhenTransactionIsLocked() {
+    public void testDeleteWhenTransactionIsLocked() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategory)
             .withId(LOCKED_ID)
-            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
+            .withTitle(EXPECTED_TITLE)
             .build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
+        TransactionRequestContext context = createContext(INCOME, transactionToDelete);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.delete(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), "Transaction is locked, cannot be deleted!");
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Transaction is locked, cannot be deleted!"));
     }
 
     @Test
-    public void testDelete() {
+    public void testDelete() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToDelete);
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToDelete = createTransactionBuilderWithValuesForUpdate(mainCategory).build();
+        TransactionRequestContext context = createContext(INCOME, transactionToDelete);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().deleteTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.delete(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), "The transaction has been deleted.");
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is("The transaction has been deleted.")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.id", Matchers.is(RESERVED_ID.intValue())));
     }
-*/
+
 }

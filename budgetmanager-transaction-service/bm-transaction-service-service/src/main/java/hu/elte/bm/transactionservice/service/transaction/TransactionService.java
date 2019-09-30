@@ -160,7 +160,7 @@ public class TransactionService {
 
     private void validateTransactionIsNotLocked(final Transaction originalTransaction, final String lockedMessage) {
         if (originalTransaction.isLocked()) {
-            throw new IllegalArgumentException(transactionIsLockedExceptionForUpdate);
+            throw new IllegalArgumentException(lockedMessage);
         }
     }
 

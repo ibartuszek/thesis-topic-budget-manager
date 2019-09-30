@@ -23,33 +23,27 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     static final String EXPECTED_TITLE = "title";
     static final String RESERVED_TITLE = "income 1";
     static final String RESERVED_TITLE_2 = "income 2";
+    static final Double EXPECTED_AMOUNT = 100.0d;
+    static final Currency EXPECTED_CURRENCY = Currency.EUR;
+    static final LocalDate EXPECTED_DATE = LocalDate.now();
     static final LocalDate RESERVED_DATE = LocalDate.now().minusDays(5L);
     static final LocalDate EXPECTED_END_DATE = LocalDate.now().plusDays(1L);
     static final String EXPECTED_DESCRIPTION = "description";
-    static final long EXISTING_MAIN_CATEGORY_ID_2 = 2L;
+    static final Long EXISTING_MAIN_CATEGORY_ID_2 = 2L;
     static final String EXISTING_MAIN_CATEGORY_NAME_2 = "main category 2";
-    static final String THE_NEW_TRANSACTION_IS_INVALID = "The new transaction is invalid.";
     static final String THE_TRANSACTION_HAS_BEEN_SAVED = "The transaction has been saved.";
-    static final String ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_IN_THE_REPOSITORY = "Original transaction cannot be found in the repository!";
+    static final Long EXISTING_MAIN_CATEGORY_ID_1 = 1L;
 
     private static final String EMPTY_STRING = "";
     private static final String TOO_LONG_TITLE = "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb1";
     private static final double ZERO = 0.0d;
-    private static final double EXPECTED_AMOUNT = 100.0d;
     private static final double RESERVED_AMOUNT = 1000.0d;
-    private static final String INVALID_CURRENCY = "EURO";
-    private static final Currency EXPECTED_CURRENCY = Currency.EUR;
-    private static final String INVALID_TYPE = "INCOME1";
-    private static final LocalDate EXPECTED_DATE = LocalDate.now();
     private static final LocalDate BEFORE_THE_DEADLINE_DATE = LocalDate.now().minusDays(15L);
     private static final LocalDate FIRST_DATE_OF_THE_PERIOD = LocalDate.now().minusDays(9L);
     private static final String TOO_LONG_DESCRIPTION = "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb1";
-    private static final long EXISTING_MAIN_CATEGORY_ID_1 = 1L;
     private static final String EXISTING_MAIN_CATEGORY_NAME_1 = "main category 1";
     private static final long EXISTING_SUB_CATEGORY_ID_1 = 1L;
     private static final long EXISTING_SUB_CATEGORY_ID_2 = 2L;
-    private static final String VALIDATED_FIELD_VALUE_CANNOT_BE_NULL = "Validated field value cannot be null!";
-    private static final String THE_ID_OF_SUB_CATEGORY_CANNOT_BE_NULL = "The Id of subCategory cannot be null!";
     private static final String EXISTING_SUB_CATEGORY_NAME_1 = "supplementary category 1";
     private static final String EXISTING_SUB_CATEGORY_NAME_2 = "supplementary category 2";
     private static final boolean MONTHLY = true;
@@ -108,25 +102,17 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
             { withNullTitle, "Title cannot be empty!" },
             { withEmptyTitle, "Title cannot be empty!" },
             { withTooLongTitle, "Title must be shorter than 50 characters!" },
-
             { withNotPositiveAmount, "Amount must be positive!" },
-
             { withNullCurrency, "Currency cannot be null!" },
-
             { witNullType, "Type cannot be null!" },
-
             { witNullMainCategory, "Main category cannot be null!" },
             { witNullMainCategoryId, "The Id of mainCategory cannot be null!" },
             { witNullMainCategoryWithInvalidSubCategory, "The Id of subCategory cannot be null!" },
-
             { witInvalidSubCategory, "The Id of subCategory cannot be null!" },
-
             { witNullDate, "Date cannot be null!" },
             { witDateBeforeTheDeadLine, "The date of transaction cannot be before the beginning of the period!" },
-
             { witEndDateBeforeDate, "End of the periodical transaction cannot be before its start!" },
             { witEndDateButNotMonthly, "Only periodical transactions have end date!" },
-
             { withEmptyDescription, "Description must be shorter than 100 characters!" },
             { withTooLongDescription, "Description must be shorter than 100 characters!" }
 

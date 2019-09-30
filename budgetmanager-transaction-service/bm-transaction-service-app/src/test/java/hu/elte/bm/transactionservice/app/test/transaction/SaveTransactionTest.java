@@ -2,6 +2,7 @@ package hu.elte.bm.transactionservice.app.test.transaction;
 
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
 
+import org.hamcrest.Matchers;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -55,6 +56,21 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     }
 
     @Test
+    public void testDeleteWhenTransactionIsNull() throws Exception {
+        // GIVEN
+        TransactionRequestContext context = createContext(INCOME, null);
+
+        // WHEN
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
+        // THEN
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Transaction cannot be null!"));
+    }
+
+    @Test
     public void testSaveWhenIdIsNotNull() throws Exception {
         // GIVEN
         MainCategory mainCategory = createDefaultMainCategory();
@@ -89,9 +105,15 @@ public class SaveTransactionTest extends AbstractTransactionTest {
             .content(createRequestBody(context)));
 
         // THEN
-        // TODO:
         result.andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.content().string(""));
+            .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(THE_TRANSACTION_HAS_BEEN_SAVED)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.id", Matchers.is(EXPECTED_ID.intValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.title", Matchers.is(EXPECTED_TITLE)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.amount", Matchers.is(EXPECTED_AMOUNT)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.currency", Matchers.is(EXPECTED_CURRENCY.name())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.transactionType", Matchers.is(INCOME.name())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.mainCategory.id", Matchers.is(EXISTING_MAIN_CATEGORY_ID_2.intValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.date", Matchers.is(RESERVED_DATE.toString())));
     }
 
     @Test
@@ -111,13 +133,15 @@ public class SaveTransactionTest extends AbstractTransactionTest {
             .content(createRequestBody(context)));
 
         // THEN
-        // TODO:
         result.andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.content().string(""));
-
-        //        Assert.assertTrue(response.isSuccessful());
-        //        Assert.assertEquals(response.getMessage(), THE_TRANSACTION_HAS_BEEN_SAVED);
-        //        Assert.assertEquals(response.getTransaction().getId(), EXPECTED_ID);
+            .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(THE_TRANSACTION_HAS_BEEN_SAVED)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.id", Matchers.is(EXPECTED_ID.intValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.title", Matchers.is(RESERVED_TITLE)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.amount", Matchers.is(EXPECTED_AMOUNT)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.currency", Matchers.is(EXPECTED_CURRENCY.name())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.transactionType", Matchers.is(INCOME.name())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.mainCategory.id", Matchers.is(EXISTING_MAIN_CATEGORY_ID_2.intValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.date", Matchers.is(RESERVED_DATE.toString())));
     }
 
     @Test
@@ -137,11 +161,8 @@ public class SaveTransactionTest extends AbstractTransactionTest {
             .content(createRequestBody(context)));
 
         // THEN
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andExpect(MockMvcResultMatchers.content().string(""));
-
-        //        Assert.assertFalse(response.isSuccessful());
-        //        Assert.assertEquals(response.getMessage(), "The transaction has been saved before.");
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
+            .andExpect(MockMvcResultMatchers.content().string("The transaction has been saved before!"));
     }
 
     @Test
@@ -164,12 +185,19 @@ public class SaveTransactionTest extends AbstractTransactionTest {
             .content(createRequestBody(context)));
 
         // THEN
-        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andExpect(MockMvcResultMatchers.content().string("End of the periodical transaction cannot be before its start!"));
-
-        //        Assert.assertTrue(response.isSuccessful());
-        //        Assert.assertEquals(response.getMessage(), THE_TRANSACTION_HAS_BEEN_SAVED);
-        //        Assert.assertEquals(response.getTransaction().getId(), EXPECTED_ID);
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(THE_TRANSACTION_HAS_BEEN_SAVED)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.id", Matchers.is(EXPECTED_ID.intValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.title", Matchers.is(EXPECTED_TITLE)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.amount", Matchers.is(EXPECTED_AMOUNT)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.currency", Matchers.is(EXPECTED_CURRENCY.name())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.transactionType", Matchers.is(INCOME.name())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.mainCategory.id", Matchers.is(EXISTING_MAIN_CATEGORY_ID_1.intValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.date", Matchers.is(EXPECTED_DATE.toString())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.monthly", Matchers.is(true)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.endDate", Matchers.is(EXPECTED_END_DATE.toString())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.description", Matchers.is(EXPECTED_DESCRIPTION)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.locked", Matchers.is(true)));
     }
 
 }

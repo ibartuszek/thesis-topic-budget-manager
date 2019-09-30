@@ -40,7 +40,7 @@ public class TransactionDateValidatorTest {
     private static final LocalDate START = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
     private static final LocalDate END = LocalDate.now();
     private static final LocalDate TRANSACTION_DATE = START.plusDays(10);
-    private static final LocalDate TRANSACTION_END_DATE = TRANSACTION_DATE.minusDays(5);
+    private static final LocalDate TRANSACTION_END_DATE = TRANSACTION_DATE.plusDays(15);
     private static final boolean NOT_MONTHLY = false;
     private static final boolean MONTHLY = true;
 
@@ -158,7 +158,7 @@ public class TransactionDateValidatorTest {
     public void testValidateWhenTransactionEndDateAfterItsDate() {
         // GIVEN
         TransactionContext context = createTransactionContext();
-        LocalDate transactionEndDate = TRANSACTION_DATE.plusDays(1);
+        LocalDate transactionEndDate = TRANSACTION_DATE.minusDays(1);
         Transaction transaction = createExampleTransactionBuilder()
             .withDate(TRANSACTION_DATE)
             .withEndDate(transactionEndDate)

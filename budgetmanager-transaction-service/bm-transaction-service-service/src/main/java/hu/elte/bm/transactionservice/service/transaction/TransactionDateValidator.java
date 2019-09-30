@@ -49,7 +49,7 @@ public class TransactionDateValidator {
         } else if (transaction.getEndDate() != null) {
             if (!transaction.isMonthly()) {
                 throw new IllegalArgumentException(notMonthlyTransaction);
-            } else if (!transaction.getEndDate().isBefore(transaction.getDate())) {
+            } else if (transaction.getDate().isAfter(transaction.getEndDate()) || transaction.getDate().equals(transaction.getEndDate())) {
                 throw new IllegalArgumentException(endDateBeforeStart);
             }
         }

@@ -1,230 +1,192 @@
 package hu.elte.bm.transactionservice.app.test.transaction;
 
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.OUTCOME;
+
+import org.hamcrest.Matchers;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testng.annotations.Test;
+
+import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
+
 public class UpdateTransactionTest extends AbstractTransactionTest {
-/*
-    @Test(dataProvider = "dataForTransactionModelValidationOfTitle")
-    public void testUpdateWhenTransactionModelTitleValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
+
+    private static final String URL = "/bm/transactions/update";
+
+    @Test(dataProvider = "dataForTransactionModelValidation")
+    public void testUpdateWhenTransactionValidationFails(final Transaction.Builder builder, final String errorMessage) throws Exception {
         // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
+        Transaction transaction = builder
+                .withId(EXPECTED_ID)
+                .build();
+        TransactionRequestContext context = createContext(INCOME, transaction);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getTitle() != null && responseModel.getTitle().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getTitle().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfAmount")
-    public void testUpdateWhenTransactionModelAmountValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getAmount() != null && responseModel.getAmount().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getAmount().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfCurrency")
-    public void testUpdateWhenTransactionModelCurrencyValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getCurrency() != null && responseModel.getCurrency().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getCurrency().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfType")
-    public void testUpdateWhenTransactionModelTypeValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getTransactionType() != null && responseModel.getTransactionType().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getTransactionType().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfDates")
-    public void testUpdateWhenTransactionModelDateValidationsFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getDate() != null && responseModel.getDate().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getDate().getErrorMessage(), fieldErrorMessage);
-        }
-
-        if (responseModel.getEndDate() != null && responseModel.getEndDate().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getEndDate().getErrorMessage(), fieldErrorMessage);
-        }
-    }
-
-    @Test(dataProvider = "dataForTransactionModelValidationOfDescription")
-    public void testUpdateWhenTransactionModelDescriptionValidationFails(final Transaction transaction,
-        final String responseErrorMessage, final String fieldErrorMessage) {
-        // GIVEN
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transaction);
-        // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
-        Transaction responseModel = response.getTransaction();
-        // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), responseErrorMessage);
-
-        if (responseModel.getDescription() != null && responseModel.getDescription().getErrorMessage() != null) {
-            Assert.assertEquals(responseModel.getDescription().getErrorMessage(), fieldErrorMessage);
-        }
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string(errorMessage));
     }
 
     @Test(dataProvider = "dataForContextValidation")
-    public void testUpdateCategoryWhenContextValidationFails(final TransactionRequestContext context, final String errorMessage) {
+    public void testUpdateCategoryWhenContextValidationFails(final TransactionRequestContext context, final String errorMessage) throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToUpdate = createTransactionBuilderWithDefaultValues(mainCategoryModel).build();
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToUpdate = createTransactionBuilderWithDefaultValues(mainCategory).build();
         context.setTransaction(transactionToUpdate);
+
         // WHEN
-        ResponseEntity result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), errorMessage);
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string(errorMessage));
     }
 
     @Test
-    public void testUpdateWhenTransactionDoesNotHaveId() {
+    public void testDeleteWhenTransactionIsNull() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel).withId(null).build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(INCOME, null);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), THE_NEW_TRANSACTION_IS_INVALID);
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Transaction cannot be null!"));
     }
 
     @Test
-    public void testUpdateWhenTransactionCannotBeFound() {
+    public void testUpdateWhenTransactionDoesNotHaveId() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategory)
+                .withId(null)
+                .build();
+        TransactionRequestContext context = createContext(INCOME, transactionToUpdate);
+
+        // WHEN
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
+        // THEN
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Transaction id cannot be null!"));
+    }
+
+    @Test
+    public void testUpdateWhenTransactionCannotBeFound() throws Exception {
+        // GIVEN
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategory)
             .withId(INVALID_ID)
-            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
+            .withTitle(EXPECTED_TITLE)
             .build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(INCOME, transactionToUpdate);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), ORIGINAL_TRANSACTION_CANNOT_BE_FOUND_IN_THE_REPOSITORY);
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Original transaction cannot be found in the repository!"));
     }
 
     @Test
-    public void testUpdateWhenTransactionIsLocked() {
+    public void testUpdateWhenTransactionIsLocked() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategory)
             .withId(LOCKED_ID)
-            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
+            .withTitle(EXPECTED_TITLE)
             .build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(INCOME, transactionToUpdate);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), "Transaction is locked, cannot be changed!");
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Transaction is locked, cannot be changed!"));
     }
 
     @Test
-    public void testUpdateWhenTransactionTypeChanged() {
+    public void testUpdateWhenTransactionTypeChanged() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
-        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
-            .withTransactionType(ModelStringValue.builder().withValue(TransactionType.OUTCOME.name()).build())
+        MainCategory mainCategory = createDefaultMainCategory();
+        Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategory)
+            .withTitle(EXPECTED_TITLE)
+            .withTransactionType(OUTCOME)
             .build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(INCOME, transactionToUpdate);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), "Transaction type cannot be changed!");
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Transaction type cannot be changed!"));
     }
 
     @Test
-    public void testUpdateWhenThereIsOneTransactionWithSameDateAndNameAndMainCategoryAndSubCategory() {
+    public void testUpdateWhenThereIsOneTransactionWithSameDateAndNameAndMainCategoryAndSubCategory() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
+        MainCategory mainCategoryModel = createDefaultMainCategory();
         Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().withValue(RESERVED_TITLE_2).build())
-            .withSubCategory(mainCategoryModel.getSubCategoryModelSet().iterator().next())
-            .withDate(ModelDateValue.builder().withValue(RESERVED_DATE).build())
+            .withTitle(RESERVED_TITLE_2)
+            .withSubCategory(mainCategoryModel.getSubCategorySet().iterator().next())
+            .withDate(RESERVED_DATE)
             .build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(INCOME, transactionToUpdate);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertFalse(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), "You cannot update this transaction, because it exists.");
+        result.andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().string("The transaction has been saved before!"));
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws Exception {
         // GIVEN
-        MainCategoryModel mainCategoryModel = createDefaultMainCategory();
+        MainCategory mainCategoryModel = createDefaultMainCategory();
         Transaction transactionToUpdate = createTransactionBuilderWithValuesForUpdate(mainCategoryModel)
-            .withTitle(ModelStringValue.builder().withValue(EXPECTED_TITLE).build())
+            .withTitle(EXPECTED_TITLE)
             .build();
-        TransactionRequestContext context = createContext(TransactionType.INCOME, transactionToUpdate);
+        TransactionRequestContext context = createContext(INCOME, transactionToUpdate);
+
         // WHEN
-        ResponseEntity<Object> result = getTransactionController().updateTransaction(context);
-        TransactionResponse response = (TransactionResponse) result.getBody();
+        ResultActions result = getMvc().perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRequestBody(context)));
+
         // THEN
-        Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(response.getMessage(), "The transaction has been updated.");
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is("The transaction has been updated.")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.id", Matchers.is(RESERVED_ID.intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.title", Matchers.is(EXPECTED_TITLE)));
     }
-*/
+
 }
