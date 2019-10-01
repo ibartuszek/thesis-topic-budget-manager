@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories("hu.elte.bm.transactionservice.dal")
 @EntityScan("hu.elte.bm.transactionservice.dal")
-@PropertySource("classpath:database-mysql.properties")
+@PropertySource("classpath:database-${application.database.type}.properties")
 public class DatabaseConfiguration {
 }
