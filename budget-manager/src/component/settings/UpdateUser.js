@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import ModelStringValue from "../layout/form/ModelStringValue";
-import {updateUser} from "../../actions/user/updateUser";
-import {validateModel} from "../../actions/validation/validateModel";
-import {createContext} from "../../actions/common/createContext";
-import {userFormMessages} from "../../store/MessageHolder";
-import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import AlertMessageComponent from "../AlertMessageComponent";
-import {createUserEmptyUser} from "../../actions/user/createUser";
+import ModelStringValue from "../layout/form/ModelStringValue";
+import {createContext} from "../../actions/common/createContext";
+import {createEmptyUser} from "../../actions/user/createUserMethods";
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
+import {updateUser} from "../../actions/user/updateUser";
+import {userFormMessages} from "../../store/MessageHolder";
+import {validateModel} from "../../actions/validation/validateModel";
 
 class UpdateUser extends Component {
 
   state = {
-    userModel: createUserEmptyUser()
+    userModel: createEmptyUser()
   };
 
   constructor(props) {

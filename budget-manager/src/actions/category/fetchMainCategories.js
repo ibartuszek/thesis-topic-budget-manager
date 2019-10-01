@@ -1,4 +1,5 @@
 import {createHeaderWithJwt} from "../common/createHeader";
+import {transformMainCategoryListFromResponse} from "./createMainCategoryMethods";
 
 export function fetchMainCategories(context, type) {
   const {userId, jwtToken, messages} = context;
@@ -16,9 +17,10 @@ export function fetchMainCategories(context, type) {
         throw Error(response.statusText);
       }
       return response.json();
-    }).then((mainCategories) => {
+    }).then((response) => {
+      let mainCategoryList = response['mainCategoryList'];
       console.log(successCase);
-      dispatch({type: successCase, mainCategories: mainCategories});
+      dispatch({type: successCase, mainCategories: transformMainCategoryListFromResponse(mainCategoryList)});
     }).catch(err => {
       console.log(errorCase);
       console.log(err);

@@ -1,4 +1,5 @@
 import {createHeaderWithJwt} from "../common/createHeader";
+import {transformSubCategoryListFromResponse} from "./createSubCategoryMethods";
 
 export function fetchSubCategories(context, type) {
   const {userId, jwtToken, messages} = context;
@@ -16,9 +17,10 @@ export function fetchSubCategories(context, type) {
         throw Error(response.statusText);
       }
       return response.json();
-    }).then((subCategories) => {
+    }).then((response) => {
+      let subCategoryList = response['subCategoryList'];
       console.log(successCase);
-      dispatch({type: successCase, subCategories: subCategories});
+      dispatch({type: successCase, subCategories: transformSubCategoryListFromResponse(subCategoryList)});
     }).catch(err => {
       console.log(errorCase);
       console.log(err);

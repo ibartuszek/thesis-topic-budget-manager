@@ -17,7 +17,7 @@ const lastNameMaximumLength = 50;
 const lastNameRegexp = null;
 const lastNamePossibleEnumValues = null;
 
-export function createUserEmptyUser() {
+export function createEmptyUser() {
   return {
     userId: null,
     email: {
@@ -63,8 +63,8 @@ export function createUserEmptyUser() {
   };
 }
 
-export function createUserFromResponse(responseModel) {
-  let user = createUserEmptyUser();
+export function transformUserFromResponse(responseModel) {
+  let user = createEmptyUser();
   user.userId = responseModel['id'];
   user.email.value = responseModel['email'];
   user.firstName.value = responseModel['firstName'];
@@ -72,7 +72,7 @@ export function createUserFromResponse(responseModel) {
   return user;
 }
 
-export function createUserToRequest(userModel) {
+export function transformUserToRequest(userModel) {
   let password;
   if (userModel.password.value === '') {
     password = "********";

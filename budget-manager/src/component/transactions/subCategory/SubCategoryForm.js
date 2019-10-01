@@ -1,27 +1,12 @@
 import React, {Component} from 'react';
 import ModelStringValue from "../../layout/form/ModelStringValue";
 import {categoryMessages} from "../../../store/MessageHolder";
+import {createEmptySubCategory} from "../../../actions/category/createSubCategoryMethods";
 
 class SubCategoryForm extends Component {
 
   state = {
-    subCategoryModel: {
-      id: null,
-      name: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 2,
-        maximumLength: 50,
-      },
-      transactionType: {
-        value: null,
-        errorMessage: null,
-        possibleEnumValues: [
-          "INCOME",
-          "OUTCOME"
-        ]
-      }
-    }
+    subCategoryModel: createEmptySubCategory()
   };
 
   constructor(props) {

@@ -1,5 +1,5 @@
 import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
-import {createCopyTransactionModel} from "./transformTransactionModel";
+import {transformTransactionFromResponse, transformTransactionToRequest} from "./createTransactionMethods";
 
 export function deleteTransaction(context, transactionModel) {
   const {userId, jwtToken, messages, transactionType} = context;
@@ -17,10 +17,13 @@ export function deleteTransaction(context, transactionModel) {
         return response.json();
       }
     ).then((response) => {
-      let transactionModel = response['transactionModel'];
+      let transaction = response['transaction'];
       console.log('DELETE_' + transactionType + '_SUCCESS');
       console.log(response);
-      dispatch({type: 'DELETE_' + transactionType + '_SUCCESS', transactionModel: transactionModel, messages: messages});
+      dispatch({
+        type: 'DELETE_' + transactionType + '_SUCCESS',
+        transactionModel: transformTransactionFromResponse(transaction), messages: messages
+      });
     }).catch(err => {
       console.log('DELETE_' + transactionType + '_ERROR');
       console.log(err);
@@ -32,7 +35,7 @@ export function deleteTransaction(context, transactionModel) {
 function createBody(transactionModel, userId, transactionType) {
   let body = {};
   body.userId = userId;
-  body.transactionModel = createCopyTransactionModel(transactionModel, transactionModel.id);
+  body.transaction = transformTransactionToRequest(transactionModel);
   body.transactionType = transactionType;
   return body;
 }

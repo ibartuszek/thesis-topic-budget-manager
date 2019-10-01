@@ -5,11 +5,10 @@ import MainCategoryForm from "./MainCategoryForm";
 import {categoryMessages} from "../../../store/MessageHolder";
 import {createTransactionContext} from "../../../actions/common/createContext";
 import {getMessage, removeMessage} from "../../../actions/message/messageActions";
-import {validateModel} from "../../../actions/validation/validateModel";
 import {updateMainCategory} from "../../../actions/category/updateMainCategory";
+import {validateModel} from "../../../actions/validation/validateModel";
 
 class MainCategoryEditPopUp extends Component {
-
 
   constructor(props) {
     super(props);

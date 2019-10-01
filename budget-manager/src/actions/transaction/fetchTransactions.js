@@ -1,4 +1,5 @@
 import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
+import {transformTransactionListFromResponse} from "./createTransactionMethods";
 
 export function fetchTransactions(context) {
   const {endDate, jwtToken, messages, startDate, transactionType, userId} = context;
@@ -20,9 +21,10 @@ export function fetchTransactions(context) {
         throw Error(response.statusText);
       }
       return response.json();
-    }).then((transactions) => {
+    }).then((response) => {
       console.log(successCase);
-      dispatch({type: successCase, transactions: transactions});
+      let transactionList = response['transactionList'];
+      dispatch({type: successCase, transactions: transformTransactionListFromResponse(transactionList)});
     }).catch(err => {
       console.log(errorCase);
       console.log(err);

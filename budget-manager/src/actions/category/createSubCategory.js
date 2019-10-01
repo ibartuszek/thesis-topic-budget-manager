@@ -1,4 +1,5 @@
 import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
+import {transformSubCategoryFromResponse, transformSubCategoryToRequest} from "./createSubCategoryMethods";
 
 export function createSubCategory(context, subCategoryModel) {
   const {userId, jwtToken, messages, transactionType} = context;
@@ -17,10 +18,13 @@ export function createSubCategory(context, subCategoryModel) {
         return response.json();
       }
     ).then((response) => {
-      let subCategoryModel = response['subCategoryModel'];
+      let subCategory = response['subCategory'];
       console.log('CREATE_' + transactionType + '_SUB_CATEGORY_SUCCESS');
       console.log(response);
-      dispatch({type: 'CREATE_' + transactionType + '_SUB_CATEGORY_SUCCESS', subCategoryModel: subCategoryModel, messages: messages});
+      dispatch({
+        type: 'CREATE_' + transactionType + '_SUB_CATEGORY_SUCCESS',
+        subCategoryModel: transformSubCategoryFromResponse(subCategory), messages: messages
+      });
     }).catch(err => {
       console.log('CREATE_' + transactionType + '_SUB_CATEGORY_ERROR');
       console.log(err);
@@ -32,7 +36,7 @@ export function createSubCategory(context, subCategoryModel) {
 function createBody(subCategoryModel, userId, transactionType) {
   let body = {};
   body.userId = userId;
-  body.subCategoryModel = subCategoryModel;
+  body.subCategory = transformSubCategoryToRequest(subCategoryModel);
   body.transactionType = transactionType;
   return body;
 }

@@ -1,4 +1,5 @@
 import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
+import {transformMainCategoryFromResponse, transformMainCategoryToRequest} from "./createMainCategoryMethods";
 
 export function updateMainCategory(context, mainCategoryModel) {
   const {userId, jwtToken, messages, transactionType} = context;
@@ -16,10 +17,13 @@ export function updateMainCategory(context, mainCategoryModel) {
         return response.json();
       }
     ).then((response) => {
-      let mainCategoryModel = response['mainCategoryModel'];
+      let mainCategory = response['mainCategory'];
       console.log('UPDATE_' + transactionType + '_MAIN_CATEGORY_SUCCESS');
       console.log(response);
-      dispatch({type: 'UPDATE_' + transactionType + '_MAIN_CATEGORY_SUCCESS', mainCategoryModel: mainCategoryModel, messages: messages});
+      dispatch({
+        type: 'UPDATE_' + transactionType + '_MAIN_CATEGORY_SUCCESS',
+        mainCategoryModel: transformMainCategoryFromResponse(mainCategory), messages: messages
+      });
     }).catch(err => {
       console.log('UPDATE_' + transactionType + '_MAIN_CATEGORY_ERROR');
       console.log(err);
@@ -31,7 +35,7 @@ export function updateMainCategory(context, mainCategoryModel) {
 function createBody(mainCategoryModel, userId, transactionType) {
   let body = {};
   body.userId = userId;
-  body.mainCategoryModel = mainCategoryModel;
+  body.mainCategory = transformMainCategoryToRequest(mainCategoryModel);
   body.transactionType = transactionType;
   return body;
 }

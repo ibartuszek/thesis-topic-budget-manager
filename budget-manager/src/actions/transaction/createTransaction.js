@@ -1,5 +1,5 @@
 import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
-import {createCopyTransactionModel} from "./transformTransactionModel";
+import {transformTransactionFromResponse, transformTransactionToRequest} from "./createTransactionMethods";
 
 export function createTransaction(context, transactionModel) {
   const {userId, jwtToken, messages, transactionType} = context;
@@ -18,10 +18,13 @@ export function createTransaction(context, transactionModel) {
         return response.json();
       }
     ).then((response) => {
-      let transactionModel = response['transactionModel'];
+      let transaction = response['transaction'];
       console.log('CREATE_' + transactionType + '_SUCCESS');
       console.log(response);
-      dispatch({type: 'CREATE_' + transactionType + '_SUCCESS', transactionModel: transactionModel, messages: messages});
+      dispatch({
+        type: 'CREATE_' + transactionType + '_SUCCESS',
+        transactionModel: transformTransactionFromResponse(transaction), messages: messages
+      });
     }).catch(err => {
       console.log('CREATE_' + transactionType + '_ERROR');
       console.log(err);
@@ -33,7 +36,7 @@ export function createTransaction(context, transactionModel) {
 function createBody(transactionModel, userId, transactionType) {
   let body = {};
   body.userId = userId;
-  body.transactionModel = createCopyTransactionModel(transactionModel);
+  body.transaction = transformTransactionToRequest(transactionModel);
   body.transactionType = transactionType;
   return body;
 }

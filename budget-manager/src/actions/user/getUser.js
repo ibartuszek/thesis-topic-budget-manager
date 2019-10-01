@@ -1,4 +1,4 @@
-import {createUserFromResponse} from "./createUser";
+import {transformUserFromResponse} from "./createUserMethods";
 import {createHeaderWithJwt} from "../common/createHeader";
 import {createAccessCookie} from "./cookie/createAccessCookie";
 
@@ -16,7 +16,7 @@ export function getUser(userName, jwtToken, messages) {
         return response.json();
       }
     ).then((response) => {
-      let userData = createUserFromResponse(response['user']);
+      let userData = transformUserFromResponse(response['user']);
       console.log('LOGIN_SUCCESS');
       createAccessCookie(userName, jwtToken);
       dispatch({type: 'LOGIN_SUCCESS', userData: userData, messages: messages});

@@ -9,6 +9,7 @@ import ModelStringValue from "../../layout/form/ModelStringValue";
 import MonthlySelect from "../MonthlySelect";
 import SubCategoryEditPopUp from "../subCategory/SubCategoryEditPopUp";
 import SubCategorySelect from "../subCategory/selectSubCategory/SubCategorySelect";
+import {createEmptyTransaction} from "../../../actions/transaction/createTransactionMethods";
 import {dateProperties} from "../../../store/Properties";
 import {getPossibleFirstDate} from "../../../actions/date/dateActions";
 import {transactionMessages} from "../../../store/MessageHolder";
@@ -16,57 +17,7 @@ import {transactionMessages} from "../../../store/MessageHolder";
 class TransactionForm extends Component {
 
   state = {
-    transactionModel: {
-      id: null,
-      title: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 2,
-        maximumLength: 50,
-      },
-      amount: {
-        value: 1.0,
-        errorMessage: null,
-        positive: true,
-      },
-      currency: {
-        value: "HUF",
-        errorMessage: null,
-        possibleEnumValues: [
-          "EUR",
-          "USD",
-          "HUF"
-        ]
-      },
-      transactionType: {
-        value: null,
-        errorMessage: null,
-        possibleEnumValues: [
-          "INCOME",
-          "OUTCOME"
-        ]
-      },
-      mainCategory: undefined,
-      subCategory: undefined,
-      monthly: false,
-      date: {
-        value: null,
-        errorMessage: null,
-        possibleFirstDay: null
-      },
-      endDate: {
-        value: null,
-        errorMessage: null,
-        possibleFirstDay: null
-      },
-      description: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 2,
-        maximumLength: 100,
-      },
-      locked: false
-    },
+    transactionModel: createEmptyTransaction(),
     editAbleMainCategory: null,
     editAbleSubCategory: null,
   };

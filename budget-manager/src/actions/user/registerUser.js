@@ -1,9 +1,9 @@
-import {createUserFromResponse, createUserToRequest} from "./createUser";
+import {transformUserFromResponse, transformUserToRequest} from "./createUserMethods";
 
 export function registerUser(model, messages) {
   let header = new Headers();
   header.set('Content-Type', 'application/json');
-  let body = JSON.stringify(createUserToRequest(model));
+  let body = JSON.stringify(transformUserToRequest(model));
   return function (dispatch) {
     return fetch(`/bm/users/register`, {
       method: 'POST',
@@ -16,7 +16,7 @@ export function registerUser(model, messages) {
         return response.json();
       }
     ).then((response) => {
-      let userData = createUserFromResponse(response['user']);
+      let userData = transformUserFromResponse(response['user']);
       console.log('SIGN_UP_SUCCESS');
       dispatch({type: 'SIGN_UP_SUCCESS', userData: userData, messages: messages});
     }).catch(err => {

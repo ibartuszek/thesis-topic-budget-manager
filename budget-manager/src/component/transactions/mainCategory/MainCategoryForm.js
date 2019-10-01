@@ -3,29 +3,13 @@ import ModelStringValue from "../../layout/form/ModelStringValue";
 import SubCategoryEditPopUp from "../subCategory/SubCategoryEditPopUp";
 import SubCategoryList from "../subCategory/selectSubCategory/SubCategoryList";
 import {categoryMessages} from "../../../store/MessageHolder";
+import {createEmptyMainCategory} from "../../../actions/category/createMainCategoryMethods";
 import {replaceElementAtArray} from "../../../actions/common/listActions";
 
 class MainCategoryForm extends Component {
 
   state = {
-    mainCategoryModel: {
-      id: null,
-      name: {
-        value: '',
-        errorMessage: null,
-        minimumLength: 2,
-        maximumLength: 50,
-      },
-      transactionType: {
-        value: null,
-        errorMessage: null,
-        possibleEnumValues: [
-          "INCOME",
-          "OUTCOME"
-        ]
-      },
-      subCategoryModelSet: []
-    },
+    mainCategoryModel: createEmptyMainCategory(),
     editAbleSubCategory: null
   };
 
@@ -48,7 +32,6 @@ class MainCategoryForm extends Component {
       }
     }))
   }
-
 
   componentWillUpdate(nextProps, nextState, nextContext) {
     if (nextProps.mainCategoryModel !== undefined && this.state.mainCategoryModel.id === null) {
@@ -125,7 +108,6 @@ class MainCategoryForm extends Component {
           <span> Close </span>
         </button>
       );
-
 
     return (
       <React.Fragment>

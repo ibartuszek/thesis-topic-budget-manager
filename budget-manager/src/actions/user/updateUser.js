@@ -1,4 +1,4 @@
-import {createUserFromResponse, createUserToRequest} from "./createUser";
+import {transformUserFromResponse, transformUserToRequest} from "./createUserMethods";
 import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
 
 export function updateUser(context, userModel) {
@@ -18,7 +18,7 @@ export function updateUser(context, userModel) {
         return response.json();
       }
     ).then((response) => {
-      let userData = createUserFromResponse(response['user']);
+      let userData = transformUserFromResponse(response['user']);
       console.log('UPDATE_USER_SUCCESS');
       console.log(response);
       dispatch({type: 'UPDATE_USER_SUCCESS', userData: userData, messages: messages});
@@ -32,7 +32,7 @@ export function updateUser(context, userModel) {
 
 function createBody(userModel, userId) {
   let body = {};
-  body.user = createUserToRequest(userModel);
+  body.user = transformUserToRequest(userModel);
   body.userId = userId;
   return body;
 }

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import TransactionTableRow from "./TransactionTableRow";
 import TransactionEditPopUp from "../TransactionEditPopUp";
-import {transformTransactionModel} from "../../../../actions/transaction/transformTransactionModel";
 import {sortTransactions} from "../../../../actions/transaction/sortTransactions";
 import TransactionDeletePopUp from "../TransactionDeletePopUp";
 
@@ -58,12 +57,12 @@ class TransactionTableBody extends Component {
 
     // TODO: refreshSubCategories?
     let editTransaction = editableTransaction === null ? null : (
-      <TransactionEditPopUp transactionModel={transformTransactionModel(editableTransaction)} transactionType={transactionType}
+      <TransactionEditPopUp transactionModel={editableTransaction} transactionType={transactionType}
                             mainCategoryList={mainCategoryList} subCategoryList={subCategoryList}
                             showTransactionEdit={this.showTransactionEdit} refreshSubCategories={this.refreshSubCategories}/>);
 
     let deleteTransaction = deletableTransaction === null ? null : (
-      <TransactionDeletePopUp transactionModel={transformTransactionModel(deletableTransaction)} transactionType={transactionType}
+      <TransactionDeletePopUp transactionModel={deletableTransaction} transactionType={transactionType}
                               showTransactionDelete={this.showTransactionDelete}/>
     );
 
