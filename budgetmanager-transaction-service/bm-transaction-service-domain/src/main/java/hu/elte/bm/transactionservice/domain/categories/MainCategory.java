@@ -12,9 +12,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
-/**
- * MainCategory represents the main category of the transaction (income or outcome).
- */
 @JsonDeserialize(builder = MainCategory.Builder.class)
 public final class MainCategory {
 

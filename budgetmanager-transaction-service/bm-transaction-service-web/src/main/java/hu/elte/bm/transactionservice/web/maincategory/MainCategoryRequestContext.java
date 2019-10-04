@@ -17,4 +17,13 @@ public class MainCategoryRequestContext extends RequestContext {
     public void setMainCategory(final MainCategory mainCategory) {
         this.mainCategory = mainCategory;
     }
+
+    @Override
+    public String toString() {
+        return "MainCategoryRequestContext{"
+                + "transactionType=" + getTransactionType()
+                + ", userId=" + getUserId()
+                + "mainCategory=" + mainCategory
+                + '}';
+    }
 }

@@ -27,4 +27,12 @@ public class RequestContext {
     public void setUserId(final Long userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "RequestContext{"
+                + "transactionType=" + transactionType
+                + ", userId=" + userId
+                + '}';
+    }
 }

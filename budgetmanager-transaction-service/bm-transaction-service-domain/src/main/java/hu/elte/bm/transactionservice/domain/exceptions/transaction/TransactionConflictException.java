@@ -1,6 +1,8 @@
-package hu.elte.bm.transactionservice.domain.transaction;
+package hu.elte.bm.transactionservice.domain.exceptions.transaction;
 
-public class TransactionConflictException extends RuntimeException {
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
+
+public class TransactionConflictException extends RuntimeException implements TransactionException {
 
     private final Transaction transaction;
 
@@ -9,6 +11,7 @@ public class TransactionConflictException extends RuntimeException {
         this.transaction = transaction;
     }
 
+    @Override
     public Transaction getTransaction() {
         return transaction;
     }

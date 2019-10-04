@@ -17,4 +17,13 @@ public class TransactionRequestContext extends RequestContext {
     public void setTransaction(final Transaction transaction) {
         this.transaction = transaction;
     }
+
+    @Override
+    public String toString() {
+        return "TransactionRequestContext{"
+                + "transactionType=" + getTransactionType()
+                + ", userId=" + getUserId()
+                + "transaction=" + transaction
+                + '}';
+    }
 }

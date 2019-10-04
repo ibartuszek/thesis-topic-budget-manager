@@ -31,4 +31,12 @@ public final class SubCategoryListResponse extends ResponseModel {
         this.subCategoryList = subCategoryList;
     }
 
+    @Override
+    public String toString() {
+        return "SubCategoryListResponse{"
+                + "message='" + getMessage() + '\''
+                + ", successful=" + isSuccessful()
+                + "subCategoryList=" + subCategoryList
+                + '}';
+    }
 }

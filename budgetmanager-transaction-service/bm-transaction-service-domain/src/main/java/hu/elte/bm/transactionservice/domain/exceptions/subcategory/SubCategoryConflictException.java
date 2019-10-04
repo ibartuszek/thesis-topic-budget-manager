@@ -1,6 +1,8 @@
-package hu.elte.bm.transactionservice.domain.categories;
+package hu.elte.bm.transactionservice.domain.exceptions.subcategory;
 
-public class SubCategoryConflictException extends RuntimeException {
+import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+
+public class SubCategoryConflictException extends RuntimeException implements SubCategoryException {
 
     private final SubCategory subCategory;
 
@@ -9,6 +11,7 @@ public class SubCategoryConflictException extends RuntimeException {
         this.subCategory = subCategory;
     }
 
+    @Override
     public SubCategory getSubCategory() {
         return subCategory;
     }

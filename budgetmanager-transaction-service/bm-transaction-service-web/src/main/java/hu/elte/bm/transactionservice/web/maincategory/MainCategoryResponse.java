@@ -24,4 +24,13 @@ public final class MainCategoryResponse extends ResponseModel {
     public void setMainCategory(final MainCategory mainCategory) {
         this.mainCategory = mainCategory;
     }
+
+    @Override
+    public String toString() {
+        return "MainCategoryResponse{"
+                + "message='" + getMessage() + '\''
+                + ", successful=" + isSuccessful()
+                + "mainCategory=" + mainCategory
+                + '}';
+    }
 }

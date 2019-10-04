@@ -22,8 +22,9 @@ import org.testng.annotations.Test;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionConflictException;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.database.TransactionDaoProxy;
 
@@ -140,7 +141,7 @@ public class TransactionServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForFieldValidation")
+    @Test(expectedExceptions = IllegalTransactionException.class, dataProvider = "testDataForFieldValidation")
     public void testSaveWhenFieldValidationFails(final Transaction.Builder builder) {
         // GIVEN
         Transaction transaction = builder.withId(null).build();
@@ -223,24 +224,28 @@ public class TransactionServiceTest {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateWhenTransactionIdIsNull() {
         // GIVEN
-        Transaction transaction = createExampleTransactionBuilder().withId(null).build();
+        Transaction transaction = createExampleTransactionBuilder()
+                .withId(null)
+                .build();
         control.replay();
         // WHEN
         underTest.update(transaction, createTransactionContext(INCOME, USER_ID));
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "testDataForFieldValidation")
+    @Test(expectedExceptions = IllegalTransactionException.class, dataProvider = "testDataForFieldValidation")
     public void testUpdateWhenValidationFails(final Transaction.Builder builder) {
         // GIVEN
-        Transaction transaction = builder.build();
+        Transaction transaction = builder
+                .withId(EXPECTED_ID)
+                .build();
         control.replay();
         // WHEN
         underTest.update(transaction, createTransactionContext(INCOME, USER_ID));
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalTransactionException.class)
     public void testUpdateWhenOriginalTransactionCannotBeFound() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
@@ -255,7 +260,7 @@ public class TransactionServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalTransactionException.class)
     public void testUpdateWhenOriginalTransactionIsLocked() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
@@ -274,8 +279,7 @@ public class TransactionServiceTest {
         // THEN
     }
 
-    /**/
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalTransactionException.class)
     public void testUpdateWhenTransactionTypeHasChanged() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
@@ -294,24 +298,8 @@ public class TransactionServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testUpdateWhenTransactionNotChanged() {
-        // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder()
-            .build());
-        Transaction transaction = createExampleTransactionBuilder()
-            .build();
-        dateValidator.validate(transaction, context);
-        EasyMock.expect(transactionDaoProxy.findById(transaction.getId(), context)).andReturn(transactionFromRepository);
-        control.replay();
-        // WHEN
-        underTest.update(transaction, context);
-        // THEN
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testUpdateWhenTransactionCannotBeChangedBecauseNewExists() {
+    @Test(expectedExceptions = IllegalTransactionException.class)
+    public void testUpdateWhenTransactionDoesNotHaveAnyChange() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
         Optional<Transaction> transactionFromRepository = Optional.ofNullable(createExampleTransactionBuilder()

@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.subcategory.IllegalSubCategoryException;
+import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryConflictException;
 import hu.elte.bm.transactionservice.service.database.SubCategoryDao;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 
@@ -84,7 +85,7 @@ public class SubCategoryService {
             if (!subCategoryWithSameName.get().getId().equals(subCategory.getId())) {
                 throw new SubCategoryConflictException(subCategory, categoryHasBeenSavedBefore);
             } else {
-                throw new IllegalArgumentException(categoryNotChanged);
+                throw new IllegalSubCategoryException(subCategory, categoryNotChanged);
             }
         }
     }
@@ -94,9 +95,9 @@ public class SubCategoryService {
         Assert.notNull(subCategory.getId(), categoryIdCannotBeNull);
         Optional<SubCategory> originalSubCategory = subCategoryDao.findById(subCategory.getId(), context);
         if (originalSubCategory.isEmpty()) {
-            throw new IllegalArgumentException(categoryCannotBeFound);
+            throw new IllegalSubCategoryException(subCategory, categoryCannotBeFound);
         } else if (subCategory.getTransactionType() != originalSubCategory.get().getTransactionType()) {
-            throw new IllegalArgumentException(typeCannotBeChanged);
+            throw new IllegalSubCategoryException(subCategory, typeCannotBeChanged);
         }
     }
 

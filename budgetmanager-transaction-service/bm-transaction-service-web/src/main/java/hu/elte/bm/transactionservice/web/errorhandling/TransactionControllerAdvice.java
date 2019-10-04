@@ -9,17 +9,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import hu.elte.bm.transactionservice.domain.categories.MainCategoryConflictException;
-import hu.elte.bm.transactionservice.domain.categories.MainCategoryNotFoundException;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryConflictException;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryNotFoundException;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionConflictException;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionNotFoundException;
+import hu.elte.bm.transactionservice.domain.exceptions.maincategory.IllegalMainCategoryException;
+import hu.elte.bm.transactionservice.domain.exceptions.subcategory.IllegalSubCategoryException;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
+import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryNotFoundException;
+import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryNotFoundException;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionNotFoundException;
 
 @RestControllerAdvice
 public class TransactionControllerAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class, IllegalMainCategoryException.class,
+            IllegalSubCategoryException.class, IllegalTransactionException.class})
     protected ResponseEntity<Object> handleBadRequests(final RuntimeException e, final WebRequest request) {
         String bodyOfResponse = e.getMessage();
         return new ResponseEntity<>(bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);

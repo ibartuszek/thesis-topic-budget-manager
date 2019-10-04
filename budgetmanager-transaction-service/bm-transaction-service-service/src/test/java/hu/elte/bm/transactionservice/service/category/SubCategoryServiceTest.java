@@ -18,7 +18,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.categories.SubCategoryConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.subcategory.IllegalSubCategoryException;
+import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryConflictException;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.database.SubCategoryDao;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
@@ -154,7 +155,7 @@ public class SubCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalSubCategoryException.class)
     public void testUpdateWhenCategoryCannotBeFoundInRepository() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
@@ -166,7 +167,7 @@ public class SubCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalSubCategoryException.class)
     public void testUpdateWhenTransactionTypeHasChanged() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
@@ -194,7 +195,7 @@ public class SubCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalSubCategoryException.class)
     public void testUpdateWhenSubCategoryNotChanged() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);

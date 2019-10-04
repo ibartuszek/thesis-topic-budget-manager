@@ -25,4 +25,12 @@ public class ResponseModel {
     public void setSuccessful(final boolean successful) {
         this.successful = successful;
     }
+
+    @Override
+    public String toString() {
+        return "ResponseModel{"
+                + "message='" + message + '\''
+                + ", successful=" + successful
+                + '}';
+    }
 }

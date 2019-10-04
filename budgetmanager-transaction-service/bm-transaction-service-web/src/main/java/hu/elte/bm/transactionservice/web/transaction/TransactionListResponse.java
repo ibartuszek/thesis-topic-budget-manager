@@ -30,4 +30,13 @@ public final class TransactionListResponse extends ResponseModel {
     public void setTransactionList(final List<Transaction> transactionList) {
         this.transactionList = transactionList;
     }
+
+    @Override
+    public String toString() {
+        return "TransactionListResponse{"
+                + "message='" + getMessage() + '\''
+                + ", successful=" + isSuccessful()
+                + "transactionList=" + transactionList
+                + '}';
+    }
 }

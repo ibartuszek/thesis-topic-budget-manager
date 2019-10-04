@@ -122,18 +122,36 @@ public final class Transaction {
         }
         Transaction that = (Transaction) o;
         return Double.compare(that.amount, amount) == 0
-            && monthly == that.monthly
-            && title.equals(that.title)
-            && currency == that.currency
-            && transactionType == that.transactionType
-            && mainCategory.equals(that.mainCategory)
-            && (subCategory == null || subCategory.equals(that.subCategory))
-            && date.equals(that.date);
+                && monthly == that.monthly
+                && title.equals(that.title)
+                && currency == that.currency
+                && transactionType == that.transactionType
+                && mainCategory.equals(that.mainCategory)
+                && (subCategory == null || subCategory.equals(that.subCategory))
+                && date.equals(that.date);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(title, amount, currency, transactionType, mainCategory, subCategory, monthly, date);
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{"
+                + "id=" + id
+                + ", title='" + title + '\''
+                + ", amount=" + amount
+                + ", currency=" + currency
+                + ", transactionType=" + transactionType
+                + ", mainCategory=" + mainCategory
+                + ", subCategory=" + subCategory
+                + ", monthly=" + monthly
+                + ", date=" + date
+                + ", endDate=" + endDate
+                + ", description='" + description + '\''
+                + ", locked=" + locked
+                + '}';
     }
 
     public static class Builder {

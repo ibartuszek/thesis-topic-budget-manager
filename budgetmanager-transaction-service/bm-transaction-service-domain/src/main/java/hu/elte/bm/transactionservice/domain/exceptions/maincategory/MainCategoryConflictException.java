@@ -1,6 +1,8 @@
-package hu.elte.bm.transactionservice.domain.categories;
+package hu.elte.bm.transactionservice.domain.exceptions.maincategory;
 
-public class MainCategoryConflictException extends RuntimeException {
+import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+
+public class MainCategoryConflictException extends RuntimeException implements MainCategoryException  {
 
     private final MainCategory mainCategory;
 
@@ -9,6 +11,7 @@ public class MainCategoryConflictException extends RuntimeException {
         this.mainCategory = mainCategory;
     }
 
+    @Override
     public MainCategory getMainCategory() {
         return mainCategory;
     }

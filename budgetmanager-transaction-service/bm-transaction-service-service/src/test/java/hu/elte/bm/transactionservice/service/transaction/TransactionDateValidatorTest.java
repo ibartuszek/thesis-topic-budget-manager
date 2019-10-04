@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.database.TransactionDaoProxy;
@@ -107,7 +108,7 @@ public class TransactionDateValidatorTest {
         Assert.assertEquals(result, EXPECTED_LAST_DATE.plusDays(1));
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalTransactionException.class)
     public void testValidateWhenDateIsBeforeTheFirstPossibleDate() {
         // GIVEN
         TransactionContext context = createTransactionContext();
@@ -138,7 +139,7 @@ public class TransactionDateValidatorTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalTransactionException.class)
     public void testValidateWhenTransactionHasEndDateButNotMonthly() {
         // GIVEN
         TransactionContext context = createTransactionContext();
@@ -154,7 +155,7 @@ public class TransactionDateValidatorTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalTransactionException.class)
     public void testValidateWhenTransactionEndDateAfterItsDate() {
         // GIVEN
         TransactionContext context = createTransactionContext();
@@ -171,7 +172,7 @@ public class TransactionDateValidatorTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalTransactionException.class)
     public void testValidateWhenTransactionDateAndEndDateIsTheSame() {
         // GIVEN
         TransactionContext context = createTransactionContext();

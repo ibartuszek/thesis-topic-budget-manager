@@ -30,4 +30,13 @@ public final class MainCategoryListResponse extends ResponseModel {
     public void setMainCategoryList(final List<MainCategory> mainCategoryList) {
         this.mainCategoryList = mainCategoryList;
     }
+
+    @Override
+    public String toString() {
+        return "MainCategoryListResponse{"
+                + "message='" + getMessage() + '\''
+                + ", successful=" + isSuccessful()
+                + "mainCategoryList=" + mainCategoryList
+                + '}';
+    }
 }

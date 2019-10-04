@@ -20,7 +20,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.categories.MainCategoryConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.maincategory.IllegalMainCategoryException;
+import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryConflictException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.database.MainCategoryDao;
@@ -113,7 +114,7 @@ public class MainCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalMainCategoryException.class)
     public void testSaveWhenThereIsOneSubCategoryWithoutId() {
         // GIVEN
         MainCategory mainCategoryToSave = createExampleMainCategory(null, EXPECTED_CATEGORY_NAME, INCOME);
@@ -171,7 +172,7 @@ public class MainCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalMainCategoryException.class)
     public void testUpdateWhenThereIsOneSubCategoryWithoutId() {
         // GIVEN
         MainCategory mainCategoryToUpdate = createExampleMainCategory(EXPECTED_CATEGORY_ID, EXPECTED_CATEGORY_NAME, INCOME);
@@ -195,7 +196,7 @@ public class MainCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalMainCategoryException.class)
     public void testUpdateWhenCategoryCannotBeFound() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
@@ -208,7 +209,7 @@ public class MainCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalMainCategoryException.class)
     public void testUpdateWhenCategoryTypeHasChanged() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);
@@ -222,7 +223,7 @@ public class MainCategoryServiceTest {
         // THEN
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalMainCategoryException.class)
     public void testUpdateWhenCategoryContainsLessSubCategory() {
         // GIVEN
         TransactionContext context = createTransactionContext(INCOME, USER_ID);

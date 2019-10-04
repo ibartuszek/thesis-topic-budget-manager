@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.service.database.TransactionDaoProxy;
 
@@ -45,12 +46,12 @@ public class TransactionDateValidator {
     void validate(final Transaction transaction, final TransactionContext context) {
         LocalDate possibleFirstDate = getTheFirstDateOfTheNewPeriod(context);
         if (transaction.getDate().isBefore(possibleFirstDate)) {
-            throw new IllegalArgumentException(dateBeforeThePeriodExceptionMessage);
+            throw new IllegalTransactionException(transaction, dateBeforeThePeriodExceptionMessage);
         } else if (transaction.getEndDate() != null) {
             if (!transaction.isMonthly()) {
-                throw new IllegalArgumentException(notMonthlyTransaction);
+                throw new IllegalTransactionException(transaction, notMonthlyTransaction);
             } else if (transaction.getDate().isAfter(transaction.getEndDate()) || transaction.getDate().equals(transaction.getEndDate())) {
-                throw new IllegalArgumentException(endDateBeforeStart);
+                throw new IllegalTransactionException(transaction, endDateBeforeStart);
             }
         }
 

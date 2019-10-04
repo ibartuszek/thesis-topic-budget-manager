@@ -42,4 +42,14 @@ public final class TransactionResponse extends ResponseModel {
     public void setFirstPossibleDay(final LocalDate firstPossibleDay) {
         this.firstPossibleDay = firstPossibleDay;
     }
+
+    @Override
+    public String toString() {
+        return "TransactionResponse{"
+                + "message='" + getMessage() + '\''
+                + ", successful=" + isSuccessful()
+                + "transaction=" + transaction
+                + ", firstPossibleDay=" + firstPossibleDay
+                + '}';
+    }
 }

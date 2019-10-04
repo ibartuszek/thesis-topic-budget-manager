@@ -226,6 +226,7 @@
       <property name="severity" value="error"/>
     </module>
     <module name="IllegalThrows">
+      <property name="id" value="illegalThrows"/>
       <property name="severity" value="error"/>
     </module>
     <module name="IllegalType">

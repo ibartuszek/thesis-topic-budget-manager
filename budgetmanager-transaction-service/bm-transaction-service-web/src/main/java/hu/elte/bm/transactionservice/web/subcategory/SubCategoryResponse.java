@@ -24,4 +24,13 @@ public final class SubCategoryResponse extends ResponseModel {
         response.setSubCategory(subCategory);
         return response;
     }
+
+    @Override
+    public String toString() {
+        return "SubCategoryResponse{"
+                + "message='" + getMessage() + '\''
+                + ", successful=" + isSuccessful()
+                + "subCategory=" + subCategory
+                + '}';
+    }
 }

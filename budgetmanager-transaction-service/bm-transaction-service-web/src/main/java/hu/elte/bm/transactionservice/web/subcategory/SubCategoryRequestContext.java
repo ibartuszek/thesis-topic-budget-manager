@@ -17,4 +17,13 @@ public class SubCategoryRequestContext extends RequestContext {
     public void setSubCategory(final SubCategory subCategory) {
         this.subCategory = subCategory;
     }
+
+    @Override
+    public String toString() {
+        return "SubCategoryRequestContext{"
+                + "transactionType=" + getTransactionType()
+                + ", userId=" + getUserId()
+                + "subCategory=" + subCategory
+                + '}';
+    }
 }

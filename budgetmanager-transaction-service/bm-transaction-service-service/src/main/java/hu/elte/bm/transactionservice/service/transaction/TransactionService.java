@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
-import hu.elte.bm.transactionservice.domain.transaction.TransactionConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionConflictException;
 import hu.elte.bm.transactionservice.service.database.TransactionDaoProxy;
 
 @Service("transactionService")
@@ -110,11 +111,11 @@ public class TransactionService {
 
     private void validateFields(final Transaction transaction, final TransactionContext context) {
         if (transaction.getMainCategory().getId() == null) {
-            throw new IllegalArgumentException(mainCategoryCannotBeNull);
+            throw new IllegalTransactionException(transaction, mainCategoryCannotBeNull);
         } else if (!hasValidSubCategories(transaction.getMainCategory())) {
-            throw new IllegalArgumentException(subCategoryIdCannotBeNull);
+            throw new IllegalTransactionException(transaction, subCategoryIdCannotBeNull);
         } else if (transaction.getSubCategory() != null && transaction.getSubCategory().getId() == null) {
-            throw new IllegalArgumentException(subCategoryIdCannotBeNull);
+            throw new IllegalTransactionException(transaction, subCategoryIdCannotBeNull);
         }
         dateValidator.validate(transaction, context);
     }
@@ -145,7 +146,7 @@ public class TransactionService {
         Assert.notNull(transaction.getId(), transactionIdCannotBeNull);
         validateFields(transaction, context);
         Transaction originalTransaction = getOriginalTransaction(transaction, context);
-        validateTransactionIsNotLocked(originalTransaction, transactionIsLockedExceptionForUpdate);
+        validateTransactionIsNotLocked(transaction, originalTransaction, transactionIsLockedExceptionForUpdate);
         validateAgainstOriginalTransaction(transaction, originalTransaction);
         transactionIsNotReserved(transaction, context);
     }
@@ -153,22 +154,22 @@ public class TransactionService {
     private Transaction getOriginalTransaction(final Transaction transaction, final TransactionContext context) {
         Optional<Transaction> transactionFromRepository = transactionDaoProxy.findById(transaction.getId(), context);
         if (transactionFromRepository.isEmpty()) {
-            throw new IllegalArgumentException(originalTransactionCannotBeFound);
+            throw new IllegalTransactionException(transaction, originalTransactionCannotBeFound);
         }
         return transactionFromRepository.get();
     }
 
-    private void validateTransactionIsNotLocked(final Transaction originalTransaction, final String lockedMessage) {
+    private void validateTransactionIsNotLocked(final Transaction transaction, final Transaction originalTransaction, final String lockedMessage) {
         if (originalTransaction.isLocked()) {
-            throw new IllegalArgumentException(lockedMessage);
+            throw new IllegalTransactionException(transaction, lockedMessage);
         }
     }
 
     private void validateAgainstOriginalTransaction(final Transaction transaction, final Transaction originalTransaction) {
         if (transaction.getTransactionType() != originalTransaction.getTransactionType()) {
-            throw new IllegalArgumentException(typeCannotBeChange);
+            throw new IllegalTransactionException(transaction, typeCannotBeChange);
         } else if (transaction.equals(originalTransaction)) {
-            throw new IllegalArgumentException(transactionNotChanged);
+            throw new IllegalTransactionException(transaction, transactionNotChanged);
         }
     }
 
@@ -176,7 +177,7 @@ public class TransactionService {
         Assert.notNull(transaction, transactionCannotBeNull);
         Assert.notNull(transaction.getId(), transactionIdCannotBeNull);
         Transaction originalTransaction = getOriginalTransaction(transaction, context);
-        validateTransactionIsNotLocked(originalTransaction, transactionIsLockedForDelete);
+        validateTransactionIsNotLocked(transaction, originalTransaction, transactionIsLockedForDelete);
     }
 
 }

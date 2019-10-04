@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.categories.MainCategoryConflictException;
+import hu.elte.bm.transactionservice.domain.exceptions.maincategory.IllegalMainCategoryException;
+import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryConflictException;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.service.database.MainCategoryDao;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
@@ -64,7 +65,7 @@ public class MainCategoryService {
     public MainCategory save(final MainCategory mainCategory, final TransactionContext context) {
         validate(context);
         validateSavableMainCategory(mainCategory);
-        validateSubCategoriesHasId(mainCategory.getSubCategorySet());
+        validateSubCategoriesHasId(mainCategory);
         validateMainCategoryIsNotReserved(mainCategory, context);
         return mainCategoryDao.save(mainCategory, context);
     }
@@ -72,7 +73,7 @@ public class MainCategoryService {
     public MainCategory update(final MainCategory mainCategory, final TransactionContext context) {
         validate(context);
         validateUpdatableMainCategory(mainCategory);
-        validateSubCategoriesHasId(mainCategory.getSubCategorySet());
+        validateSubCategoriesHasId(mainCategory);
         validateMainCategoryIsNotReserved(mainCategory, context);
         validateForUpdate(mainCategory, context);
         return mainCategoryDao.update(mainCategory, context);
@@ -88,9 +89,9 @@ public class MainCategoryService {
         Assert.isNull(mainCategory.getId(), categoryIdMustBeNull);
     }
 
-    private void validateSubCategoriesHasId(final Set<SubCategory> subCategorySet) {
-        if (!hasAllSubCategoryId(subCategorySet)) {
-            throw new IllegalArgumentException(subCategoryWithoutId);
+    private void validateSubCategoriesHasId(final MainCategory mainCategory) {
+        if (!hasAllSubCategoryId(mainCategory.getSubCategorySet())) {
+            throw new IllegalMainCategoryException(mainCategory, subCategoryWithoutId);
         }
     }
 
@@ -114,13 +115,13 @@ public class MainCategoryService {
     private void validateForUpdate(final MainCategory mainCategory, final TransactionContext context) {
         Optional<MainCategory> originalMainCategory = mainCategoryDao.findById(mainCategory.getId(), context);
         if (originalMainCategory.isEmpty()) {
-            throw new IllegalArgumentException(categoryCannotBeFound);
+            throw new IllegalMainCategoryException(mainCategory, categoryCannotBeFound);
         } else if (mainCategory.getTransactionType() != originalMainCategory.get().getTransactionType()) {
-            throw new IllegalArgumentException(typeCannotBeChanged);
+            throw new IllegalMainCategoryException(mainCategory, typeCannotBeChanged);
         } else if (!mainCategory.getSubCategorySet().containsAll(originalMainCategory.get().getSubCategorySet())) {
-            throw new IllegalArgumentException(categoryNotContainsAllSubcategory);
+            throw new IllegalMainCategoryException(mainCategory, categoryNotContainsAllSubcategory);
         } else if (mainCategory.equals(originalMainCategory.get())) {
-            throw new IllegalArgumentException(categoryNotChanged);
+            throw new IllegalMainCategoryException(mainCategory, categoryNotChanged);
         }
     }
 

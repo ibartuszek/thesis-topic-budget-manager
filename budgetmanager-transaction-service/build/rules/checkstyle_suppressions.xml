@@ -14,5 +14,6 @@
   <suppress id="noWhiteSpaceAfterError" files="hu.elte.bm.*Test"/>
   <suppress id="noWhiteSpaceAfterError" files="hu.elte.bm.*Test"/>
   <suppress id="ParameterNumber_Error" files="TransactionModelServiceTest.java"/>
+  <suppress id="illegalThrows" files="LoggerAspect.java"/>
 
 </suppressions>

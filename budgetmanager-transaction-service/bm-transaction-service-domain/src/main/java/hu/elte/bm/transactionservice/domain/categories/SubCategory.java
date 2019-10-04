@@ -11,9 +11,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 
-/**
- * It represents the secondary category of the transaction (can be income or outcome).
- */
 @JsonDeserialize(builder = SubCategory.Builder.class)
 public final class SubCategory {
 
