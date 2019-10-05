@@ -19,6 +19,10 @@ export const categoryMessages = {
   updateSubCategoryTitle: "Update subcategory",
 };
 
+export const defaultMessages = {
+  defaultErrorMessage: "Something went wrong, please try again!",
+};
+
 export const transactionMessages = {
   createTransactionSuccess: "The transaction has been saved.",
   createTransactionError: "The transaction has been saved before.",

@@ -24,7 +24,7 @@ export function createEmptyMainCategory() {
 export function transformMainCategoryFromResponse(responseModel) {
   let subCategoryModelSet = [];
   if (responseModel['subCategorySet'] !== undefined) {
-    transformSubCategoryListFromResponse(responseModel['subCategorySet'])
+    subCategoryModelSet = transformSubCategoryListFromResponse(responseModel['subCategorySet'])
   }
   let mainCategory = createEmptyMainCategory();
   mainCategory.id = responseModel['id'];

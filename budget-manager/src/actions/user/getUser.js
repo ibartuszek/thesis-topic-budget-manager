@@ -1,29 +1,40 @@
-import {transformUserFromResponse} from "./createUserMethods";
+import {createDispatchContext} from "../common/createDispatchContext";
+import {createErrorBody} from "../common/createErrorBody";
 import {createHeaderWithJwt} from "../common/createHeader";
-import {createAccessCookie} from "./cookie/createAccessCookie";
+import {dispatchError, dispatchSuccess} from "../common/dispatchActions";
+import {transformUserFromResponse} from "./createUserMethods";
+import {defaultMessages, userMessages} from "../../store/MessageHolder";
+import {deleteAccessCookie} from "./cookie/deleteAccessCookie";
 
 export function getUser(userName, jwtToken, messages) {
   let url = `/bm/users/findByEmail?email=` + userName;
   let header = createHeaderWithJwt(jwtToken);
+  let successCase = 'LOGIN_SUCCESS';
+  let errorCase = 'LOGIN_ERROR';
+  let responseStatus = null;
+
   return function (dispatch) {
+    let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
     return fetch(url, {
       method: 'GET',
       headers: header
     }).then(function (response) {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
+        responseStatus = response.status;
+        return responseStatus === 200 ? response.json() : createErrorBody(response);
       }
-    ).then((response) => {
-      let userData = transformUserFromResponse(response['user']);
-      console.log('LOGIN_SUCCESS');
-      createAccessCookie(userName, jwtToken);
-      dispatch({type: 'LOGIN_SUCCESS', userData: userData, messages: messages});
-    }).catch(err => {
-      console.log('LOGIN_ERROR');
-      console.log(err.message);
-      dispatch({type: 'LOGIN_ERROR', messages: messages});
+    ).then(function (responseBody) {
+      if (responseStatus === 200) {
+        let userData = transformUserFromResponse(responseBody['user']);
+        return dispatchSuccess(dispatchContext, userMessages['logInMessage'], 'userData', userData);
+      } else if (responseStatus === 400 || responseStatus === 409 || responseStatus === 404) {
+        return dispatchError(dispatchContext, responseBody);
+      } else {
+        deleteAccessCookie();
+        return dispatchError(dispatchContext, defaultMessages['defaultErrorMessage']);
+      }
+    }).catch(errorMessage => {
+      deleteAccessCookie();
+      console.log(errorMessage);
     });
   }
 }

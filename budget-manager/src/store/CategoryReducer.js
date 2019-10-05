@@ -1,5 +1,4 @@
 import {addMessage, createMessage} from "../actions/message/messageActions";
-import {categoryMessages} from "./MessageHolder"
 import {addElementToArray, replaceElementAtArray} from "../actions/common/listActions";
 
 const initState = {
@@ -18,27 +17,27 @@ const CategoryReducer = (state = initState, action) => {
   switch (action.type) {
     case 'CREATE_INCOME_MAIN_CATEGORY_SUCCESS':
       key = "createMainCategorySuccess";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         incomeMainCategories: addElementToArray(state.incomeMainCategories, action.mainCategoryModel),
       });
     case 'CREATE_INCOME_MAIN_CATEGORY_ERROR':
       key = "createMainCategoryError";
-      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
     case 'CREATE_INCOME_SUB_CATEGORY_SUCCESS':
       key = "createSubCategorySuccess";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         incomeSubCategories: addElementToArray(state.incomeSubCategories, action.subCategoryModel),
       });
     case 'CREATE_INCOME_SUB_CATEGORY_ERROR':
       key = "createSubCategoryError";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
       });
@@ -50,7 +49,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'GET_INCOME_MAIN_CATEGORIES_ERROR':
       key = "categoriesUnavailableMessage";
-      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return {
         ...state,
       };
@@ -62,60 +61,60 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'GET_INCOME_SUB_CATEGORIES_ERROR':
       key = "categoriesUnavailableMessage";
-      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return {
         ...state,
       };
     case 'UPDATE_INCOME_MAIN_CATEGORY_SUCCESS':
       key = "updateMainCategorySuccess";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         incomeMainCategories: replaceElementAtArray(state.incomeMainCategories, action.mainCategoryModel),
       });
     case 'UPDATE_INCOME_MAIN_CATEGORY_ERROR':
       key = "updateMainCategoryError";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
       });
     case 'UPDATE_INCOME_SUB_CATEGORY_SUCCESS':
       key = "updateSubCategorySuccess";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         incomeSubCategories: replaceElementAtArray(state.incomeSubCategories, action.subCategoryModel),
       });
     case 'UPDATE_INCOME_SUB_CATEGORY_ERROR':
       key = "updateSubCategoryError";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
       });
 
     case 'CREATE_OUTCOME_MAIN_CATEGORY_SUCCESS':
       key = "createMainCategorySuccess";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         outcomeMainCategories: addElementToArray(state.outcomeMainCategories, action.mainCategoryModel),
       });
     case 'CREATE_OUTCOME_MAIN_CATEGORY_ERROR':
       key = "createMainCategoryError";
-      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
     case 'CREATE_OUTCOME_SUB_CATEGORY_SUCCESS':
       key = "createSubCategorySuccess";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         outcomeSubCategories: addElementToArray(state.outcomeSubCategories, action.subCategoryModel),
       });
     case 'CREATE_OUTCOME_SUB_CATEGORY_ERROR':
       key = "createSubCategoryError";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
       });
@@ -127,7 +126,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'GET_OUTCOME_MAIN_CATEGORIES_ERROR':
       key = "categoriesUnavailableMessage";
-      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return {
         ...state,
       };
@@ -139,33 +138,33 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'GET_OUTCOME_SUB_CATEGORIES_ERROR':
       key = "categoriesUnavailableMessage";
-      addMessage(action.messages, createMessage(key, false, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return {
         ...state,
       };
     case 'UPDATE_OUTCOME_MAIN_CATEGORY_SUCCESS':
       key = "updateMainCategorySuccess";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         outcomeMainCategories: replaceElementAtArray(state.outcomeMainCategories, action.mainCategoryModel),
       });
     case 'UPDATE_OUTCOME_MAIN_CATEGORY_ERROR':
       key = "updateMainCategoryError";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
       });
     case 'UPDATE_OUTCOME_SUB_CATEGORY_SUCCESS':
       key = "updateSubCategorySuccess";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         outcomeSubCategories: replaceElementAtArray(state.outcomeSubCategories, action.subCategoryModel),
       });
     case 'UPDATE_OUTCOME_SUB_CATEGORY_ERROR':
       key = "updateSubCategoryError";
-      addMessage(action.messages, createMessage(key, true, categoryMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
       });

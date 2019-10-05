@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {logOut} from '../../actions/user/logOut';
 
 const SignedInLinks = (props) => {
+  const {logHolder, userHolder} = props;
   return (
     <div className="collapse navbar-collapse mt-1" id="mainNavbar">
       <ul className="navbar-nav mr-auto mt-lg-0">
@@ -45,7 +46,7 @@ const SignedInLinks = (props) => {
         </li>
       </ul>
       <div className="nav-item logout-custom-colored ml-auto mr-3" onClick={() => {
-        props.logOut(props.logHolder.messages);
+        props.logOut(userHolder.userData.userId, userHolder.jwtToken, logHolder.messages);
       }}>
         <span className="fas fa-sign-out-alt"/>
         <span> Log Out </span>
@@ -56,13 +57,14 @@ const SignedInLinks = (props) => {
 
 const mapStateToProps = (state) => {
   return {
+    userHolder: state.userHolder,
     logHolder: state.logHolder
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logOut: (messages) => dispatch(logOut(messages))
+    logOut: (userId, jwtToken, messages) => dispatch(logOut(userId, jwtToken, messages))
   };
 };
 

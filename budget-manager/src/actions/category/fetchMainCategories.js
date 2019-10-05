@@ -1,5 +1,9 @@
+import {createDispatchContext} from "../common/createDispatchContext";
+import {createErrorBody} from "../common/createErrorBody";
 import {createHeaderWithJwt} from "../common/createHeader";
+import {dispatchError} from "../common/dispatchActions";
 import {transformMainCategoryListFromResponse} from "./createMainCategoryMethods";
+import {defaultMessages} from "../../store/MessageHolder";
 
 export function fetchMainCategories(context, type) {
   const {userId, jwtToken, messages} = context;
@@ -7,24 +11,33 @@ export function fetchMainCategories(context, type) {
   let header = createHeaderWithJwt(jwtToken);
   let successCase = 'GET_' + type.toUpperCase() + '_MAIN_CATEGORIES_SUCCESS';
   let errorCase = 'GET_' + type.toUpperCase() + '_MAIN_CATEGORIES_ERROR';
+  let responseStatus = null;
 
   return function (dispatch) {
+    let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
     return fetch(url, {
       method: 'GET',
       headers: header
     }).then(function (response) {
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      return response.json();
+      responseStatus = response.status;
+      return responseStatus === 200 ? response.json() : createErrorBody(response);
     }).then((response) => {
-      let mainCategoryList = response['mainCategoryList'];
-      console.log(successCase);
-      dispatch({type: successCase, mainCategories: transformMainCategoryListFromResponse(mainCategoryList)});
-    }).catch(err => {
-      console.log(errorCase);
-      console.log(err);
-      dispatch({type: errorCase, messages});
+      if (responseStatus === 200) {
+        let mainCategoryList = response['mainCategoryList'];
+        console.log(successCase);
+        dispatch({
+          type: successCase,
+          mainCategories: transformMainCategoryListFromResponse(mainCategoryList)
+        });
+      } else if (responseStatus === 400 || responseStatus === 409 || responseStatus === 404) {
+        return dispatchError(dispatchContext, response);
+      } else {
+        console.log(response);
+        return dispatchError(dispatchContext, defaultMessages['defaultErrorMessage']);
+      }
+    }).catch(errorMessage => {
+      console.log(errorMessage);
     });
   }
 }
+

@@ -1,5 +1,4 @@
 import {addMessage, createMessage} from "../actions/message/messageActions";
-import {userMessages} from "./MessageHolder"
 
 const initState = {
   userIsLoggedIn: false,
@@ -17,14 +16,14 @@ const UserReducer = (state = initState, action) => {
       });
     case 'GET_ACCESS_TOKEN_ERROR':
       key = "logInErrorMessage";
-      addMessage(action.messages, createMessage(key, false, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         jwtToken: null,
         userIsLoggedIn: false,
       });
     case 'LOGIN_SUCCESS':
       key = "logInMessage";
-      addMessage(action.messages, createMessage(key, true, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         userData: action.userData,
@@ -32,7 +31,7 @@ const UserReducer = (state = initState, action) => {
       });
     case 'LOGIN_ERROR':
       key = "logInErrorMessage";
-      addMessage(action.messages, createMessage(key, false, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
         userData: null,
@@ -40,7 +39,7 @@ const UserReducer = (state = initState, action) => {
       });
     case 'LOGOUT_SUCCESS':
       key = "logOutMessage";
-      addMessage(action.messages, createMessage(key, true, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         userIsLoggedIn: false,
@@ -49,7 +48,7 @@ const UserReducer = (state = initState, action) => {
       });
     case 'LOGOUT_ERROR':
       key = "logOutErrorMessage";
-      addMessage(action.messages, createMessage(key, false, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
         userData: null,
@@ -57,7 +56,7 @@ const UserReducer = (state = initState, action) => {
       });
     case 'SIGN_UP_SUCCESS':
       key = "signUpMessage";
-      addMessage(action.messages, createMessage(key, true, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         userData: action.userData,
@@ -65,7 +64,7 @@ const UserReducer = (state = initState, action) => {
       });
     case 'SIGN_UP_ERROR':
       key = "signUpErrorMessage";
-      addMessage(action.messages, createMessage(key, false, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
         userData: null,
@@ -73,14 +72,14 @@ const UserReducer = (state = initState, action) => {
       });
     case 'UPDATE_USER_SUCCESS':
       key = "updateUserMessage";
-      addMessage(action.messages, createMessage(key, true, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         userData: action.userData,
       });
     case 'UPDATE_USER_ERROR':
       key = "updateUserErrorMessage";
-      addMessage(action.messages, createMessage(key, false, userMessages));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state
       });

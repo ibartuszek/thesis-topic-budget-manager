@@ -41,10 +41,10 @@ export function getMessage(messages, messageKey, success) {
   };
 }
 
-export function createMessage(key, success, defaultMessages) {
+export function createMessage(key, message, success) {
   return {
     key: key,
-    value: defaultMessages[key],
+    value: message,
     success: success
   };
 }
