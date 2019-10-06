@@ -30,7 +30,7 @@ export function getAccessToken(username, password, messages) {
         let jwtToken = responseBody['access_token'];
         createAccessCookie(username, jwtToken);
         return dispatchSuccess(dispatchContext, null, 'jwtToken', jwtToken);
-      } else if (responseStatus === 400 || responseStatus === 409 || responseStatus === 404) {
+      } else if (responseStatus === 401) {
         return dispatchError(dispatchContext, userMessages['logInErrorMessage']);
       } else {
         return dispatchError(dispatchContext, defaultMessages['defaultErrorMessage']);

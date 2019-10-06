@@ -37,7 +37,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'CREATE_INCOME_SUB_CATEGORY_ERROR':
       key = "createSubCategoryError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
@@ -74,7 +74,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'UPDATE_INCOME_MAIN_CATEGORY_ERROR':
       key = "updateMainCategoryError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
@@ -87,7 +87,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'UPDATE_INCOME_SUB_CATEGORY_ERROR':
       key = "updateSubCategoryError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
@@ -114,7 +114,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'CREATE_OUTCOME_SUB_CATEGORY_ERROR':
       key = "createSubCategoryError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
@@ -151,7 +151,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'UPDATE_OUTCOME_MAIN_CATEGORY_ERROR':
       key = "updateMainCategoryError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
@@ -164,7 +164,7 @@ const CategoryReducer = (state = initState, action) => {
       });
     case 'UPDATE_OUTCOME_SUB_CATEGORY_ERROR':
       key = "updateSubCategoryError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });

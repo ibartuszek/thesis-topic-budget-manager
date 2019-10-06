@@ -33,7 +33,7 @@ const TransactionReducer = (state = initState, action) => {
       });
     case 'DELETE_INCOME_ERROR':
       key = "deleteTransactionError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
@@ -58,7 +58,7 @@ const TransactionReducer = (state = initState, action) => {
       });
     case 'UPDATE_INCOME_ERROR':
       key = "updateTransactionError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
@@ -85,7 +85,7 @@ const TransactionReducer = (state = initState, action) => {
       });
     case 'DELETE_OUTCOME_ERROR':
       key = "deleteTransactionError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });
@@ -110,7 +110,7 @@ const TransactionReducer = (state = initState, action) => {
       });
     case 'UPDATE_OUTCOME_ERROR':
       key = "updateTransactionError";
-      addMessage(action.messages, createMessage(key, action.message, true));
+      addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,
       });

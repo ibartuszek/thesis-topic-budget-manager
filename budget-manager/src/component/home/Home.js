@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
-import DismissableAlert from "../DismissableAlert";
 import Loading from '../Loading'
+import LogContainer from "./LogContainer";
 import {connect} from "react-redux";
-import {removeMessage} from "../../actions/message/messageActions";
 import {getAccessCookie} from "../../actions/user/cookie/getAccessCookie";
-import {setAccessToken} from "../../actions/user/setAccessToken";
 import {getUser} from "../../actions/user/getUser";
+import {removeMessage} from "../../actions/message/messageActions";
+import {setAccessToken} from "../../actions/user/setAccessToken";
 
 class Home extends Component {
   state = {
@@ -15,11 +15,6 @@ class Home extends Component {
       value: ''
     }
   };
-
-  constructor(props) {
-    super(props);
-    this.handleDismiss = this.handleDismiss.bind(this);
-  }
 
   componentDidMount() {
     const cookie = getAccessCookie();
@@ -50,25 +45,22 @@ class Home extends Component {
     }
   }
 
-  handleDismiss(message) {
-    this.props.removeMessage(this.props.logHolder.messages, message);
-  }
-
   render() {
-    const {messages} = this.props.logHolder;
     if (this.state.loggedOut) {
       return <Redirect to='/login'/>;
     }
 
-    this.fetchUserData();
+    let logs = null;
+    if (this.props.userHolder.userIsLoggedIn === true && this.props.logHolder.messages.length > 0) {
+      logs = <LogContainer/>
+    }
 
-    const messageList = messages.slice(0).reverse().map((message, i) =>
-      <DismissableAlert key={i} message={message} onChange={this.handleDismiss}/>);
+    this.fetchUserData();
     return (
-      <React.Fragment>
-        {messageList}
+      <main>
+        {logs}
         <Loading/>
-      </React.Fragment>
+      </main>
     )
   }
 }

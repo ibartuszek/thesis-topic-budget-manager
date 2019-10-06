@@ -1,50 +1,55 @@
+import moment from "moment";
+
 export function addMessage(messages, message) {
-  let found = false;
-  for (let key in messages) {
-    let m = messages[key];
-    if (m.key === message.key && m.value === message.value) {
-      found = true;
+  for (let index = 0; index < messages.length; index++) {
+    if (messages[index].key === message.key && messages[index].show === true) {
+      messages[index].show = false;
       break;
     }
   }
-  if (!found) {
-    messages.push(message);
-  }
+  messages.push(message);
   return function (dispatch) {
     dispatch({type: 'ADD_MESSAGE', messages: messages});
   }
 }
 
 export function removeMessage(messages, message) {
+  let found = false;
   for (let index = 0; index < messages.length; index++) {
-    if (messages[index].key === message.key) {
-      messages.splice(index, 1);
+    if (messages[index].key === message.key && messages[index].show === true) {
+      messages[index].show = false;
+      found = true;
       break;
     }
   }
-  return function (dispatch) {
-    dispatch({type: 'REMOVE_MESSAGE', messages: messages});
+  if (found) {
+    return function (dispatch) {
+      dispatch({type: 'REMOVE_MESSAGE', messages: messages});
+    }
   }
 }
 
 export function getMessage(messages, messageKey, success) {
   let result = null;
   for (let index = 0; index < messages.length && result === null; index++) {
-    if (messages[index].key === messageKey) {
-      result = messages[index].value;
+    if (messages[index].key === messageKey && messages[index].show === true) {
+      result = messages[index];
     }
   }
-  return {
+  let emptyMessage = {
     key: messageKey,
-    value: result,
+    value: null,
     success: success
   };
+  return result !== null ? result : emptyMessage;
 }
 
 export function createMessage(key, message, success) {
   return {
+    date: moment().format("YYYY-MM-DD HH:mm"),
     key: key,
     value: message,
-    success: success
+    success: success,
+    show: true
   };
 }

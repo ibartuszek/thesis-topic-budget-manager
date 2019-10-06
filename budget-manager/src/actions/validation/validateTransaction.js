@@ -22,7 +22,7 @@ export function validateTransaction(transaction) {
   } else if (validateModelValue(date) || validateModelDateValue(date, "Date") !== null) {
     valid = false;
   } else if (monthly) {
-    if (validateModelValue(endDate) || endDate.value === null || validateModelDateValue(endDate, "EndDate") !== null) {
+    if (validateModelValue(endDate) || validateModelDateValue(endDate, "EndDate") !== null) {
       valid = false;
     }
   } else if (validateModelValue(description) || validateModelStringValue(description) !== null) {
