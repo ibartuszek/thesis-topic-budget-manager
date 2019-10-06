@@ -13,7 +13,7 @@ class SubCategorySelect extends Component {
   handleChange(newSubCategory) {
     const {subCategoryList} = this.props;
     let newCategory = findElementByName(subCategoryList, newSubCategory);
-    this.props.handleFieldChange("subCategory", newCategory);
+    this.props.handleModelValueChange("subCategory", newCategory);
   }
 
   showCategoryEdit = (category) => {

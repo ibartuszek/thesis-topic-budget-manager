@@ -7,6 +7,7 @@ import {createTransactionContext} from "../../../actions/common/createContext";
 import {getMessage, removeMessage} from "../../../actions/message/messageActions";
 import {transactionMessages} from "../../../store/MessageHolder";
 import {validateTransaction} from "../../../actions/validation/validateTransaction";
+import {createTrackingCoordinates} from "../../../actions/transaction/createTrackingCoordinates";
 
 class TransactionCard extends Component {
 
@@ -20,7 +21,10 @@ class TransactionCard extends Component {
     const {userHolder, logHolder, transactionType, createTransaction} = this.props;
     if (validateTransaction(transaction)) {
       let context = createTransactionContext(userHolder, logHolder, transactionType);
-      createTransaction(context, transaction);
+      createTrackingCoordinates(transactionType, userHolder.userData.tracking).then(function (coordinate) {
+        createTransaction(context, transaction, coordinate);
+      });
+
     }
   };
 
@@ -56,7 +60,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createTransaction: (context, model) => dispatch(createTransaction(context, model)),
+    createTransaction: (context, model, coordinate) => dispatch(createTransaction(context, model, coordinate)),
     removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
   };
 };

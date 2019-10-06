@@ -68,6 +68,8 @@ export const userFormMessages = {
   passwordMessage: "Please write your password.",
   passwordMessageToChange: "Please write your password to change.",
   passwordConfirmMessage: "Please write your password again to confirm.",
+  trackingLabel: "Outcome tracking",
+  trackingMessage: "Please choose yes or no."
 };
 
 export const userMessages = {

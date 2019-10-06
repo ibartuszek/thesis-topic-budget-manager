@@ -13,7 +13,7 @@ class MainCategorySelect extends Component {
   handleChange(newMainCategory) {
     const {mainCategoryList} = this.props;
     let newCategory = findElementByName(mainCategoryList, newMainCategory);
-    this.props.handleFieldChange("mainCategory", newCategory);
+    this.props.handleModelValueChange("mainCategory", newCategory);
   }
 
   showCategoryEdit = (category) => {

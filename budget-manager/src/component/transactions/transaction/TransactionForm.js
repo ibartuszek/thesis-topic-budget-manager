@@ -6,7 +6,7 @@ import MainCategorySelect from "../mainCategory/MainCategorySelect";
 import ModelAmountValue from "../../layout/form/ModelAmountValue";
 import ModelDateValue from "../../layout/form/ModelDateValue";
 import ModelStringValue from "../../layout/form/ModelStringValue";
-import MonthlySelect from "../MonthlySelect";
+import YesNoSelect from "../../layout/form/YesNoSelect";
 import SubCategoryEditPopUp from "../subCategory/SubCategoryEditPopUp";
 import SubCategorySelect from "../subCategory/selectSubCategory/SubCategorySelect";
 import {createEmptyTransaction} from "../../../actions/transaction/createTransactionMethods";
@@ -124,8 +124,8 @@ class TransactionForm extends Component {
     const {title, amount, currency, mainCategory, subCategory, monthly, date, endDate, description} = this.state.transactionModel;
     const {
       transactionTitleLabel, transactionTitleMessage, transactionAmountLabel, transactionAmountMessage,
-      transactionDateLabel, transactionDateMessage, transactionEndDateLabel, transactionEndDateMessage,
-      transactionDescriptionLabel, transactionDescriptionMessage
+      transactionDateLabel, transactionDateMessage, transactionMonthlyLabel, transactionMonthlyMessage,
+      transactionEndDateLabel, transactionEndDateMessage, transactionDescriptionLabel, transactionDescriptionMessage
     } = transactionMessages;
 
     let editableCategories = popup === undefined;
@@ -170,7 +170,8 @@ class TransactionForm extends Component {
                               mainCategory={mainCategory} mainCategoryList={mainCategoryList} editable={editableCategories}/>
           <SubCategorySelect handleFieldChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
                              subCategory={subCategory} subCategoryList={subCategoryList} editable={editableCategories}/>
-          <MonthlySelect handleFieldChange={this.handleFieldChange} monthly={monthly}/>
+          <YesNoSelect handleFieldChange={this.handleFieldChange} value={monthly} valueName="monthly"
+                       valueLabel={transactionMonthlyLabel} valueMessage={transactionMonthlyMessage}/>
           <ModelDateValue onChange={this.handleModelValueChange}
                           id="date" model={date}
                           labelTitle={transactionDateLabel} placeHolder={transactionDateMessage}/>

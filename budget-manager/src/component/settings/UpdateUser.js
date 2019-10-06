@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import AlertMessageComponent from "../AlertMessageComponent";
 import ModelStringValue from "../layout/form/ModelStringValue";
+import YesNoSelect from "../layout/form/YesNoSelect";
 import {createContext} from "../../actions/common/createContext";
 import {createEmptyUser} from "../../actions/user/createUserMethods";
 import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import {updateUser} from "../../actions/user/updateUser";
-import {userFormMessages} from "../../store/MessageHolder";
 import {validateModel} from "../../actions/validation/validateModel";
+import {userFormMessages} from "../../store/MessageHolder";
 
 class UpdateUser extends Component {
 
@@ -17,6 +18,7 @@ class UpdateUser extends Component {
 
   constructor(props) {
     super(props);
+    this.handleModelValueChange = this.handleModelValueChange.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
   }
@@ -30,7 +32,7 @@ class UpdateUser extends Component {
     });
   }
 
-  handleFieldChange(id, value, errorMessage) {
+  handleModelValueChange(id, value, errorMessage) {
     this.setState(prevState => ({
       userModel: {
         ...prevState.userModel,
@@ -41,6 +43,15 @@ class UpdateUser extends Component {
         }
       }
     }))
+  }
+
+  handleFieldChange(id, value) {
+    this.setState(prevState => ({
+      userModel: {
+        ...prevState.userModel,
+        [id]: value
+      }
+    }));
   }
 
   handleSubmit = (e) => {
@@ -60,10 +71,10 @@ class UpdateUser extends Component {
 
   render() {
     const {logHolder} = this.props;
-    const {email, password, confirmationPassword, firstName, lastName} = this.state.userModel;
+    const {email, password, confirmationPassword, firstName, lastName, tracking} = this.state.userModel;
     const {
       emailLabel, emailMessage, passwordLabel, passwordMessageToChange, passwordConfirmMessage,
-      firstNameLabel, firstNameMessage, lastNameLabel, lastNameMessage
+      firstNameLabel, firstNameMessage, lastNameLabel, lastNameMessage, trackingLabel, trackingMessage
     } = userFormMessages;
 
     return (
@@ -71,21 +82,23 @@ class UpdateUser extends Component {
         <div className="card card-body mx-auto max-w-500 min-w-400">
           <form className="form-group mb-0" onSubmit={this.handleSubmit}>
             <h1 className="mt-3 mx-auto">User data</h1>
-            <ModelStringValue onChange={this.handleFieldChange}
+            <ModelStringValue onChange={this.handleModelValueChange}
                               id="email" model={email}
                               labelTitle={emailLabel} placeHolder={emailMessage} type="email"/>
-            <ModelStringValue onChange={this.handleFieldChange}
+            <ModelStringValue onChange={this.handleModelValueChange}
                               id="password" model={password}
                               labelTitle={passwordLabel} placeHolder={passwordMessageToChange} type="password"/>
-            <ModelStringValue onChange={this.handleFieldChange}
+            <ModelStringValue onChange={this.handleModelValueChange}
                               id="confirmationPassword" model={confirmationPassword} passwordValue={password.value}
                               labelTitle={passwordLabel} placeHolder={passwordConfirmMessage} type="password"/>
-            <ModelStringValue onChange={this.handleFieldChange}
+            <ModelStringValue onChange={this.handleModelValueChange}
                               id="firstName" model={firstName}
                               labelTitle={firstNameLabel} placeHolder={firstNameMessage} type="text"/>
-            <ModelStringValue onChange={this.handleFieldChange}
+            <ModelStringValue onChange={this.handleModelValueChange}
                               id="lastName" model={lastName}
                               labelTitle={lastNameLabel} placeHolder={lastNameMessage} type="text"/>
+            <YesNoSelect handleFieldChange={this.handleFieldChange} value={tracking} valueName="tracking"
+                         valueLabel={trackingLabel} valueMessage={trackingMessage}/>
             <AlertMessageComponent message={getMessage(logHolder.messages, "updateUserMessage", true)} onChange={this.handleDismiss}/>
             <AlertMessageComponent message={getMessage(logHolder.messages, "updateUserErrorMessage", false)} onChange={this.handleDismiss}/>
             <button className="btn btn-block btn-outline-success mt-3 mb-2">

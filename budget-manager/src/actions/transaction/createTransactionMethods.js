@@ -93,7 +93,7 @@ export function transformTransactionListFromResponse(responseModelList) {
   return responseModelList.map(transformTransactionFromResponse);
 }
 
-export function transformTransactionToRequest(transactionModel) {
+export function transformTransactionToRequest(transactionModel, coordinate) {
   let subCategory = null;
   if (transactionModel.subCategory !== undefined && transactionModel.subCategory !== null) {
     subCategory = transformSubCategoryToRequest(transactionModel.subCategory)
@@ -110,7 +110,8 @@ export function transformTransactionToRequest(transactionModel) {
     date: transactionModel.date.value,
     endDate: replaceOptionalField(transactionModel, 'endDate'),
     description: replaceOptionalField(transactionModel, 'description'),
-    locked: transactionModel.locked
+    locked: transactionModel.locked,
+    coordinate: coordinate
   };
 }
 

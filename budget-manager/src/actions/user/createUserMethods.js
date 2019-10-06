@@ -60,6 +60,7 @@ export function createEmptyUser() {
       regexp: lastNameRegexp,
       possibleEnumValues: lastNamePossibleEnumValues
     },
+    tracking: false
   };
 }
 
@@ -69,6 +70,7 @@ export function transformUserFromResponse(responseModel) {
   user.email.value = responseModel['email'];
   user.firstName.value = responseModel['firstName'];
   user.lastName.value = responseModel['lastName'];
+  user.tracking = responseModel['tracking'];
   return user;
 }
 
@@ -79,12 +81,12 @@ export function transformUserToRequest(userModel) {
   } else {
     password = base64.encode(userModel.password.value);
   }
-
   return {
     id: userModel['userId'],
     email: userModel['email'].value,
     password: password,
     firstName: userModel['firstName'].value,
     lastName: userModel['lastName'].value,
+    tracking: userModel['tracking']
   };
 }

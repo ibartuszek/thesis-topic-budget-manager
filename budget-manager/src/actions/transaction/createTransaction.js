@@ -5,10 +5,11 @@ import {dispatchError, dispatchSuccess} from "../common/dispatchActions";
 import {transformTransactionFromResponse, transformTransactionToRequest} from "./createTransactionMethods";
 import {defaultMessages} from "../../store/MessageHolder";
 
-export function createTransaction(context, transactionModel) {
+export function createTransaction(context, transactionModel, coordinate) {
   const {userId, jwtToken, messages, transactionType} = context;
   let header = createHeaderWithJwtAndJsonBody(jwtToken);
-  let body = JSON.stringify(createBody(transactionModel, userId, transactionType));
+  let body = JSON.stringify(createBody(transactionModel, userId, transactionType, coordinate));
+  console.log(body);
   let successCase = 'CREATE_' + transactionType + '_SUCCESS';
   let errorCase = 'CREATE_' + transactionType + '_ERROR';
   let responseStatus = null;
@@ -38,10 +39,10 @@ export function createTransaction(context, transactionModel) {
   }
 }
 
-function createBody(transactionModel, userId, transactionType) {
+function createBody(transactionModel, userId, transactionType, coordinate) {
   let body = {};
   body.userId = userId;
-  body.transaction = transformTransactionToRequest(transactionModel);
+  body.transaction = transformTransactionToRequest(transactionModel, coordinate);
   body.transactionType = transactionType;
   return body;
 }
