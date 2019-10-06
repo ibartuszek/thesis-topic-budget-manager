@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
+import hu.elte.bm.transactionservice.dal.picture.PictureEntity;
 import hu.elte.bm.transactionservice.domain.Currency;
 
 @Entity
@@ -48,6 +49,11 @@ public final class OutcomeEntity {
     private boolean locked;
     @Column(name = "user_id")
     private Long userId;
+    private Double latitude;
+    private Double longitude;
+    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "picture_id")
+    private PictureEntity pictureEntity;
 
     OutcomeEntity() {
     }
@@ -146,5 +152,29 @@ public final class OutcomeEntity {
 
     public void setUserId(final Long userId) {
         this.userId = userId;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(final Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(final Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public PictureEntity getPictureEntity() {
+        return pictureEntity;
+    }
+
+    public void setPictureEntity(final PictureEntity pictureEntity) {
+        this.pictureEntity = pictureEntity;
     }
 }

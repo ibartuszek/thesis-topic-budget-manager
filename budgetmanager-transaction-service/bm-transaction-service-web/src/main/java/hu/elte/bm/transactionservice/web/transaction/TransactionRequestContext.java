@@ -21,9 +21,9 @@ public class TransactionRequestContext extends RequestContext {
     @Override
     public String toString() {
         return "TransactionRequestContext{"
-                + "transactionType=" + getTransactionType()
-                + ", userId=" + getUserId()
-                + "transaction=" + transaction
-                + '}';
+            + "transactionType=" + getTransactionType()
+            + ", userId=" + getUserId()
+            + ", transaction=" + transaction
+            + '}';
     }
 }

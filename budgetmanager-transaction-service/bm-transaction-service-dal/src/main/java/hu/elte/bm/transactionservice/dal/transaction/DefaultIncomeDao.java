@@ -11,10 +11,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
-import hu.elte.bm.transactionservice.dal.categories.MainCategoryRepository;
-import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
-import hu.elte.bm.transactionservice.dal.categories.SubCategoryRepository;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContext;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContextFactory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.service.database.IncomeDao;
 
@@ -22,38 +20,35 @@ import hu.elte.bm.transactionservice.service.database.IncomeDao;
 public class DefaultIncomeDao implements IncomeDao {
 
     private final IncomeRepository incomeRepository;
-    private final MainCategoryRepository mainCategoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
-    private final TransactionEntityTransformer transactionEntityTransformer;
+    private final TransactionEntityContextFactory contextFactory;
+    private final TransactionEntityTransformer entityTransformer;
 
-    DefaultIncomeDao(final IncomeRepository incomeRepository, final MainCategoryRepository mainCategoryRepository,
-        final SubCategoryRepository subCategoryRepository,
-        final TransactionEntityTransformer transactionEntityTransformer) {
+    DefaultIncomeDao(final IncomeRepository incomeRepository, final TransactionEntityContextFactory contextFactory,
+        final TransactionEntityTransformer entityTransformer) {
         this.incomeRepository = incomeRepository;
-        this.mainCategoryRepository = mainCategoryRepository;
-        this.subCategoryRepository = subCategoryRepository;
-        this.transactionEntityTransformer = transactionEntityTransformer;
+        this.contextFactory = contextFactory;
+        this.entityTransformer = entityTransformer;
     }
 
     @Override
     public List<Transaction> findAll(final LocalDate start, final LocalDate end, final Long userId) {
         List<Transaction> transactionList = new ArrayList<>();
         incomeRepository.findAll(convertToDate(start), convertToDate(end), userId)
-            .forEach(entity -> transactionList.add(transactionEntityTransformer.transformToTransaction(entity)));
+            .forEach(entity -> transactionList.add(entityTransformer.transformToTransaction(entity)));
         return transactionList;
     }
 
     @Override
     public Optional<Transaction> findById(final Long id, final Long userId) {
         return incomeRepository.findByIdAndUserId(id, userId)
-            .map(transactionEntityTransformer::transformToTransaction);
+            .map(entityTransformer::transformToTransaction);
     }
 
     @Override
     public List<Transaction> findByTitle(final String title, final Long userId) {
         List<Transaction> transactionList = new ArrayList<>();
         incomeRepository.findByTitleAndUserId(title, userId).forEach(entity ->
-            transactionList.add(transactionEntityTransformer.transformToTransaction(entity)));
+            transactionList.add(entityTransformer.transformToTransaction(entity)));
         return transactionList;
     }
 
@@ -62,7 +57,7 @@ public class DefaultIncomeDao implements IncomeDao {
     public Transaction save(final Transaction transaction, final Long userId) {
         IncomeEntity entityToSave = createIncomeEntity(transaction, userId);
         IncomeEntity response = incomeRepository.save(entityToSave);
-        return transactionEntityTransformer.transformToTransaction(response);
+        return entityTransformer.transformToTransaction(response);
     }
 
     @Override
@@ -83,16 +78,8 @@ public class DefaultIncomeDao implements IncomeDao {
     }
 
     private IncomeEntity createIncomeEntity(final Transaction transaction, final Long userId) {
-        return transactionEntityTransformer.transformToIncomeEntity(transaction, getMainCategoryEntityFromRepository(transaction, userId),
-            getSubCategoryFromRepository(transaction, userId), userId);
+        TransactionEntityContext transactionEntityContext = contextFactory.create(transaction, userId);
+        return entityTransformer.transformToIncomeEntity(transactionEntityContext);
     }
 
-    private MainCategoryEntity getMainCategoryEntityFromRepository(final Transaction transaction, final Long userId) {
-        return mainCategoryRepository.findByIdAndUserId(transaction.getMainCategory().getId(), userId).orElse(null);
-    }
-
-    private SubCategoryEntity getSubCategoryFromRepository(final Transaction transaction, final Long userId) {
-        return transaction.getSubCategory() == null ? null
-            : subCategoryRepository.findByIdAndUserId(transaction.getSubCategory().getId(), userId).orElse(null);
-    }
 }

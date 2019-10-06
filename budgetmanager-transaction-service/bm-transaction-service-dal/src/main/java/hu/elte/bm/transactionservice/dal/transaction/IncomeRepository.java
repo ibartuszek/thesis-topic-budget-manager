@@ -9,7 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface IncomeRepository extends CrudRepository<IncomeEntity, Long> {
 
-    @Query("select i from IncomeEntity i where i.date >= :start and i.date <= :end and i.userId = :userId")
+    @Query("select i from IncomeEntity i where i.userId = :userId "
+        + "and (i.date >= :start and i.date <= :end "
+        + "or (i.monthly = true and (i.endDate >= :start or i.endDate = null)))")
     Iterable<IncomeEntity> findAll(@Param("start") Date start, @Param("end") Date end, @Param("userId") Long userId);
 
     Optional<IncomeEntity> findByIdAndUserId(Long id, Long userId);

@@ -11,6 +11,12 @@ public final class SubCategoryResponse extends ResponseModel {
         super(message, successful);
     }
 
+    static SubCategoryResponse createSuccessfulSubCategoryResponse(final SubCategory subCategory, final String message) {
+        SubCategoryResponse response = new SubCategoryResponse(message, true);
+        response.setSubCategory(subCategory);
+        return response;
+    }
+
     public SubCategory getSubCategory() {
         return subCategory;
     }
@@ -19,18 +25,12 @@ public final class SubCategoryResponse extends ResponseModel {
         this.subCategory = subCategory;
     }
 
-    static SubCategoryResponse createSuccessfulSubCategoryResponse(final SubCategory subCategory, final String message) {
-        SubCategoryResponse response = new SubCategoryResponse(message, true);
-        response.setSubCategory(subCategory);
-        return response;
-    }
-
     @Override
     public String toString() {
         return "SubCategoryResponse{"
-                + "message='" + getMessage() + '\''
-                + ", successful=" + isSuccessful()
-                + "subCategory=" + subCategory
-                + '}';
+            + "message='" + getMessage() + '\''
+            + ", successful=" + isSuccessful()
+            + ", subCategory=" + subCategory
+            + '}';
     }
 }

@@ -11,8 +11,8 @@ import org.springframework.util.Assert;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
-import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionConflictException;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.service.database.TransactionDaoProxy;
 
 @Service("transactionService")
@@ -142,13 +142,17 @@ public class TransactionService {
     }
 
     private void validateForUpdate(final Transaction transaction, final TransactionContext context) {
-        Assert.notNull(transaction, transactionCannotBeNull);
-        Assert.notNull(transaction.getId(), transactionIdCannotBeNull);
+        validateTransactionWithIdForUpdate(transaction);
         validateFields(transaction, context);
         Transaction originalTransaction = getOriginalTransaction(transaction, context);
         validateTransactionIsNotLocked(transaction, originalTransaction, transactionIsLockedExceptionForUpdate);
         validateAgainstOriginalTransaction(transaction, originalTransaction);
         transactionIsNotReserved(transaction, context);
+    }
+
+    private void validateTransactionWithIdForUpdate(final Transaction transaction) {
+        Assert.notNull(transaction, transactionCannotBeNull);
+        Assert.notNull(transaction.getId(), transactionIdCannotBeNull);
     }
 
     private Transaction getOriginalTransaction(final Transaction transaction, final TransactionContext context) {
@@ -174,8 +178,7 @@ public class TransactionService {
     }
 
     private void validateForDelete(final Transaction transaction, final TransactionContext context) {
-        Assert.notNull(transaction, transactionCannotBeNull);
-        Assert.notNull(transaction.getId(), transactionIdCannotBeNull);
+        validateTransactionWithIdForUpdate(transaction);
         Transaction originalTransaction = getOriginalTransaction(transaction, context);
         validateTransactionIsNotLocked(transaction, originalTransaction, transactionIsLockedForDelete);
     }

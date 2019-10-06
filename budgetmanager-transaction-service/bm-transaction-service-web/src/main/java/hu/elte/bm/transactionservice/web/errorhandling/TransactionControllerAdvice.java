@@ -9,21 +9,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import hu.elte.bm.transactionservice.domain.exceptions.PictureNotFoundException;
 import hu.elte.bm.transactionservice.domain.exceptions.maincategory.IllegalMainCategoryException;
-import hu.elte.bm.transactionservice.domain.exceptions.subcategory.IllegalSubCategoryException;
-import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
 import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryConflictException;
 import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryNotFoundException;
+import hu.elte.bm.transactionservice.domain.exceptions.subcategory.IllegalSubCategoryException;
 import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryConflictException;
 import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryNotFoundException;
+import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
 import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionConflictException;
 import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionNotFoundException;
 
 @RestControllerAdvice
 public class TransactionControllerAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({IllegalArgumentException.class, IllegalMainCategoryException.class,
-            IllegalSubCategoryException.class, IllegalTransactionException.class})
+    @ExceptionHandler({ IllegalArgumentException.class, IllegalMainCategoryException.class,
+        IllegalSubCategoryException.class, IllegalTransactionException.class })
     protected ResponseEntity<Object> handleBadRequests(final RuntimeException e, final WebRequest request) {
         String bodyOfResponse = e.getMessage();
         return new ResponseEntity<>(bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -42,7 +43,8 @@ public class TransactionControllerAdvice extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler({ SubCategoryNotFoundException.class, MainCategoryNotFoundException.class, TransactionNotFoundException.class })
+    @ExceptionHandler({ SubCategoryNotFoundException.class, MainCategoryNotFoundException.class, TransactionNotFoundException.class,
+        PictureNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(final RuntimeException e, final WebRequest request) {
         String bodyOfResponse = e.getMessage();
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);

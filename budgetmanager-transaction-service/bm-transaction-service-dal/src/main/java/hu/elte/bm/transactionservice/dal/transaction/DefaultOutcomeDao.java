@@ -11,10 +11,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
-import hu.elte.bm.transactionservice.dal.categories.MainCategoryRepository;
-import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
-import hu.elte.bm.transactionservice.dal.categories.SubCategoryRepository;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContext;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContextFactory;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.service.database.OutcomeDao;
 
@@ -22,36 +20,34 @@ import hu.elte.bm.transactionservice.service.database.OutcomeDao;
 public class DefaultOutcomeDao implements OutcomeDao {
 
     private final OutcomeRepository outcomeRepository;
-    private final MainCategoryRepository mainCategoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
-    private final TransactionEntityTransformer transactionEntityTransformer;
+    private final TransactionEntityContextFactory contextFactory;
+    private final TransactionEntityTransformer entityTransformer;
 
-    DefaultOutcomeDao(final OutcomeRepository outcomeRepository, final MainCategoryRepository mainCategoryRepository,
-        final SubCategoryRepository subCategoryRepository, final TransactionEntityTransformer transactionEntityTransformer) {
+    DefaultOutcomeDao(final OutcomeRepository outcomeRepository, final TransactionEntityContextFactory contextFactory,
+        final TransactionEntityTransformer entityTransformer) {
         this.outcomeRepository = outcomeRepository;
-        this.mainCategoryRepository = mainCategoryRepository;
-        this.subCategoryRepository = subCategoryRepository;
-        this.transactionEntityTransformer = transactionEntityTransformer;
+        this.contextFactory = contextFactory;
+        this.entityTransformer = entityTransformer;
     }
 
     @Override
     public List<Transaction> findAll(final LocalDate start, final LocalDate end, final Long userId) {
         List<Transaction> transactionList = new ArrayList<>();
         outcomeRepository.findAll(convertToDate(start), convertToDate(end), userId)
-            .forEach(entity -> transactionList.add(transactionEntityTransformer.transformToTransaction(entity)));
+            .forEach(entity -> transactionList.add(entityTransformer.transformToTransaction(entity)));
         return transactionList;
     }
 
     @Override
     public Optional<Transaction> findById(final Long id, final Long userId) {
-        return outcomeRepository.findByIdAndUserId(id, userId).map(transactionEntityTransformer::transformToTransaction);
+        return outcomeRepository.findByIdAndUserId(id, userId).map(entityTransformer::transformToTransaction);
     }
 
     @Override
     public List<Transaction> findByTitle(final String title, final Long userId) {
         List<Transaction> transactionList = new ArrayList<>();
         outcomeRepository.findByTitleAndUserId(title, userId).forEach(entity ->
-            transactionList.add(transactionEntityTransformer.transformToTransaction(entity)));
+            transactionList.add(entityTransformer.transformToTransaction(entity)));
         return transactionList;
     }
 
@@ -60,7 +56,7 @@ public class DefaultOutcomeDao implements OutcomeDao {
     public Transaction save(final Transaction transaction, final Long userId) {
         OutcomeEntity entityToSave = createOutcomeEntity(transaction, userId);
         OutcomeEntity response = outcomeRepository.save(entityToSave);
-        return transactionEntityTransformer.transformToTransaction(response);
+        return entityTransformer.transformToTransaction(response);
     }
 
     @Override
@@ -81,17 +77,9 @@ public class DefaultOutcomeDao implements OutcomeDao {
     }
 
     private OutcomeEntity createOutcomeEntity(final Transaction transaction, final Long userId) {
-        return transactionEntityTransformer.transformToOutcomeEntity(transaction, getMainCategoryEntityFromRepository(transaction, userId),
-            getSubCategoryFromRepository(transaction, userId), userId);
-    }
+        TransactionEntityContext transactionEntityContext = contextFactory.create(transaction, userId);
+        return entityTransformer.transformToOutcomeEntity(transactionEntityContext);
 
-    private MainCategoryEntity getMainCategoryEntityFromRepository(final Transaction transaction, final Long userId) {
-        return mainCategoryRepository.findByIdAndUserId(transaction.getMainCategory().getId(), userId).orElse(null);
-    }
-
-    private SubCategoryEntity getSubCategoryFromRepository(final Transaction transaction, final Long userId) {
-        return transaction.getSubCategory() == null ? null
-            : subCategoryRepository.findByIdAndUserId(transaction.getSubCategory().getId(), userId).orElse(null);
     }
 
 }

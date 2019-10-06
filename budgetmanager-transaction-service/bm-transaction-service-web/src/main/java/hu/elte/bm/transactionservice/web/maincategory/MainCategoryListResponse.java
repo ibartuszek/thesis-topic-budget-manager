@@ -34,9 +34,9 @@ public final class MainCategoryListResponse extends ResponseModel {
     @Override
     public String toString() {
         return "MainCategoryListResponse{"
-                + "message='" + getMessage() + '\''
-                + ", successful=" + isSuccessful()
-                + "mainCategoryList=" + mainCategoryList
-                + '}';
+            + "message='" + getMessage() + '\''
+            + ", successful=" + isSuccessful()
+            + ", mainCategoryList=" + mainCategoryList
+            + '}';
     }
 }

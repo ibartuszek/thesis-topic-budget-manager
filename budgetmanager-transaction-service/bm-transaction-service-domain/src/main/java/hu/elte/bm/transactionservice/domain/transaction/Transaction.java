@@ -44,6 +44,8 @@ public final class Transaction {
     @Length(min = 1, max = MAXIMUM_DESCRIPTION_LENGTH, message = "Description must be shorter than 100 characters!")
     private final String description;
     private final boolean locked;
+    private final Coordinate coordinate;
+    private final Picture picture;
 
     private Transaction(final Builder builder) {
         this.id = builder.id;
@@ -58,6 +60,8 @@ public final class Transaction {
         this.endDate = builder.endDate;
         this.description = builder.description;
         this.locked = builder.locked;
+        this.coordinate = builder.coordinate;
+        this.picture = builder.picture;
     }
 
     public static Builder builder() {
@@ -112,6 +116,14 @@ public final class Transaction {
         return locked;
     }
 
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public Picture getPicture() {
+        return picture;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,13 +134,13 @@ public final class Transaction {
         }
         Transaction that = (Transaction) o;
         return Double.compare(that.amount, amount) == 0
-                && monthly == that.monthly
-                && title.equals(that.title)
-                && currency == that.currency
-                && transactionType == that.transactionType
-                && mainCategory.equals(that.mainCategory)
-                && (subCategory == null || subCategory.equals(that.subCategory))
-                && date.equals(that.date);
+            && monthly == that.monthly
+            && title.equals(that.title)
+            && currency == that.currency
+            && transactionType == that.transactionType
+            && mainCategory.equals(that.mainCategory)
+            && (subCategory == null || subCategory.equals(that.subCategory))
+            && date.equals(that.date);
     }
 
     @Override
@@ -139,19 +151,21 @@ public final class Transaction {
     @Override
     public String toString() {
         return "Transaction{"
-                + "id=" + id
-                + ", title='" + title + '\''
-                + ", amount=" + amount
-                + ", currency=" + currency
-                + ", transactionType=" + transactionType
-                + ", mainCategory=" + mainCategory
-                + ", subCategory=" + subCategory
-                + ", monthly=" + monthly
-                + ", date=" + date
-                + ", endDate=" + endDate
-                + ", description='" + description + '\''
-                + ", locked=" + locked
-                + '}';
+            + "id=" + id
+            + ", title='" + title + '\''
+            + ", amount=" + amount
+            + ", currency=" + currency
+            + ", transactionType=" + transactionType
+            + ", mainCategory=" + mainCategory
+            + ", subCategory=" + subCategory
+            + ", monthly=" + monthly
+            + ", date=" + date
+            + ", endDate=" + endDate
+            + ", description='" + description + '\''
+            + ", locked=" + locked
+            + ", coordinate=" + coordinate
+            + ", picture=" + picture
+            + '}';
     }
 
     public static class Builder {
@@ -167,6 +181,8 @@ public final class Transaction {
         private LocalDate endDate;
         private String description;
         private boolean locked;
+        private Coordinate coordinate;
+        private Picture picture;
 
         public Builder withId(final Long id) {
             this.id = id;
@@ -225,6 +241,16 @@ public final class Transaction {
 
         public Builder withLocked(final boolean locked) {
             this.locked = locked;
+            return this;
+        }
+
+        public Builder withCoordinate(final Coordinate coordinate) {
+            this.coordinate = coordinate;
+            return this;
+        }
+
+        public Builder withPicture(final Picture picture) {
+            this.picture = picture;
             return this;
         }
 

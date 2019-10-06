@@ -2,7 +2,7 @@ package hu.elte.bm.transactionservice.domain.exceptions.maincategory;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 
-public class MainCategoryNotFoundException extends RuntimeException implements MainCategoryException  {
+public class MainCategoryNotFoundException extends RuntimeException implements MainCategoryException {
 
     private final MainCategory mainCategory;
 

@@ -1,4 +1,4 @@
-package hu.elte.bm.transactionservice.web.logging;
+package hu.elte.bm.transactionservice.logging;
 
 import java.text.MessageFormat;
 
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import hu.elte.bm.transactionservice.domain.exceptions.PictureNotFoundException;
 import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryException;
 import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryException;
 import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionException;
@@ -51,45 +52,49 @@ public class LoggerAspect {
     }
 
     @Before("repositoryClassMethods()")
-    public void logRepositoryCalls(final JoinPoint joinPoint) throws Throwable {
+    public void logRepositoryCalls(final JoinPoint joinPoint) {
         logInfoWithParameters(joinPoint);
     }
 
     @Before("controllerClassMethods()")
-    public void logControllerCalls(final JoinPoint joinPoint) throws Throwable {
+    public void logControllerCalls(final JoinPoint joinPoint) {
         logInfoWithParameters(joinPoint);
     }
 
     @AfterReturning(value = "controllerClassMethods()", returning = "returnValue")
-    public void logControllerReturns(final JoinPoint joinPoint, final Object returnValue) throws Throwable {
+    public void logControllerReturns(final JoinPoint joinPoint, final Object returnValue) {
         logInfoWithReturnValue(joinPoint, returnValue);
     }
 
     @Before("controllerAdviceClassMethods()")
-    public void logControllerAdviceCalls(final JoinPoint joinPoint) throws Throwable {
+    public void logControllerAdviceCalls(final JoinPoint joinPoint) {
         logError(joinPoint);
     }
 
-    private void logInfoWithParameters(final JoinPoint joinPoint) throws Throwable {
+    private void logInfoWithParameters(final JoinPoint joinPoint) {
         if ("INFO".equals(loggingLevel)) {
             LOGGER.info(createInfoLog(joinPoint.getSignature().toShortString(), joinPoint.getArgs()));
         }
     }
 
-    private void logInfoWithReturnValue(final JoinPoint joinPoint, final Object result) throws Throwable {
+    private void logInfoWithReturnValue(final JoinPoint joinPoint, final Object result) {
         if ("INFO".equals(loggingLevel)) {
             LOGGER.info(MessageFormat.format(PATTERN, joinPoint.getSignature().toShortString(), result));
         }
     }
 
-    private void logError(final JoinPoint joinPoint) throws Throwable {
+    private void logError(final JoinPoint joinPoint) {
         LOGGER.error(createErrorLog(joinPoint.getArgs()));
     }
 
     private String createInfoLog(final String shortName, final Object[] args) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Object arg : args) {
-            stringBuilder.append(arg.toString());
+            if (arg != null) {
+                stringBuilder.append(arg.toString());
+            } else {
+                stringBuilder.append("null");
+            }
             if (arg != args[args.length - 1]) {
                 stringBuilder.append(ARGUMENT_SEPARATOR);
             }
@@ -109,6 +114,9 @@ public class LoggerAspect {
         } else if (e instanceof SubCategoryException) {
             SubCategoryException exception = (SubCategoryException) e;
             target = exception.getSubCategory();
+        } else if (e instanceof PictureNotFoundException) {
+            PictureNotFoundException exception = (PictureNotFoundException) e;
+            target = exception.getPicture();
         }
         Object servletWebRequest = args[1];
         return createExceptionLog(e, target, servletWebRequest);
@@ -132,13 +140,13 @@ public class LoggerAspect {
 
     private void logStackTrace(final RuntimeException exception, final StringBuilder builder) {
         builder.append(END_LINE)
-                .append(TAB)
-                .append(STACK_TRACE);
+            .append(TAB)
+            .append(STACK_TRACE);
         for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
             builder.append(END_LINE)
-                    .append(TAB)
-                    .append(TAB)
-                    .append(stackTraceElement);
+                .append(TAB)
+                .append(TAB)
+                .append(stackTraceElement);
         }
     }
 

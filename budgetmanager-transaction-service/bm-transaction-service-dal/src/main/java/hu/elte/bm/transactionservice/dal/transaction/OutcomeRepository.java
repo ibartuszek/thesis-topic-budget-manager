@@ -9,7 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface OutcomeRepository extends CrudRepository<OutcomeEntity, Long> {
 
-    @Query("select o from OutcomeEntity o where o.date >= :start and o.date <= :end and o.userId = :userId")
+    @Query("select o from OutcomeEntity o where o.userId = :userId "
+        + "and (o.date >= :start and o.date <= :end "
+        + "or (o.monthly = true and (o.endDate >= :start or o.endDate = null)))")
     Iterable<OutcomeEntity> findAll(@Param("start") Date start, @Param("end") Date end, @Param("userId") Long userId);
 
     Optional<OutcomeEntity> findByIdAndUserId(Long id, Long userId);

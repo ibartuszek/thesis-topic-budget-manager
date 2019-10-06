@@ -1,6 +1,7 @@
 package hu.elte.bm.transactionservice.app.test.transaction;
 
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
+import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.OUTCOME;
 
 import java.time.LocalDate;
 
@@ -10,6 +11,8 @@ import hu.elte.bm.transactionservice.app.AbstractTransactionServiceApplicationTe
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
+import hu.elte.bm.transactionservice.domain.transaction.Coordinate;
+import hu.elte.bm.transactionservice.domain.transaction.Picture;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
@@ -17,6 +20,7 @@ import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
 public abstract class AbstractTransactionTest extends AbstractTransactionServiceApplicationTest {
 
     static final Long EXPECTED_ID = 10L;
+    static final Long EXPECTED_OUTCOME_ID = 1L;
     static final Long RESERVED_ID = 5L;
     static final Long INVALID_ID = 99L;
     static final Long LOCKED_ID = 1L;
@@ -33,6 +37,20 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     static final String EXISTING_MAIN_CATEGORY_NAME_2 = "main category 2";
     static final String THE_TRANSACTION_HAS_BEEN_SAVED = "The transaction has been saved.";
     static final Long EXISTING_MAIN_CATEGORY_ID_1 = 1L;
+    static final Long EXISTING_OUTCOME_MAIN_CATEGORY_ID_1 = 4L;
+    static final Double LATITUDE = 1.0;
+    static final Double LONGITUDE = -1.0;
+    static final Coordinate COORDINATE = Coordinate.builder()
+        .withLatitude(LATITUDE)
+        .withLongitude(LONGITUDE)
+        .build();
+    static final Long PICTURE_ID = 1L;
+    static final byte[] PICTURE_BYTES = { 1, 0, 0, 1, 0, 0, 1 };
+    static final String EXPECTED_PICTURE_BYTES = "AQAAAQAAAQ==";
+    static final Picture PICTURE = Picture.builder()
+        .withId(PICTURE_ID)
+        .withPicture(PICTURE_BYTES)
+        .build();
 
     private static final String EMPTY_STRING = "";
     private static final String TOO_LONG_TITLE = "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb1";
@@ -44,6 +62,8 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
     private static final String EXISTING_MAIN_CATEGORY_NAME_1 = "main category 1";
     private static final long EXISTING_SUB_CATEGORY_ID_1 = 1L;
     private static final long EXISTING_SUB_CATEGORY_ID_2 = 2L;
+    private static final long EXISTING_OUTCOME_SUB_CATEGORY_ID_1 = 4L;
+    private static final long EXISTING_OUTCOME_SUB_CATEGORY_ID_2 = 5L;
     private static final String EXISTING_SUB_CATEGORY_NAME_1 = "supplementary category 1";
     private static final String EXISTING_SUB_CATEGORY_NAME_2 = "supplementary category 2";
     private static final boolean MONTHLY = true;
@@ -168,6 +188,13 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
         MainCategory mainCategory = createMainCategory(EXISTING_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, INCOME);
         mainCategory.getSubCategorySet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_1, EXISTING_SUB_CATEGORY_NAME_1, INCOME));
         mainCategory.getSubCategorySet().add(createSubCategory(EXISTING_SUB_CATEGORY_ID_2, EXISTING_SUB_CATEGORY_NAME_2, INCOME));
+        return mainCategory;
+    }
+
+    MainCategory createDefaultMainCategoryForOutcome() {
+        MainCategory mainCategory = createMainCategory(EXISTING_OUTCOME_MAIN_CATEGORY_ID_1, EXISTING_MAIN_CATEGORY_NAME_1, OUTCOME);
+        mainCategory.getSubCategorySet().add(createSubCategory(EXISTING_OUTCOME_SUB_CATEGORY_ID_1, EXISTING_SUB_CATEGORY_NAME_1, OUTCOME));
+        mainCategory.getSubCategorySet().add(createSubCategory(EXISTING_OUTCOME_SUB_CATEGORY_ID_2, EXISTING_SUB_CATEGORY_NAME_2, OUTCOME));
         return mainCategory;
     }
 

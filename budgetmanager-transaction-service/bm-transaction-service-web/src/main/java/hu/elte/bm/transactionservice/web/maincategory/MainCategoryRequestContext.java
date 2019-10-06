@@ -21,9 +21,9 @@ public class MainCategoryRequestContext extends RequestContext {
     @Override
     public String toString() {
         return "MainCategoryRequestContext{"
-                + "transactionType=" + getTransactionType()
-                + ", userId=" + getUserId()
-                + "mainCategory=" + mainCategory
-                + '}';
+            + "transactionType=" + getTransactionType()
+            + ", userId=" + getUserId()
+            + ", mainCategory=" + mainCategory
+            + '}';
     }
 }

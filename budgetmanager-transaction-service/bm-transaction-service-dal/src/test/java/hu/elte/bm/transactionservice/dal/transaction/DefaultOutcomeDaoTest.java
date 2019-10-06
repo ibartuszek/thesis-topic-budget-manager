@@ -20,9 +20,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
-import hu.elte.bm.transactionservice.dal.categories.MainCategoryRepository;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
-import hu.elte.bm.transactionservice.dal.categories.SubCategoryRepository;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContext;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContextFactory;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
@@ -45,18 +45,16 @@ public class DefaultOutcomeDaoTest {
 
     private IMocksControl control;
     private OutcomeRepository outcomeRepository;
-    private MainCategoryRepository mainCategoryRepository;
-    private SubCategoryRepository subCategoryRepository;
+    private TransactionEntityContextFactory contextFactory;
     private TransactionEntityTransformer transformer;
 
     @BeforeClass
     public void setup() {
         control = EasyMock.createControl();
         outcomeRepository = control.createMock(OutcomeRepository.class);
-        mainCategoryRepository = control.createMock(MainCategoryRepository.class);
-        subCategoryRepository = control.createMock(SubCategoryRepository.class);
+        contextFactory = control.createMock(TransactionEntityContextFactory.class);
         transformer = control.createMock(TransactionEntityTransformer.class);
-        underTest = new DefaultOutcomeDao(outcomeRepository, mainCategoryRepository, subCategoryRepository, transformer);
+        underTest = new DefaultOutcomeDao(outcomeRepository, contextFactory, transformer);
     }
 
     @BeforeMethod
@@ -160,9 +158,14 @@ public class DefaultOutcomeDaoTest {
         transformedEntity.setSubCategoryEntity(subCategoryEntity);
         OutcomeEntity responseEntity = createExampleOutcomeEntity();
         Transaction expectedTransaction = createTransactionBuilderWithDefaultValues().build();
-        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
-        EasyMock.expect(subCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(subCategoryEntity));
-        EasyMock.expect(transformer.transformToOutcomeEntity(transactionToSave, mainCategoryEntity, subCategoryEntity, USER_ID)).andReturn(transformedEntity);
+        TransactionEntityContext context = TransactionEntityContext.builder()
+            .withTransaction(transactionToSave)
+            .withUserId(USER_ID)
+            .withMainCategoryEntity(mainCategoryEntity)
+            .withSubCategoryEntity(subCategoryEntity)
+            .build();
+        EasyMock.expect(contextFactory.create(transactionToSave, USER_ID)).andReturn(context);
+        EasyMock.expect(transformer.transformToOutcomeEntity(context)).andReturn(transformedEntity);
         EasyMock.expect(outcomeRepository.save(transformedEntity)).andReturn(responseEntity);
         EasyMock.expect(transformer.transformToTransaction(responseEntity)).andReturn(expectedTransaction);
         control.replay();
@@ -179,8 +182,13 @@ public class DefaultOutcomeDaoTest {
         OutcomeEntity transformedEntity = createExampleOutcomeEntity();
         MainCategoryEntity mainCategoryEntity = transformedEntity.getMainCategoryEntity();
         Transaction expectedTransaction = createTransactionBuilderWithDefaultValues().build();
-        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
-        EasyMock.expect(transformer.transformToOutcomeEntity(transactionToDelete, mainCategoryEntity, null, USER_ID)).andReturn(transformedEntity);
+        TransactionEntityContext context = TransactionEntityContext.builder()
+            .withTransaction(transactionToDelete)
+            .withUserId(USER_ID)
+            .withMainCategoryEntity(mainCategoryEntity)
+            .build();
+        EasyMock.expect(contextFactory.create(transactionToDelete, USER_ID)).andReturn(context);
+        EasyMock.expect(transformer.transformToOutcomeEntity(context)).andReturn(transformedEntity);
         outcomeRepository.delete(transformedEntity);
         control.replay();
         // WHEN

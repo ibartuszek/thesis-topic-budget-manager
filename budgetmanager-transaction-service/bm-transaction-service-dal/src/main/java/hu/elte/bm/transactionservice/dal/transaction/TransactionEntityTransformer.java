@@ -9,10 +9,12 @@ import java.util.Date;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntityTransformer;
-import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntityTransformer;
+import hu.elte.bm.transactionservice.dal.picture.PictureEntity;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContext;
+import hu.elte.bm.transactionservice.domain.transaction.Coordinate;
+import hu.elte.bm.transactionservice.domain.transaction.Picture;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 
 @Component
@@ -30,34 +32,41 @@ public class TransactionEntityTransformer {
     }
 
     // MainCategory and Subcategory are value classes and managed entities.
-    public IncomeEntity transformToIncomeEntity(final Transaction transaction, final MainCategoryEntity mainCategoryEntity,
-        final SubCategoryEntity subCategoryEntity, final Long userId) {
-        IncomeEntity incomeEntity = mapper.map(transformToTransactionEntity(transaction, userId), IncomeEntity.class);
-        incomeEntity.setMainCategoryEntity(mainCategoryEntity);
-        incomeEntity.setSubCategoryEntity(subCategoryEntity);
+    IncomeEntity transformToIncomeEntity(final TransactionEntityContext transactionEntityContext) {
+        Transaction transaction = transactionEntityContext.getTransaction();
+        IncomeEntity incomeEntity = mapper.map(transformToTransactionEntity(transaction, transactionEntityContext.getUserId()), IncomeEntity.class);
+        incomeEntity.setMainCategoryEntity(transactionEntityContext.getMainCategoryEntity());
+        incomeEntity.setSubCategoryEntity(transactionEntityContext.getSubCategoryEntity());
         return incomeEntity;
     }
 
     // MainCategory and Subcategory are value classes and managed entities.
-    public OutcomeEntity transformToOutcomeEntity(final Transaction transaction, final MainCategoryEntity mainCategoryEntity,
-        final SubCategoryEntity subCategoryEntity, final Long userId) {
-        OutcomeEntity outcomeEntity = mapper.map(transformToTransactionEntity(transaction, userId), OutcomeEntity.class);
-        outcomeEntity.setMainCategoryEntity(mainCategoryEntity);
-        outcomeEntity.setSubCategoryEntity(subCategoryEntity);
+    OutcomeEntity transformToOutcomeEntity(final TransactionEntityContext transactionEntityContext) {
+        Transaction transaction = transactionEntityContext.getTransaction();
+        OutcomeEntity outcomeEntity = mapper.map(transformToTransactionEntity(transaction, transactionEntityContext.getUserId()), OutcomeEntity.class);
+        if (transaction.getCoordinate() != null) {
+            outcomeEntity.setLatitude(transaction.getCoordinate().getLatitude());
+            outcomeEntity.setLongitude(transaction.getCoordinate().getLongitude());
+        }
+        outcomeEntity.setMainCategoryEntity(transactionEntityContext.getMainCategoryEntity());
+        outcomeEntity.setSubCategoryEntity(transactionEntityContext.getSubCategoryEntity());
+        outcomeEntity.setPictureEntity(transactionEntityContext.getPictureEntity());
         return outcomeEntity;
     }
 
-    public Transaction transformToTransaction(final IncomeEntity incomeEntity) {
+    Transaction transformToTransaction(final IncomeEntity incomeEntity) {
         TransactionEntity transactionEntity = mapper.map(incomeEntity, TransactionEntity.class);
         return transformToTransaction(transactionEntity)
             .withTransactionType(INCOME)
             .build();
     }
 
-    public Transaction transformToTransaction(final OutcomeEntity outcomeEntity) {
+    Transaction transformToTransaction(final OutcomeEntity outcomeEntity) {
         TransactionEntity transactionEntity = mapper.map(outcomeEntity, TransactionEntity.class);
         return transformToTransaction(transactionEntity)
             .withTransactionType(OUTCOME)
+            .withCoordinate(getCoordinate(outcomeEntity))
+            .withPicture(getPicture(outcomeEntity.getPictureEntity()))
             .build();
     }
 
@@ -92,6 +101,28 @@ public class TransactionEntityTransformer {
             .withMonthly(transactionEntity.isMonthly())
             .withDescription(transactionEntity.getDescription())
             .withLocked(transactionEntity.isLocked());
+    }
+
+    private Coordinate getCoordinate(final OutcomeEntity outcomeEntity) {
+        Coordinate coordinate = null;
+        if (outcomeEntity.getLatitude() != null && outcomeEntity.getLongitude() != null) {
+            coordinate = Coordinate.builder()
+                .withLatitude(outcomeEntity.getLatitude())
+                .withLongitude(outcomeEntity.getLongitude())
+                .build();
+        }
+        return coordinate;
+    }
+
+    private Picture getPicture(final PictureEntity pictureEntity) {
+        Picture picture = null;
+        if (pictureEntity != null) {
+            picture = Picture.builder()
+                .withId(pictureEntity.getId())
+                .withPicture(pictureEntity.getPicture())
+                .build();
+        }
+        return picture;
     }
 
 }

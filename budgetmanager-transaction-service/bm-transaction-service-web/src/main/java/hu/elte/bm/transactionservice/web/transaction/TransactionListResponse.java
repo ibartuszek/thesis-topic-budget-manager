@@ -34,9 +34,9 @@ public final class TransactionListResponse extends ResponseModel {
     @Override
     public String toString() {
         return "TransactionListResponse{"
-                + "message='" + getMessage() + '\''
-                + ", successful=" + isSuccessful()
-                + "transactionList=" + transactionList
-                + '}';
+            + "message='" + getMessage() + '\''
+            + ", successful=" + isSuccessful()
+            + ", transactionList=" + transactionList
+            + '}';
     }
 }

@@ -19,9 +19,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
-import hu.elte.bm.transactionservice.dal.categories.MainCategoryRepository;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
-import hu.elte.bm.transactionservice.dal.categories.SubCategoryRepository;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContext;
+import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContextFactory;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
@@ -44,18 +44,16 @@ public class DefaultIncomeDaoTest {
 
     private IMocksControl control;
     private IncomeRepository incomeRepository;
-    private MainCategoryRepository mainCategoryRepository;
-    private SubCategoryRepository subCategoryRepository;
+    private TransactionEntityContextFactory contextFactory;
     private TransactionEntityTransformer transformer;
 
     @BeforeClass
     public void setup() {
         control = EasyMock.createControl();
         incomeRepository = control.createMock(IncomeRepository.class);
-        mainCategoryRepository = control.createMock(MainCategoryRepository.class);
-        subCategoryRepository = control.createMock(SubCategoryRepository.class);
+        contextFactory = control.createMock(TransactionEntityContextFactory.class);
         transformer = control.createMock(TransactionEntityTransformer.class);
-        underTest = new DefaultIncomeDao(incomeRepository, mainCategoryRepository, subCategoryRepository, transformer);
+        underTest = new DefaultIncomeDao(incomeRepository, contextFactory, transformer);
     }
 
     @BeforeMethod
@@ -157,9 +155,14 @@ public class DefaultIncomeDaoTest {
         transformedEntity.setSubCategoryEntity(subCategoryEntity);
         IncomeEntity responseEntity = createExampleIncomeEntity();
         Transaction expectedTransaction = createTransactionBuilderWithDefaultValues().build();
-        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
-        EasyMock.expect(subCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(subCategoryEntity));
-        EasyMock.expect(transformer.transformToIncomeEntity(transactionToSave, mainCategoryEntity, subCategoryEntity, USER_ID)).andReturn(transformedEntity);
+        TransactionEntityContext context = TransactionEntityContext.builder()
+            .withTransaction(transactionToSave)
+            .withMainCategoryEntity(mainCategoryEntity)
+            .withSubCategoryEntity(subCategoryEntity)
+            .withUserId(USER_ID)
+            .build();
+        EasyMock.expect(contextFactory.create(transactionToSave, USER_ID)).andReturn(context);
+        EasyMock.expect(transformer.transformToIncomeEntity(context)).andReturn(transformedEntity);
         EasyMock.expect(incomeRepository.save(transformedEntity)).andReturn(responseEntity);
         EasyMock.expect(transformer.transformToTransaction(responseEntity)).andReturn(expectedTransaction);
         control.replay();
@@ -176,15 +179,19 @@ public class DefaultIncomeDaoTest {
         IncomeEntity transformedEntity = createExampleIncomeEntity();
         Transaction expectedTransaction = createTransactionBuilderWithDefaultValues().build();
         MainCategoryEntity mainCategoryEntity = transformedEntity.getMainCategoryEntity();
-        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(CATEGORY_ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
-        EasyMock.expect(transformer.transformToIncomeEntity(transactionToDelete, mainCategoryEntity, null, USER_ID)).andReturn(transformedEntity);
+        TransactionEntityContext context = TransactionEntityContext.builder()
+            .withTransaction(transactionToDelete)
+            .withMainCategoryEntity(mainCategoryEntity)
+            .withUserId(USER_ID)
+            .build();
+        EasyMock.expect(contextFactory.create(transactionToDelete, USER_ID)).andReturn(context);
+        EasyMock.expect(transformer.transformToIncomeEntity(context)).andReturn(transformedEntity);
         incomeRepository.delete(transformedEntity);
         control.replay();
         // WHEN
         Transaction result = underTest.delete(transactionToDelete, USER_ID);
         // THEN
         Assert.assertEquals(result, expectedTransaction);
-
     }
 
     private List<IncomeEntity> createExampleIncomeEntityList() {

@@ -29,8 +29,8 @@ public class ResponseModel {
     @Override
     public String toString() {
         return "ResponseModel{"
-                + "message='" + message + '\''
-                + ", successful=" + successful
-                + '}';
+            + "message='" + message + '\''
+            + ", successful=" + successful
+            + '}';
     }
 }
