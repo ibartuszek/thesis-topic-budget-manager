@@ -19,6 +19,7 @@ public final class User {
     private static final int MAXIMUM_PASSWORD_LENGTH = 16;
     private static final int MINIMUM_NAME_LENGTH = 2;
     private static final int MAXIMUM_NAME_LENGTH = 50;
+
     private final Long id;
 
     @NotEmpty(message = "Email cannot be empty!")
@@ -38,22 +39,26 @@ public final class User {
     @Length(min = MINIMUM_NAME_LENGTH, max = MAXIMUM_NAME_LENGTH, message = "Last name must be between 2 and 50 characters!")
     private final String lastName;
 
+    private final boolean tracking;
+
     private User(final Builder builder) {
         this.id = builder.id;
         this.email = builder.email;
         this.password = builder.password;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
+        this.tracking = builder.tracking;
     }
 
     public static User createUserWithNewPassword(final User user, final String password) {
         return User.builder()
-                .withId(user.getId())
-                .withPassword(password)
-                .withEmail(user.getEmail())
-                .withFirstName(user.getFirstName())
-                .withLastName(user.getLastName())
-                .build();
+            .withId(user.getId())
+            .withPassword(password)
+            .withEmail(user.getEmail())
+            .withFirstName(user.getFirstName())
+            .withLastName(user.getLastName())
+
+            .build();
     }
 
     public static Builder builder() {
@@ -80,6 +85,10 @@ public final class User {
         return lastName;
     }
 
+    public boolean isTracking() {
+        return tracking;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -90,23 +99,25 @@ public final class User {
         }
         User user = (User) o;
         return Objects.equals(email, user.email)
-                && Objects.equals(firstName, user.firstName)
-                && Objects.equals(lastName, user.lastName);
+            && Objects.equals(firstName, user.firstName)
+            && Objects.equals(lastName, user.lastName)
+            && tracking == user.tracking;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, firstName, lastName);
+        return Objects.hash(email, firstName, lastName, tracking);
     }
 
     @Override
     public String toString() {
         return "User{"
-                + "id=" + id
-                + ", email='" + email + '\''
-                + ", firstName='" + firstName + '\''
-                + ", lastName='" + lastName + '\''
-                + '}';
+            + "id=" + id
+            + ", email='" + email + '\''
+            + ", firstName='" + firstName + '\''
+            + ", lastName='" + lastName + '\''
+            + ", tracking='" + tracking + '\''
+            + '}';
     }
 
     public static final class Builder {
@@ -115,6 +126,7 @@ public final class User {
         private String password;
         private String firstName;
         private String lastName;
+        private boolean tracking;
 
         private Builder() {
         }
@@ -141,6 +153,11 @@ public final class User {
 
         public Builder withLastName(final String lastName) {
             this.lastName = lastName;
+            return this;
+        }
+
+        public Builder withTracking(final boolean tracking) {
+            this.tracking = tracking;
             return this;
         }
 

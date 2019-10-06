@@ -15,6 +15,7 @@ import hu.elte.bm.authenticationservice.dal.BlackListDao;
 
 public class TokenFilter implements Filter {
 
+    private static final String REGISTER_URL = "/bm/users/register";
     private final BlackListDao blackListDao;
 
     public TokenFilter(final BlackListDao blackListDao) {
@@ -22,10 +23,14 @@ public class TokenFilter implements Filter {
     }
 
     @Override
-    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-        String tokenToCheck = ((HttpServletRequest) servletRequest).getHeader("Authorization");
-        if (blackListDao.isExpired(tokenToCheck)) {
-            throw new InvalidTokenException("Token is invalid. User logged out before");
+    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain)
+        throws IOException, ServletException {
+        String url = ((HttpServletRequest) servletRequest).getRequestURL().toString();
+        if (!url.contains(REGISTER_URL)) {
+            String tokenToCheck = ((HttpServletRequest) servletRequest).getHeader("Authorization");
+            if (blackListDao.isExpired(tokenToCheck)) {
+                throw new InvalidTokenException("Token is invalid. User logged out before");
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

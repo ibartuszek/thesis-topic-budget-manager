@@ -28,6 +28,9 @@ public class UserController {
     @Value("${user.user_has_been_deleted:User has been deleted!}")
     private String userHasBeenDeleted;
 
+    @Value("${user.logout.success:User has been logged out.}")
+    private String userHasBeenLoggedOut;
+
     public UserController(final UserService userService) {
         this.userService = userService;
     }

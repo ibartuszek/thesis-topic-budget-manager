@@ -32,6 +32,8 @@ public final class UserEntity {
     @Column(length = LAST_NAME_LENGTH, nullable = false)
     private String lastName;
 
+    private boolean tracking;
+
     UserEntity() {
     }
 
@@ -73,5 +75,13 @@ public final class UserEntity {
 
     public void setLastName(final String lastName) {
         this.lastName = lastName;
+    }
+
+    public boolean isTracking() {
+        return tracking;
+    }
+
+    public void setTracking(final boolean tracking) {
+        this.tracking = tracking;
     }
 }

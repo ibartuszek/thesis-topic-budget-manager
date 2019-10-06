@@ -13,12 +13,13 @@ public class UserEntityTransformer {
 
     User transformToUserWithRawPassword(final UserEntity userEntity) {
         return User.builder()
-                .withId(userEntity.getId())
-                .withEmail(userEntity.getEmail())
-                .withPassword(userEntity.getPassword())
-                .withFirstName(userEntity.getFirstName())
-                .withLastName(userEntity.getLastName())
-                .build();
+            .withId(userEntity.getId())
+            .withEmail(userEntity.getEmail())
+            .withPassword(userEntity.getPassword())
+            .withFirstName(userEntity.getFirstName())
+            .withLastName(userEntity.getLastName())
+            .withTracking(userEntity.isTracking())
+            .build();
     }
 
     User transformToUserWithMaskedPassword(final UserEntity userEntity) {
@@ -28,6 +29,7 @@ public class UserEntityTransformer {
             .withPassword(maskedPasswordValue)
             .withFirstName(userEntity.getFirstName())
             .withLastName(userEntity.getLastName())
+            .withTracking(userEntity.isTracking())
             .build();
     }
 
@@ -38,6 +40,7 @@ public class UserEntityTransformer {
         userEntity.setPassword(user.getPassword());
         userEntity.setFirstName(user.getFirstName());
         userEntity.setLastName(user.getLastName());
+        userEntity.setTracking(user.isTracking());
         return userEntity;
     }
 
