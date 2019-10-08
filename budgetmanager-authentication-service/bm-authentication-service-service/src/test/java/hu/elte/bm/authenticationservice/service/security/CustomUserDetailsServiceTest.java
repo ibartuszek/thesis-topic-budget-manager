@@ -7,12 +7,14 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.authenticationservice.dal.UserDao;
 import hu.elte.bm.authenticationservice.domain.User;
-import hu.elte.bm.authenticationservice.domain.UserCannotBeFoundException;
+import hu.elte.bm.authenticationservice.domain.exceptions.UserNotFoundException;
 
 public class CustomUserDetailsServiceTest {
 
@@ -27,25 +29,31 @@ public class CustomUserDetailsServiceTest {
     private IMocksControl control;
     private UserDao userDao;
 
-    @BeforeMethod
+    @BeforeClass
     private void setup() {
         control = EasyMock.createControl();
         userDao = control.createMock(UserDao.class);
         underTest = new CustomUserDetailsService(userDao);
     }
 
-    @Test(expectedExceptions = UserCannotBeFoundException.class)
+    @BeforeMethod
+    public void reset() {
+        control.reset();
+    }
+
+    @AfterMethod
+    public void verify() {
+        control.verify();
+    }
+
+    @Test(expectedExceptions = UserNotFoundException.class)
     public void tesLoadUserByUserNameWhenUserCannotBeFound() {
         // GIVEN
         EasyMock.expect(userDao.findByEmailWithPassword(USER_NAME)).andReturn(Optional.empty());
         control.replay();
         // WHEN
-        try {
-            underTest.loadUserByUsername(USER_NAME);
-        } finally {
-            // THEN
-            control.verify();
-        }
+        underTest.loadUserByUsername(USER_NAME);
+        // THEN
     }
 
     @Test
@@ -63,7 +71,6 @@ public class CustomUserDetailsServiceTest {
         // WHEN
         UserDetails result = underTest.loadUserByUsername(USER_NAME);
         // THEN
-        control.verify();
         Assert.assertEquals(result.getUsername(), USER_NAME);
         Assert.assertEquals(result.getPassword(), PASSWORD);
         Assert.assertEquals(result.getAuthorities(), Collections.emptyList());

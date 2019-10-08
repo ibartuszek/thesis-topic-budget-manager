@@ -12,7 +12,7 @@ import javax.servlet.ServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import hu.elte.bm.authenticationservice.service.UserService;
-import hu.elte.bm.authenticationservice.domain.UserIdException;
+import hu.elte.bm.authenticationservice.domain.exceptions.UserIdException;
 
 public class UserIdFilter implements Filter {
 

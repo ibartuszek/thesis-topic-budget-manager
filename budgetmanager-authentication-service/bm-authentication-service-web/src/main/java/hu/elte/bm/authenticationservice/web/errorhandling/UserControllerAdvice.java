@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import hu.elte.bm.authenticationservice.domain.UserCannotBeFoundException;
-import hu.elte.bm.authenticationservice.domain.UserEmailIsReservedException;
+import hu.elte.bm.authenticationservice.domain.exceptions.IllegalUserException;
+import hu.elte.bm.authenticationservice.domain.exceptions.UserIdException;
+import hu.elte.bm.authenticationservice.domain.exceptions.UserNotFoundException;
+import hu.elte.bm.authenticationservice.domain.exceptions.UserConflictException;
 
 @RestControllerAdvice
 public class UserControllerAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class, IllegalUserException.class, UserIdException.class})
     protected ResponseEntity<Object> handleBadRequests(final RuntimeException e, final WebRequest request) {
         String bodyOfResponse = e.getMessage();
         return new ResponseEntity<>(bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -28,13 +30,13 @@ public class UserControllerAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserEmailIsReservedException.class)
+    @ExceptionHandler(UserConflictException.class)
     protected ResponseEntity<Object> handleConflicts(final RuntimeException e, final WebRequest request) {
         String bodyOfResponse = e.getMessage();
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UserCannotBeFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     protected ResponseEntity<Object> handleNotFound(final RuntimeException e, final WebRequest request) {
         String bodyOfResponse = e.getMessage();
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);

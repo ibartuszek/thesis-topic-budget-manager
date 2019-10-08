@@ -17,7 +17,7 @@ import org.testng.annotations.Test;
 
 import hu.elte.bm.authenticationservice.domain.User;
 import hu.elte.bm.authenticationservice.service.UserService;
-import hu.elte.bm.authenticationservice.domain.UserIdException;
+import hu.elte.bm.authenticationservice.domain.exceptions.UserIdException;
 
 public class UserIdFilterTest {
 

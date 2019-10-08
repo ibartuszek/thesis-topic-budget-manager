@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import hu.elte.bm.authenticationservice.dal.UserDao;
 import hu.elte.bm.authenticationservice.domain.User;
-import hu.elte.bm.authenticationservice.domain.UserCannotBeFoundException;
+import hu.elte.bm.authenticationservice.domain.exceptions.UserNotFoundException;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String userName) throws UsernameNotFoundException {
         Optional<User> user = userDao.findByEmailWithPassword(userName);
         if (user.isEmpty()) {
-            throw new UserCannotBeFoundException(userCannotBeFound);
+            throw new UserNotFoundException(userName, userCannotBeFound);
         }
         return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), new ArrayList<>());
     }
