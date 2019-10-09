@@ -31,8 +31,8 @@ public class PictureContext {
     @Override
     public String toString() {
         return "PictureContext{"
-                + "userId=" + userId
-                + ", picture=" + picture
-                + '}';
+            + "userId=" + userId
+            + ", picture=" + picture
+            + '}';
     }
 }

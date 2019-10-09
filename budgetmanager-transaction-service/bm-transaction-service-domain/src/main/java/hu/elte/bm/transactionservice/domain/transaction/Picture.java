@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public final class Picture {
 
     private final Long id;
-    private final byte[] picture;
+    private final String picture;
 
     private Picture(final Builder builder) {
         this.id = builder.id;
@@ -21,7 +21,7 @@ public final class Picture {
         return id;
     }
 
-    public byte[] getPicture() {
+    public String getPicture() {
         return picture;
     }
 
@@ -34,7 +34,7 @@ public final class Picture {
 
     public static final class Builder {
         private Long id;
-        private byte[] picture;
+        private String picture;
 
         private Builder() {
         }
@@ -44,7 +44,7 @@ public final class Picture {
             return this;
         }
 
-        public Builder withPicture(final byte[] picture) {
+        public Builder withPicture(final String picture) {
             this.picture = picture;
             return this;
         }

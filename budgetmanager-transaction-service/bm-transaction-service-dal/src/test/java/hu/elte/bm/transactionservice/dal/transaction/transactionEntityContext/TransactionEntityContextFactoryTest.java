@@ -23,7 +23,6 @@ import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryNotFoundException;
 import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryNotFoundException;
-import hu.elte.bm.transactionservice.domain.transaction.Picture;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 
 public class TransactionEntityContextFactoryTest {
@@ -167,12 +166,6 @@ public class TransactionEntityContextFactoryTest {
             .withId(ID)
             .withName(CATEGORY_NAME)
             .build();
-    }
-
-    private Picture.Builder createPicture() {
-        return Picture.builder()
-            .withId(ID)
-            .withPicture(PICTURE);
     }
 
     private MainCategoryEntity createMainCategoryEntity(final Set<SubCategoryEntity> subCategoryEntitySet) {

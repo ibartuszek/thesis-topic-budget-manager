@@ -11,10 +11,8 @@ import org.springframework.stereotype.Component;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntityTransformer;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntityTransformer;
-import hu.elte.bm.transactionservice.dal.picture.PictureEntity;
 import hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext.TransactionEntityContext;
 import hu.elte.bm.transactionservice.domain.transaction.Coordinate;
-import hu.elte.bm.transactionservice.domain.transaction.Picture;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 
 @Component
@@ -112,17 +110,6 @@ public class TransactionEntityTransformer {
                 .build();
         }
         return coordinate;
-    }
-
-    private Picture getPicture(final PictureEntity pictureEntity) {
-        Picture picture = null;
-        if (pictureEntity != null) {
-            picture = Picture.builder()
-                .withId(pictureEntity.getId())
-                .withPicture(pictureEntity.getPicture())
-                .build();
-        }
-        return picture;
     }
 
 }
