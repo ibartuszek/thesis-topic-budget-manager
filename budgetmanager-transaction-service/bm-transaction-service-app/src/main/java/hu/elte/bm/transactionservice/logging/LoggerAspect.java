@@ -116,7 +116,7 @@ public class LoggerAspect {
             target = exception.getSubCategory();
         } else if (e instanceof PictureNotFoundException) {
             PictureNotFoundException exception = (PictureNotFoundException) e;
-            target = exception.getPicture();
+            target = exception.getPicture() != null ? exception.getPicture() : exception.getPictureId();
         }
         Object servletWebRequest = args[1];
         return createExceptionLog(e, target, servletWebRequest);

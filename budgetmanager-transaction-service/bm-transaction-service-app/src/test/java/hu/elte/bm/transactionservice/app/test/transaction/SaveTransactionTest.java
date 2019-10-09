@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testng.annotations.Test;
 
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
-import hu.elte.bm.transactionservice.domain.transaction.Picture;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
 
@@ -205,9 +204,6 @@ public class SaveTransactionTest extends AbstractTransactionTest {
     public void testSaveOutcomeWhenOptionalFieldsPresent() throws Exception {
         // GIVEN
         MainCategory mainCategory = createDefaultMainCategoryForOutcome();
-        Picture newPicture = Picture.builder()
-            .withPicture(PICTURE_BYTES)
-            .build();
         Transaction transactionToSave = createTransactionBuilderWithDefaultValues(mainCategory)
             .withId(null)
             .withTransactionType(OUTCOME)
@@ -217,7 +213,7 @@ public class SaveTransactionTest extends AbstractTransactionTest {
             .withMonthly(true)
             .withLocked(true)
             .withCoordinate(COORDINATE)
-            .withPicture(newPicture)
+            .withPictureId(PICTURE_ID)
             .build();
         TransactionRequestContext context = createContext(OUTCOME, transactionToSave);
 
@@ -242,8 +238,7 @@ public class SaveTransactionTest extends AbstractTransactionTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.locked", Matchers.is(true)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.coordinate.latitude", Matchers.is(LATITUDE)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.coordinate.longitude", Matchers.is(LONGITUDE)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.picture.id", Matchers.is(PICTURE_ID.intValue())))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.picture.picture", Matchers.is(EXPECTED_PICTURE_BYTES)));
+            .andExpect(MockMvcResultMatchers.jsonPath("$.transaction.pictureId", Matchers.is(PICTURE_ID.intValue())));
     }
 
 }

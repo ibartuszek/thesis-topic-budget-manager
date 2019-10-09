@@ -45,7 +45,7 @@ public final class Transaction {
     private final String description;
     private final boolean locked;
     private final Coordinate coordinate;
-    private final Picture picture;
+    private final Long pictureId;
 
     private Transaction(final Builder builder) {
         this.id = builder.id;
@@ -61,7 +61,7 @@ public final class Transaction {
         this.description = builder.description;
         this.locked = builder.locked;
         this.coordinate = builder.coordinate;
-        this.picture = builder.picture;
+        this.pictureId = builder.pictureId;
     }
 
     public static Builder builder() {
@@ -120,8 +120,8 @@ public final class Transaction {
         return coordinate;
     }
 
-    public Picture getPicture() {
-        return picture;
+    public Long getPictureId() {
+        return pictureId;
     }
 
     @Override
@@ -164,7 +164,7 @@ public final class Transaction {
             + ", description='" + description + '\''
             + ", locked=" + locked
             + ", coordinate=" + coordinate
-            + ", picture=" + picture
+            + ", pictureId=" + pictureId
             + '}';
     }
 
@@ -182,7 +182,7 @@ public final class Transaction {
         private String description;
         private boolean locked;
         private Coordinate coordinate;
-        private Picture picture;
+        private Long pictureId;
 
         public Builder withId(final Long id) {
             this.id = id;
@@ -249,8 +249,8 @@ public final class Transaction {
             return this;
         }
 
-        public Builder withPicture(final Picture picture) {
-            this.picture = picture;
+        public Builder withPictureId(final Long pictureId) {
+            this.pictureId = pictureId;
             return this;
         }
 

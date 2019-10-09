@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.testng.Assert;
@@ -19,12 +18,9 @@ import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryRepository;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryRepository;
-import hu.elte.bm.transactionservice.dal.picture.PictureEntity;
-import hu.elte.bm.transactionservice.dal.picture.PictureRepository;
 import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
-import hu.elte.bm.transactionservice.domain.exceptions.PictureNotFoundException;
 import hu.elte.bm.transactionservice.domain.exceptions.maincategory.MainCategoryNotFoundException;
 import hu.elte.bm.transactionservice.domain.exceptions.subcategory.SubCategoryNotFoundException;
 import hu.elte.bm.transactionservice.domain.transaction.Picture;
@@ -44,15 +40,13 @@ public class TransactionEntityContextFactoryTest {
     private IMocksControl control;
     private MainCategoryRepository mainCategoryRepository;
     private SubCategoryRepository subCategoryRepository;
-    private PictureRepository pictureRepository;
 
     @BeforeClass
     public void setup() {
         control = EasyMock.createControl();
         mainCategoryRepository = control.createMock(MainCategoryRepository.class);
         subCategoryRepository = control.createMock(SubCategoryRepository.class);
-        pictureRepository = control.createMock(PictureRepository.class);
-        underTest = new TransactionEntityContextFactory(mainCategoryRepository, subCategoryRepository, pictureRepository);
+        underTest = new TransactionEntityContextFactory(mainCategoryRepository, subCategoryRepository);
     }
 
     @BeforeMethod
@@ -69,7 +63,7 @@ public class TransactionEntityContextFactoryTest {
     public void testCreateWhenPictureAndSubCategoryIsNull() {
         // GIVEN
         MainCategory mainCategory = createMainCategory(Set.of());
-        Transaction transaction = createTransaction(null, mainCategory, null);
+        Transaction transaction = createTransaction(null, mainCategory);
         MainCategoryEntity mainCategoryEntity = createMainCategoryEntity(Set.of());
         EasyMock.expect(mainCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
         control.replay();
@@ -80,14 +74,13 @@ public class TransactionEntityContextFactoryTest {
         Assert.assertEquals(result.getUserId(), USER_ID);
         Assert.assertEquals(result.getMainCategoryEntity(), mainCategoryEntity);
         Assert.assertNull(result.getSubCategoryEntity());
-        Assert.assertNull(result.getPictureEntity());
     }
 
     @Test(expectedExceptions = MainCategoryNotFoundException.class)
     public void testCreateWhenMainCategoryCannotBeFound() {
         // GIVEN
         MainCategory mainCategory = createMainCategory(Set.of());
-        Transaction transaction = createTransaction(null, mainCategory, null);
+        Transaction transaction = createTransaction(null, mainCategory);
         EasyMock.expect(mainCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.empty());
         control.replay();
         // WHEN
@@ -100,28 +93,10 @@ public class TransactionEntityContextFactoryTest {
         // GIVEN
         SubCategory subCategory = createSubCategory();
         MainCategory mainCategory = createMainCategory(Set.of(subCategory));
-        Transaction transaction = createTransaction(subCategory, mainCategory, null);
+        Transaction transaction = createTransaction(subCategory, mainCategory);
         MainCategoryEntity mainCategoryEntity = createMainCategoryEntity(Set.of());
         EasyMock.expect(mainCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
         EasyMock.expect(subCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.empty());
-        control.replay();
-        // WHEN
-        underTest.create(transaction, USER_ID);
-        // THEN
-    }
-
-    @Test(expectedExceptions = PictureNotFoundException.class)
-    public void testCreateWhenPictureCannotBeFound() {
-        // GIVEN
-        SubCategory subCategory = createSubCategory();
-        MainCategory mainCategory = createMainCategory(Set.of(subCategory));
-        Picture picture = createPicture().build();
-        Transaction transaction = createTransaction(subCategory, mainCategory, picture);
-        SubCategoryEntity subCategoryEntity = createSubCategoryEntity();
-        MainCategoryEntity mainCategoryEntity = createMainCategoryEntity(Set.of(subCategoryEntity));
-        EasyMock.expect(mainCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
-        EasyMock.expect(subCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(subCategoryEntity));
-        EasyMock.expect(pictureRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.empty());
         control.replay();
         // WHEN
         underTest.create(transaction, USER_ID);
@@ -133,14 +108,11 @@ public class TransactionEntityContextFactoryTest {
         // GIVEN
         SubCategory subCategory = createSubCategory();
         MainCategory mainCategory = createMainCategory(Set.of(subCategory));
-        Picture picture = createPicture().build();
-        Transaction transaction = createTransaction(subCategory, mainCategory, picture);
+        Transaction transaction = createTransaction(subCategory, mainCategory);
         SubCategoryEntity subCategoryEntity = createSubCategoryEntity();
         MainCategoryEntity mainCategoryEntity = createMainCategoryEntity(Set.of(subCategoryEntity));
-        PictureEntity pictureEntity = createPictureEntity();
         EasyMock.expect(mainCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
         EasyMock.expect(subCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(subCategoryEntity));
-        EasyMock.expect(pictureRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(pictureEntity));
         control.replay();
         // WHEN
         TransactionEntityContext result = underTest.create(transaction, USER_ID);
@@ -149,7 +121,6 @@ public class TransactionEntityContextFactoryTest {
         Assert.assertEquals(result.getUserId(), USER_ID);
         Assert.assertEquals(result.getMainCategoryEntity(), mainCategoryEntity);
         Assert.assertEquals(result.getSubCategoryEntity(), subCategoryEntity);
-        Assert.assertEquals(result.getPictureEntity(), pictureEntity);
     }
 
     @Test
@@ -157,17 +128,11 @@ public class TransactionEntityContextFactoryTest {
         // GIVEN
         SubCategory subCategory = createSubCategory();
         MainCategory mainCategory = createMainCategory(Set.of(subCategory));
-        Picture picture = createPicture()
-            .withId(null)
-            .build();
-        Transaction transaction = createTransaction(subCategory, mainCategory, picture);
+        Transaction transaction = createTransaction(subCategory, mainCategory);
         SubCategoryEntity subCategoryEntity = createSubCategoryEntity();
         MainCategoryEntity mainCategoryEntity = createMainCategoryEntity(Set.of(subCategoryEntity));
-        PictureEntity pictureEntity = createPictureEntity();
-        Capture<PictureEntity> capture = Capture.newInstance();
         EasyMock.expect(mainCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(mainCategoryEntity));
         EasyMock.expect(subCategoryRepository.findByIdAndUserId(ID, USER_ID)).andReturn(Optional.of(subCategoryEntity));
-        EasyMock.expect(pictureRepository.save(EasyMock.capture(capture))).andReturn(pictureEntity);
         control.replay();
         // WHEN
         TransactionEntityContext result = underTest.create(transaction, USER_ID);
@@ -176,14 +141,9 @@ public class TransactionEntityContextFactoryTest {
         Assert.assertEquals(result.getUserId(), USER_ID);
         Assert.assertEquals(result.getMainCategoryEntity(), mainCategoryEntity);
         Assert.assertEquals(result.getSubCategoryEntity(), subCategoryEntity);
-        Assert.assertEquals(result.getPictureEntity(), pictureEntity);
-        PictureEntity captured = capture.getValue();
-        Assert.assertNull(captured.getId());
-        Assert.assertEquals(captured.getPicture(), PICTURE);
-        Assert.assertEquals(captured.getUserId(), USER_ID);
     }
 
-    private Transaction createTransaction(final SubCategory subCategory, final MainCategory mainCategory, final Picture picture) {
+    private Transaction createTransaction(final SubCategory subCategory, final MainCategory mainCategory) {
         return Transaction.builder()
             .withTitle(TRANSACTION_TITLE)
             .withAmount(TRANSACTION_AMOUNT)
@@ -191,7 +151,6 @@ public class TransactionEntityContextFactoryTest {
             .withDate(TRANSACTION_DATE)
             .withMainCategory(mainCategory)
             .withSubCategory(subCategory)
-            .withPicture(picture)
             .build();
     }
 
@@ -231,14 +190,6 @@ public class TransactionEntityContextFactoryTest {
             .withId(ID)
             .withName(CATEGORY_NAME)
             .withTransactionType(INCOME)
-            .withUserId(USER_ID)
-            .build();
-    }
-
-    private PictureEntity createPictureEntity() {
-        return PictureEntity.builder()
-            .withId(ID)
-            .withPicture(PICTURE)
             .withUserId(USER_ID)
             .build();
     }

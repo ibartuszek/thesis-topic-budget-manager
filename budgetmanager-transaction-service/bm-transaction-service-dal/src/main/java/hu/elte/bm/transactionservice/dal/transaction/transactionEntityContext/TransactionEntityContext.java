@@ -2,7 +2,6 @@ package hu.elte.bm.transactionservice.dal.transaction.transactionEntityContext;
 
 import hu.elte.bm.transactionservice.dal.categories.MainCategoryEntity;
 import hu.elte.bm.transactionservice.dal.categories.SubCategoryEntity;
-import hu.elte.bm.transactionservice.dal.picture.PictureEntity;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 
 public final class TransactionEntityContext {
@@ -11,14 +10,12 @@ public final class TransactionEntityContext {
     private final Long userId;
     private final MainCategoryEntity mainCategoryEntity;
     private final SubCategoryEntity subCategoryEntity;
-    private final PictureEntity pictureEntity;
 
     private TransactionEntityContext(final Builder builder) {
         this.transaction = builder.transaction;
         this.userId = builder.userId;
         this.mainCategoryEntity = builder.mainCategoryEntity;
         this.subCategoryEntity = builder.subCategoryEntity;
-        this.pictureEntity = builder.pictureEntity;
     }
 
     public static Builder builder() {
@@ -41,16 +38,12 @@ public final class TransactionEntityContext {
         return subCategoryEntity;
     }
 
-    public PictureEntity getPictureEntity() {
-        return pictureEntity;
-    }
 
     public static final class Builder {
         private Transaction transaction;
         private Long userId;
         private MainCategoryEntity mainCategoryEntity;
         private SubCategoryEntity subCategoryEntity;
-        private PictureEntity pictureEntity;
 
         private Builder() {
         }
@@ -72,11 +65,6 @@ public final class TransactionEntityContext {
 
         public Builder withSubCategoryEntity(final SubCategoryEntity subCategoryEntity) {
             this.subCategoryEntity = subCategoryEntity;
-            return this;
-        }
-
-        public Builder withPictureEntity(final PictureEntity pictureEntity) {
-            this.pictureEntity = pictureEntity;
             return this;
         }
 

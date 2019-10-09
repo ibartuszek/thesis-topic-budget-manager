@@ -50,7 +50,7 @@ public class TransactionEntityTransformer {
         }
         outcomeEntity.setMainCategoryEntity(transactionEntityContext.getMainCategoryEntity());
         outcomeEntity.setSubCategoryEntity(transactionEntityContext.getSubCategoryEntity());
-        outcomeEntity.setPictureEntity(transactionEntityContext.getPictureEntity());
+        outcomeEntity.setPictureId(transaction.getPictureId());
         return outcomeEntity;
     }
 
@@ -66,7 +66,7 @@ public class TransactionEntityTransformer {
         return transformToTransaction(transactionEntity)
             .withTransactionType(OUTCOME)
             .withCoordinate(getCoordinate(outcomeEntity))
-            .withPicture(getPicture(outcomeEntity.getPictureEntity()))
+            .withPictureId(outcomeEntity.getPictureId())
             .build();
     }
 

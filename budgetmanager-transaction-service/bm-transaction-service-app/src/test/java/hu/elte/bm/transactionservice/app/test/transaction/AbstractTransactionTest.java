@@ -12,7 +12,6 @@ import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.transaction.Coordinate;
-import hu.elte.bm.transactionservice.domain.transaction.Picture;
 import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.web.transaction.TransactionRequestContext;
@@ -45,12 +44,6 @@ public abstract class AbstractTransactionTest extends AbstractTransactionService
         .withLongitude(LONGITUDE)
         .build();
     static final Long PICTURE_ID = 1L;
-    static final byte[] PICTURE_BYTES = { 1, 0, 0, 1, 0, 0, 1 };
-    static final String EXPECTED_PICTURE_BYTES = "AQAAAQAAAQ==";
-    static final Picture PICTURE = Picture.builder()
-        .withId(PICTURE_ID)
-        .withPicture(PICTURE_BYTES)
-        .build();
 
     private static final String EMPTY_STRING = "";
     private static final String TOO_LONG_TITLE = "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb1";
