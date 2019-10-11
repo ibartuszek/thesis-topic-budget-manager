@@ -1,6 +1,7 @@
 package hu.elte.bm.transactionservice.web.picture;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public class PictureController {
     }
 
     @RequestMapping(value = "/bm/pictures/findById", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public PictureResponse findUserById(@RequestParam final Long id, @RequestParam final Long userId) {
+    public PictureResponse findUserById(@NotNull @RequestParam final Long id, @NotNull @RequestParam final Long userId) {
         return PictureResponse.createSuccessfulPictureResponse(pictureService.findById(id, userId), null);
     }
 
