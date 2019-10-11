@@ -60,6 +60,16 @@ label.input-group-addon.input-group-text {
     border-radius: 1em;
 }
 
+.custom-popup-inner-picture {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    max-height: 600px;
+    margin-left: -200px;
+    border-radius: 0.8em;
+    background: var(--light);
+}
+
 .custom-react-datepicker-wrapper div {
     flex: 1 1 auto;
 }
@@ -118,6 +128,13 @@ label.input-group-addon.input-group-text {
     color: var(--light);
     background-color: var(--orange);
     /* background-color: var(--light); */
+}
+
+.picture-close-button {
+    z-index: 1020;
+    position: absolute;
+    right: 20px;
+    top: 20px;
 }
 
 .text-unmuted {

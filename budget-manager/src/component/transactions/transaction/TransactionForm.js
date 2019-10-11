@@ -13,6 +13,10 @@ import {createEmptyTransaction} from "../../../actions/transaction/createTransac
 import {dateProperties} from "../../../store/Properties";
 import {getPossibleFirstDate} from "../../../actions/date/dateActions";
 import {transactionMessages} from "../../../store/MessageHolder";
+import UploadPicture from "../../layout/picture/UploadPicture";
+import RemovePicture from "../../layout/picture/RemovePicture";
+import ShowPicture from "../../layout/picture/ShowPicture";
+import GetPicture from "../../layout/picture/GetPicture";
 
 class TransactionForm extends Component {
 
@@ -20,13 +24,15 @@ class TransactionForm extends Component {
     transactionModel: createEmptyTransaction(),
     editAbleMainCategory: null,
     editAbleSubCategory: null,
+    showablePicture: null,
   };
 
   constructor(props) {
     super(props);
-    this.setFirstPossibleDay = this.setFirstPossibleDay.bind(this);
+    this.getPictureId = this.getPictureId.bind(this);
     this.handleModelValueChange = this.handleModelValueChange.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.setFirstPossibleDay = this.setFirstPossibleDay.bind(this);
     this.showTransactionEdit = this.showTransactionEdit.bind(this);
   }
 
@@ -118,10 +124,26 @@ class TransactionForm extends Component {
     this.props.showTransactionEdit(message);
   }
 
+  getPictureId(pictureId) {
+    this.setState(prevState => ({
+      transactionModel: {
+        ...prevState.transactionModel,
+        pictureId: pictureId
+      }
+    }));
+  }
+
+  showPicture = (picture) => {
+    let showablePicture = picture !== null ? picture : null;
+    this.setState({
+      showablePicture: showablePicture,
+    })
+  };
+
   render() {
     const {formTitle, mainCategoryList, subCategoryListFromRepo, popup, transactionType} = this.props;
-    const {editAbleMainCategory, editAbleSubCategory} = this.state;
-    const {title, amount, currency, mainCategory, subCategory, monthly, date, endDate, description} = this.state.transactionModel;
+    const {editAbleMainCategory, editAbleSubCategory, showablePicture} = this.state;
+    const {title, amount, currency, mainCategory, subCategory, monthly, date, endDate, description, pictureId} = this.state.transactionModel;
     const {
       transactionTitleLabel, transactionTitleMessage, transactionAmountLabel, transactionAmountMessage,
       transactionDateLabel, transactionDateMessage, transactionMonthlyLabel, transactionMonthlyMessage,
@@ -155,6 +177,18 @@ class TransactionForm extends Component {
         </button>
       );
 
+    let pictureButton = transactionType === 'INCOME' || (pictureId !== null && pictureId !== undefined)
+      ? null
+      : <UploadPicture getPictureId={this.getPictureId}/>;
+    let pictureRemoveButton = transactionType === 'INCOME' || pictureId === undefined || pictureId === null
+      ? null
+      : <RemovePicture getPictureId={this.getPictureId} pictureId={pictureId}/>;
+    let showPicture = showablePicture !== undefined && showablePicture !== null
+      ? <ShowPicture showPicture={this.showPicture} picture={showablePicture}/> : null;
+    let getPicture = transactionType === 'INCOME' || pictureId === null || pictureId === undefined
+      ? null
+      : <GetPicture pictureId={pictureId} showPicture={this.showPicture}/>;
+
     return (
       <React.Fragment>
         <form className="form-group mb-0" onSubmit={this.handleSubmit}>
@@ -179,6 +213,11 @@ class TransactionForm extends Component {
           <ModelStringValue onChange={this.handleModelValueChange}
                             id="description" model={description}
                             labelTitle={transactionDescriptionLabel} placeHolder={transactionDescriptionMessage} type="text"/>
+          <div>
+            {pictureButton}
+            {getPicture}
+            {pictureRemoveButton}
+          </div>
           <button className="btn btn-outline-success mt-3 mb-2">
             <span className="fas fa-pencil-alt"/>
             <span> Save transaction </span>
@@ -187,6 +226,7 @@ class TransactionForm extends Component {
         </form>
         {editMainCategory}
         {editSubCategory}
+        {showPicture}
       </React.Fragment>
     )
   }

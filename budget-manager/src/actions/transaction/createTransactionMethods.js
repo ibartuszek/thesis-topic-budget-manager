@@ -86,6 +86,8 @@ export function transformTransactionFromResponse(responseModel) {
     transaction.description.value = description;
   }
 
+  transaction.pictureId = responseModel['pictureId'];
+
   return transaction;
 }
 
@@ -111,7 +113,8 @@ export function transformTransactionToRequest(transactionModel, coordinate) {
     endDate: replaceOptionalField(transactionModel, 'endDate'),
     description: replaceOptionalField(transactionModel, 'description'),
     locked: transactionModel.locked,
-    coordinate: coordinate
+    coordinate: coordinate,
+    pictureId: transactionModel.pictureId
   };
 }
 

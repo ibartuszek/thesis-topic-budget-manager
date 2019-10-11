@@ -34,7 +34,6 @@ class TransactionCard extends Component {
 
   render() {
     const {logHolder, mainCategoryList, subCategoryList, target, transactionType} = this.props;
-
     return (
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
@@ -43,6 +42,12 @@ class TransactionCard extends Component {
                              formTitle={transactionMessages.createTransactionTitle} handleSubmit={this.handleSubmit}/>
             <AlertMessageComponent message={getMessage(logHolder.messages, "createTransactionSuccess", true)} onChange={this.handleDismiss}/>
             <AlertMessageComponent message={getMessage(logHolder.messages, "createTransactionError", false)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "uploadPictureSuccess", true)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "uploadPictureError", false)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "deletePictureSuccess", true)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "deletePictureError", false)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "getPictureSuccess", true)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "getPictureError", false)} onChange={this.handleDismiss}/>
           </div>
         </div>
       </React.Fragment>
@@ -52,9 +57,10 @@ class TransactionCard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    userHolder: state.userHolder,
     logHolder: state.logHolder,
+    pictureHolder: state.pictureHolder,
     transactionHolder: state.transactionHolder,
+    userHolder: state.userHolder
   }
 };
 

@@ -47,6 +47,12 @@ class TransactionEditPopUp extends Component {
                                popup={true} showTransactionEdit={this.showTransactionEdit}/>
               <AlertMessageComponent message={getMessage(logHolder.messages, "updateTransactionSuccess", true)} onChange={this.handleDismiss}/>
               <AlertMessageComponent message={getMessage(logHolder.messages, "updateTransactionError", false)} onChange={this.handleDismiss}/>
+              <AlertMessageComponent message={getMessage(logHolder.messages, "uploadPictureSuccess", true)} onChange={this.handleDismiss}/>
+              <AlertMessageComponent message={getMessage(logHolder.messages, "uploadPictureError", false)} onChange={this.handleDismiss}/>
+              <AlertMessageComponent message={getMessage(logHolder.messages, "deletePictureSuccess", true)} onChange={this.handleDismiss}/>
+              <AlertMessageComponent message={getMessage(logHolder.messages, "deletePictureError", false)} onChange={this.handleDismiss}/>
+              <AlertMessageComponent message={getMessage(logHolder.messages, "getPictureSuccess", true)} onChange={this.handleDismiss}/>
+              <AlertMessageComponent message={getMessage(logHolder.messages, "getPictureError", false)} onChange={this.handleDismiss}/>
             </div>
           </div>
         </div>
@@ -58,8 +64,9 @@ class TransactionEditPopUp extends Component {
 const mapStateToProps = (state) => {
   return {
     logHolder: state.logHolder,
+    pictureHolder: state.pictureHolder,
     transactionHolder: state.transactionHolder,
-    userHolder: state.userHolder,
+    userHolder: state.userHolder
   }
 };
 
