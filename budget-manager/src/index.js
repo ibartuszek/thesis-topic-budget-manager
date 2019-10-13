@@ -5,6 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import "bootstrap/dist/js/bootstrap.js";
 import "./styles/style.scss";
 import "./styles/my-custom-style.css"
+import '../node_modules/react-vis/dist/style.css';
 import "jquery"
 import "popper.js"
 import {applyMiddleware, createStore} from 'redux';

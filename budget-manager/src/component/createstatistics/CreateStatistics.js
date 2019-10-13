@@ -1,10 +1,10 @@
 import React from 'react';
 import Loading from '../Loading'
 
-const Reports = () => {
+const CreateStatistics = () => {
   return (
     <Loading/>
   )
 };
 
-export default Reports;
+export default CreateStatistics;

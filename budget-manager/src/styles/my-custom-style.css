@@ -21,12 +21,40 @@ label.input-group-addon.input-group-text {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.custom-chart-container {
+    width: 550px;
+    display: inline-block;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0.5em;
+    border-color: var(--primary);
+    background-color: var(--light);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.custom-chart-details-container {
+    background-color: var(--light);
+    float: left;
+    display: inline-flex;
+}
+
+.custom-crosshair {
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 6rem;
+    text-align: center;
+}
+
 .custom-error-message-container {
     color: var(--danger);
 }
 
 .custom-form-control-select {
     height: 2.5rem;
+}
+
+.custom-list {
+    list-style-type: square;
 }
 
 .custom-popup {
@@ -108,16 +136,12 @@ label.input-group-addon.input-group-text {
     max-width: 500px;
 }
 
-.min-800 {
-    min-width: 800px;
-}
-
-.min-1000 {
-    min-width: 1000px;
-}
-
 .min-w-400 {
     min-width: 400px;
+}
+
+.min-w-600 {
+    min-width: 600px;
 }
 
 .my-nav-link:hover {

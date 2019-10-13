@@ -27,13 +27,13 @@ const SignedInLinks = (props) => {
           </NavLink>
         </li>
         <li className="nav-item mx-3">
-          <NavLink className="nav-link" to="/draft">
+          <NavLink className="nav-link" to="/create-statistics">
             <span className="fas fa-pencil-alt"/>
             <span> Create statistics </span>
           </NavLink>
         </li>
         <li className="nav-item mx-3">
-          <NavLink className="nav-link" to="/reports">
+          <NavLink className="nav-link" to="/statistics">
             <span className="fas fa-balance-scale"/>
             <span> Statistics </span>
           </NavLink>
