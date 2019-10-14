@@ -1,59 +1,100 @@
 import React, {Component} from 'react';
-import CustomChart from "./CustomChart";
+import {bindActionCreators} from "redux";
+import Loading from "../Loading";
+import TransactionTableSearchBar from "../transactions/transaction/table/TransactionTableSearchBar";
+import {connect} from "react-redux";
+import {createContext} from "../../actions/common/createContext";
+import {getStandardStatistics} from "../../actions/statistics/getStandardStatistics";
+import {statisticsMessages} from "../../store/MessageHolder";
+import StandardStatistics from "./standardStatistics/StandardStatistics";
 
 class Statistics extends Component {
 
-  render() {
+  state = {
+    startDate: undefined,
+    endDate: undefined,
+    standardStatisticsAreLoaded: undefined,
+  };
 
-    const customStatistics = {
-      id: 1,
-      title: "Example chart",
-      type: ["INCOME, OUTCOME"],
-      startDate: "2019-10-01",
-      endDate: "2019-10-31",
-      currency: "EUR",
-      mainCategory: "test main category",
-      subCategory: "test supplementary category",
-      monthly: true,
-      chartType: "linear",
-      xAxisName: "day",
-      yAxisName: "amount",
-      height: 300,
-      width: 500,
-      data: [
-        [
-          {x: 0, y: 8},
-          {x: 1, y: 5},
-          {x: 2, y: 4},
-          {x: 3, y: 9},
-          {x: 4, y: 1},
-          {x: 5, y: 7},
-          {x: 6, y: 6},
-          {x: 7, y: 3},
-          {x: 8, y: 2},
-          {x: 9, y: 0}
-        ], [
-          {x: 0, y: 18},
-          {x: 1, y: 15},
-          {x: 2, y: 14},
-          {x: 3, y: 19},
-          {x: 4, y: 11},
-          {x: 5, y: 17},
-          {x: 6, y: 16},
-          {x: 7, y: 13},
-          {x: 8, y: 12},
-          {x: 9, y: 10}
-        ]]
-    };
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleGetStandardStatistics = this.handleGetStandardStatistics.bind(this);
+  }
+
+  componentDidUpdate(oldProps) {
+    const newProps = this.props;
+
+    if (this.state.standardStatisticsAreLoaded === false && newProps.statisticsHolder['standardStatisticsAreLoaded'] === true) {
+      this.setState({
+        ...this.state,
+        standardStatisticsAreLoaded: true
+      })
+    }
+  }
+
+  handleChange = (id, value) => {
+    this.setState({
+      [id]: value
+    });
+  };
+
+  handleGetStandardStatistics() {
+    const {endDate, startDate} = this.state;
+    const {userHolder, logHolder} = this.props;
+    if (startDate !== undefined && startDate !== null && endDate !== undefined && endDate !== null) {
+      let context = createContext(userHolder, logHolder);
+      this.setState({
+        standardStatisticsAreLoaded: false
+      });
+      this.props.getStandardStatistics(context, startDate, endDate);
+    }
+  }
+
+  render() {
+    const {startDate, endDate, standardStatisticsAreLoaded} = this.state;
+    const {statisticsHolder} = this.props;
+
+    let standardStatistics = null;
+    if (standardStatisticsAreLoaded === false) {
+      standardStatistics = <Loading/>;
+    } else if (standardStatisticsAreLoaded === true) {
+      standardStatistics = <StandardStatistics standardStatistics={statisticsHolder.standardStatistics}/>;
+    }
 
     return (
       <main>
-        <div className="card card-body mt-3 min-w-600">
-          <CustomChart data={customStatistics}/>
+        <div className="card my-3">
+          <TransactionTableSearchBar startDateId="startDate" startDate={startDate} startDatePlaceHolder={statisticsMessages.startDatePlaceHolder}
+                                     endDateId="endDate" endDate={endDate} endDatePlaceHolder={statisticsMessages.endDatePlaceHolder}
+                                     buttonName="Get statistics" buttonIcon="fas fa-download" handleDateChange={this.handleChange}
+                                     handleSearch={this.handleGetStandardStatistics}/>
+          <div className="card-body">
+            {standardStatistics}
+          </div>
         </div>
       </main>);
   }
 
 }
 
-export default Statistics;
+const mapStateToProps = (state) => {
+  return {
+    logHolder: state.logHolder,
+    statisticsHolder: state.statisticsHolder,
+    userHolder: state.userHolder,
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch,
+    ...bindActionCreators(
+      {
+        getStandardStatistics: getStandardStatistics,
+      },
+      dispatch)
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Statistics)

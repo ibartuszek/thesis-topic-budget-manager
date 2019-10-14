@@ -2,20 +2,11 @@ export const categoryMessages = {
   addNewSubCategory: "New subcategory",
   categoryNameLabel: "Name of the category",
   categoryNameMessage: "Please write the name of the new category.",
-  // categoriesUnavailableMessage: "We cannot reach the backup repository, please try it later!",
-  // createMainCategorySuccess: "The category has been saved.",
-  // createMainCategoryError: "The category has been saved before.",
   createMainCategoryTitle: "Create new main category",
-  // createSubCategorySuccess: "The category has been saved.",
-  // createSubCategoryError: "The category has been saved before.",
   createSubCategoryTitle: "Create new subcategory",
   selectNewCategory: "Choose one to add as a new category.",
   subCategoryLabel: "Subcategory",
-  // updateMainCategorySuccess: "The category has been modified!",
-  // updateMainCategoryError: "The category exists!",
   updateMainCategoryTitle: "Update main category",
-  // updateSubCategorySuccess: "The category has been modified!",
-  // updateSubCategoryError: "The category exists!",
   updateSubCategoryTitle: "Update subcategory",
 };
 
@@ -23,12 +14,13 @@ export const defaultMessages = {
   defaultErrorMessage: "Something went wrong, please try again!",
 };
 
+export const statisticsMessages = {
+  endDatePlaceHolder: "Select end date",
+  startDatePlaceHolder: "Select end date"
+};
+
 export const transactionMessages = {
-  // createTransactionSuccess: "The transaction has been saved.",
-  // createTransactionError: "The transaction has been saved before.",
   createTransactionTitle: "Create new transaction",
-  // deleteTransactionSuccess: "The transaction has been deleted.",
-  // deleteTransactionError: "The transaction cannot be deleted.",
   transactionAmountLabel: "Amount",
   transactionAmountMessage: "The amount of your new transaction.",
   transactionCurrencyLabel: "Currency",
@@ -51,9 +43,6 @@ export const transactionMessages = {
   transactionsEndDatePlaceHolder: "Select end date",
   transactionsStartDateLabel: "Start date",
   transactionsStartDatePlaceHolder: "Select start date",
-  // transactionsUnavailableMessage: "We cannot reach the backup repository, please try it later!",
-  // updateTransactionSuccess: "The transaction has been modified!",
-  // updateTransactionError: "The transaction exists!",
   updateTransactionTitle: "Update transaction",
 };
 
@@ -73,14 +62,10 @@ export const userFormMessages = {
 };
 
 export const userMessages = {
-  // defaultErrorMessage: "Something went wrong, please try again!",
   logInMessage: "User has logged in.",
   logInErrorMessage: "Login failed, wrong username or password!",
   logOutMessage: "User has logged out.",
   signUpMessage: "The registration was successful.",
-  // signUpErrorMessage: "The registration was not successful. This email has been used already!",
-  // updateUserMessage: "Your modification has been saved.",
-  // updateUserErrorMessage: "Your modification was not saved. This email has been used by another user.",
 };
 
 export const validationMessages = {

@@ -34,7 +34,7 @@ label.input-group-addon.input-group-text {
 
 .custom-chart-details-container {
     background-color: var(--light);
-    float: left;
+    /* float: left; */
     display: inline-flex;
 }
 

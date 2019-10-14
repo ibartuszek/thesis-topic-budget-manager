@@ -12,6 +12,10 @@ class TransactionTableSearchBar extends Component {
 
   render() {
     const {endDateId, endDate, endDatePlaceHolder, handleSearch, startDateId, startDate, startDatePlaceHolder} = this.props;
+    const {buttonName, buttonIcon} = this.props;
+
+    let buttonText = buttonName === undefined ? " Search " : (" " + buttonName + " ");
+    let buttonIconText = buttonIcon === undefined ? "fas fa-search" : buttonIcon;
 
     let sDate = startDate !== undefined && startDate !== null ? new Date(moment(startDate).format(dateProperties.dateFormat)) : null;
     let eDate = endDate !== undefined && endDate !== null ? new Date(moment(endDate).format(dateProperties.dateFormat)) : null;
@@ -36,8 +40,8 @@ class TransactionTableSearchBar extends Component {
           selected={eDate} onChange={(e) => this.handleChange(e, endDateId)}
           popperModifiers={popperModifiers}/>
         <button className="btn btn-outline-success my-2 mx-3" onClick={handleSearch}>
-          <span className="fas fa-search"/>
-          <span> Search </span>
+          <span className={buttonIconText}/>
+          <span>{buttonText}</span>
         </button>
       </div>
     )
