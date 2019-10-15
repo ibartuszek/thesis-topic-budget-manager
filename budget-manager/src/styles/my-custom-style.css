@@ -22,20 +22,19 @@ label.input-group-addon.input-group-text {
 }
 
 .custom-chart-container {
-    width: 550px;
-    display: inline-block;
+    min-width: 400px;
     border-style: solid;
     border-width: 1px;
     border-radius: 0.5em;
     border-color: var(--primary);
     background-color: var(--light);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 
 .custom-chart-details-container {
     background-color: var(--light);
-    /* float: left; */
-    display: inline-flex;
+    min-width: 600px;
+    width: 100%;
 }
 
 .custom-crosshair {

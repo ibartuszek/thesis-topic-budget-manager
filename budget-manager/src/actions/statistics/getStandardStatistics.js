@@ -42,99 +42,58 @@ export function createGetStandardStatisticsMockResponse() {
   let responseStatus = 200;
   let responseBody = {
     message: "OK",
-    standardStatistics: [
-      {
-        schemaId: 1,
-        schemaTitle: "Example income radial chart",
-        type: ["INCOME"],
-        startDate: "2019-10-01",
-        endDate: "2019-10-31",
+    standardStatistics: {
+      schema: {
+        id: 1,
+        title: "Monthly budget",
+        types: "MONTHLY_BUDGET",
         currency: "EUR",
         monthly: true,
         chartType: "RADIAL",
-        height: 300,
-        width: 500,
-        data: [
-          {
-            legend: "Incomes",
-            data: [
-              {angle: 120, label: "Salary"},
-              {angle: 20, label: "Reward"},
-              {angle: 65, label: "Gift"}
-            ]
-          }
+      },
+      startDate: "2019-10-01",
+      endDate: "2019-10-31",
+      chartData: {
+        legend: "Expenses",
+        sectorPoints: [
+          {angle: 820.00, label: "Lodging"},
+          {angle: 80, label: "Car"},
+          {angle: 350, label: "Food"},
+          {angle: 80, label: "Beauty care"},
+          {angle: 100, label: "Health care"},
+          {angle: 100, label: "Entertainment"},
+          {angle: 600, label: 'Saving'}
+        ]
+      },
+      budgetDetails: {
+        totalIncomes: 2150.00,
+        totalExpenses: 1550.00,
+        savings: 600,
+        incomes: [
+          {mainCategoryName: "Salary", subCategoryName: null, amount: 2000.00},
+          {mainCategoryName: "Salary", subCategoryName: "Allowance", amount: 100.00},
+          {mainCategoryName: "Gift", subCategoryName: null, amount: 50.00}
         ],
-      }, {
-        schemaId: 2,
-        schemaTitle: "Example outcome radial chart",
-        type: ["OUTCOME"],
-        startDate: "2019-10-01",
-        endDate: "2019-10-31",
-        currency: "EUR",
-        monthly: true,
-        chartType: "RADIAL",
-        height: 300,
-        width: 500,
-        data: [
-          {
-            legend: "Expenses",
-            data: [
-              {angle: 8, label: "Flat", labelsAboveChildren: true},
-              {angle: 5, label: "Internet"},
-              {angle: 4, label: "Food"}
-            ]
-          }
-        ],
-      }, {
-        id: 3,
-        schemaTitle: "Example income and outcome vertical bar chart",
-        type: ["INCOME", "OUTCOME"],
-        startDate: "2019-10-01",
-        endDate: "2019-10-31",
-        currency: "EUR",
-        monthly: true,
-        chartType: "LINEAR",
-        height: 300,
-        width: 500,
-        data: [
-          {
-            legend: "test1",
-            data: [
-              {x: 0, y: 8},
-              {x: 1, y: 5},
-              {x: 2, y: 4},
-              {x: 3, y: 9},
-              {x: 4, y: 1},
-              {x: 5, y: 7},
-              {x: 6, y: 6},
-              {x: 7, y: 3},
-              {x: 8, y: 2},
-              {x: 9, y: 0}
-            ]
-          }, {
-            legend: "test2",
-            data: [
-              {x: 0, y: 18},
-              {x: 1, y: 15},
-              {x: 2, y: 14},
-              {x: 3, y: 19},
-              {x: 4, y: 11},
-              {x: 5, y: 17},
-              {x: 6, y: 16},
-              {x: 7, y: 13},
-              {x: 8, y: 12},
-              {x: 9, y: 10}
-            ]
-          }
-        ],
+        outcomes: [
+          {mainCategoryName: "Lodging", subCategoryName: null, amount: 820.00},
+          {mainCategoryName: "Lodging", subCategoryName: "Internet", amount: 20.00},
+          {mainCategoryName: "Car", subCategoryName: null, amount: 80.00},
+          {mainCategoryName: "Car", subCategoryName: "Petrol", amount: 80.00},
+          {mainCategoryName: "Food", subCategoryName: null, amount: 350.00},
+          {mainCategoryName: "Beauty care", subCategoryName: null, amount: 80.00},
+          {mainCategoryName: "Health care", subCategoryName: null, amount: 100.00},
+          {mainCategoryName: "Entertainment", subCategoryName: null, amount: 100.00},
+          {mainCategoryName: "Entertainment", subCategoryName: "Cinema", amount: 20.00},
+        ]
       }
-    ],
+    },
     monthlyCustomStatisticsIds: [
       {
         schemaId: 1,
         schemaTitle: "Example monthly custom statistics 1",
 
-      }, {
+      },
+      {
         schemaId: 2,
         schemaTitle: "Example monthly custom statistics 2"
       }
@@ -144,7 +103,8 @@ export function createGetStandardStatisticsMockResponse() {
         schemaId: 1,
         schemaTitle: "Example irregular statistics 1",
 
-      }, {
+      },
+      {
         schemaId: 2,
         schemaTitle: "Example irregular statistics 2"
       }
@@ -154,4 +114,41 @@ export function createGetStandardStatisticsMockResponse() {
     "status": responseStatus,
     "body": responseBody
   }
+}
+
+export function createGetCustomStatisticsMock() {
+  return {
+    schema: {
+      id: 2,
+      title: "Monthly scale",
+      types: "CUSTOM_BUDGET",
+      currency: "EUR",
+      monthly: true,
+      chartType: "BAR",
+    },
+    startDate: "2019-10-01",
+    endDate: "2019-10-31",
+    chartData: {
+      legend: "Monthly-scale",
+      dataPoints: [
+        {x: 1, y: -5.00, label: 'I am legend'},
+        {x: 2, y: 1995.00, label: 'Salary'},
+        {x: 2, y: 2025.00, label: 'Fringe benefit'},
+        {x: 6, y: 2125.00, label: 'Birthday present from grandparents'},
+        {x: 6, y: 2079.55, label: 'Big shopping'},
+        {x: 11, y: 2076.55, label: 'Found money'},
+        {x: 10, y: 1985.64, label: 'Tax'},
+        {x: 10, y: 1955.34, label: 'Common cost'},
+        {x: 10, y: 1155.34, label: 'Lodging'},
+        {x: 15, y: 1135.34, label: 'Internet'},
+        {x: 21, y: 1132.34, label: 'C-vitamin'},
+        {x: 21, y: 1052.00, label: 'Big shopping'},
+        {x: 21, y: 1037.00, label: 'Online course'},
+        {x: 21, y: 1017.00, label: 'New convenient keyboard'},
+        {x: 26, y: 937.00, label: 'Petrol'},
+        {x: 26, y: 902.00, label: 'Shopping'},
+        {x: 30, y: 866.00, label: 'New shirt'},
+      ]
+    }
+  };
 }

@@ -8,7 +8,8 @@ import {getUser} from "../../actions/user/getUser";
 import {removeMessage} from "../../actions/message/messageActions";
 import {setAccessToken} from "../../actions/user/setAccessToken";
 import StandardStatistics from "../statistics/standardStatistics/StandardStatistics";
-import {createGetStandardStatisticsMockResponse} from "../../actions/statistics/getStandardStatistics";
+import {createGetCustomStatisticsMock, createGetStandardStatisticsMockResponse} from "../../actions/statistics/getStandardStatistics";
+import CustomChart from "../statistics/CustomChart";
 
 class Home extends Component {
   state = {
@@ -16,6 +17,11 @@ class Home extends Component {
     email: {
       value: ''
     }
+  };
+
+  chartDetails = {
+    height: 350,
+    width: 400,
   };
 
   componentDidMount() {
@@ -59,12 +65,22 @@ class Home extends Component {
 
     // TODO: delete:
     let response = createGetStandardStatisticsMockResponse();
+    let customStatistics = createGetCustomStatisticsMock();
 
     this.fetchUserData();
     return (
       <main>
-        <div className="card my-3">
-          <StandardStatistics standardStatistics={response.body.standardStatistics}/>
+        <StandardStatistics standardStatistics={response.body.standardStatistics}/>
+        <div className="card card-body custom-chart-details-container my-3 mx-auto">
+          <div className="clearfix my-3 mx-auto container">
+            <h3 className="mx-auto">Main statistics</h3>
+            <div className="row">
+              <div className="col-12 col-lg-6 my-3 text-center">
+                <CustomChart chartData={customStatistics.chartData} chartDetails={this.chartDetails}
+                             schema={customStatistics.schema}/>
+              </div>
+            </div>
+          </div>
         </div>
         {logs}
         <Loading/>
