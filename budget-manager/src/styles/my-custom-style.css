@@ -17,6 +17,10 @@ label.input-group-addon.input-group-text {
     border-bottom-right-radius: 0;
 }
 
+.border-2 {
+    border-width: 2px !important;
+}
+
 .card.card-body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -24,10 +28,10 @@ label.input-group-addon.input-group-text {
 .custom-chart-container {
     min-width: 400px;
     border-style: solid;
-    border-width: 1px;
+    border-width: 2px;
     border-radius: 0.5em;
     border-color: var(--primary);
-    background-color: var(--light);
+    /* background-color: var(--light); */
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 
@@ -42,6 +46,7 @@ label.input-group-addon.input-group-text {
     background-color: rgba(0, 0, 0, 0.8);
     width: 6rem;
     text-align: center;
+    border-radius: 0.5em;
 }
 
 .custom-error-message-container {

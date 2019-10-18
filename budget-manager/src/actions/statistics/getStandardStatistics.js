@@ -46,9 +46,8 @@ export function createGetStandardStatisticsMockResponse() {
       schema: {
         id: 1,
         title: "Monthly budget",
-        types: "MONTHLY_BUDGET",
+        type: "MONTHLY_BUDGET",
         currency: "EUR",
-        monthly: true,
         chartType: "RADIAL",
       },
       startDate: "2019-10-01",
@@ -67,8 +66,11 @@ export function createGetStandardStatisticsMockResponse() {
       },
       budgetDetails: {
         totalIncomes: 2150.00,
+        totalIncomesLabel: 'Total incomes',
         totalExpenses: 1550.00,
+        totalExpensesLabel: 'Total expenses',
         savings: 600,
+        savingsLabel: 'Savings',
         incomes: [
           {mainCategoryName: "Salary", subCategoryName: null, amount: 2000.00},
           {mainCategoryName: "Salary", subCategoryName: "Allowance", amount: 100.00},
@@ -87,26 +89,15 @@ export function createGetStandardStatisticsMockResponse() {
         ]
       }
     },
-    monthlyCustomStatisticsIds: [
+    customStatisticsIds: [
       {
-        schemaId: 1,
-        schemaTitle: "Example monthly custom statistics 1",
+        schemaId: 2,
+        schemaTitle: "Example scale",
 
       },
       {
-        schemaId: 2,
-        schemaTitle: "Example monthly custom statistics 2"
-      }
-    ],
-    irregularStatisticsIds: [
-      {
-        schemaId: 1,
-        schemaTitle: "Example irregular statistics 1",
-
-      },
-      {
-        schemaId: 2,
-        schemaTitle: "Example irregular statistics 2"
+        schemaId: 3,
+        schemaTitle: "Example sum"
       }
     ]
   };
@@ -114,41 +105,4 @@ export function createGetStandardStatisticsMockResponse() {
     "status": responseStatus,
     "body": responseBody
   }
-}
-
-export function createGetCustomStatisticsMock() {
-  return {
-    schema: {
-      id: 2,
-      title: "Monthly scale",
-      types: "CUSTOM_BUDGET",
-      currency: "EUR",
-      monthly: true,
-      chartType: "BAR",
-    },
-    startDate: "2019-10-01",
-    endDate: "2019-10-31",
-    chartData: {
-      legend: "Monthly-scale",
-      dataPoints: [
-        {x: 1, y: -5.00, label: 'I am legend'},
-        {x: 2, y: 1995.00, label: 'Salary'},
-        {x: 2, y: 2025.00, label: 'Fringe benefit'},
-        {x: 6, y: 2125.00, label: 'Birthday present from grandparents'},
-        {x: 6, y: 2079.55, label: 'Big shopping'},
-        {x: 11, y: 2076.55, label: 'Found money'},
-        {x: 10, y: 1985.64, label: 'Tax'},
-        {x: 10, y: 1955.34, label: 'Common cost'},
-        {x: 10, y: 1155.34, label: 'Lodging'},
-        {x: 15, y: 1135.34, label: 'Internet'},
-        {x: 21, y: 1132.34, label: 'C-vitamin'},
-        {x: 21, y: 1052.00, label: 'Big shopping'},
-        {x: 21, y: 1037.00, label: 'Online course'},
-        {x: 21, y: 1017.00, label: 'New convenient keyboard'},
-        {x: 26, y: 937.00, label: 'Petrol'},
-        {x: 26, y: 902.00, label: 'Shopping'},
-        {x: 30, y: 866.00, label: 'New shirt'},
-      ]
-    }
-  };
 }

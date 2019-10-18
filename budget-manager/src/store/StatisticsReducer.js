@@ -2,12 +2,11 @@ import {addMessage, createMessage} from "../actions/message/messageActions";
 import {addElementToArray} from "../actions/common/listActions";
 
 const initState = {
-  standardStatistics: [],
+  standardStatistics: null,
   standardStatisticsAreLoaded: undefined,
-  monthlyCustomStatisticsIds: [],
-  monthlyCustomStatistics: [],
-  irregularStatisticsIds: [],
-  irregularStatistics: [],
+  customStatisticsIds: [],
+  customStatistics: [],
+  customStatisticsAreLoaded: undefined
 };
 
 const StatisticsReducer = (state = initState, action) => {
@@ -19,8 +18,7 @@ const StatisticsReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
         standardStatistics: action['response'].standardStatistics,
-        monthlyCustomStatisticsIds: action['response'].monthlyCustomStatisticsIds,
-        irregularStatisticsIds: action['response'].irregularStatisticsIds,
+        customStatisticsIds: action['response'].customStatisticsIds,
         standardStatisticsAreLoaded: true
       });
     case 'GET_STANDARD_STATISTICS_ERROR':
@@ -29,30 +27,18 @@ const StatisticsReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state
       });
-    case 'GET_MONTHLY_CUSTOM_STATISTICS_SUCCESS':
-      key = "getMonthlyCustomStatisticsSuccess";
+    case 'GET_CUSTOM_STATISTICS_SUCCESS':
+      key = "getCustomStatisticsSuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
+      console.log(action['response'].customStatistics);
       return Object.assign({}, state, {
         ...state,
         // TODO:
-        pictures: addElementToArray(state.standardStatistics, action.picture)
+        customStatistics: addElementToArray(state.customStatistics, action['response'].customStatistics),
+        customStatisticsAreLoaded: true,
       });
-    case 'GET_MONTHLY_CUSTOM_STATISTICS_ERROR':
-      key = "getMonthlyCustomStatisticsError";
-      addMessage(action.messages, createMessage(key, action.message, false));
-      return Object.assign({}, state, {
-        ...state
-      });
-    case 'GET_IRREGULAR_STATISTICS_SUCCESS':
-      key = "getIrregularStatisticsSuccess";
-      addMessage(action.messages, createMessage(key, action.message, true));
-      return Object.assign({}, state, {
-        ...state,
-        // TODO:
-        pictures: addElementToArray(state.standardStatistics, action.picture)
-      });
-    case 'GET_IRREGULAR_STATISTICS_ERROR':
-      key = "getIrregularStatisticsError";
+    case 'GET_CUSTOM_STATISTICS_ERROR':
+      key = "getCustomStatisticsError";
       addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state

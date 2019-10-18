@@ -8,8 +8,9 @@ import {getUser} from "../../actions/user/getUser";
 import {removeMessage} from "../../actions/message/messageActions";
 import {setAccessToken} from "../../actions/user/setAccessToken";
 import StandardStatistics from "../statistics/standardStatistics/StandardStatistics";
-import {createGetCustomStatisticsMock, createGetStandardStatisticsMockResponse} from "../../actions/statistics/getStandardStatistics";
-import CustomChart from "../statistics/CustomChart";
+import {createGetStandardStatisticsMockResponse} from "../../actions/statistics/getStandardStatistics";
+import CustomStatistics from "../statistics/customStatistics/CustomStatistics";
+import {createGetCustomScaleStatisticsMock, createGetCustomSumStatisticsMock} from "../../actions/statistics/getCustomStatistics";
 
 class Home extends Component {
   state = {
@@ -65,23 +66,15 @@ class Home extends Component {
 
     // TODO: delete:
     let response = createGetStandardStatisticsMockResponse();
-    let customStatistics = createGetCustomStatisticsMock();
+    let exampleScale = createGetCustomScaleStatisticsMock();
+    let exampleSum = createGetCustomSumStatisticsMock();
 
     this.fetchUserData();
     return (
       <main>
         <StandardStatistics standardStatistics={response.body.standardStatistics}/>
-        <div className="card card-body custom-chart-details-container my-3 mx-auto">
-          <div className="clearfix my-3 mx-auto container">
-            <h3 className="mx-auto">Main statistics</h3>
-            <div className="row">
-              <div className="col-12 col-lg-6 my-3 text-center">
-                <CustomChart chartData={customStatistics.chartData} chartDetails={this.chartDetails}
-                             schema={customStatistics.schema}/>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CustomStatistics customStatistics={exampleScale.customStatistics}/>
+        <CustomStatistics customStatistics={exampleSum.customStatistics}/>
         {logs}
         <Loading/>
       </main>
