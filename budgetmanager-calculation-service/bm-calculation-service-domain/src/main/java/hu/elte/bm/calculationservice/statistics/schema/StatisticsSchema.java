@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice;
+package hu.elte.bm.calculationservice.statistics.schema;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice;
+package hu.elte.bm.calculationservice.statistics;
 
 import java.time.LocalDate;
 
@@ -6,8 +6,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.PastOrPresent;
 
-import hu.elte.bm.calculationservice.chartdata.ChartData;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import hu.elte.bm.calculationservice.statistics.chartdata.ChartData;
+import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+
+@JsonDeserialize(builder = Statistics.Builder.class)
 public final class Statistics {
 
     @Past

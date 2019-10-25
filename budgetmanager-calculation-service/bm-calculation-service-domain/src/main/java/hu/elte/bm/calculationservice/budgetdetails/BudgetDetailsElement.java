@@ -1,27 +1,18 @@
-package hu.elte.bm.calculationservice.chartdata;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
+package hu.elte.bm.calculationservice.budgetdetails;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-@JsonDeserialize(builder = SectorPoint.Builder.class)
-public final class SectorPoint {
+@JsonDeserialize(builder = BudgetDetailsElement.Builder.class)
+public final class BudgetDetailsElement {
 
-    private static final int MAXIMUM_LABEL_LENGTH = 50;
-
-    @Positive(message = "Angle must be positive!")
-    private final double angle;
-    @NotEmpty(message = "Label cannot be empty!")
-    @Length(max = MAXIMUM_LABEL_LENGTH, message = "Label must be shorter than 50 characters!")
+    private final double amount;
     private final String label;
 
-    private SectorPoint(final Builder builder) {
-        this.angle = builder.angle;
+    private BudgetDetailsElement(final Builder builder) {
+        this.amount = builder.amount;
         this.label = builder.label;
     }
 
@@ -29,8 +20,8 @@ public final class SectorPoint {
         return new Builder();
     }
 
-    public double getAngle() {
-        return angle;
+    public double getAmount() {
+        return amount;
     }
 
     public String getLabel() {
@@ -47,10 +38,10 @@ public final class SectorPoint {
             return false;
         }
 
-        SectorPoint that = (SectorPoint) o;
+        BudgetDetailsElement that = (BudgetDetailsElement) o;
 
         return new EqualsBuilder()
-                .append(angle, that.angle)
+                .append(amount, that.amount)
                 .append(label, that.label)
                 .isEquals();
     }
@@ -58,29 +49,29 @@ public final class SectorPoint {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(angle)
+                .append(amount)
                 .append(label)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "SectorPoint{"
-                + "angle=" + angle
+        return "BudgetDetailsElement{"
+                + "amount=" + amount
                 + ", label='" + label + '\''
                 + '}';
     }
 
     public static final class Builder {
 
-        private double angle;
+        private double amount;
         private String label;
 
         private Builder() {
         }
 
-        public Builder withAngle(final double angle) {
-            this.angle = angle;
+        public Builder withAmount(final double amount) {
+            this.amount = amount;
             return this;
         }
 
@@ -89,10 +80,9 @@ public final class SectorPoint {
             return this;
         }
 
-        public SectorPoint build() {
-            return new SectorPoint(this);
+        public BudgetDetailsElement build() {
+            return new BudgetDetailsElement(this);
         }
 
     }
-
 }

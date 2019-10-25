@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.chartdata;
+package hu.elte.bm.calculationservice.statistics.chartdata;
 
 import java.util.List;
 
