@@ -27,7 +27,7 @@ class StatisticsSchemaContainer extends Component {
     let mainCategory = mainCategoryName === null || mainCategoryName === undefined ? null :
       (
         <div className="list-group-item my-2 p-2 border border-secondary rounded">
-          <div className="float-left d-inline-block">Filtered to main category</div>
+          <div className="float-left d-inline-block">Filtered to expenses' main category</div>
           <div className="float-right d-inline-block">{mainCategoryName}</div>
         </div>
       );
@@ -35,7 +35,7 @@ class StatisticsSchemaContainer extends Component {
     let subCategory = subCategoryName === null || subCategoryName === undefined ? null :
       (
         <div className="list-group-item my-2 p-2 border border-secondary rounded">
-          <div className="float-left d-inline-block">Filtered to supplementary category</div>
+          <div className="float-left d-inline-block">Filtered to expenses' supplementary category</div>
           <div className="float-right d-inline-block">{subCategoryName}</div>
         </div>
       );
