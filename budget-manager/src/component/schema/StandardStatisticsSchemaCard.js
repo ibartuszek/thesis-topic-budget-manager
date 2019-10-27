@@ -4,7 +4,7 @@ import StatisticsSchemaContainer from "./StatisticsSchemaContainer";
 class StandardStatisticsSchemaCard extends Component {
 
   render() {
-    const {target, schema} = this.props;
+    const {schema, target} = this.props;
 
     return (
       <React.Fragment>

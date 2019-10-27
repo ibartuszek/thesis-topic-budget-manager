@@ -9,9 +9,7 @@ class StatisticsSchemaContainer extends Component {
   }
 
   showEditSchema(schema) {
-    // TODO:
-    console.log("EDIT SCHEMA");
-    console.log(schema);
+    this.props.showSchemaEdit(schema);
   }
 
   showDeleteSchema(schema) {

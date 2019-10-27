@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import EnumSelect from "../transactions/EnumSelect";
 import ModelStringValue from "../layout/form/ModelStringValue";
-import SubCategorySelect from "../transactions/subCategory/selectSubCategory/SubCategorySelect";
 import MainCategorySelect from "../transactions/mainCategory/MainCategorySelect";
+import SubCategorySelect from "../transactions/subCategory/selectSubCategory/SubCategorySelect";
 import {createEmptySchema} from "../../actions/schema/createSchemaMethods";
 
 class SchemaForm extends Component {
@@ -16,6 +16,16 @@ class SchemaForm extends Component {
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleModelValueChange = this.handleModelValueChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.showSchemaEdit = this.showSchemaEdit.bind(this);
+  }
+
+  componentDidMount() {
+    let {editableSchema} = this.props;
+    if (editableSchema !== null && editableSchema !== undefined) {
+      this.setState({
+        schema: editableSchema
+      })
+    }
   }
 
   handleFieldChange(id, value) {
@@ -46,13 +56,23 @@ class SchemaForm extends Component {
     this.props.handleSubmit(this.state.schema);
   };
 
+  showSchemaEdit() {
+    this.props.showSchemaEdit();
+  }
+
   render() {
     const {chartType, currency, mainCategory, subCategory, title, type} = this.state.schema;
-    const {formTitle, mainCategoryList} = this.props;
-
-    console.log(this.state);
+    const {formTitle, mainCategoryList, editableSchema} = this.props;
 
     let subCategoryList = mainCategory !== undefined && mainCategory !== null ? mainCategory.subCategoryModelSet : [];
+
+    let closeButton = editableSchema === null || editableSchema === undefined ? null :
+      (
+        <button className="btn btn-outline-danger mx-3 mt-3 mb-2" onClick={this.showSchemaEdit}>
+          <span>&times;</span>
+          <span> Close </span>
+        </button>
+      );
 
     return (
       <React.Fragment>
@@ -73,6 +93,7 @@ class SchemaForm extends Component {
             <span className="fas fa-pencil-alt"/>
             <span> Save schema </span>
           </button>
+          {closeButton}
         </form>
       </React.Fragment>
     )

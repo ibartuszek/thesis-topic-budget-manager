@@ -24,7 +24,7 @@ class CustomStatisticsSchemaCard extends Component {
     if (schemas !== null) {
       schemaList = schemas.map((schema, i) =>
         <div key={i}>
-          <StatisticsSchemaContainer schema={schema} editable={true}/>
+          <StatisticsSchemaContainer schema={schema} editable={true} showSchemaEdit={this.props.showSchemaEdit}/>
           <hr/>
         </div>);
     }

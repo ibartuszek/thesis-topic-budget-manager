@@ -1,5 +1,5 @@
 import {addMessage, createMessage} from "../actions/message/messageActions";
-import {addElementToArray} from "../actions/common/listActions";
+import {addElementToArray, replaceElementAtArray} from "../actions/common/listActions";
 
 const initState = {
   standardStatistics: null,
@@ -37,6 +37,21 @@ const StatisticsReducer = (state = initState, action) => {
       });
     case 'CREATE_SCHEMA_ERROR':
       key = "createSchemaError";
+      addMessage(action.messages, createMessage(key, action.message, false));
+      return Object.assign({}, state, {
+        ...state
+      });
+    case 'UPDATE_SCHEMA_SUCCESS':
+      key = "updateSchemaSuccess";
+      console.log(action['schemaModel']);
+      console.log(state.customSchemas);
+      addMessage(action.messages, createMessage(key, action.message, true));
+      return Object.assign({}, state, {
+        ...state,
+        customSchemas: replaceElementAtArray(state.customSchemas, action['schemaModel']),
+      });
+    case 'UPDATE_SCHEMA_SUCCESS':
+      key = "updateSchemaError";
       addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state

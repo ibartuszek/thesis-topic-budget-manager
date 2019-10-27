@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+import AlertMessageComponent from "../AlertMessageComponent";
 import SchemaForm from "./SchemaForm";
 import {createContext} from "../../actions/common/createContext";
-import {validateSchema} from "../../actions/validation/validateSchema";
 import {createSchema} from "../../actions/schema/createSchema";
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
+import {validateSchema} from "../../actions/validation/validateSchema";
 
 class CreateNewSchemaCard extends Component {
 
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDismiss = this.handleDismiss.bind(this);
   }
 
   handleSubmit(schema) {
@@ -21,18 +24,21 @@ class CreateNewSchemaCard extends Component {
     }
   }
 
+  handleDismiss(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
+  }
+
   render() {
-    const {categoryHolder, target} = this.props;
-
+    const {categoryHolder, logHolder, target} = this.props;
     let outcomeMainCategories = categoryHolder.outcomeMainCategories;
-
-    console.log(this.props.statisticsHolder);
 
     return (
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
           <div className="card card-body">
             <SchemaForm formTitle="Create schema" mainCategoryList={outcomeMainCategories} handleSubmit={this.handleSubmit}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "createSchemaSuccess", true)} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={getMessage(logHolder.messages, "createSchemaError", false)} onChange={this.handleDismiss}/>
           </div>
         </div>
       </React.Fragment>
@@ -54,7 +60,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     dispatch,
     ...bindActionCreators(
-      {createSchema: createSchema},
+      {
+        createSchema: createSchema,
+        removeMessage: removeMessage
+      },
       dispatch)
   }
 };

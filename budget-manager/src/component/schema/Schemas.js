@@ -5,12 +5,20 @@ import CardHeaderButton from "../layout/card/CardHeaderButton";
 import StandardStatisticsSchemaCard from "./StandardStatisticsSchemaCard";
 import CustomStatisticsSchemaCard from "./CustomStatisticsSchemaCard";
 import CreateNewSchemaCard from "./CreateNewSchemaCard";
+import UpdateSchemaPopUp from "./UpdateSchemaPopUp";
 
 class Schemas extends Component {
+
+  state = {
+    editableSchema: null,
+    deletableSchema: null
+  };
 
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
+    this.showSchemaDelete = this.showSchemaDelete.bind(this);
+    this.showSchemaEdit = this.showSchemaEdit.bind(this);
   }
 
   /*
@@ -30,8 +38,23 @@ class Schemas extends Component {
     });
   };
 
+  showSchemaEdit = (schema) => {
+    let editableSchema = schema !== null ? schema : null;
+    this.setState({
+      editableSchema: editableSchema,
+    })
+  };
+
+  showSchemaDelete = (schema) => {
+    let deletableSchema = schema !== null ? schema : null;
+    this.setState({
+      deletableSchema: deletableSchema,
+    })
+  };
+
   render() {
     const {statisticsHolder} = this.props;
+    const {deletableSchema, editableSchema} = this.state;
 
     let createNewSchema = "createNewSchemaContainer";
     let createNewSchemaCard = statisticsHolder.customSchemas === null
@@ -46,7 +69,11 @@ class Schemas extends Component {
     let showCustomSchemas = "customSchemasContainer";
     let customStatisticsCard = statisticsHolder.customSchemas === null
     || statisticsHolder.customSchemas === undefined ? null
-      : <CustomStatisticsSchemaCard target={showCustomSchemas} schemas={statisticsHolder.customSchemas}/>;
+      : <CustomStatisticsSchemaCard target={showCustomSchemas} schemas={statisticsHolder.customSchemas}
+                                    showSchemaEdit={this.showSchemaEdit}/>;
+
+    let editAbleSchemaContainer = editableSchema === null ? null
+      : <UpdateSchemaPopUp schema={editableSchema} showSchemaEdit={this.showSchemaEdit}/>;
 
     return (
       <main>
@@ -59,6 +86,7 @@ class Schemas extends Component {
           {createNewSchemaCard}
           {standardStatisticsCard}
           {customStatisticsCard}
+          {editAbleSchemaContainer}
         </div>
       </main>);
   }
