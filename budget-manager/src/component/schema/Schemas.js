@@ -34,19 +34,19 @@ class Schemas extends Component {
     const {statisticsHolder} = this.props;
 
     let createNewSchema = "createNewSchemaContainer";
-    let createNewSchemaCard = statisticsHolder.customStatisticsSchemas === null
-    || statisticsHolder.customStatisticsSchemas === undefined ? null
+    let createNewSchemaCard = statisticsHolder.customSchemas === null
+    || statisticsHolder.customSchemas === undefined ? null
       : <CreateNewSchemaCard target={createNewSchema}/>;
 
     let showStandardSchema = "standardSchemaContainer";
-    let standardStatisticsCard = statisticsHolder.standardStatisticsSchema === null
-    || statisticsHolder.standardStatisticsSchema === undefined ? null
-      : <StandardStatisticsSchemaCard target={showStandardSchema} schema={statisticsHolder.standardStatisticsSchema}/>;
+    let standardStatisticsCard = statisticsHolder.standardSchema === null
+    || statisticsHolder.standardSchema === undefined ? null
+      : <StandardStatisticsSchemaCard target={showStandardSchema} schema={statisticsHolder.standardSchema}/>;
 
     let showCustomSchemas = "customSchemasContainer";
-    let customStatisticsCard = statisticsHolder.customStatisticsSchemas === null
-    || statisticsHolder.customStatisticsSchemas === undefined ? null
-      : <CustomStatisticsSchemaCard target={showCustomSchemas} schemas={statisticsHolder.customStatisticsSchemas}/>;
+    let customStatisticsCard = statisticsHolder.customSchemas === null
+    || statisticsHolder.customSchemas === undefined ? null
+      : <CustomStatisticsSchemaCard target={showCustomSchemas} schemas={statisticsHolder.customSchemas}/>;
 
     return (
       <main>

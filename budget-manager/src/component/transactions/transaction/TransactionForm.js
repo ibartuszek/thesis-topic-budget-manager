@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import moment from "moment";
-import CurrencySelect from "../CurrencySelect";
+import EnumSelect from "../EnumSelect";
 import MainCategoryEditPopUp from "../mainCategory/MainCategoryEditPopUp";
 import MainCategorySelect from "../mainCategory/MainCategorySelect";
 import ModelAmountValue from "../../layout/form/ModelAmountValue";
@@ -145,8 +145,8 @@ class TransactionForm extends Component {
     const {editAbleMainCategory, editAbleSubCategory, showablePicture} = this.state;
     const {title, amount, currency, mainCategory, subCategory, monthly, date, endDate, description, pictureId} = this.state.transactionModel;
     const {
-      transactionTitleLabel, transactionTitleMessage, transactionAmountLabel, transactionAmountMessage,
-      transactionDateLabel, transactionDateMessage, transactionMonthlyLabel, transactionMonthlyMessage,
+      transactionTitleLabel, transactionTitleMessage, transactionAmountLabel, transactionAmountMessage, transactionCurrencyLabel,
+      transactionCurrencyMessage, transactionDateLabel, transactionDateMessage, transactionMonthlyLabel, transactionMonthlyMessage,
       transactionEndDateLabel, transactionEndDateMessage, transactionDescriptionLabel, transactionDescriptionMessage
     } = transactionMessages;
 
@@ -199,10 +199,11 @@ class TransactionForm extends Component {
           <ModelAmountValue onChange={this.handleModelValueChange}
                             id="amount" model={amount}
                             labelTitle={transactionAmountLabel} placeHolder={transactionAmountMessage} type="number"/>
-          <CurrencySelect handleModelValueChange={this.handleModelValueChange} currency={currency}/>
-          <MainCategorySelect handleFieldChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
+          <EnumSelect handleModelValueChange={this.handleModelValueChange} model={currency} id="currency" label={transactionCurrencyLabel}
+                      placeHolder={transactionCurrencyMessage}/>
+          <MainCategorySelect handleModelValueChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
                               mainCategory={mainCategory} mainCategoryList={mainCategoryList} editable={editableCategories}/>
-          <SubCategorySelect handleFieldChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
+          <SubCategorySelect handleModelValueChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
                              subCategory={subCategory} subCategoryList={subCategoryList} editable={editableCategories}/>
           <YesNoSelect handleFieldChange={this.handleFieldChange} value={monthly} valueName="monthly"
                        valueLabel={transactionMonthlyLabel} valueMessage={transactionMonthlyMessage}/>

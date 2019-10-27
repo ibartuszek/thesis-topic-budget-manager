@@ -1,31 +1,34 @@
-import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
 import {createDispatchContext} from "../common/createDispatchContext";
+import {createHeaderWithJwtAndJsonBody} from "../common/createHeader";
 import {dispatchError, dispatchSuccess} from "../common/dispatchActions";
 import {defaultMessages} from "../../store/MessageHolder";
+import {transformSchemaFromResponse, transformSchemaToRequest} from "./createSchemaMethods";
 
-export function getStatisticsSchemas(context) {
+export function createSchema(context, schema) {
   const {userId, jwtToken, messages} = context;
   let header = createHeaderWithJwtAndJsonBody(jwtToken);
-  let url = `/bm/statistics/getStatisticsSchemas?userId=` + userId;
-  let successCase = 'GET_STATISTICS_SCHEMAS_SUCCESS';
-  let errorCase = 'GET_STATISTICS_SCHEMAS_ERROR';
+  let body = JSON.stringify(createBody(schema, userId));
+  let successCase = 'CREATE_SCHEMA_SUCCESS';
+  let errorCase = 'CREATE_SCHEMA_ERROR';
   let responseStatus = null;
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    // return fetch(url, {
-    //   method: 'GET',
+    // return fetch(`/bm/statistics/schema/create`, {
+    //   method: 'POST',
     //   headers: header,
+    //   body: body
     // }).then(function (response) {
     //     responseStatus = response.status;
     //     return responseStatus === 200 ? response.json() : createErrorBody(response);
     //   }
     // ).then(function (responseBody) {
-    let response = createGetStatisticsSchemasMockResponse();
+    let response = createSchemaMock(schema);
     responseStatus = response.status;
     let responseBody = response.body;
     if (responseStatus === 200) {
-      return dispatchSuccess(dispatchContext, responseBody['message'], 'response', responseBody);
+      let schemaModel = transformSchemaFromResponse(responseBody['schema']);
+      return dispatchSuccess(dispatchContext, responseBody['message'], 'schemaModel', schemaModel);
     } else if (responseStatus === 400 || responseStatus === 409 || responseStatus === 404) {
       return dispatchError(dispatchContext, responseBody);
     } else {
@@ -37,35 +40,20 @@ export function getStatisticsSchemas(context) {
   }
 }
 
-export function createGetStatisticsSchemasMockResponse() {
+function createBody(schemaModel, userId) {
+  let body = {};
+  body.userId = userId;
+  body.schema = transformSchemaToRequest(schemaModel);
+  return body;
+}
+
+function createSchemaMock(schema) {
   let responseStatus = 200;
+  let schemaFromResponse = transformSchemaToRequest(schema);
+  schemaFromResponse.id = 999;
   let responseBody = {
-    message: "OK",
-    standardStatisticsSchema: {
-      id: 1,
-      title: "Monthly budget",
-      type: "STANDARD",
-      currency: "EUR",
-      chartType: "RADIAL"
-    },
-    customStatisticsSchemas: [
-      {
-        id: 2,
-        title: "Example scale",
-        type: "SCALE",
-        currency: "EUR",
-        chartType: "BAR"
-      },
-      {
-        id: 3,
-        title: "Example sum",
-        type: "SUM",
-        currency: "EUR",
-        chartType: "LINEAR",
-        mainCategoryName: 'Entertainment',
-        subCategoryName: null
-      }
-    ]
+    message: "Schema has been saved",
+    schema: schemaFromResponse
   };
   return {
     "status": responseStatus,

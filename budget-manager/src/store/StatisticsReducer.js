@@ -4,29 +4,44 @@ import {addElementToArray} from "../actions/common/listActions";
 const initState = {
   standardStatistics: null,
   standardStatisticsAreLoaded: undefined,
-  standardStatisticsSchema: null,
-  customStatisticsSchemas: [],
   customStatistics: [],
-  customStatisticsAreLoaded: undefined
+  standardSchema: null,
+  customSchemas: [],
 };
 
 const StatisticsReducer = (state = initState, action) => {
   let key;
   switch (action.type) {
-    case 'GET_STATISTICS_SCHEMAS_SUCCESS':
-      key = "getStatisticsSchemasSuccess";
+    case 'GET_SCHEMAS_SUCCESS':
+      key = "getSchemasSuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
-        standardStatisticsSchema: action['response'].standardStatisticsSchema,
-        customStatisticsSchemas: action['response'].customStatisticsSchemas
+        standardSchema: action['response'].standardSchema,
+        customSchemas: action['response'].customSchemas
       });
-    case 'GET_STATISTICS_SCHEMAS_ERROR':
-      key = "getStatisticsSchemasError";
+    case 'GET_SCHEMAS_ERROR':
+      key = "getSchemasError";
       addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state
       });
+    case 'CREATE_SCHEMA_SUCCESS':
+      key = "createSchemaSuccess";
+      console.log(action['schemaModel']);
+      console.log(state.customSchemas);
+      addMessage(action.messages, createMessage(key, action.message, true));
+      return Object.assign({}, state, {
+        ...state,
+        customSchemas: addElementToArray(state.customSchemas, action['schemaModel']),
+      });
+    case 'CREATE_SCHEMA_ERROR':
+      key = "createSchemaError";
+      addMessage(action.messages, createMessage(key, action.message, false));
+      return Object.assign({}, state, {
+        ...state
+      });
+
     case 'GET_STANDARD_STATISTICS_SUCCESS':
       key = "getStandardStatisticsSuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
@@ -48,7 +63,6 @@ const StatisticsReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
         customStatistics: addElementToArray(state.customStatistics, action['response'].customStatistics),
-        customStatisticsAreLoaded: true,
       });
     case 'GET_CUSTOM_STATISTICS_ERROR':
       key = "getCustomStatisticsError";

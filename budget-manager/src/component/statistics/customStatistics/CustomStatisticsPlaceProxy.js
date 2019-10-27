@@ -18,7 +18,9 @@ class CustomStatisticsPlaceProxy extends Component {
 
   componentDidUpdate(oldProps) {
     const newProps = this.props;
-    if (this.state.customStatisticsAreLoaded === false && newProps.statisticsHolder['customStatisticsAreLoaded'] === true) {
+    // TODO: check
+    if (this.state.customStatisticsAreLoaded === false
+      && newProps.statisticsHolder.customStatistics.length > oldProps.statisticsHolder.customStatistics.length) {
       this.setState({
         ...this.state,
         customStatisticsAreLoaded: true

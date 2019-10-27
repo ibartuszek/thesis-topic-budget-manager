@@ -22,21 +22,21 @@ class StatisticsSchemaContainer extends Component {
 
   render() {
     const {editable} = this.props;
-    const {chartType, currency, mainCategoryName, subCategoryName, title, type} = this.props.schema;
+    const {chartType, currency, mainCategory, subCategory, title, type} = this.props.schema;
 
-    let mainCategory = mainCategoryName === null || mainCategoryName === undefined ? null :
+    let mainCategoryContainer = mainCategory === null || mainCategory === undefined ? null :
       (
         <div className="list-group-item my-2 p-2 border border-secondary rounded">
           <div className="float-left d-inline-block">Filtered to expenses' main category</div>
-          <div className="float-right d-inline-block">{mainCategoryName}</div>
+          <div className="float-right d-inline-block">{mainCategory.name.value}</div>
         </div>
       );
 
-    let subCategory = subCategoryName === null || subCategoryName === undefined ? null :
+    let subCategoryContainer = subCategory === null || subCategory === undefined ? null :
       (
         <div className="list-group-item my-2 p-2 border border-secondary rounded">
           <div className="float-left d-inline-block">Filtered to expenses' supplementary category</div>
-          <div className="float-right d-inline-block">{subCategoryName}</div>
+          <div className="float-right d-inline-block">{subCategory.name.value}</div>
         </div>
       );
     let editButton;
@@ -51,24 +51,24 @@ class StatisticsSchemaContainer extends Component {
     return (
       <React.Fragment>
         <div>
-          <h4 className="d-inline-block">{title}</h4>
+          <h4 className="d-inline-block">{title.value}</h4>
           {editButton}
         </div>
         <div className="list-group">
           <div className="list-group-item my-2 p-2 border border-secondary rounded">
             <div className="float-left d-inline-block">Currency</div>
-            <div className="float-right d-inline-block">{currency}</div>
+            <div className="float-right d-inline-block">{currency.value}</div>
           </div>
           <div className="list-group-item my-2 p-2 border border-secondary rounded">
             <div className="float-left d-inline-block">Type of data to show</div>
-            <div className="float-right d-inline-block">{type}</div>
+            <div className="float-right d-inline-block">{type.value}</div>
           </div>
           <div className="list-group-item my-2 p-2 border border-secondary rounded">
             <div className="float-left d-inline-block">Type of the chart</div>
-            <div className="float-right d-inline-block">{chartType}</div>
+            <div className="float-right d-inline-block">{chartType.value}</div>
           </div>
-          {mainCategory}
-          {subCategory}
+          {mainCategoryContainer}
+          {subCategoryContainer}
         </div>
       </React.Fragment>
     )

@@ -68,7 +68,7 @@ class Statistics extends Component {
       standardStatistics = <Loading/>;
     } else if (standardStatisticsAreLoaded === true) {
       standardStatistics = <StandardStatistics standardStatistics={statisticsHolder.standardStatistics}/>;
-      customStatistics = this.createCustomStatistics(statisticsHolder.customStatisticsSchemas);
+      customStatistics = this.createCustomStatistics(statisticsHolder.customSchemas);
       lockStatisticsButtonEnabled = true;
     }
 
@@ -86,10 +86,10 @@ class Statistics extends Component {
       </main>);
   }
 
-  createCustomStatistics(customStatisticsSchemas) {
+  createCustomStatistics(customSchemas) {
     let statisticsList = null;
-    if (customStatisticsSchemas !== null) {
-      statisticsList = customStatisticsSchemas.map((schema, i) =>
+    if (customSchemas !== null) {
+      statisticsList = customSchemas.map((schema, i) =>
         <div className="mt-3" key={i}>
           <CustomStatisticsPlaceProxy schema={schema} startDate={this.state.startDate} endDate={this.state.endDate}/>
         </div>);
