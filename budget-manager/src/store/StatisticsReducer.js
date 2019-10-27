@@ -1,5 +1,5 @@
 import {addMessage, createMessage} from "../actions/message/messageActions";
-import {addElementToArray, replaceElementAtArray} from "../actions/common/listActions";
+import {addElementToArray, removeElementFromArray, replaceElementAtArray} from "../actions/common/listActions";
 
 const initState = {
   standardStatistics: null,
@@ -56,6 +56,21 @@ const StatisticsReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state
       });
+    case 'DELETE_SCHEMA_SUCCESS':
+      key = "deleteSchemaSuccess";
+      console.log(action['schemaModel']);
+      console.log(state.customSchemas);
+      addMessage(action.messages, createMessage(key, action.message, true));
+      return Object.assign({}, state, {
+        ...state,
+        customSchemas: removeElementFromArray(state.customSchemas, action['schemaModel']),
+      });
+    case 'DELETE_SCHEMA_SUCCESS':
+      key = "deleteSchemaError";
+      addMessage(action.messages, createMessage(key, action.message, false));
+      return Object.assign({}, state, {
+        ...state
+      });
 
     case 'GET_STANDARD_STATISTICS_SUCCESS':
       key = "getStandardStatisticsSuccess";
@@ -74,7 +89,6 @@ const StatisticsReducer = (state = initState, action) => {
     case 'GET_CUSTOM_STATISTICS_SUCCESS':
       key = "getCustomStatisticsSuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
-      console.log(action['response'].customStatistics);
       return Object.assign({}, state, {
         ...state,
         customStatistics: addElementToArray(state.customStatistics, action['response'].customStatistics),

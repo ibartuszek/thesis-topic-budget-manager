@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import StatisticsSchemaContainer from "./StatisticsSchemaContainer";
+import SchemaContainer from "./SchemaContainer";
 
-class StandardStatisticsSchemaCard extends Component {
+class StandardSchemaCard extends Component {
 
   render() {
     const {schema, target} = this.props;
@@ -10,7 +10,7 @@ class StandardStatisticsSchemaCard extends Component {
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
           <div className="card card-body">
-            <StatisticsSchemaContainer schema={schema}/>
+            <SchemaContainer schema={schema}/>
           </div>
         </div>
       </React.Fragment>
@@ -18,4 +18,4 @@ class StandardStatisticsSchemaCard extends Component {
   }
 }
 
-export default StandardStatisticsSchemaCard;
+export default StandardSchemaCard;

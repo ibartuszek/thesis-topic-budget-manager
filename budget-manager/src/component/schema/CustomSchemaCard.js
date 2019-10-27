@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import StatisticsSchemaContainer from "./StatisticsSchemaContainer";
+import SchemaContainer from "./SchemaContainer";
 
-class CustomStatisticsSchemaCard extends Component {
+class CustomSchemaCard extends Component {
 
   render() {
     const {target, schemas} = this.props;
@@ -24,7 +24,8 @@ class CustomStatisticsSchemaCard extends Component {
     if (schemas !== null) {
       schemaList = schemas.map((schema, i) =>
         <div key={i}>
-          <StatisticsSchemaContainer schema={schema} editable={true} showSchemaEdit={this.props.showSchemaEdit}/>
+          <SchemaContainer schema={schema} editable={true} showSchemaEdit={this.props.showSchemaEdit}
+                           showSchemaDelete={this.props.showSchemaDelete}/>
           <hr/>
         </div>);
     }
@@ -32,4 +33,4 @@ class CustomStatisticsSchemaCard extends Component {
   }
 }
 
-export default CustomStatisticsSchemaCard;
+export default CustomSchemaCard;

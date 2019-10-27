@@ -48,7 +48,7 @@ class CustomStatisticsPlaceProxy extends Component {
         <div className="card card-body my-3 mx-auto">
           <button className="btn btn-outline-success my-2" onClick={this.handleGetStatistics}>
             <span className="fas fa-download"/>
-            <span>{" Get " + schema.title}</span>
+            <span>{" Get " + schema.title.value}</span>
           </button>
         </div>);
     } else if (customStatisticsAreLoaded === false) {

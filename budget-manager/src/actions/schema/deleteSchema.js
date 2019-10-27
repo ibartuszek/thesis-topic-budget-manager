@@ -4,18 +4,18 @@ import {dispatchError, dispatchSuccess} from "../common/dispatchActions";
 import {defaultMessages} from "../../store/MessageHolder";
 import {transformSchemaFromResponse, transformSchemaToRequest} from "./createSchemaMethods";
 
-export function updateSchema(context, schema) {
+export function deleteSchema(context, schema) {
   const {userId, jwtToken, messages} = context;
   let header = createHeaderWithJwtAndJsonBody(jwtToken);
   let body = JSON.stringify(createBody(schema, userId));
-  let successCase = 'UPDATE_SCHEMA_SUCCESS';
-  let errorCase = 'UPDATE_SCHEMA_ERROR';
+  let successCase = 'DELETE_SCHEMA_SUCCESS';
+  let errorCase = 'DELETE_SCHEMA_ERROR';
   let responseStatus = null;
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    // return fetch(`/bm/statistics/schema/update`, {
-    //   method: 'PUT',
+    // return fetch(`/bm/statistics/schema/delete`, {
+    //   method: 'DELETE',
     //   headers: header,
     //   body: body
     // }).then(function (response) {
@@ -51,7 +51,7 @@ function createSchemaMock(schema) {
   let responseStatus = 200;
   let schemaFromResponse = transformSchemaToRequest(schema);
   let responseBody = {
-    message: "Schema has been updated",
+    message: "Schema has been deleted",
     schema: schemaFromResponse
   };
   return {

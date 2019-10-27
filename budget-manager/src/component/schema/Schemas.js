@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import CardHeaderButton from "../layout/card/CardHeaderButton";
-import StandardStatisticsSchemaCard from "./StandardStatisticsSchemaCard";
-import CustomStatisticsSchemaCard from "./CustomStatisticsSchemaCard";
+import StandardSchemaCard from "./StandardSchemaCard";
+import CustomSchemaCard from "./CustomSchemaCard";
 import CreateNewSchemaCard from "./CreateNewSchemaCard";
 import UpdateSchemaPopUp from "./UpdateSchemaPopUp";
+import DeleteSchemaPopUp from "./DeleteSchemaPopUp";
 
 class Schemas extends Component {
 
@@ -62,18 +63,21 @@ class Schemas extends Component {
       : <CreateNewSchemaCard target={createNewSchema}/>;
 
     let showStandardSchema = "standardSchemaContainer";
-    let standardStatisticsCard = statisticsHolder.standardSchema === null
+    let standardSchemasCard = statisticsHolder.standardSchema === null
     || statisticsHolder.standardSchema === undefined ? null
-      : <StandardStatisticsSchemaCard target={showStandardSchema} schema={statisticsHolder.standardSchema}/>;
+      : <StandardSchemaCard target={showStandardSchema} schema={statisticsHolder.standardSchema}/>;
 
     let showCustomSchemas = "customSchemasContainer";
-    let customStatisticsCard = statisticsHolder.customSchemas === null
+    let customSchemasCard = statisticsHolder.customSchemas === null
     || statisticsHolder.customSchemas === undefined ? null
-      : <CustomStatisticsSchemaCard target={showCustomSchemas} schemas={statisticsHolder.customSchemas}
-                                    showSchemaEdit={this.showSchemaEdit}/>;
+      : <CustomSchemaCard target={showCustomSchemas} schemas={statisticsHolder.customSchemas}
+                          showSchemaEdit={this.showSchemaEdit} showSchemaDelete={this.showSchemaDelete}/>;
 
-    let editAbleSchemaContainer = editableSchema === null ? null
+    let editableSchemaContainer = editableSchema === null ? null
       : <UpdateSchemaPopUp schema={editableSchema} showSchemaEdit={this.showSchemaEdit}/>;
+
+    let deletableSchemaContainer = deletableSchema === null ? null
+      : <DeleteSchemaPopUp schema={deletableSchema} showSchemaDelete={this.showSchemaDelete}/>;
 
     return (
       <main>
@@ -84,9 +88,10 @@ class Schemas extends Component {
             <CardHeaderButton target={showCustomSchemas} buttonName="Show custom schemas"/>
           </div>
           {createNewSchemaCard}
-          {standardStatisticsCard}
-          {customStatisticsCard}
-          {editAbleSchemaContainer}
+          {standardSchemasCard}
+          {customSchemasCard}
+          {editableSchemaContainer}
+          {deletableSchemaContainer}
         </div>
       </main>);
   }

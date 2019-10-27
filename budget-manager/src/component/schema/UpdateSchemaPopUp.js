@@ -43,7 +43,7 @@ class UpdateSchemaPopUp extends Component {
         <div className='custom-popup'>
           <div className="card card-body custom-popup-inner">
             <div className="container overflow-auto">
-              <SchemaForm formTitle="Create schema" mainCategoryList={outcomeMainCategories}
+              <SchemaForm formTitle="Update schema" mainCategoryList={outcomeMainCategories}
                           handleSubmit={this.handleSubmit} editableSchema={schema} showSchemaEdit={this.showSchemaEdit}/>
               <AlertMessageComponent message={getMessage(logHolder.messages, "updateSchemaSuccess", true)} onChange={this.handleDismiss}/>
               <AlertMessageComponent message={getMessage(logHolder.messages, "updateSchemaError", false)} onChange={this.handleDismiss}/>

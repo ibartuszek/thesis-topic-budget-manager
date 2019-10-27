@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-class StatisticsSchemaContainer extends Component {
+class SchemaContainer extends Component {
 
   constructor(props) {
     super(props);
@@ -13,9 +13,7 @@ class StatisticsSchemaContainer extends Component {
   }
 
   showDeleteSchema(schema) {
-    // TODO:
-    console.log("DELETE SCHEMA");
-    console.log(schema);
+    this.props.showSchemaDelete(schema);
   }
 
   render() {
@@ -73,4 +71,4 @@ class StatisticsSchemaContainer extends Component {
   }
 }
 
-export default StatisticsSchemaContainer;
+export default SchemaContainer;
