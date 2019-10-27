@@ -27,9 +27,9 @@ const SignedInLinks = (props) => {
           </NavLink>
         </li>
         <li className="nav-item mx-3">
-          <NavLink className="nav-link" to="/create-statistics">
+          <NavLink className="nav-link" to="/statistics-schema">
             <span className="fas fa-pencil-alt"/>
-            <span> Create statistics </span>
+            <span> Schemas </span>
           </NavLink>
         </li>
         <li className="nav-item mx-3">

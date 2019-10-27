@@ -1,15 +1,17 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
-import ModelStringValue from "../layout/form/ModelStringValue";
-import {getAccessToken} from '../../actions/user/getAccessToken';
-import {getUser} from '../../actions/user/getUser';
-import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import AlertMessageComponent from "../AlertMessageComponent";
-import {getAccessCookie} from "../../actions/user/cookie/getAccessCookie";
-import {setAccessToken} from "../../actions/user/setAccessToken";
-import {getStatisticsSchemas} from "../../actions/statistics/getStatisticsSchemas";
+import ModelStringValue from "../layout/form/ModelStringValue";
 import {createContext} from "../../actions/common/createContext";
+import {fetchMainCategories} from "../../actions/category/fetchMainCategories";
+import {fetchSubCategories} from "../../actions/category/fetchSubCategories";
+import {getAccessCookie} from "../../actions/user/cookie/getAccessCookie";
+import {getAccessToken} from '../../actions/user/getAccessToken';
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
+import {getStatisticsSchemas} from "../../actions/statistics/getStatisticsSchemas";
+import {getUser} from '../../actions/user/getUser';
+import {setAccessToken} from "../../actions/user/setAccessToken";
 
 class LogIn extends Component {
   state = {
@@ -68,17 +70,17 @@ class LogIn extends Component {
     this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
-  getStatisticsSchemas(context) {
-    this.props.getStatisticsSchemas(context);
-  }
-
   render() {
     const {userHolder, logHolder} = this.props;
     const {email, password} = this.state;
 
     if (userHolder.userIsLoggedIn) {
       let context = createContext(userHolder, logHolder);
-      this.getStatisticsSchemas(context);
+      this.props.fetchMainCategories(context, 'INCOME');
+      this.props.fetchMainCategories(context, 'OUTCOME');
+      this.props.fetchSubCategories(context, 'INCOME');
+      this.props.fetchSubCategories(context, 'OUTCOME');
+      this.props.getStatisticsSchemas(context);
       return <Redirect to='/'/>;
     }
 
@@ -120,7 +122,9 @@ const mapDispatchToProps = (dispatch) => {
     setAccessToken: (accessToken) => dispatch(setAccessToken(accessToken)),
     getUser: (email, jwtToken, messages) => dispatch(getUser(email, jwtToken, messages)),
     removeMessage: (messages, message) => dispatch(removeMessage(messages, message)),
-    getStatisticsSchemas: (context) => dispatch(getStatisticsSchemas(context))
+    getStatisticsSchemas: (context) => dispatch(getStatisticsSchemas(context)),
+    fetchMainCategories: (context, transactionType) => dispatch(fetchMainCategories(context, transactionType)),
+    fetchSubCategories: (context, transactionType) => dispatch(fetchSubCategories(context, transactionType))
   };
 };
 

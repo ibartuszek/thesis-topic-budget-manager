@@ -41,10 +41,10 @@ export function createGetStatisticsSchemasMockResponse() {
   let responseStatus = 200;
   let responseBody = {
     message: "OK",
-    standardStatisticsSchemas: {
+    standardStatisticsSchema: {
       id: 1,
       title: "Monthly budget",
-      type: "MONTHLY_BUDGET",
+      type: "STANDARD",
       currency: "EUR",
       chartType: "RADIAL"
     },
@@ -52,14 +52,14 @@ export function createGetStatisticsSchemasMockResponse() {
       {
         id: 2,
         title: "Example scale",
-        type: "CUSTOM_SCALE",
+        type: "SCALE",
         currency: "EUR",
         chartType: "BAR"
       },
       {
         id: 3,
         title: "Example sum",
-        type: "CUSTOM_SUM",
+        type: "SUM",
         currency: "EUR",
         chartType: "LINEAR",
         mainCategoryName: 'Entertainment',
