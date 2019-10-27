@@ -65,7 +65,7 @@ export function createGetCustomScaleStatisticsMock() {
       chartData: {
         legend: "Monthly-scale",
         dataPoints: [
-          {x: 0, y: -5.00, label: 'I am legend', date: '2019-10-01'},
+          {x: 0, y: 5.00, label: 'I am legend', date: '2019-10-01'},
           {x: 1, y: 1995.00, label: 'Salary', date: '2019-10-02'},
           {x: 2, y: 2025.00, label: 'Fringe benefit', date: '2019-10-02'},
           {x: 3, y: 2125.00, label: 'Birthday present from grandparents', date: '2019-10-06'},
@@ -85,12 +85,18 @@ export function createGetCustomScaleStatisticsMock() {
         ]
       },
       budgetDetails: {
-        totalIncomes: 2150.00,
-        totalIncomesLabel: 'Total incomes',
-        totalExpenses: 1550.00,
-        totalExpensesLabel: 'Total expenses',
-        savings: 600,
-        savingsLabel: 'Savings'
+        totalIncomes: {
+          amount: 2150.00,
+          label: 'Total incomes'
+        },
+        totalExpenses: {
+          amount: 1550.00,
+          label: 'Total expenses',
+        },
+        savings: {
+          amount: 600,
+          label: 'Savings'
+        }
       }
     }
   };
@@ -122,12 +128,10 @@ export function createGetCustomSumStatisticsMock() {
         ]
       },
       budgetDetails: {
-        totalIncomes: null,
-        totalIncomesLabel: null,
-        totalExpenses: 125.00,
-        totalExpensesLabel: 'Total cost of Entertainment',
-        savings: null,
-        savingsLabel: null
+        totalExpenses: {
+          amount: 125.00,
+          label: 'Total cost of Entertainment'
+        }
       }
     }
   };

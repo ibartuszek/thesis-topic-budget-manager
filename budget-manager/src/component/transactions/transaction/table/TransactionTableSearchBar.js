@@ -10,9 +10,13 @@ class TransactionTableSearchBar extends Component {
     this.props.handleDateChange(id, convertDate(value));
   }
 
+  handleLock() {
+    this.props.handleLock();
+  }
+
   render() {
     const {endDateId, endDate, endDatePlaceHolder, handleSearch, startDateId, startDate, startDatePlaceHolder} = this.props;
-    const {buttonName, buttonIcon} = this.props;
+    const {buttonName, buttonIcon, lockStatisticsButtonEnabled, handleLock} = this.props;
 
     let buttonText = buttonName === undefined ? " Search " : (" " + buttonName + " ");
     let buttonIconText = buttonIcon === undefined ? "fas fa-search" : buttonIcon;
@@ -26,6 +30,14 @@ class TransactionTableSearchBar extends Component {
         offset: '125px, 10px'
       }
     };
+
+    let lockButton = null;
+    if (lockStatisticsButtonEnabled === true) {
+      lockButton = (<button className="btn btn-outline-danger my-2 mr-3 ml-auto" onClick={handleLock}>
+        <span className="fas fa-lock"/>
+        <span> Lock statistics</span>
+      </button>);
+    }
 
     return (
       <div className="card-header form-inline">
@@ -43,6 +55,7 @@ class TransactionTableSearchBar extends Component {
           <span className={buttonIconText}/>
           <span>{buttonText}</span>
         </button>
+        {lockButton}
       </div>
     )
   }

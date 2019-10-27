@@ -10,24 +10,24 @@ class CustomStatistics extends Component {
 
   render() {
     const {chartData, endDate, schema, startDate} = this.props.customStatistics;
-    const {savings, savingsLabel, totalExpenses, totalExpensesLabel, totalIncomes, totalIncomesLabel} = this.props.customStatistics.budgetDetails;
+    const {savings, totalExpenses, totalIncomes} = this.props.customStatistics.budgetDetails;
 
-    let totalIncomesContainer = totalIncomes === null ? null :
+    let totalIncomesContainer = totalIncomes === null || totalIncomes === undefined ? null :
       (<div className="list-group-item my-2 p-2 border border-primary border-2 rounded">
-        <div className="float-left d-inline-block">{totalIncomesLabel}</div>
-        <div className="float-right d-inline-block"><strong>{totalIncomes + " " + schema.currency}</strong></div>
+        <div className="float-left d-inline-block">{totalIncomes.label}</div>
+        <div className="float-right d-inline-block"><strong>{totalIncomes.amount + " " + schema.currency}</strong></div>
       </div>);
 
-    let totalExpensesContainer = totalExpenses === null ? null :
+    let totalExpensesContainer = totalExpenses === null || totalExpenses === undefined ? null :
       (<div className="list-group-item my-2 p-2 border border-warning border-2 rounded">
-        <div className="float-left d-inline-block">{totalExpensesLabel}</div>
-        <div className="float-right d-inline-block"><strong>{totalExpenses + " " + schema.currency}</strong></div>
+        <div className="float-left d-inline-block">{totalExpenses.label}</div>
+        <div className="float-right d-inline-block"><strong>{totalExpenses.amount + " " + schema.currency}</strong></div>
       </div>);
 
-    let totalSavingsContainer = savings === null ? null :
+    let totalSavingsContainer = savings === null || savings === undefined ? null :
       (<div className="list-group-item my-2 p-2 border border-success border-2 rounded">
-        <div className="float-left d-inline-block">{savingsLabel}</div>
-        <div className="float-right d-inline-block"><strong>{savings + " " + schema.currency}</strong></div>
+        <div className="float-left d-inline-block">{savings.label}</div>
+        <div className="float-right d-inline-block"><strong>{savings.amount + " " + schema.currency}</strong></div>
       </div>);
 
     return (

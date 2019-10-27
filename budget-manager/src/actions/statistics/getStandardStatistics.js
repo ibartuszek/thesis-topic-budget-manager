@@ -65,12 +65,18 @@ export function createGetStandardStatisticsMockResponse() {
         ]
       },
       budgetDetails: {
-        totalIncomes: 2150.00,
-        totalIncomesLabel: 'Total incomes',
-        totalExpenses: 1550.00,
-        totalExpensesLabel: 'Total expenses',
-        savings: 600,
-        savingsLabel: 'Savings',
+        totalIncomes: {
+          amount: 2150.00,
+          label: 'Total incomes',
+        },
+        totalExpenses: {
+          amount: 1550.00,
+          label: 'Total expenses',
+        },
+        savings: {
+          amount: 600,
+          label: 'Savings',
+        },
         incomes: [
           {mainCategoryName: "Salary", subCategoryName: null, amount: 2000.00},
           {mainCategoryName: "Salary", subCategoryName: "Allowance", amount: 100.00},
@@ -88,18 +94,7 @@ export function createGetStandardStatisticsMockResponse() {
           {mainCategoryName: "Entertainment", subCategoryName: "Cinema", amount: 20.00},
         ]
       }
-    },
-    customStatisticsIds: [
-      {
-        schemaId: 2,
-        schemaTitle: "Example scale",
-
-      },
-      {
-        schemaId: 3,
-        schemaTitle: "Example sum"
-      }
-    ]
+    }
   };
   return {
     "status": responseStatus,

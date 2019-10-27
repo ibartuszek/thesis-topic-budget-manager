@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import CustomStatisticsPlaceProxy from "./customStatistics/CustomStatisticsPlaceProxy";
 import Loading from "../Loading";
 import StandardStatistics from "./standardStatistics/StandardStatistics";
 import TransactionTableSearchBar from "../transactions/transaction/table/TransactionTableSearchBar";
-import {connect} from "react-redux";
 import {createContext} from "../../actions/common/createContext";
 import {getStandardStatistics} from "../../actions/statistics/getStandardStatistics";
 import {statisticsMessages} from "../../store/MessageHolder";
-import CustomStatisticsPlaceProxy from "./customStatistics/CustomStatisticsPlaceProxy";
 
 class Statistics extends Component {
 
@@ -21,6 +21,7 @@ class Statistics extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleGetStandardStatistics = this.handleGetStandardStatistics.bind(this);
+    this.handleLock = this.handleLock.bind(this);
   }
 
   componentDidUpdate(oldProps) {
@@ -51,17 +52,24 @@ class Statistics extends Component {
     }
   }
 
+  handleLock() {
+    // TODO:
+    console.log("TODO: Lock statistics data!");
+  }
+
   render() {
     const {startDate, endDate, standardStatisticsAreLoaded} = this.state;
     const {statisticsHolder} = this.props;
 
+    let lockStatisticsButtonEnabled = null;
     let standardStatistics = null;
     let customStatistics = null;
     if (standardStatisticsAreLoaded === false) {
       standardStatistics = <Loading/>;
     } else if (standardStatisticsAreLoaded === true) {
       standardStatistics = <StandardStatistics standardStatistics={statisticsHolder.standardStatistics}/>;
-      customStatistics = this.createCustomStatistics(statisticsHolder.customStatisticsIds);
+      customStatistics = this.createCustomStatistics(statisticsHolder.customStatisticsSchemas);
+      lockStatisticsButtonEnabled = true;
     }
 
     return (
@@ -70,17 +78,18 @@ class Statistics extends Component {
           <TransactionTableSearchBar startDateId="startDate" startDate={startDate} startDatePlaceHolder={statisticsMessages.startDatePlaceHolder}
                                      endDateId="endDate" endDate={endDate} endDatePlaceHolder={statisticsMessages.endDatePlaceHolder}
                                      buttonName="Get statistics" buttonIcon="fas fa-download" handleDateChange={this.handleChange}
-                                     handleSearch={this.handleGetStandardStatistics}/>
+                                     handleSearch={this.handleGetStandardStatistics} lockStatisticsButtonEnabled={lockStatisticsButtonEnabled}
+                                     handleLock={this.handleLock}/>
         </div>
         {standardStatistics}
         {customStatistics}
       </main>);
   }
 
-  createCustomStatistics(customStatisticsIds) {
+  createCustomStatistics(customStatisticsSchemas) {
     let statisticsList = null;
-    if (customStatisticsIds !== null) {
-      statisticsList = customStatisticsIds.map((schema, i) =>
+    if (customStatisticsSchemas !== null) {
+      statisticsList = customStatisticsSchemas.map((schema, i) =>
         <div className="mt-3" key={i}>
           <CustomStatisticsPlaceProxy schema={schema} startDate={this.state.startDate} endDate={this.state.endDate}/>
         </div>);

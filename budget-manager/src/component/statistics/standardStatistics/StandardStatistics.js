@@ -10,9 +10,7 @@ class StandardStatistics extends Component {
 
   render() {
     const {chartData, endDate, schema, startDate} = this.props.standardStatistics;
-    const {
-      incomes, outcomes, savings, savingsLabel, totalExpenses, totalExpensesLabel, totalIncomes, totalIncomesLabel
-    } = this.props.standardStatistics.budgetDetails;
+    const {incomes, outcomes, savings, totalExpenses, totalIncomes} = this.props.standardStatistics.budgetDetails;
 
     let incomeList = this.createList(incomes, schema.currency);
     let outcomeList = this.createList(outcomes, schema.currency);
@@ -45,16 +43,16 @@ class StandardStatistics extends Component {
             <div className="d-inline-block float-right badge-pill badge-info mt-1">{"Interval: [" + startDate + ", " + endDate + "]"}</div>
             <div className="list-group">
               <div className="list-group-item-primary my-2 p-2 border border-primary border-2 rounded">
-                <div className="float-left d-inline-block">{totalIncomesLabel}</div>
-                <div className="float-right d-inline-block"><strong>{totalIncomes + " " + schema.currency}</strong></div>
+                <div className="float-left d-inline-block">{totalIncomes.label}</div>
+                <div className="float-right d-inline-block"><strong>{totalIncomes.amount + " " + schema.currency}</strong></div>
               </div>
               <div className="list-group-item-warning my-2 p-2 border border-warning border-2 rounded">
-                <div className="float-left d-inline-block">{totalExpensesLabel}</div>
-                <div className="float-right d-inline-block"><strong>{totalExpenses + " " + schema.currency}</strong></div>
+                <div className="float-left d-inline-block">{totalExpenses.label}</div>
+                <div className="float-right d-inline-block"><strong>{totalExpenses.amount + " " + schema.currency}</strong></div>
               </div>
               <div className="list-group-item-success my-2 p-2 border border-success border-2 rounded">
-                <div className="float-left d-inline-block">{savingsLabel}</div>
-                <div className="float-right d-inline-block"><strong>{savings + " " + schema.currency}</strong></div>
+                <div className="float-left d-inline-block">{savings.label}</div>
+                <div className="float-right d-inline-block"><strong>{savings.amount + " " + schema.currency}</strong></div>
               </div>
             </div>
           </div>

@@ -7,10 +7,6 @@ import {getAccessCookie} from "../../actions/user/cookie/getAccessCookie";
 import {getUser} from "../../actions/user/getUser";
 import {removeMessage} from "../../actions/message/messageActions";
 import {setAccessToken} from "../../actions/user/setAccessToken";
-import StandardStatistics from "../statistics/standardStatistics/StandardStatistics";
-import {createGetStandardStatisticsMockResponse} from "../../actions/statistics/getStandardStatistics";
-import CustomStatistics from "../statistics/customStatistics/CustomStatistics";
-import {createGetCustomScaleStatisticsMock, createGetCustomSumStatisticsMock} from "../../actions/statistics/getCustomStatistics";
 
 class Home extends Component {
   state = {
@@ -64,17 +60,9 @@ class Home extends Component {
       logs = <LogContainer/>
     }
 
-    // TODO: delete:
-    let response = createGetStandardStatisticsMockResponse();
-    let exampleScale = createGetCustomScaleStatisticsMock();
-    let exampleSum = createGetCustomSumStatisticsMock();
-
     this.fetchUserData();
     return (
       <main>
-        <StandardStatistics standardStatistics={response.body.standardStatistics}/>
-        <CustomStatistics customStatistics={exampleScale.customStatistics}/>
-        <CustomStatistics customStatistics={exampleSum.customStatistics}/>
         {logs}
         <Loading/>
       </main>

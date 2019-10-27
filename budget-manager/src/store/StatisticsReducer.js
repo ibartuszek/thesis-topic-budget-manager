@@ -4,7 +4,8 @@ import {addElementToArray} from "../actions/common/listActions";
 const initState = {
   standardStatistics: null,
   standardStatisticsAreLoaded: undefined,
-  customStatisticsIds: [],
+  standardStatisticsSchema: null,
+  customStatisticsSchemas: [],
   customStatistics: [],
   customStatisticsAreLoaded: undefined
 };
@@ -12,13 +13,26 @@ const initState = {
 const StatisticsReducer = (state = initState, action) => {
   let key;
   switch (action.type) {
+    case 'GET_STATISTICS_SCHEMAS_SUCCESS':
+      key = "getStatisticsSchemasSuccess";
+      addMessage(action.messages, createMessage(key, action.message, true));
+      return Object.assign({}, state, {
+        ...state,
+        standardStatisticsSchema: action['response'].standardStatisticsSchema,
+        customStatisticsSchemas: action['response'].customStatisticsSchemas
+      });
+    case 'GET_STATISTICS_SCHEMAS_ERROR':
+      key = "getStatisticsSchemasError";
+      addMessage(action.messages, createMessage(key, action.message, false));
+      return Object.assign({}, state, {
+        ...state
+      });
     case 'GET_STANDARD_STATISTICS_SUCCESS':
       key = "getStandardStatisticsSuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         standardStatistics: action['response'].standardStatistics,
-        customStatisticsIds: action['response'].customStatisticsIds,
         standardStatisticsAreLoaded: true
       });
     case 'GET_STANDARD_STATISTICS_ERROR':
@@ -33,7 +47,6 @@ const StatisticsReducer = (state = initState, action) => {
       console.log(action['response'].customStatistics);
       return Object.assign({}, state, {
         ...state,
-        // TODO:
         customStatistics: addElementToArray(state.customStatistics, action['response'].customStatistics),
         customStatisticsAreLoaded: true,
       });

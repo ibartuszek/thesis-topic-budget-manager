@@ -8,6 +8,8 @@ import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import AlertMessageComponent from "../AlertMessageComponent";
 import {getAccessCookie} from "../../actions/user/cookie/getAccessCookie";
 import {setAccessToken} from "../../actions/user/setAccessToken";
+import {getStatisticsSchemas} from "../../actions/statistics/getStatisticsSchemas";
+import {createContext} from "../../actions/common/createContext";
 
 class LogIn extends Component {
   state = {
@@ -66,11 +68,17 @@ class LogIn extends Component {
     this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
+  getStatisticsSchemas(context) {
+    this.props.getStatisticsSchemas(context);
+  }
+
   render() {
     const {userHolder, logHolder} = this.props;
     const {email, password} = this.state;
 
     if (userHolder.userIsLoggedIn) {
+      let context = createContext(userHolder, logHolder);
+      this.getStatisticsSchemas(context);
       return <Redirect to='/'/>;
     }
 
@@ -111,7 +119,8 @@ const mapDispatchToProps = (dispatch) => {
     getAccessToken: (username, password, messages) => dispatch(getAccessToken(username, password, messages)),
     setAccessToken: (accessToken) => dispatch(setAccessToken(accessToken)),
     getUser: (email, jwtToken, messages) => dispatch(getUser(email, jwtToken, messages)),
-    removeMessage: (messages, message) => dispatch(removeMessage(messages, message))
+    removeMessage: (messages, message) => dispatch(removeMessage(messages, message)),
+    getStatisticsSchemas: (context) => dispatch(getStatisticsSchemas(context))
   };
 };
 

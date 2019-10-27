@@ -33,7 +33,7 @@ class CustomStatisticsPlaceProxy extends Component {
       this.setState({
         customStatisticsAreLoaded: false
       });
-      this.props.getCustomStatistics(context, startDate, endDate, schema.schemaId);
+      this.props.getCustomStatistics(context, startDate, endDate, schema.id);
     }
   }
 
@@ -47,7 +47,7 @@ class CustomStatisticsPlaceProxy extends Component {
         <div className="card card-body my-3 mx-auto">
           <button className="btn btn-outline-success my-2" onClick={this.handleGetStatistics}>
             <span className="fas fa-download"/>
-            <span>{" Get " + schema.schemaTitle}</span>
+            <span>{" Get " + schema.title}</span>
           </button>
         </div>);
     } else if (customStatisticsAreLoaded === false) {
@@ -57,11 +57,11 @@ class CustomStatisticsPlaceProxy extends Component {
             <div className="spinner-border spinner-border-sm" role="status">
               <span className="sr-only">Loading...</span>
             </div>
-            <span>{" Get " + schema.schemaTitle}</span>
+            <span>{" Get " + schema.title}</span>
           </button>
         </div>);
     } else {
-      let statistics = this.getStatistics(statisticsHolder.customStatistics, schema.schemaId);
+      let statistics = this.getStatistics(statisticsHolder.customStatistics, schema.id);
       content = statistics !== null ? (<CustomStatistics customStatistics={statistics}/>) : null;
     }
 
