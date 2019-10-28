@@ -10,6 +10,8 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import hu.elte.bm.transactionservice.Currency;
+import hu.elte.bm.transactionservice.MainCategory;
+import hu.elte.bm.transactionservice.SubCategory;
 
 @JsonDeserialize(builder = StatisticsSchema.Builder.class)
 public final class StatisticsSchema {
@@ -26,6 +28,8 @@ public final class StatisticsSchema {
     private final Currency currency;
     @NotNull(message = "ChartType cannot be null!")
     private final ChartType chartType;
+    private final MainCategory mainCategory;
+    private final SubCategory subCategory;
 
     private StatisticsSchema(final Builder builder) {
         this.id = builder.id;
@@ -33,6 +37,8 @@ public final class StatisticsSchema {
         this.type = builder.type;
         this.currency = builder.currency;
         this.chartType = builder.chartType;
+        this.mainCategory = builder.mainCategory;
+        this.subCategory = builder.subCategory;
     }
 
     public static Builder builder() {
@@ -59,6 +65,14 @@ public final class StatisticsSchema {
         return chartType;
     }
 
+    public MainCategory getMainCategory() {
+        return mainCategory;
+    }
+
+    public SubCategory getSubCategory() {
+        return subCategory;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -76,6 +90,8 @@ public final class StatisticsSchema {
                 .append(type, that.type)
                 .append(currency, that.currency)
                 .append(chartType, that.chartType)
+                .append(mainCategory, that.mainCategory)
+                .append(subCategory, that.subCategory)
                 .isEquals();
     }
 
@@ -86,6 +102,8 @@ public final class StatisticsSchema {
                 .append(type)
                 .append(currency)
                 .append(chartType)
+                .append(mainCategory)
+                .append(subCategory)
                 .toHashCode();
     }
 
@@ -97,6 +115,8 @@ public final class StatisticsSchema {
                 + ", type=" + type
                 + ", currency=" + currency
                 + ", chartType=" + chartType
+                + ", mainCategory=" + mainCategory
+                + ", subCategory=" + subCategory
                 + '}';
     }
 
@@ -107,6 +127,8 @@ public final class StatisticsSchema {
         private StatisticsType type;
         private Currency currency;
         private ChartType chartType;
+        private MainCategory mainCategory;
+        private SubCategory subCategory;
 
         private Builder() {
         }
@@ -133,6 +155,16 @@ public final class StatisticsSchema {
 
         public Builder withChartType(final ChartType chartType) {
             this.chartType = chartType;
+            return this;
+        }
+
+        public Builder withMainCategory(final MainCategory mainCategory) {
+            this.mainCategory = mainCategory;
+            return this;
+        }
+
+        public Builder withSubCategory(final SubCategory subCategory) {
+            this.subCategory = subCategory;
             return this;
         }
 

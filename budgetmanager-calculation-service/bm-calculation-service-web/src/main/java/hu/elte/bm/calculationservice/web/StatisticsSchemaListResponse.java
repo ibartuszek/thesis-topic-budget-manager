@@ -7,28 +7,38 @@ import hu.elte.bm.calculationservice.web.common.ResponseModel;
 
 public final class StatisticsSchemaListResponse extends ResponseModel  {
 
-    private List<StatisticsSchema> schemaList;
+    private StatisticsSchema standardSchema;
+    private List<StatisticsSchema> customSchemas;
 
     private StatisticsSchemaListResponse(final String message, final boolean successful) {
         super(message, successful);
     }
 
-    static StatisticsSchemaListResponse createSuccessfulResponse(final List<StatisticsSchema> schemaList) {
-        return createSuccessfulResponse(schemaList, null);
+    static StatisticsSchemaListResponse createSuccessfulResponse(final StatisticsSchema standardSchema, final List<StatisticsSchema> customSchemas) {
+        return createSuccessfulResponse(standardSchema, customSchemas, null);
     }
 
-    static StatisticsSchemaListResponse createSuccessfulResponse(final List<StatisticsSchema> schemaList, final String message) {
+    static StatisticsSchemaListResponse createSuccessfulResponse(final StatisticsSchema standardSchema, final List<StatisticsSchema> customSchemas, final String message) {
         StatisticsSchemaListResponse response = new StatisticsSchemaListResponse(message, true);
-        response.schemaList = schemaList;
+        response.standardSchema = standardSchema;
+        response.customSchemas = customSchemas;
         return response;
     }
 
-    public List<StatisticsSchema> getSchemaList() {
-        return schemaList;
+    public StatisticsSchema getStandardSchema() {
+        return standardSchema;
     }
 
-    public void setSchemaList(final List<StatisticsSchema> schemaList) {
-        this.schemaList = schemaList;
+    public void setStandardSchema(final StatisticsSchema standardSchema) {
+        this.standardSchema = standardSchema;
+    }
+
+    public List<StatisticsSchema> getCustomSchemas() {
+        return customSchemas;
+    }
+
+    public void setCustomSchemas(final List<StatisticsSchema> customSchemas) {
+        this.customSchemas = customSchemas;
     }
 
     @Override
@@ -36,7 +46,7 @@ public final class StatisticsSchemaListResponse extends ResponseModel  {
         return "StatisticsSchemaListResponse{"
                 + "message='" + getMessage() + '\''
                 + ", successful=" + isSuccessful()
-                + ", schemaList=" + schemaList
+                + ", customSchemas=" + customSchemas
                 + '}';
     }
 }

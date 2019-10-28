@@ -1,13 +1,11 @@
 package hu.elte.bm.calculationservice.web;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,12 +36,11 @@ public class StatisticsSchemaController {
     }
 
     @RequestMapping(value = "/bm/statistics/schema/findAll", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public StatisticsSchemaListResponse getTransactions(
-            @NotNull @RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate start,
-            @NotNull @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate end,
+    public StatisticsSchemaListResponse getSchemaList(
             @NotNull @RequestParam(value = "userId") final Long userId) {
-        List<StatisticsSchema> schemaList = service.getSchemaList(start, end, userId);
-        return StatisticsSchemaListResponse.createSuccessfulResponse(schemaList);
+        StatisticsSchema standardSchema = service.getStandardSchema();
+        List<StatisticsSchema> customSchemas = service.getCustomSchemas(userId);
+        return StatisticsSchemaListResponse.createSuccessfulResponse(standardSchema, customSchemas);
     }
 
     @RequestMapping(value = "/bm/statistics/schema/create", method = RequestMethod.POST, produces = APPLICATION_JSON)
