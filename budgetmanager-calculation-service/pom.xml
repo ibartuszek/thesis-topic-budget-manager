@@ -43,8 +43,9 @@
 		<module>bm-calculation-service-dal</module>
 		<module>bm-calculation-service-domain</module>
 		<module>bm-calculation-service-service</module>
+    <module>bm-calculation-service-transaction-service-client</module>
 		<module>bm-calculation-service-web</module>
-	</modules>
+  </modules>
 
 	<dependencies>
 

@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>bm-calculation-service-service</artifactId>
-  <name>bm-calculation-service-service</name>
+  <artifactId>bm-calculation-service-transaction-service-client</artifactId>
+  <name>bm-calculation-service-transaction-service-client</name>
   <version>${project.parent.version}</version>
 
   <parent>
@@ -21,11 +21,6 @@
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
       <artifactId>bm-calculation-service-domain</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.parent.groupId}</groupId>
-      <artifactId>bm-calculation-service-transaction-service-client</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
   </dependencies>
