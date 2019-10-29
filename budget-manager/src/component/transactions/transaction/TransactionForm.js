@@ -51,7 +51,7 @@ class TransactionForm extends Component {
           ...prevState.transactionModel.date,
           value: now,
         },
-        mainCategory: mainCategory
+        mainCategory: mainCategory,
       }
     }));
     this.setFirstPossibleDay();
@@ -113,11 +113,17 @@ class TransactionForm extends Component {
 
   showCategoryEdit = (category) => {
     let editAbleMainCategory = category !== null && category !== undefined && category.subCategoryModelSet !== undefined ? category : null;
-    let editAbleSubCategory = category !== null && category !== undefined && category.subCategoryModelSet === undefined ? category : null;
+
     this.setState({
       editAbleMainCategory: editAbleMainCategory,
-      editAbleSubCategory: editAbleSubCategory
-    })
+    });
+  };
+
+  showSubCategoryPopUp = (subCategory) => {
+    let editAbleSubCategory = subCategory !== null && subCategory !== undefined ? subCategory : null;
+    this.setState({
+      editAbleSubCategory: editAbleSubCategory,
+    });
   };
 
   showTransactionEdit(message) {
@@ -141,7 +147,7 @@ class TransactionForm extends Component {
   };
 
   render() {
-    const {formTitle, mainCategoryList, subCategoryListFromRepo, popup, transactionType} = this.props;
+    const {formTitle, mainCategoryList, popup, transactionType} = this.props;
     const {editAbleMainCategory, editAbleSubCategory, showablePicture} = this.state;
     const {title, amount, currency, mainCategory, subCategory, monthly, date, endDate, description, pictureId} = this.state.transactionModel;
     const {
@@ -149,8 +155,6 @@ class TransactionForm extends Component {
       transactionCurrencyMessage, transactionDateLabel, transactionDateMessage, transactionMonthlyLabel, transactionMonthlyMessage,
       transactionEndDateLabel, transactionEndDateMessage, transactionDescriptionLabel, transactionDescriptionMessage
     } = transactionMessages;
-
-    let editableCategories = popup === undefined;
 
     let endDateComponent = !monthly ? null :
       (
@@ -161,15 +165,15 @@ class TransactionForm extends Component {
 
     let subCategoryList = mainCategory !== undefined && mainCategory !== null ? mainCategory.subCategoryModelSet : [];
 
-    let editMainCategory = !editableCategories || editAbleMainCategory === null ? null : (
-      <MainCategoryEditPopUp mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryListFromRepo}
+    let editMainCategoryPopUp = editAbleMainCategory === null ? null : (
+      <MainCategoryEditPopUp mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryList}
                              showCategoryEdit={this.showCategoryEdit} refreshMainCategories={this.handleFieldChange}/>);
 
-    let editSubCategory = !editableCategories || editAbleSubCategory === null ? null : (
+    let editSubCategoryPopUp = editAbleSubCategory === null ? null : (
       <SubCategoryEditPopUp subCategoryModel={editAbleSubCategory} transactionType={transactionType}
-                            showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.handleFieldChange}/>);
+                            showSubCategoryPopUp={this.showSubCategoryPopUp} refreshSubCategories={this.handleFieldChange}/>);
 
-    let closeButton = editableCategories ? null :
+    let closeButton = popup !== true ? null :
       (
         <button className="btn btn-outline-danger mx-3 mt-3 mb-2" onClick={this.showTransactionEdit}>
           <span>&times;</span>
@@ -202,9 +206,9 @@ class TransactionForm extends Component {
           <EnumSelect handleModelValueChange={this.handleModelValueChange} model={currency} id="currency" label={transactionCurrencyLabel}
                       placeHolder={transactionCurrencyMessage}/>
           <MainCategorySelect handleModelValueChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
-                              mainCategory={mainCategory} mainCategoryList={mainCategoryList} editable={editableCategories}/>
-          <SubCategorySelect handleModelValueChange={this.handleFieldChange} showCategoryEdit={this.showCategoryEdit}
-                             subCategory={subCategory} subCategoryList={subCategoryList} editable={editableCategories}/>
+                              mainCategory={mainCategory} mainCategoryList={mainCategoryList} editable={true}/>
+          <SubCategorySelect handleModelValueChange={this.handleFieldChange} showSubCategoryPopUp={this.showSubCategoryPopUp}
+                             subCategory={subCategory} subCategoryList={subCategoryList} editable={true}/>
           <YesNoSelect handleFieldChange={this.handleFieldChange} value={monthly} valueName="monthly"
                        valueLabel={transactionMonthlyLabel} valueMessage={transactionMonthlyMessage}/>
           <ModelDateValue onChange={this.handleModelValueChange}
@@ -225,8 +229,8 @@ class TransactionForm extends Component {
           </button>
           {closeButton}
         </form>
-        {editMainCategory}
-        {editSubCategory}
+        {editMainCategoryPopUp}
+        {editSubCategoryPopUp}
         {showPicture}
       </React.Fragment>
     )

@@ -12,9 +12,6 @@ class Transaction extends Component {
     const {data, mainCategoryList, subCategoryList} = this.props;
     const cardData = createCardNames(data);
 
-    console.log("render: Transaction");
-    console.log(this.props);
-
     return (
       <React.Fragment>
         <div className="card">

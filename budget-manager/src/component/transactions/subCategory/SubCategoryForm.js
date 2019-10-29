@@ -1,19 +1,23 @@
 import React, {Component} from 'react';
+import CloseButton from "../../buttons/CloseButton";
 import ModelStringValue from "../../layout/form/ModelStringValue";
+import SpinButton from "../../buttons/SpinButton";
 import {categoryMessages} from "../../../store/MessageHolder";
 import {createEmptySubCategory} from "../../../actions/category/createSubCategoryMethods";
+import {validateModel} from "../../../actions/validation/validateModel";
 
 class SubCategoryForm extends Component {
 
   state = {
-    subCategoryModel: createEmptySubCategory()
+    subCategoryModel: createEmptySubCategory(),
+    loading: false
   };
 
   constructor(props) {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.showCategoryEdit = this.showCategoryEdit.bind(this);
+    this.closePopUp = this.closePopUp.bind(this);
   }
 
   componentDidMount() {
@@ -32,6 +36,11 @@ class SubCategoryForm extends Component {
     if (nextProps.subCategoryModel !== undefined && this.state.subCategoryModel.id === null) {
       this.setState({
         subCategoryModel: nextProps.subCategoryModel
+      });
+    }
+    if (this.state.loading && !nextProps.loading) {
+      this.setState({
+        loading: false
       })
     }
   }
@@ -51,37 +60,37 @@ class SubCategoryForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.handleSubmit(this.state.subCategoryModel);
+    if (validateModel(this.state.subCategoryModel)) {
+      this.setState({
+        loading: true
+      });
+      this.props.handleSubmit(this.state.subCategoryModel);
+    }
   };
 
-  showCategoryEdit(message) {
-    this.props.showCategoryEdit(message);
+  closePopUp() {
+    this.setState({
+      subCategoryModel: createEmptySubCategory(),
+      loading: false
+    });
+    this.props.closePopUp();
   }
 
   render() {
     const {formTitle, popup} = this.props;
-    const {name} = this.state.subCategoryModel;
+    const {subCategoryModel, loading} = this.state;
     const {categoryNameLabel, categoryNameMessage} = categoryMessages;
 
-    let closeButton = popup === undefined ? null :
-      (
-        <button className="btn btn-outline-danger mx-3 mt-3 mb-2" onClick={this.showCategoryEdit}>
-          <span>&times;</span>
-          <span> Close </span>
-        </button>
-      );
+    let closeButton = popup === undefined ? null : (<CloseButton buttonLabel="Close" closePopUp={this.closePopUp}/>);
 
     return (
       <React.Fragment>
         <form className="form-group mb-0" onSubmit={this.handleSubmit}>
           <h4 className="mt-3 mx-auto">{formTitle}</h4>
           <ModelStringValue onChange={this.handleFieldChange}
-                            id="name" model={name}
+                            id="name" model={subCategoryModel.name}
                             labelTitle={categoryNameLabel} placeHolder={categoryNameMessage} type="text"/>
-          <button className="btn btn-outline-success mt-3 mb-2">
-            <span className="fas fa-pencil-alt"/>
-            <span> Save supplementary category </span>
-          </button>
+          <SpinButton buttonLabel="Save supplementary category" icon="fas fa-pencil-alt" loading={loading}/>
           {closeButton}
         </form>
       </React.Fragment>

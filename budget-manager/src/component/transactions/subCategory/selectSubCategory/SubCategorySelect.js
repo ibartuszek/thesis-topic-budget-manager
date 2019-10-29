@@ -16,8 +16,8 @@ class SubCategorySelect extends Component {
     this.props.handleModelValueChange("subCategory", newCategory);
   }
 
-  showCategoryEdit = (category) => {
-    this.props.showCategoryEdit(category);
+  showSubCategoryPopUp = (category) => {
+    this.props.showSubCategoryPopUp(category);
   };
 
   render() {
@@ -28,11 +28,13 @@ class SubCategorySelect extends Component {
 
     let model = subCategory === undefined || subCategory === null ? undefined : subCategory.name.value;
 
+    let editableSubCategory = editable && subCategory !== undefined && subCategory !== null;
+
     return (
       <React.Fragment>
         <ModelSelectValue onChange={this.handleChange}
                           id="subCategory" model={model} value={model} elementList={subCategorySelectList}
-                          editableObject={subCategory} showCategoryEdit={this.showCategoryEdit} editable={editable}
+                          editableObject={subCategory} showCategoryEdit={this.showSubCategoryPopUp} editable={editableSubCategory}
                           labelTitle={transactionSubCategoryLabel} placeHolder={transactionSubCategoryMessage} type="text"/>
       </React.Fragment>)
   }

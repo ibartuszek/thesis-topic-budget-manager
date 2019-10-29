@@ -6,7 +6,7 @@ import {getMessage, removeMessage} from "../../../actions/message/messageActions
 import {validateTransaction} from "../../../actions/validation/validateTransaction";
 import {deleteTransaction} from "../../../actions/transaction/deleteTransaction";
 
-class TransactionEditPopUp extends Component {
+class TransactionDeletePopUp extends Component {
 
   constructor(props) {
     super(props);
@@ -73,4 +73,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionEditPopUp);
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionDeletePopUp);

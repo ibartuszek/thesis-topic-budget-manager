@@ -36,14 +36,14 @@ class TransactionEditPopUp extends Component {
   render() {
     const {logHolder, mainCategoryList, subCategoryList, transactionModel, transactionType} = this.props;
 
+    console.log(this.props);
     return (
       <React.Fragment>
         <div className='custom-popup'>
           <div className="card card-body custom-popup-inner">
             <div className="container overflow-auto">
               <TransactionForm transactionType={transactionType} transactionModel={transactionModel} mainCategoryList={mainCategoryList}
-                               subCategoryList={subCategoryList}
-                               formTitle={transactionMessages.updateTransactionTitle} handleSubmit={this.handleSubmit}
+                               subCategoryList={subCategoryList} formTitle={transactionMessages.updateTransactionTitle} handleSubmit={this.handleSubmit}
                                popup={true} showTransactionEdit={this.showTransactionEdit}/>
               <AlertMessageComponent message={getMessage(logHolder.messages, "updateTransactionSuccess", true)} onChange={this.handleDismiss}/>
               <AlertMessageComponent message={getMessage(logHolder.messages, "updateTransactionError", false)} onChange={this.handleDismiss}/>

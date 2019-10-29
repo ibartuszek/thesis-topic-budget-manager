@@ -36,7 +36,7 @@ class MainCategoryEditPopUp extends Component {
 
   render() {
     const {logHolder, mainCategoryModel, subCategoryList, transactionType} = this.props;
-
+    console.log(this.props);
     return (
       <div className='custom-popup'>
         <div className='card card-body custom-popup-inner'>

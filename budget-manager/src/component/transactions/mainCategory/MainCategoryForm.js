@@ -10,7 +10,8 @@ class MainCategoryForm extends Component {
 
   state = {
     mainCategoryModel: createEmptyMainCategory(),
-    editAbleSubCategory: null
+    editAbleSubCategory: null,
+    loading: false
   };
 
   constructor(props) {
@@ -69,7 +70,7 @@ class MainCategoryForm extends Component {
     this.props.handleSubmit(this.state.mainCategoryModel);
   };
 
-  refreshSubCategories = (subCategory) => {
+  refreshSubCategories = (id, subCategory) => {
     let newSubCategories = replaceElementAtArray(this.state.mainCategoryModel.subCategoryModelSet, subCategory);
     this.setState(prevState => ({
       mainCategoryModel: {
@@ -83,7 +84,7 @@ class MainCategoryForm extends Component {
     this.props.showMainCategoryEdit(message);
   }
 
-  showCategoryEdit = (subCategory) => {
+  showSubCategoryPopUp = (subCategory) => {
     this.setState({
       editAbleSubCategory: subCategory
     });
@@ -98,8 +99,10 @@ class MainCategoryForm extends Component {
     let editableSubcategories = popup === undefined;
 
     let editCategory = editAbleSubCategory === null ? null : (
-      <SubCategoryEditPopUp subCategoryModel={editAbleSubCategory} transactionType={transactionType}
-                            showCategoryEdit={this.showCategoryEdit} refreshSubCategories={this.refreshSubCategories}/>);
+      <SubCategoryEditPopUp subCategoryModel={editAbleSubCategory}
+                            transactionType={transactionType}
+                            showSubCategoryPopUp={this.showSubCategoryPopUp}
+                            refreshSubCategories={this.refreshSubCategories}/>);
 
     let closeButton = editableSubcategories ? null :
       (
@@ -121,7 +124,7 @@ class MainCategoryForm extends Component {
                            transactionType={transactionType}
                            editable={editableSubcategories}
                            setSubCategoryModelSet={this.setSubCategoryModelSet}
-                           showCategoryEdit={this.showCategoryEdit}/>
+                           showCategoryEdit={this.showSubCategoryPopUp}/>
           <button className="btn btn-outline-success mt-3 mb-2">
             <span className="fas fa-pencil-alt"/>
             <span> Save main category </span>

@@ -1,5 +1,5 @@
 import {addMessage, createMessage} from "../actions/message/messageActions";
-import {addElementToArray, replaceElementAtArray} from "../actions/common/listActions";
+import {addElementToArray, findElementById, replaceElementAtArray} from "../actions/common/listActions";
 
 const initState = {
   incomeMainCategoriesAreLoaded: false,
@@ -81,6 +81,7 @@ const CategoryReducer = (state = initState, action) => {
     case 'UPDATE_INCOME_SUB_CATEGORY_SUCCESS':
       key = "updateSubCategorySuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
+      updateSubCategoryNameAtMainCategories(state.incomeMainCategories, action.subCategoryModel);
       return Object.assign({}, state, {
         ...state,
         incomeSubCategories: replaceElementAtArray(state.incomeSubCategories, action.subCategoryModel),
@@ -108,6 +109,7 @@ const CategoryReducer = (state = initState, action) => {
     case 'CREATE_OUTCOME_SUB_CATEGORY_SUCCESS':
       key = "createSubCategorySuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
+      updateSubCategoryNameAtMainCategories(state.outcomeMainCategories, action.subCategoryModel);
       return Object.assign({}, state, {
         ...state,
         outcomeSubCategories: addElementToArray(state.outcomeSubCategories, action.subCategoryModel),
@@ -173,5 +175,14 @@ const CategoryReducer = (state = initState, action) => {
       return state;
   }
 };
+
+function updateSubCategoryNameAtMainCategories(mainCategories, subCategory) {
+  for (let index = 0; index < mainCategories.length; index++) {
+    let subCategoryFromRepo = findElementById(mainCategories[index].subCategoryModelSet, subCategory.id);
+    if (subCategoryFromRepo !== null) {
+      subCategoryFromRepo.name = subCategory.name;
+    }
+  }
+}
 
 export default CategoryReducer;

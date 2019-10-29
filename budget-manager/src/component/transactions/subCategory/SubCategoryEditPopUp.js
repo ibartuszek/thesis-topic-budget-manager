@@ -2,40 +2,70 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import AlertMessageComponent from "../../AlertMessageComponent";
 import SubCategoryForm from "./SubCategoryForm";
-import {getMessage, removeMessage} from "../../../actions/message/messageActions";
-import {validateModel} from "../../../actions/validation/validateModel";
-import {createTransactionContext} from "../../../actions/common/createContext";
 import {categoryMessages} from "../../../store/MessageHolder";
+import {createTransactionContext} from "../../../actions/common/createContext";
+import {findElementById, findElementByName} from "../../../actions/common/listActions";
+import {getMessage, removeMessage} from "../../../actions/message/messageActions";
 import {updateSubCategory} from "../../../actions/category/updateSubCategory";
 
 class SubCategoryEditPopUp extends Component {
 
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDismiss = this.handleDismiss.bind(this);
-    this.showCategoryEdit = this.showCategoryEdit.bind(this);
-  }
-
-  handleSubmit = (subCategoryModel) => {
-    const {userHolder, logHolder, transactionType, updateSubCategory, refreshSubCategories} = this.props;
-    if (validateModel(subCategoryModel)) {
-      let context = createTransactionContext(userHolder, logHolder, transactionType);
-      updateSubCategory(context, subCategoryModel);
-      refreshSubCategories(subCategoryModel);
-    }
+  state = {
+    subCategory: null
   };
 
-  showCategoryEdit() {
-    this.props.showCategoryEdit(null);
+  constructor(props) {
+    super(props);
+    this.closePopUp = this.closePopUp.bind(this);
+    this.handleDismissMessage = this.handleDismissMessage.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.refreshSubCategories = this.refreshSubCategories.bind(this);
   }
 
-  handleDismiss(message) {
+  closePopUp() {
+    this.props.showSubCategoryPopUp(null);
+  }
+
+  componentWillUpdate(nextProps, nextState, nextContext) {
+    const {categoryHolder, transactionType} = this.props;
+    const {subCategory} = this.state;
+    if (subCategory !== null) {
+      this.refreshSubCategories(categoryHolder[transactionType.toLowerCase() + "SubCategories"]);
+      this.setState({
+        subCategory: null
+      })
+    }
+  }
+
+  handleDismissMessage(message) {
     this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
+  handleSubmit = (subCategoryModel) => {
+    const {logHolder, transactionType, updateSubCategory, userHolder} = this.props;
+    updateSubCategory(createTransactionContext(userHolder, logHolder, transactionType), subCategoryModel);
+    this.setState({
+      subCategory: subCategoryModel
+    })
+  };
+
+  refreshSubCategories(subCategoryList) {
+    const {subCategory} = this.state;
+    let subCategoryFromRepoById = findElementById(subCategoryList, subCategory.id);
+    let subCategoryFromRepoByName = findElementByName(subCategoryList, subCategory.name.value);
+    if (subCategoryFromRepoById !== null
+      && (subCategoryFromRepoByName === null || subCategoryFromRepoByName.id === subCategory.id)) {
+      this.props.refreshSubCategories("subCategory", subCategory);
+    }
+  }
+
   render() {
-    const {transactionType, subCategoryModel, logHolder} = this.props;
+    const {logHolder, subCategoryModel, transactionType} = this.props;
+
+
+    let successMessage = getMessage(logHolder.messages, "updateSubCategorySuccess", true);
+    let errorMessage = getMessage(logHolder.messages, "updateSubCategoryError", false);
+    let loading = successMessage.value === null && errorMessage.value === null;
 
     return (
       <div className='custom-popup'>
@@ -44,9 +74,10 @@ class SubCategoryEditPopUp extends Component {
                            subCategoryModel={subCategoryModel}
                            formTitle={categoryMessages.updateSubCategoryTitle}
                            handleSubmit={this.handleSubmit}
-                           popup={true} showCategoryEdit={this.showCategoryEdit}/>
-          <AlertMessageComponent message={getMessage(logHolder.messages, "updateSubCategorySuccess", true)} onChange={this.handleDismiss}/>
-          <AlertMessageComponent message={getMessage(logHolder.messages, "updateSubCategoryError", false)} onChange={this.handleDismiss}/>
+                           loading={loading}
+                           popup={true} closePopUp={this.closePopUp}/>
+          <AlertMessageComponent message={successMessage} onChange={this.handleDismissMessage}/>
+          <AlertMessageComponent message={errorMessage} onChange={this.handleDismissMessage}/>
         </div>
       </div>
     )
