@@ -38,7 +38,7 @@ public class StatisticsSchemaController {
     @RequestMapping(value = "/bm/statistics/schema/findAll", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public StatisticsSchemaListResponse getSchemaList(
             @NotNull @RequestParam(value = "userId") final Long userId) {
-        StatisticsSchema standardSchema = service.getStandardSchema();
+        StatisticsSchema standardSchema = service.getStandardSchema(userId);
         List<StatisticsSchema> customSchemas = service.getCustomSchemas(userId);
         return StatisticsSchemaListResponse.createSuccessfulResponse(standardSchema, customSchemas);
     }

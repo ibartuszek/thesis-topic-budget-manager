@@ -47,7 +47,7 @@ public class LoggerAspect {
 //    @Pointcut("execution(* hu.elte.bm.transactionservice.web.errorhandling.TransactionControllerAdvice.*(..))")
 //    public void controllerAdviceClassMethods() {
 //    }
-
+/*
     @Before("repositoryClassMethods()")
     public void logRepositoryCalls(final JoinPoint joinPoint) {
         logInfoWithParameters(joinPoint);
@@ -67,7 +67,7 @@ public class LoggerAspect {
     public void logControllerAdviceCalls(final JoinPoint joinPoint) {
         logError(joinPoint);
     }
-
+*/
     private void logInfoWithParameters(final JoinPoint joinPoint) {
         if ("INFO".equals(loggingLevel)) {
             LOGGER.info(createInfoLog(joinPoint.getSignature().toShortString(), joinPoint.getArgs()));

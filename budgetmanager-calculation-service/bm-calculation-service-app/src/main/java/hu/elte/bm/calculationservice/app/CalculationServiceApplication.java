@@ -1,5 +1,7 @@
 package hu.elte.bm.calculationservice.app;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "hu.elte.bm.calculationservice")
 @PropertySource("classpath:messages.properties")
 public class CalculationServiceApplication {
 
@@ -30,13 +32,13 @@ public class CalculationServiceApplication {
     public CommandLineRunner commandLineRunner(final ApplicationContext ctx) {
         return args -> {
 
-//            LOGGER.info("# Let's inspect the beans provided by Spring Boot:");
-//
-//            String[] beanNames = ctx.getBeanDefinitionNames();
-//            Arrays.sort(beanNames);
-//            for (String beanName : beanNames) {
-//                LOGGER.info("# " + beanName);
-//            }
+            LOGGER.info("# Let's inspect the beans provided by Spring Boot:");
+
+            String[] beanNames = ctx.getBeanDefinitionNames();
+            Arrays.sort(beanNames);
+            for (String beanName : beanNames) {
+                LOGGER.info("# " + beanName);
+            }
 
             LOGGER.info("# Application is running now. (Profile: " + activeProfile + ")");
             LOGGER.info("# With running database: " + db);

@@ -56,11 +56,11 @@ public class StatisticsSchemaServiceTest {
     public void testGetStandardSchema() {
         // GIVEN
         StatisticsSchema standardSchema = createStandardSchema();
-        Mockito.when(schemaDao.getStandardSchema()).thenReturn(standardSchema);
+        Mockito.when(schemaDao.getStandardSchema(USER_ID)).thenReturn(standardSchema);
         // WHEN
-        var result = underTest.getStandardSchema();
+        var result = underTest.getStandardSchema(USER_ID);
         // THEN
-        Mockito.verify(schemaDao).getStandardSchema();
+        Mockito.verify(schemaDao).getStandardSchema(USER_ID);
         Assert.assertEquals(standardSchema, result);
     }
 

@@ -48,8 +48,8 @@ public class StatisticsSchemaService {
         this.transactionServiceFacade = transactionServiceFacade;
     }
 
-    public StatisticsSchema getStandardSchema() {
-        return schemaDao.getStandardSchema();
+    public StatisticsSchema getStandardSchema(final Long userId) {
+        return schemaDao.getStandardSchema(userId);
     }
 
     public List<StatisticsSchema> getCustomSchemas(final Long userId) {

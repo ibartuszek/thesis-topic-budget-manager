@@ -1,6 +1,7 @@
 package hu.elte.bm.calculationservice.transactionserviceclient;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,21 @@ public class TransactionServiceFacade {
         return mainCategoryProvider.provide(type, userId);
     }
 
+    public Optional<MainCategory> getMainCategoryById(final TransactionType type, final Long userId, final Long mainCategoryId) {
+        List<MainCategory> mainCategoryList = getMainCategories(type, userId);
+        return mainCategoryList.stream()
+                .filter(mainCategory -> mainCategory.getId().equals(mainCategoryId))
+                .findAny();
+    }
+
     public List<SubCategory> getSubCategories(final TransactionType type, final Long userId) {
         return subCategoryProvider.provide(type, userId);
+    }
+
+    public Optional<SubCategory> getSubCategoryById(final TransactionType type, final Long userId, final Long subCategoryId) {
+        List<SubCategory> subCategoryList = getSubCategories(type, userId);
+        return subCategoryList.stream()
+                .filter(subCategory -> subCategory.getId().equals(subCategoryId))
+                .findAny();
     }
 }

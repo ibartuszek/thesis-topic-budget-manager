@@ -7,7 +7,7 @@ import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
 
 public interface StatisticsSchemaDao  {
 
-    StatisticsSchema getStandardSchema();
+    StatisticsSchema getStandardSchema(Long userId);
 
     List<StatisticsSchema> getCustomSchemas(Long userId);
 
