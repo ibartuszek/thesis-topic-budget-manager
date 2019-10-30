@@ -2,49 +2,77 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import AlertMessageComponent from "../../AlertMessageComponent";
 import MainCategoryForm from "./MainCategoryForm";
-import {categoryMessages} from "../../../store/MessageHolder";
 import {createTransactionContext} from "../../../actions/common/createContext";
 import {getMessage, removeMessage} from "../../../actions/message/messageActions";
 import {updateMainCategory} from "../../../actions/category/updateMainCategory";
-import {validateModel} from "../../../actions/validation/validateModel";
+import {findElementById, findElementByName} from "../../../actions/common/listActions";
 
 class MainCategoryEditPopUp extends Component {
 
+  state = {
+    mainCategory: null
+  };
+
   constructor(props) {
     super(props);
+    this.closePopUp = this.closePopUp.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDismiss = this.handleDismiss.bind(this);
-    this.showMainCategoryEdit = this.showMainCategoryEdit.bind(this);
+    this.refreshMainCategories = this.refreshMainCategories.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState, nextContext) {
+    const {categoryHolder, transactionType} = this.props;
+    const {mainCategory} = this.state;
+    if (mainCategory !== null) {
+      this.refreshMainCategories(categoryHolder[transactionType.toLowerCase() + "MainCategories"]);
+      this.setState({
+        mainCategory: null
+      })
+    }
   }
 
   handleSubmit = (mainCategoryModel) => {
-    const {logHolder, refreshMainCategories, transactionType, updateMainCategory, userHolder} = this.props;
-    if (validateModel(mainCategoryModel)) {
-      let context = createTransactionContext(userHolder, logHolder, transactionType);
-      updateMainCategory(context, mainCategoryModel);
-      refreshMainCategories('mainCategory', mainCategoryModel);
-    }
+    const {logHolder, transactionType, updateMainCategory, userHolder} = this.props;
+    updateMainCategory(createTransactionContext(userHolder, logHolder, transactionType), mainCategoryModel);
+    this.setState({
+      mainCategory: mainCategoryModel
+    })
   };
-
-  showMainCategoryEdit() {
-    this.props.showCategoryEdit(null);
-  }
 
   handleDismiss(message) {
     this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
+  closePopUp() {
+    this.props.showCategoryEdit(null);
+  }
+
+  refreshMainCategories(mainCategoryList) {
+    const {mainCategory} = this.state;
+    let mainCategoryFromRepoById = findElementById(mainCategoryList, mainCategory.id);
+    let mainCategoryFromRepoByName = findElementByName(mainCategoryList, mainCategory.name.value);
+    if (mainCategoryFromRepoById !== null
+      && (mainCategoryFromRepoByName === null || mainCategoryFromRepoByName.id === mainCategory.id)) {
+      this.props.refreshMainCategories("mainCategory", mainCategory);
+    }
+  }
+
   render() {
-    const {logHolder, mainCategoryModel, subCategoryList, transactionType} = this.props;
-    console.log(this.props);
+    const {categoryHolder, logHolder, mainCategoryModel, transactionType} = this.props;
+
+    let successMessage = getMessage(logHolder.messages, "updateMainCategorySuccess", true);
+    let errorMessage = getMessage(logHolder.messages, "updateMainCategoryError", false);
+    let loading = successMessage.value === null && errorMessage.value === null;
+
     return (
       <div className='custom-popup'>
         <div className='card card-body custom-popup-inner'>
-          <MainCategoryForm transactionType={transactionType} subCategoryList={subCategoryList} mainCategoryModel={mainCategoryModel}
-                            formTitle={categoryMessages.updateMainCategoryTitle} popup={true}
-                            handleSubmit={this.handleSubmit} showMainCategoryEdit={this.showMainCategoryEdit}/>
-          <AlertMessageComponent message={getMessage(logHolder.messages, "updateMainCategorySuccess", true)} onChange={this.handleDismiss}/>
-          <AlertMessageComponent message={getMessage(logHolder.messages, "updateMainCategoryError", false)} onChange={this.handleDismiss}/>
+          <MainCategoryForm transactionType={transactionType} subCategoryList={categoryHolder[transactionType.toLowerCase() + "SubCategories"]}
+                            mainCategoryModel={mainCategoryModel} formTitle="Update main category" loading={loading}
+                            popup={true} handleSubmit={this.handleSubmit} closePopUp={this.closePopUp}/>
+          <AlertMessageComponent message={successMessage} onChange={this.handleDismiss}/>
+          <AlertMessageComponent message={errorMessage} onChange={this.handleDismiss}/>
         </div>
       </div>
     )

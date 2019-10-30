@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import CloseButton from "../../buttons/CloseButton";
 import ModelStringValue from "../../layout/form/ModelStringValue";
 import SpinButton from "../../buttons/SpinButton";
-import {categoryMessages} from "../../../store/MessageHolder";
 import {createEmptySubCategory} from "../../../actions/category/createSubCategoryMethods";
 import {validateModel} from "../../../actions/validation/validateModel";
 
@@ -79,7 +78,6 @@ class SubCategoryForm extends Component {
   render() {
     const {formTitle, popup} = this.props;
     const {subCategoryModel, loading} = this.state;
-    const {categoryNameLabel, categoryNameMessage} = categoryMessages;
 
     let closeButton = popup === undefined ? null : (<CloseButton buttonLabel="Close" closePopUp={this.closePopUp}/>);
 
@@ -87,9 +85,8 @@ class SubCategoryForm extends Component {
       <React.Fragment>
         <form className="form-group mb-0" onSubmit={this.handleSubmit}>
           <h4 className="mt-3 mx-auto">{formTitle}</h4>
-          <ModelStringValue onChange={this.handleFieldChange}
-                            id="name" model={subCategoryModel.name}
-                            labelTitle={categoryNameLabel} placeHolder={categoryNameMessage} type="text"/>
+          <ModelStringValue onChange={this.handleFieldChange} id="name" model={subCategoryModel.name} type="text"
+                            labelTitle="Name of the category" placeHolder="Please write the name of the new category."/>
           <SpinButton buttonLabel="Save supplementary category" icon="fas fa-pencil-alt" loading={loading}/>
           {closeButton}
         </form>

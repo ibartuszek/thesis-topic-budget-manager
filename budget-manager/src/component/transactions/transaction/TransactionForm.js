@@ -156,17 +156,14 @@ class TransactionForm extends Component {
       transactionEndDateLabel, transactionEndDateMessage, transactionDescriptionLabel, transactionDescriptionMessage
     } = transactionMessages;
 
-    let endDateComponent = !monthly ? null :
-      (
-        <ModelDateValue onChange={this.handleModelValueChange}
-                        id="endDate" model={endDate}
-                        labelTitle={transactionEndDateLabel} placeHolder={transactionEndDateMessage}/>
-      );
+    let endDateComponent = !monthly ? null : (
+      <ModelDateValue onChange={this.handleModelValueChange} id="endDate" model={endDate}
+                      labelTitle={transactionEndDateLabel} placeHolder={transactionEndDateMessage}/>);
 
     let subCategoryList = mainCategory !== undefined && mainCategory !== null ? mainCategory.subCategoryModelSet : [];
 
     let editMainCategoryPopUp = editAbleMainCategory === null ? null : (
-      <MainCategoryEditPopUp mainCategoryModel={editAbleMainCategory} transactionType={transactionType} subCategoryList={subCategoryList}
+      <MainCategoryEditPopUp mainCategoryModel={editAbleMainCategory} transactionType={transactionType}
                              showCategoryEdit={this.showCategoryEdit} refreshMainCategories={this.handleFieldChange}/>);
 
     let editSubCategoryPopUp = editAbleSubCategory === null ? null : (

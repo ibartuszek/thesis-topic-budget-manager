@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import AlertMessageComponent from "../../AlertMessageComponent";
 import SubCategoryForm from "./SubCategoryForm";
-import {categoryMessages} from "../../../store/MessageHolder";
 import {createTransactionContext} from "../../../actions/common/createContext";
 import {findElementById, findElementByName} from "../../../actions/common/listActions";
 import {getMessage, removeMessage} from "../../../actions/message/messageActions";
@@ -62,7 +61,6 @@ class SubCategoryEditPopUp extends Component {
   render() {
     const {logHolder, subCategoryModel, transactionType} = this.props;
 
-
     let successMessage = getMessage(logHolder.messages, "updateSubCategorySuccess", true);
     let errorMessage = getMessage(logHolder.messages, "updateSubCategoryError", false);
     let loading = successMessage.value === null && errorMessage.value === null;
@@ -70,12 +68,9 @@ class SubCategoryEditPopUp extends Component {
     return (
       <div className='custom-popup'>
         <div className='card card-body custom-popup-inner'>
-          <SubCategoryForm transactionType={transactionType}
-                           subCategoryModel={subCategoryModel}
-                           formTitle={categoryMessages.updateSubCategoryTitle}
-                           handleSubmit={this.handleSubmit}
-                           loading={loading}
-                           popup={true} closePopUp={this.closePopUp}/>
+          <SubCategoryForm transactionType={transactionType} subCategoryModel={subCategoryModel}
+                           formTitle="Update subcategory" handleSubmit={this.handleSubmit}
+                           loading={loading} popup={true} closePopUp={this.closePopUp}/>
           <AlertMessageComponent message={successMessage} onChange={this.handleDismissMessage}/>
           <AlertMessageComponent message={errorMessage} onChange={this.handleDismissMessage}/>
         </div>

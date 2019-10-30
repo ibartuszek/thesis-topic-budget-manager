@@ -34,10 +34,8 @@ class SubCategoryCard extends Component {
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
           <div className="card card-body">
-            <SubCategoryForm transactionType={transactionType}
-                             formTitle={"Create new subcategory"}
-                             handleSubmit={this.handleSubmit}
-                             loading={loading}/>
+            <SubCategoryForm transactionType={transactionType} formTitle="Create new subcategory"
+                             handleSubmit={this.handleSubmit} loading={loading}/>
             <AlertMessageComponent message={successMessage} onChange={this.handleDismissMessage}/>
             <AlertMessageComponent message={errorMessage} onChange={this.handleDismissMessage}/>
           </div>
