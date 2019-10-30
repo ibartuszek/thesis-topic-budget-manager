@@ -28,6 +28,9 @@ public class StatisticsSchemaService {
     @Value("${schema.schema_id_must_be_null:Schema's id must be null!}")
     private String schemaIdMustBeNull;
 
+    @Value("${schema.schema_not_changed:Schema has no changes!}")
+    private String schemaNotChanged;
+
     @Value("${schema.schema_not_found:Schema cannot be found!}")
     private String schemaNotFound;
 
@@ -96,6 +99,9 @@ public class StatisticsSchemaService {
     private void validateForUpdate(final StatisticsSchema schema, final Long userId) {
         Optional<StatisticsSchema> optionalOriginalSchema = validateForDelete(schema, userId);
         StatisticsSchema originalSchema = optionalOriginalSchema.get();
+        if (schema.equals(originalSchema)) {
+            throw new IllegalStatisticsSchemaException(schema, schemaNotChanged);
+        }
         List<StatisticsSchema> schemaListWithSameTitle = schemaDao.findByTitle(schema, userId);
         if (!schemaListWithSameTitle.isEmpty() && !schemaListWithSameTitle.contains(originalSchema)) {
             throw new StatisticsSchemaConflictException(schema, schemaTitleIsReserved);
