@@ -1,14 +1,18 @@
 import React, {Component} from 'react';
+import CloseButton from "../buttons/CloseButton";
 import EnumSelect from "../transactions/EnumSelect";
 import ModelStringValue from "../layout/form/ModelStringValue";
 import MainCategorySelect from "../transactions/mainCategory/MainCategorySelect";
 import SubCategorySelect from "../transactions/subCategory/selectSubCategory/SubCategorySelect";
 import {createEmptySchema} from "../../actions/schema/createSchemaMethods";
+import SpinButton from "../buttons/SpinButton";
+import {validateSchema} from "../../actions/validation/validateSchema";
 
 class SchemaForm extends Component {
 
   state = {
-    schema: createEmptySchema()
+    schema: createEmptySchema(),
+    loading: false
   };
 
   constructor(props) {
@@ -24,6 +28,14 @@ class SchemaForm extends Component {
     if (editableSchema !== null && editableSchema !== undefined) {
       this.setState({
         schema: editableSchema
+      })
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState, nextContext) {
+    if (this.state.loading && !nextProps.loading) {
+      this.setState({
+        loading: false
       })
     }
   }
@@ -53,7 +65,12 @@ class SchemaForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.handleSubmit(this.state.schema);
+    if (validateSchema(this.state.schema)) {
+      this.setState({
+        loading: true
+      });
+      this.props.handleSubmit(this.state.schema);
+    }
   };
 
   showSchemaEdit() {
@@ -62,17 +79,13 @@ class SchemaForm extends Component {
 
   render() {
     const {chartType, currency, mainCategory, subCategory, title, type} = this.state.schema;
+    const {loading} = this.state;
     const {formTitle, mainCategoryList, editableSchema} = this.props;
 
     let subCategoryList = mainCategory !== undefined && mainCategory !== null ? mainCategory.subCategoryModelSet : [];
 
-    let closeButton = editableSchema === null || editableSchema === undefined ? null :
-      (
-        <button className="btn btn-outline-danger mx-3 mt-3 mb-2" onClick={this.showSchemaEdit}>
-          <span>&times;</span>
-          <span> Close </span>
-        </button>
-      );
+    let closeButton = editableSchema === null || editableSchema === undefined ? null
+      : (<CloseButton buttonLabel="Close" closePopUp={this.showSchemaEdit}/>);
 
     return (
       <React.Fragment>
@@ -87,12 +100,10 @@ class SchemaForm extends Component {
                       placeHolder="Currency of the schema"/>
           <EnumSelect handleModelValueChange={this.handleModelValueChange} model={chartType} id="chartType" label="Type of the chart"
                       placeHolder="Type of the visualization  of the data"/>
-          <MainCategorySelect handleModelValueChange={this.handleFieldChange} mainCategory={mainCategory} mainCategoryList={mainCategoryList}/>
+          <MainCategorySelect handleModelValueChange={this.handleFieldChange} mainCategory={mainCategory} mainCategoryList={mainCategoryList}
+                              withNullList={true}/>
           <SubCategorySelect handleModelValueChange={this.handleFieldChange} subCategory={subCategory} subCategoryList={subCategoryList}/>
-          <button className="btn btn-outline-success mt-3 mb-2">
-            <span className="fas fa-pencil-alt"/>
-            <span> Save schema </span>
-          </button>
+          <SpinButton buttonLabel="Save schema" icon="fas fa-pencil-alt" loading={loading}/>
           {closeButton}
         </form>
       </React.Fragment>

@@ -6,7 +6,6 @@ import SchemaForm from "./SchemaForm";
 import {createContext} from "../../actions/common/createContext";
 import {createSchema} from "../../actions/schema/createSchema";
 import {getMessage, removeMessage} from "../../actions/message/messageActions";
-import {validateSchema} from "../../actions/validation/validateSchema";
 
 class CreateNewSchemaCard extends Component {
 
@@ -18,10 +17,7 @@ class CreateNewSchemaCard extends Component {
 
   handleSubmit(schema) {
     const {userHolder, logHolder, createSchema} = this.props;
-    if (validateSchema(schema)) {
-      let context = createContext(userHolder, logHolder);
-      createSchema(context, schema);
-    }
+    createSchema(createContext(userHolder, logHolder), schema);
   }
 
   handleDismiss(message) {
@@ -32,13 +28,18 @@ class CreateNewSchemaCard extends Component {
     const {categoryHolder, logHolder, target} = this.props;
     let outcomeMainCategories = categoryHolder.outcomeMainCategories;
 
+    let successMessage = getMessage(logHolder.messages, "createSchemaSuccess", true);
+    let errorMessage = getMessage(logHolder.messages, "createSchemaError", false);
+    let loading = successMessage.value === null && errorMessage.value === null;
+
     return (
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
           <div className="card card-body">
-            <SchemaForm formTitle="Create schema" mainCategoryList={outcomeMainCategories} handleSubmit={this.handleSubmit}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "createSchemaSuccess", true)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "createSchemaError", false)} onChange={this.handleDismiss}/>
+            <SchemaForm formTitle="Create schema" mainCategoryList={outcomeMainCategories}
+                        handleSubmit={this.handleSubmit} loading={loading}/>
+            <AlertMessageComponent message={successMessage} onChange={this.handleDismiss}/>
+            <AlertMessageComponent message={errorMessage} onChange={this.handleDismiss}/>
           </div>
         </div>
       </React.Fragment>

@@ -4,7 +4,6 @@ import {connect} from "react-redux";
 import AlertMessageComponent from "../AlertMessageComponent";
 import SchemaForm from "./SchemaForm";
 import {createContext} from "../../actions/common/createContext";
-import {validateSchema} from "../../actions/validation/validateSchema";
 import {updateSchema} from "../../actions/schema/updateSchema";
 import {getMessage, removeMessage} from "../../actions/message/messageActions";
 
@@ -12,41 +11,50 @@ class UpdateSchemaPopUp extends Component {
 
   constructor(props) {
     super(props);
-    this.handleDismiss = this.handleDismiss.bind(this);
+    this.closePopUp = this.closePopUp.bind(this);
+    this.handleDismissMessage = this.handleDismissMessage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.showSchemaEdit = this.showSchemaEdit.bind(this);
   }
 
   handleSubmit(schema) {
     const {userHolder, logHolder, updateSchema} = this.props;
-    if (validateSchema(schema)) {
-      let context = createContext(userHolder, logHolder);
-      updateSchema(context, schema);
-    }
+    updateSchema(createContext(userHolder, logHolder), schema);
   }
 
-  handleDismiss(message) {
+  handleDismissMessage(message) {
     this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
-  showSchemaEdit() {
+  closePopUp() {
+    const {logHolder} = this.props;
+    let successMessage = getMessage(logHolder.messages, "updateSchemaSuccess", true);
+    let errorMessage = getMessage(logHolder.messages, "updateSchemaError", false);
+    if (successMessage.value !== null) {
+      this.handleDismissMessage(successMessage);
+    }
+    if (errorMessage.value) {
+      this.handleDismissMessage(errorMessage);
+    }
     this.props.showSchemaEdit(null);
   }
 
   render() {
     const {categoryHolder, logHolder, schema} = this.props;
     let outcomeMainCategories = categoryHolder.outcomeMainCategories;
-    console.log(schema);
+
+    let successMessage = getMessage(logHolder.messages, "updateSchemaSuccess", true);
+    let errorMessage = getMessage(logHolder.messages, "updateSchemaError", false);
+    let loading = successMessage.value === null && errorMessage.value === null;
 
     return (
       <React.Fragment>
         <div className='custom-popup'>
           <div className="card card-body custom-popup-inner">
             <div className="container overflow-auto">
-              <SchemaForm formTitle="Update schema" mainCategoryList={outcomeMainCategories}
-                          handleSubmit={this.handleSubmit} editableSchema={schema} showSchemaEdit={this.showSchemaEdit}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "updateSchemaSuccess", true)} onChange={this.handleDismiss}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "updateSchemaError", false)} onChange={this.handleDismiss}/>
+              <SchemaForm formTitle="Update schema" mainCategoryList={outcomeMainCategories} loading={loading}
+                          handleSubmit={this.handleSubmit} editableSchema={schema} showSchemaEdit={this.closePopUp}/>
+              <AlertMessageComponent message={successMessage} onChange={this.handleDismissMessage}/>
+              <AlertMessageComponent message={errorMessage} onChange={this.handleDismissMessage}/>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import CustomSchemaCard from "./CustomSchemaCard";
 import CreateNewSchemaCard from "./CreateNewSchemaCard";
 import UpdateSchemaPopUp from "./UpdateSchemaPopUp";
 import DeleteSchemaPopUp from "./DeleteSchemaPopUp";
+import Redirect from "../statistics/Statistics";
 
 class Schemas extends Component {
 
@@ -54,8 +55,12 @@ class Schemas extends Component {
   };
 
   render() {
-    const {statisticsHolder} = this.props;
+    const {statisticsHolder, userHolder} = this.props;
     const {deletableSchema, editableSchema} = this.state;
+
+    if (userHolder == null || !userHolder.userIsLoggedIn) {
+      return <Redirect to='/login'/>;
+    }
 
     let createNewSchema = "createNewSchemaContainer";
     let createNewSchemaCard = statisticsHolder.customSchemas === null

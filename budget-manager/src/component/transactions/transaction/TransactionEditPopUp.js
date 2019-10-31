@@ -86,7 +86,7 @@ class TransactionEditPopUp extends Component {
     return (
       <React.Fragment>
         <div className='custom-popup'>
-          <div className="card card-body custom-popup-inner">
+          <div className="card card-body custom-popup-inner mt-3">
             <div className="container overflow-auto">
               <TransactionForm transactionType={transactionType} transactionModel={transactionModel} mainCategoryList={mainCategoryList}
                                formTitle="Update transaction" handleSubmit={this.handleSubmit} popup={true}

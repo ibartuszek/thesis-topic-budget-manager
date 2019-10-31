@@ -3,6 +3,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import CustomStatisticsPlaceProxy from "./customStatistics/CustomStatisticsPlaceProxy";
 import Loading from "../Loading";
+import Redirect from "react-router-dom/es/Redirect";
 import StandardStatistics from "./standardStatistics/StandardStatistics";
 import TransactionTableSearchBar from "../transactions/transaction/table/TransactionTableSearchBar";
 import {createContext} from "../../actions/common/createContext";
@@ -59,7 +60,11 @@ class Statistics extends Component {
 
   render() {
     const {startDate, endDate, standardStatisticsAreLoaded} = this.state;
-    const {statisticsHolder} = this.props;
+    const {statisticsHolder, userHolder} = this.props;
+
+    if (userHolder == null || !userHolder.userIsLoggedIn) {
+      return <Redirect to='/login'/>;
+    }
 
     let lockStatisticsButtonEnabled = null;
     let standardStatistics = null;

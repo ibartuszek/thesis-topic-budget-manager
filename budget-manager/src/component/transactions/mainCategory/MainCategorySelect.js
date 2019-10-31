@@ -20,13 +20,18 @@ class MainCategorySelect extends Component {
   };
 
   render() {
-    const {mainCategory, mainCategoryList, editable} = this.props;
+    const {editable, mainCategory, mainCategoryList, withNullList} = this.props;
 
-    let mainCategorySelectList = mainCategoryList.length === 0
-      ? createCategoryListWithNullForSelect(mainCategoryList)
-      : createCategoryListForSelect(mainCategoryList);
+    let mainCategorySelectList;
+    if (withNullList !== undefined && withNullList) {
+      mainCategorySelectList = createCategoryListWithNullForSelect(mainCategoryList);
+    } else {
+      mainCategorySelectList = mainCategoryList.length === 0
+        ? createCategoryListWithNullForSelect(mainCategoryList)
+        : createCategoryListForSelect(mainCategoryList);
+    }
 
-    let model = mainCategory !== undefined ? mainCategory.name.value : undefined;
+    let model = mainCategory !== undefined && mainCategory !== null ? mainCategory.name.value : undefined;
 
     return (
       <React.Fragment>
