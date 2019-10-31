@@ -109,7 +109,6 @@ const CategoryReducer = (state = initState, action) => {
     case 'CREATE_OUTCOME_SUB_CATEGORY_SUCCESS':
       key = "createSubCategorySuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
-      updateSubCategoryNameAtMainCategories(state.outcomeMainCategories, action.subCategoryModel);
       return Object.assign({}, state, {
         ...state,
         outcomeSubCategories: addElementToArray(state.outcomeSubCategories, action.subCategoryModel),
@@ -160,6 +159,7 @@ const CategoryReducer = (state = initState, action) => {
     case 'UPDATE_OUTCOME_SUB_CATEGORY_SUCCESS':
       key = "updateSubCategorySuccess";
       addMessage(action.messages, createMessage(key, action.message, true));
+      updateSubCategoryNameAtMainCategories(state.outcomeMainCategories, action.subCategoryModel);
       return Object.assign({}, state, {
         ...state,
         outcomeSubCategories: replaceElementAtArray(state.outcomeSubCategories, action.subCategoryModel),

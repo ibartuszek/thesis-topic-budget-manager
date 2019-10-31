@@ -3,13 +3,13 @@ import CardHeader from "../layout/card/CardHeader";
 import MainCategoryCard from "./mainCategory/MainCategoryCard";
 import SubCategoryCard from "./subCategory/SubCategoryCard";
 import TransactionCard from "./transaction/TransactionCard";
-import {createCardNames} from "../../actions/message/createElementIds";
 import TransactionTable from "./transaction/table/TransactionTable";
+import {createCardNames} from "../../actions/message/createElementIds";
 
 class Transaction extends Component {
 
   render() {
-    const {data, mainCategoryList, subCategoryList} = this.props;
+    const {data, subCategoryList} = this.props;
     const cardData = createCardNames(data);
 
     return (
@@ -22,13 +22,9 @@ class Transaction extends Component {
           <SubCategoryCard transactionType={cardData.transactionType}
                            target={cardData.createSubType}/>
           <TransactionCard transactionType={cardData.transactionType}
-                           target={cardData.createTransaction}
-                           mainCategoryList={mainCategoryList}
-                           subCategoryList={subCategoryList}/>
+                           target={cardData.createTransaction}/>
         </div>
-        <TransactionTable transactionType={cardData.transactionType}
-                          mainCategoryList={mainCategoryList}
-                          subCategoryList={subCategoryList}/>
+        <TransactionTable transactionType={cardData.transactionType}/>
       </React.Fragment>
     )
   }

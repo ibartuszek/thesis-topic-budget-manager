@@ -17,7 +17,7 @@ class MainCategoryEditPopUp extends Component {
     super(props);
     this.closePopUp = this.closePopUp.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDismiss = this.handleDismiss.bind(this);
+    this.handleDismissMessage = this.handleDismissMessage.bind(this);
     this.refreshMainCategories = this.refreshMainCategories.bind(this);
   }
 
@@ -40,12 +40,21 @@ class MainCategoryEditPopUp extends Component {
     })
   };
 
-  handleDismiss(message) {
+  handleDismissMessage(message) {
     this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
   closePopUp() {
-    this.props.showCategoryEdit(null);
+    const {logHolder} = this.props;
+    let successMessage = getMessage(logHolder.messages, "updateMainCategorySuccess", true);
+    let errorMessage = getMessage(logHolder.messages, "updateMainCategoryError", false);
+    if (successMessage.value !== null) {
+      this.handleDismissMessage(successMessage);
+    }
+    if (errorMessage.value) {
+      this.handleDismissMessage(errorMessage);
+    }
+    this.props.showMainCategoryPopUp(null);
   }
 
   refreshMainCategories(mainCategoryList) {
@@ -71,8 +80,8 @@ class MainCategoryEditPopUp extends Component {
           <MainCategoryForm transactionType={transactionType} subCategoryList={categoryHolder[transactionType.toLowerCase() + "SubCategories"]}
                             mainCategoryModel={mainCategoryModel} formTitle="Update main category" loading={loading}
                             popup={true} handleSubmit={this.handleSubmit} closePopUp={this.closePopUp}/>
-          <AlertMessageComponent message={successMessage} onChange={this.handleDismiss}/>
-          <AlertMessageComponent message={errorMessage} onChange={this.handleDismiss}/>
+          <AlertMessageComponent message={successMessage} onChange={this.handleDismissMessage}/>
+          <AlertMessageComponent message={errorMessage} onChange={this.handleDismissMessage}/>
         </div>
       </div>
     )

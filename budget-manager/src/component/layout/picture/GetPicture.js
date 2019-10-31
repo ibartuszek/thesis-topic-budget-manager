@@ -11,13 +11,12 @@ class GetPicture extends Component {
     this.getPicture = this.getPicture.bind(this);
   }
 
-  getPicture() {
+  getPicture = (e) => {
+    e.preventDefault();
     const {userHolder, logHolder, pictureHolder, getPicture, pictureId, showPicture} = this.props;
     let context = createContext(userHolder, logHolder);
     let picture = findElementById(pictureHolder.pictures, pictureId);
-    console.log(picture);
     if (picture === undefined || picture === null) {
-      console.log(picture);
       getPicture(pictureId, context).then(function (response) {
         if ('GET_PICTURE_SUCCESS' === response['type']) {
           showPicture(response['picture'])
@@ -26,7 +25,7 @@ class GetPicture extends Component {
     } else {
       showPicture(picture);
     }
-  }
+  };
 
   render() {
     return (

@@ -24,6 +24,7 @@ class MainCategoryCard extends Component {
   }
 
   render() {
+    // TODO: check subCategoryList...
     const {target, transactionType, logHolder, subCategoryList} = this.props;
 
     let successMessage = getMessage(logHolder.messages, "createMainCategorySuccess", true);

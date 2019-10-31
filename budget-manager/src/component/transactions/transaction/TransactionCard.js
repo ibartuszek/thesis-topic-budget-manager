@@ -5,49 +5,62 @@ import TransactionForm from "./TransactionForm";
 import {createTransaction} from "../../../actions/transaction/createTransaction";
 import {createTransactionContext} from "../../../actions/common/createContext";
 import {getMessage, removeMessage} from "../../../actions/message/messageActions";
-import {transactionMessages} from "../../../store/MessageHolder";
-import {validateTransaction} from "../../../actions/validation/validateTransaction";
 import {createTrackingCoordinates} from "../../../actions/transaction/createTrackingCoordinates";
 
 class TransactionCard extends Component {
 
   constructor(props) {
     super(props);
-    this.handleDismiss = this.handleDismiss.bind(this);
+    this.handleDismissMessage = this.handleDismissMessage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleDismissMessage(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
   handleSubmit = (transaction) => {
     const {userHolder, logHolder, transactionType, createTransaction} = this.props;
-    if (validateTransaction(transaction)) {
-      let context = createTransactionContext(userHolder, logHolder, transactionType);
-      createTrackingCoordinates(transactionType, userHolder.userData.tracking).then(function (coordinate) {
-        createTransaction(context, transaction, coordinate);
+    createTrackingCoordinates(transactionType, userHolder.userData.tracking)
+      .then(function (coordinate) {
+        createTransaction(createTransactionContext(userHolder, logHolder, transactionType), transaction, coordinate);
       });
-
-    }
   };
 
-  handleDismiss(message) {
-    this.props.removeMessage(this.props.logHolder.messages, message);
-  }
-
   render() {
-    const {logHolder, mainCategoryList, subCategoryList, target, transactionType} = this.props;
+    const {categoryHolder, logHolder, target, transactionType} = this.props;
+
+    let mainCategoryList = categoryHolder[transactionType.toLowerCase() + "MainCategories"];
+
+    let createTransactionSuccessMessage = getMessage(logHolder.messages, "createTransactionSuccess", true);
+    let createTransactionErrorMessage = getMessage(logHolder.messages, "createTransactionError", false);
+    let uploadPictureSuccessMessage = getMessage(logHolder.messages, "uploadPictureSuccess", true);
+    let uploadPictureErrorMessage = getMessage(logHolder.messages, "uploadPictureError", false);
+    let deletePictureSuccessMessage = getMessage(logHolder.messages, "deletePictureSuccess", true);
+    let deletePictureErrorMessage = getMessage(logHolder.messages, "deletePictureError", false);
+    let getPictureSuccessMessage = getMessage(logHolder.messages, "getPictureSuccess", true);
+    let getPictureErrorMessage = getMessage(logHolder.messages, "getPictureError", false);
+    let loading = createTransactionSuccessMessage.value === null && createTransactionErrorMessage.value === null
+      && uploadPictureSuccessMessage.value === null && uploadPictureErrorMessage.value === null
+      && deletePictureSuccessMessage.value === null && deletePictureErrorMessage.value === null
+      && getPictureSuccessMessage.value === null && getPictureErrorMessage.value === null;
+
     return (
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
           <div className="card card-body">
-            <TransactionForm transactionType={transactionType} mainCategoryList={mainCategoryList} subCategoryListFromRepo={subCategoryList}
-                             formTitle={transactionMessages.createTransactionTitle} handleSubmit={this.handleSubmit}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "createTransactionSuccess", true)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "createTransactionError", false)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "uploadPictureSuccess", true)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "uploadPictureError", false)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "deletePictureSuccess", true)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "deletePictureError", false)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "getPictureSuccess", true)} onChange={this.handleDismiss}/>
-            <AlertMessageComponent message={getMessage(logHolder.messages, "getPictureError", false)} onChange={this.handleDismiss}/>
+
+            <TransactionForm transactionType={transactionType} mainCategoryList={mainCategoryList} formTitle="Create new transaction"
+                             handleSubmit={this.handleSubmit} loading={loading}/>
+
+            <AlertMessageComponent message={createTransactionSuccessMessage} onChange={this.handleDismissMessage}/>
+            <AlertMessageComponent message={createTransactionErrorMessage} onChange={this.handleDismissMessage}/>
+            <AlertMessageComponent message={uploadPictureSuccessMessage} onChange={this.handleDismissMessage}/>
+            <AlertMessageComponent message={uploadPictureErrorMessage} onChange={this.handleDismissMessage}/>
+            <AlertMessageComponent message={deletePictureSuccessMessage} onChange={this.handleDismissMessage}/>
+            <AlertMessageComponent message={deletePictureErrorMessage} onChange={this.handleDismissMessage}/>
+            <AlertMessageComponent message={getPictureSuccessMessage} onChange={this.handleDismissMessage}/>
+            <AlertMessageComponent message={getPictureErrorMessage} onChange={this.handleDismissMessage}/>
           </div>
         </div>
       </React.Fragment>
@@ -58,6 +71,7 @@ class TransactionCard extends Component {
 const mapStateToProps = (state) => {
   return {
     logHolder: state.logHolder,
+    categoryHolder: state.categoryHolder,
     pictureHolder: state.pictureHolder,
     transactionHolder: state.transactionHolder,
     userHolder: state.userHolder

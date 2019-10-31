@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {findElementById} from "../../../../actions/common/listActions";
 
 class TransactionTableRow extends Component {
 
@@ -16,11 +17,14 @@ class TransactionTableRow extends Component {
   }
 
   render() {
-    const {amount, currency, date, description, endDate, locked, mainCategory, monthly, subCategory, title,} = this.props.transaction;
+    const {transactionList, id} = this.props;
+    const transaction = findElementById(transactionList, id);
+    const {amount, currency, date, description, endDate, locked, mainCategory, monthly, subCategory, title,} = transaction;
+
     const editButton = locked ? null : (
-      <button className="btn btn-warning btn-sm fas fa-edit" onClick={() => this.showTransactionEdit(this.props.transaction)}/>);
+      <button className="btn btn-warning btn-sm fas fa-edit" onClick={() => this.showTransactionEdit(transaction)}/>);
     const deleteButton = locked ? null : (
-      <button className="btn btn-danger btn-sm fas fa-trash-alt" onClick={() => this.showTransactionDelete(this.props.transaction)}/>);
+      <button className="btn btn-danger btn-sm fas fa-trash-alt" onClick={() => this.showTransactionDelete(transaction)}/>);
     return (
       <tr>
         <td className="remove-button-cell">{editButton}</td>

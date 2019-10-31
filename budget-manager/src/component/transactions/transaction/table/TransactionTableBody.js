@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import TransactionTableRow from "./TransactionTableRow";
+import TransactionDeletePopUp from "../TransactionDeletePopUp";
 import TransactionEditPopUp from "../TransactionEditPopUp";
 import {sortTransactions} from "../../../../actions/transaction/sortTransactions";
-import TransactionDeletePopUp from "../TransactionDeletePopUp";
 
 class TransactionTableBody extends Component {
 
@@ -15,6 +15,7 @@ class TransactionTableBody extends Component {
 
   constructor(props) {
     super(props);
+    this.refreshTransactions = this.refreshTransactions.bind(this);
     this.showTransactionEdit = this.showTransactionEdit.bind(this);
   }
 
@@ -44,22 +45,29 @@ class TransactionTableBody extends Component {
     });
   }
 
+  refreshTransactions() {
+    const {transactionHolder, transactionType} = this.props;
+    let transactions = transactionHolder[transactionType.toLowerCase() + 's'];
+    console.log("refresh");
+    this.setState({
+      transactions: transactions
+    })
+  }
+
   render() {
-    const {mainCategoryList, subCategoryList, transactions, transactionType} = this.props;
+    const {transactionType, transactionHolder} = this.props;
     const {deletableTransaction, editableTransaction} = this.state;
-    let data = transactions;
+    let data = transactionHolder[transactionType.toLowerCase() + 's'];
 
     let tableBody = data.map((transaction, index) =>
-      <TransactionTableRow key={index} id={transaction.id} transaction={transaction} index={index}
+      <TransactionTableRow key={index} id={transaction.id} transactionList={data} index={index}
                            showTransactionEdit={this.showTransactionEdit}
                            showTransactionDelete={this.showTransactionDelete}/>
     );
 
-    // TODO: refreshSubCategories?
     let editTransaction = editableTransaction === null ? null : (
       <TransactionEditPopUp transactionModel={editableTransaction} transactionType={transactionType}
-                            mainCategoryList={mainCategoryList} subCategoryList={subCategoryList}
-                            showTransactionEdit={this.showTransactionEdit} refreshSubCategories={this.refreshSubCategories}/>);
+                            showTransactionEdit={this.showTransactionEdit} refreshTransactions={this.refreshTransactions}/>);
 
     let deleteTransaction = deletableTransaction === null ? null : (
       <TransactionDeletePopUp transactionModel={deletableTransaction} transactionType={transactionType}

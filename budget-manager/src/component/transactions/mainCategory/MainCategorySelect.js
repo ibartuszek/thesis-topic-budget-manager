@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import ModelSelectValue from "../../layout/form/ModelSelectValue";
 import {createCategoryListForSelect, createCategoryListWithNullForSelect, findElementByName} from "../../../actions/common/listActions";
-import {transactionMessages} from "../../../store/MessageHolder";
 
 class MainCategorySelect extends Component {
 
@@ -17,12 +16,11 @@ class MainCategorySelect extends Component {
   }
 
   showCategoryEdit = (category) => {
-    this.props.showCategoryEdit(category);
+    this.props.showMainCategoryPopUp(category);
   };
 
   render() {
     const {mainCategory, mainCategoryList, editable} = this.props;
-    const {transactionMainCategoryLabel, transactionMainCategoryMessage} = transactionMessages;
 
     let mainCategorySelectList = mainCategoryList.length === 0
       ? createCategoryListWithNullForSelect(mainCategoryList)
@@ -35,7 +33,7 @@ class MainCategorySelect extends Component {
         <ModelSelectValue onChange={this.handleChange}
                           id="mainCategory" model={model} value={model} elementList={mainCategorySelectList}
                           editableObject={mainCategory} editable={editable} showCategoryEdit={this.showCategoryEdit}
-                          labelTitle={transactionMainCategoryLabel} placeHolder={transactionMainCategoryMessage} type="text"/>
+                          labelTitle="Main category" placeHolder="The main category of the transaction" type="text"/>
       </React.Fragment>)
   }
 

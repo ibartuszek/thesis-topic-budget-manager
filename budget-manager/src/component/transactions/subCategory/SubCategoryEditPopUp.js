@@ -22,6 +22,15 @@ class SubCategoryEditPopUp extends Component {
   }
 
   closePopUp() {
+    const {logHolder} = this.props;
+    let successMessage = getMessage(logHolder.messages, "updateSubCategorySuccess", true);
+    let errorMessage = getMessage(logHolder.messages, "updateSubCategoryError", false);
+    if (successMessage.value !== null) {
+      this.handleDismissMessage(successMessage);
+    }
+    if (errorMessage.value) {
+      this.handleDismissMessage(errorMessage);
+    }
     this.props.showSubCategoryPopUp(null);
   }
 

@@ -4,55 +4,102 @@ import AlertMessageComponent from "../../AlertMessageComponent";
 import TransactionForm from "./TransactionForm";
 import {createTransactionContext} from "../../../actions/common/createContext";
 import {getMessage, removeMessage} from "../../../actions/message/messageActions";
-import {transactionMessages} from "../../../store/MessageHolder";
 import {updateTransaction} from "../../../actions/transaction/updateTransaction";
-import {validateTransaction} from "../../../actions/validation/validateTransaction";
 
 class TransactionEditPopUp extends Component {
 
+  state = {
+    transaction: null
+  };
+
   constructor(props) {
     super(props);
-    this.handleDismiss = this.handleDismiss.bind(this);
+    this.handleDismissMessage = this.handleDismissMessage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.refreshTransactions = this.refreshTransactions.bind(this);
     this.showTransactionEdit = this.showTransactionEdit.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState, nextContext) {
+
+    const {transaction} = this.state;
+    if (transaction !== null) {
+      this.refreshTransactions();
+      this.setState({
+        transaction: null
+      })
+    }
+  }
+
+  createMessages(logHolder) {
+    return {
+      createTransactionSuccessMessage: getMessage(logHolder.messages, "updateTransactionSuccess", true),
+      createTransactionErrorMessage: getMessage(logHolder.messages, "updateTransactionError", false),
+      uploadPictureSuccessMessage: getMessage(logHolder.messages, "uploadPictureSuccess", true),
+      uploadPictureErrorMessage: getMessage(logHolder.messages, "uploadPictureError", false),
+      deletePictureSuccessMessage: getMessage(logHolder.messages, "deletePictureSuccess", true),
+      deletePictureErrorMessage: getMessage(logHolder.messages, "deletePictureError", false),
+      getPictureSuccessMessage: getMessage(logHolder.messages, "getPictureSuccess", true),
+      getPictureErrorMessage: getMessage(logHolder.messages, "getPictureError", false)
+    }
+  }
+
+  handleDismissMessage(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
   }
 
   handleSubmit = (transaction) => {
     const {userHolder, logHolder, transactionType, updateTransaction} = this.props;
-    if (validateTransaction(transaction)) {
-      let context = createTransactionContext(userHolder, logHolder, transactionType);
-      updateTransaction(context, transaction);
-    }
+    updateTransaction(createTransactionContext(userHolder, logHolder, transactionType), transaction);
+    this.setState({
+      transaction: transaction
+    });
   };
 
-  handleDismiss(message) {
-    this.props.removeMessage(this.props.logHolder.messages, message);
+  refreshTransactions() {
+    const {transactionHolder, transactionType} = this.props;
+    const transactions = transactionHolder[transactionType.toLowerCase() + "s"];
+    this.props.refreshTransactions(transactions);
   }
 
   showTransactionEdit() {
-    this.props.showTransactionEdit(null);
+    const {logHolder, showTransactionEdit} = this.props;
+    const {handleDismissMessage} = this;
+    let messages = this.createMessages(logHolder);
+    Object.keys(messages).forEach(function (key, index) {
+      let message = messages[key];
+      if (message.value !== null) {
+        handleDismissMessage(message);
+      }
+    });
+    showTransactionEdit(null);
   }
 
   render() {
-    const {logHolder, mainCategoryList, subCategoryList, transactionModel, transactionType} = this.props;
+    const {categoryHolder, logHolder, transactionModel, transactionType} = this.props;
 
-    console.log(this.props);
+    let mainCategoryList = categoryHolder[transactionType.toLowerCase() + "MainCategories"];
+
+    let messages = this.createMessages(logHolder);
+    let loading = messages.createTransactionSuccessMessage.value === null && messages.createTransactionErrorMessage.value === null;
+
     return (
       <React.Fragment>
         <div className='custom-popup'>
           <div className="card card-body custom-popup-inner">
             <div className="container overflow-auto">
               <TransactionForm transactionType={transactionType} transactionModel={transactionModel} mainCategoryList={mainCategoryList}
-                               subCategoryList={subCategoryList} formTitle={transactionMessages.updateTransactionTitle} handleSubmit={this.handleSubmit}
-                               popup={true} showTransactionEdit={this.showTransactionEdit}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "updateTransactionSuccess", true)} onChange={this.handleDismiss}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "updateTransactionError", false)} onChange={this.handleDismiss}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "uploadPictureSuccess", true)} onChange={this.handleDismiss}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "uploadPictureError", false)} onChange={this.handleDismiss}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "deletePictureSuccess", true)} onChange={this.handleDismiss}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "deletePictureError", false)} onChange={this.handleDismiss}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "getPictureSuccess", true)} onChange={this.handleDismiss}/>
-              <AlertMessageComponent message={getMessage(logHolder.messages, "getPictureError", false)} onChange={this.handleDismiss}/>
+                               formTitle="Update transaction" handleSubmit={this.handleSubmit} popup={true}
+                               closePopUp={this.showTransactionEdit} loading={loading}/>
+
+              <AlertMessageComponent message={messages.createTransactionSuccessMessage} onChange={this.handleDismissMessage}/>
+              <AlertMessageComponent message={messages.createTransactionErrorMessage} onChange={this.handleDismissMessage}/>
+              <AlertMessageComponent message={messages.uploadPictureSuccessMessage} onChange={this.handleDismissMessage}/>
+              <AlertMessageComponent message={messages.uploadPictureErrorMessage} onChange={this.handleDismissMessage}/>
+              <AlertMessageComponent message={messages.deletePictureSuccessMessage} onChange={this.handleDismissMessage}/>
+              <AlertMessageComponent message={messages.deletePictureErrorMessage} onChange={this.handleDismissMessage}/>
+              <AlertMessageComponent message={messages.getPictureSuccessMessage} onChange={this.handleDismissMessage}/>
+              <AlertMessageComponent message={messages.getPictureErrorMessage} onChange={this.handleDismissMessage}/>
             </div>
           </div>
         </div>
@@ -64,6 +111,7 @@ class TransactionEditPopUp extends Component {
 const mapStateToProps = (state) => {
   return {
     logHolder: state.logHolder,
+    categoryHolder: state.categoryHolder,
     pictureHolder: state.pictureHolder,
     transactionHolder: state.transactionHolder,
     userHolder: state.userHolder

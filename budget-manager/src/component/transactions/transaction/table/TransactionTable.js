@@ -1,20 +1,19 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import TransactionTableSearchBar from "./TransactionTableSearchBar";
 import Loading from "../../../Loading";
-import {getPossibleFirstDate} from "../../../../actions/date/dateActions";
+import TransactionTableBody from "./TransactionTableBody";
+import TransactionTableSearchBar from "./TransactionTableSearchBar";
 import {createContextParameters, createFetchTransactionsContext} from "../../../../actions/common/createContext";
 import {fetchTransactions} from "../../../../actions/transaction/fetchTransactions";
-import {transactionMessages} from "../../../../store/MessageHolder";
-import TransactionTableBody from "./TransactionTableBody";
+import {getPossibleFirstDate} from "../../../../actions/date/dateActions";
 
 class TransactionTable extends Component {
 
   state = {
     startDate: undefined,
     endDate: undefined,
-    transactionsAreLoaded: undefined
+    transactionsAreLoaded: undefined,
   };
 
   constructor(props) {
@@ -39,7 +38,7 @@ class TransactionTable extends Component {
     if (!this.state.transactionsAreLoaded && newProps.transactionHolder[transactionsAreLoadedName]) {
       this.setState({
         ...this.state,
-        transactionsAreLoaded: true
+        transactionsAreLoaded: true,
       })
     }
   }
@@ -65,8 +64,7 @@ class TransactionTable extends Component {
 
   render() {
     const {endDate, startDate, transactionsAreLoaded} = this.state;
-    const {transactionHolder, transactionType, mainCategoryList, subCategoryList} = this.props;
-    const {transactionsEndDatePlaceHolder, transactionsStartDatePlaceHolder} = transactionMessages;
+    const {transactionType} = this.props;
 
     let transactionTableBody;
     if (transactionsAreLoaded === undefined || transactionsAreLoaded === null) {
@@ -74,17 +72,14 @@ class TransactionTable extends Component {
     } else if (transactionsAreLoaded === false) {
       transactionTableBody = <Loading/>
     } else {
-      let transactions = transactionHolder[transactionType.toLowerCase() + 's'];
-      transactionTableBody = <TransactionTableBody transactionType={transactionType} transactions={transactions}
-                                                   mainCategoryList={mainCategoryList} subCategoryList={subCategoryList}/>;
+      transactionTableBody = <TransactionTableBody transactionType={transactionType}/>;
     }
+
 
     return (
       <div className="card my-3">
-        <TransactionTableSearchBar startDateId="startDate" startDate={startDate}
-                                   startDatePlaceHolder={transactionsStartDatePlaceHolder}
-                                   endDateId="endDate" endDate={endDate}
-                                   endDatePlaceHolder={transactionsEndDatePlaceHolder}
+        <TransactionTableSearchBar startDateId="startDate" startDate={startDate} startDatePlaceHolder="Select start date"
+                                   endDateId="endDate" endDate={endDate} endDatePlaceHolder="Select end date"
                                    handleDateChange={this.handleDateChange} handleSearch={this.handleSearch}/>
         <div className="card-body pt-0 mb-3 mr-0">
           {transactionTableBody}
