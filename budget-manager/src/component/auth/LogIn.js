@@ -12,6 +12,7 @@ import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import {fetchSchemas} from "../../actions/schema/fetchSchemas";
 import {getUser} from '../../actions/user/getUser';
 import {setAccessToken} from "../../actions/user/setAccessToken";
+import {getFirstPossibleDay} from "../../actions/transaction/getFirstPossibleDay";
 
 class LogIn extends Component {
   state = {
@@ -49,6 +50,17 @@ class LogIn extends Component {
     }
   }
 
+  fetchAdditionalUserData() {
+    const {userHolder, logHolder} = this.props;
+    let context = createContext(userHolder, logHolder);
+    this.props.fetchMainCategories(context, 'INCOME');
+    this.props.fetchMainCategories(context, 'OUTCOME');
+    this.props.fetchSubCategories(context, 'INCOME');
+    this.props.fetchSubCategories(context, 'OUTCOME');
+    this.props.getStatisticsSchemas(context);
+    this.props.getFirstPossibleDay(context);
+  }
+
   handleFieldChange(id, value, errorMessage) {
     this.setState(prevState => ({
       [id]: {
@@ -75,12 +87,7 @@ class LogIn extends Component {
     const {email, password} = this.state;
 
     if (userHolder.userIsLoggedIn) {
-      let context = createContext(userHolder, logHolder);
-      this.props.fetchMainCategories(context, 'INCOME');
-      this.props.fetchMainCategories(context, 'OUTCOME');
-      this.props.fetchSubCategories(context, 'INCOME');
-      this.props.fetchSubCategories(context, 'OUTCOME');
-      this.props.getStatisticsSchemas(context);
+      this.fetchAdditionalUserData();
       return <Redirect to='/'/>;
     }
 
@@ -124,7 +131,8 @@ const mapDispatchToProps = (dispatch) => {
     removeMessage: (messages, message) => dispatch(removeMessage(messages, message)),
     getStatisticsSchemas: (context) => dispatch(fetchSchemas(context)),
     fetchMainCategories: (context, transactionType) => dispatch(fetchMainCategories(context, transactionType)),
-    fetchSubCategories: (context, transactionType) => dispatch(fetchSubCategories(context, transactionType))
+    fetchSubCategories: (context, transactionType) => dispatch(fetchSubCategories(context, transactionType)),
+    getFirstPossibleDay: (context) => dispatch(getFirstPossibleDay(context))
   };
 };
 

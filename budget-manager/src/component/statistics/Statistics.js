@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import CustomStatisticsPlaceProxy from "./customStatistics/CustomStatisticsPlaceProxy";
 import Loading from "../Loading";
-import Redirect from "react-router-dom/es/Redirect";
 import StandardStatistics from "./standardStatistics/StandardStatistics";
 import TransactionTableSearchBar from "../transactions/transaction/table/TransactionTableSearchBar";
 import {createContext} from "../../actions/common/createContext";

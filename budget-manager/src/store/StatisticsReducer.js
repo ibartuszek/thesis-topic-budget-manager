@@ -50,7 +50,7 @@ const StatisticsReducer = (state = initState, action) => {
         ...state,
         customSchemas: replaceElementAtArray(state.customSchemas, action['schemaModel']),
       });
-    case 'UPDATE_SCHEMA_SUCCESS':
+    case 'UPDATE_SCHEMA_ERROR':
       key = "updateSchemaError";
       addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
@@ -65,7 +65,7 @@ const StatisticsReducer = (state = initState, action) => {
         ...state,
         customSchemas: removeElementFromArray(state.customSchemas, action['schemaModel']),
       });
-    case 'DELETE_SCHEMA_SUCCESS':
+    case 'DELETE_SCHEMA_ERROR':
       key = "deleteSchemaError";
       addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {

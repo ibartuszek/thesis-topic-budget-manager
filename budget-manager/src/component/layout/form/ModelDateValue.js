@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {convertDate} from "../../../actions/date/dateActions";
 import {dateProperties} from "../../../store/Properties";
-import {validateModelDateValue} from "../../../actions/validation/modelDateValueValidation";
+import {validateModelDateValue, validateModelEndDateValue} from "../../../actions/validation/modelDateValueValidation";
 
 
 class ModelDateValue extends Component {
@@ -18,11 +18,16 @@ class ModelDateValue extends Component {
   };
 
   render() {
-    const {id, model, labelTitle, placeHolder} = this.props;
+    const {id, model, labelTitle, placeHolder, possibleFirstDay} = this.props;
 
     // TODO: check
     let date = model !== undefined && model !== null && model.value !== null ? new Date(model.value) : null;
-    const errorMessage = date !== undefined ? validateModelDateValue(model, labelTitle) : null;
+    let errorMessage;
+    if (possibleFirstDay !== undefined) {
+      errorMessage = date !== undefined ? validateModelEndDateValue(model, possibleFirstDay, labelTitle) : null;
+    } else {
+      errorMessage = date !== undefined ? validateModelDateValue(model, labelTitle) : null;
+    }
 
     let popperModifiers = {
       offset: {

@@ -34,7 +34,7 @@ class CustomChart extends Component {
 
   render() {
     const {crossHairValues} = this.state;
-    const {chartType, currency, title} = this.props.schema;
+    const {chartType, currency} = this.props.schema;
     const {height, width} = this.props.chartDetails;
     const {dataPoints} = this.props.chartData;
 

@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 
-// import {Image} from 'react-native';
-
 class ShowPicture extends Component {
 
   constructor(props) {
@@ -22,7 +20,7 @@ class ShowPicture extends Component {
           <button type="button" className="close picture-close-button" onClick={this.showPicture}>
             <span>&times;</span>
           </button>
-          <img src={"data:image/jpeg;base64," + picture} width="400" className="img-thumbnail"/>
+          <img src={"data:image/jpeg;base64," + picture} width="400" className="img-thumbnail" alt=""/>
         </div>
       </div>
     );

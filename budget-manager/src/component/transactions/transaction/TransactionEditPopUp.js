@@ -76,7 +76,7 @@ class TransactionEditPopUp extends Component {
   }
 
   render() {
-    const {categoryHolder, logHolder, transactionModel, transactionType} = this.props;
+    const {categoryHolder, logHolder, transactionModel, transactionHolder, transactionType} = this.props;
 
     let mainCategoryList = categoryHolder[transactionType.toLowerCase() + "MainCategories"];
 
@@ -89,8 +89,8 @@ class TransactionEditPopUp extends Component {
           <div className="card card-body custom-popup-inner mt-3">
             <div className="container overflow-auto">
               <TransactionForm transactionType={transactionType} transactionModel={transactionModel} mainCategoryList={mainCategoryList}
-                               formTitle="Update transaction" handleSubmit={this.handleSubmit} popup={true}
-                               closePopUp={this.showTransactionEdit} loading={loading}/>
+                               formTitle="Update transaction" handleSubmit={this.handleSubmit} popup={true} loading={loading}
+                               firstPossibleDay={transactionHolder.firstPossibleDay} closePopUp={this.showTransactionEdit}/>
 
               <AlertMessageComponent message={messages.createTransactionSuccessMessage} onChange={this.handleDismissMessage}/>
               <AlertMessageComponent message={messages.createTransactionErrorMessage} onChange={this.handleDismissMessage}/>

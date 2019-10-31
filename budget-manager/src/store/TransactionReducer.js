@@ -6,6 +6,7 @@ const initState = {
   incomes: [],
   outcomesAreLoaded: false,
   outcomes: [],
+  firstPossibleDay: null
 };
 
 const TransactionReducer = (state = initState, action) => {
@@ -110,6 +111,17 @@ const TransactionReducer = (state = initState, action) => {
       });
     case 'UPDATE_OUTCOME_ERROR':
       key = "updateTransactionError";
+      addMessage(action.messages, createMessage(key, action.message, false));
+      return Object.assign({}, state, {
+        ...state,
+      });
+    case 'GET_FIRST_POSSIBLE_DAY_SUCCESS':
+      return Object.assign({}, state, {
+        ...state,
+        firstPossibleDay: action.firstPossibleDay,
+      });
+    case 'GET_FIRST_POSSIBLE_DAY_ERROR':
+      key = "getFirstPossibleDayError";
       addMessage(action.messages, createMessage(key, action.message, false));
       return Object.assign({}, state, {
         ...state,

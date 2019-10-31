@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import CardHeaderButton from "../layout/card/CardHeaderButton";
-import StandardSchemaCard from "./StandardSchemaCard";
-import CustomSchemaCard from "./CustomSchemaCard";
 import CreateNewSchemaCard from "./CreateNewSchemaCard";
-import UpdateSchemaPopUp from "./UpdateSchemaPopUp";
+import CustomSchemaCard from "./CustomSchemaCard";
 import DeleteSchemaPopUp from "./DeleteSchemaPopUp";
-import Redirect from "../statistics/Statistics";
+import StandardSchemaCard from "./StandardSchemaCard";
+import UpdateSchemaPopUp from "./UpdateSchemaPopUp";
 
 class Schemas extends Component {
 

@@ -1,6 +1,6 @@
 import {validateModelStringValue} from "./modelStringValueValidation";
 import {validateModelAmountValue} from "./modelAmountValueValidation";
-import {validateModelDateValue} from "./modelDateValueValidation";
+import {validateModelDateValue, validateModelEndDateValue} from "./modelDateValueValidation";
 
 export function validateTransaction(transaction) {
   const {
@@ -22,7 +22,7 @@ export function validateTransaction(transaction) {
   } else if (validateModelValue(date) || validateModelDateValue(date, "Date") !== null) {
     valid = false;
   } else if (monthly) {
-    if (validateModelValue(endDate) || validateModelDateValue(endDate, "EndDate") !== null) {
+    if (validateModelValue(endDate) || validateModelEndDateValue(endDate, date.value, "EndDate") !== null) {
       valid = false;
     }
   } else if (validateModelValue(description) || validateModelStringValue(description) !== null) {

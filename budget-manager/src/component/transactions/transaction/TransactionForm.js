@@ -13,13 +13,12 @@ import SubCategorySelect from "../subCategory/selectSubCategory/SubCategorySelec
 import YesNoSelect from "../../layout/form/YesNoSelect";
 import {createEmptyTransaction} from "../../../actions/transaction/createTransactionMethods";
 import {dateProperties} from "../../../store/Properties";
-import {getPossibleFirstDate} from "../../../actions/date/dateActions";
+import {findElementById} from "../../../actions/common/listActions";
 import {validateTransaction} from "../../../actions/validation/validateTransaction";
 import GetPicture from "../../layout/picture/GetPicture";
 import RemovePicture from "../../layout/picture/RemovePicture";
 import ShowPicture from "../../layout/picture/ShowPicture";
 import UploadPicture from "../../layout/picture/UploadPicture";
-import {findElementById} from "../../../actions/common/listActions";
 
 class TransactionForm extends Component {
 
@@ -37,12 +36,11 @@ class TransactionForm extends Component {
     this.getPictureId = this.getPictureId.bind(this);
     this.handleModelValueChange = this.handleModelValueChange.bind(this);
     this.handleFieldChange = this.handleFieldChange.bind(this);
-    this.setFirstPossibleDay = this.setFirstPossibleDay.bind(this);
     this.showPicture = this.showPicture.bind(this);
   }
 
   componentDidMount() {
-    const {mainCategoryList, transactionModel, transactionType} = this.props;
+    const {firstPossibleDay, mainCategoryList, transactionModel, transactionType} = this.props;
     let mainCategory;
     let subCategory = undefined;
     if (transactionModel === undefined) {
@@ -64,12 +62,16 @@ class TransactionForm extends Component {
         date: {
           ...prevState.transactionModel.date,
           value: now,
+          possibleFirstDay: firstPossibleDay
+        },
+        endDate: {
+          ...prevState.transactionModel.endDate,
+          possibleFirstDay: firstPossibleDay
         },
         mainCategory: mainCategory,
         subCategory: subCategory
       }
     }));
-    this.setFirstPossibleDay();
   }
 
   componentWillUpdate(nextProps, nextState, nextContext) {
@@ -78,7 +80,6 @@ class TransactionForm extends Component {
       this.setState({
         transactionModel: this.createNewTransactionModel(nextProps, transactionModel.mainCategory, transactionModel.subCategory),
       });
-      this.setFirstPossibleDay();
     }
     if (loading && !nextProps.loading) {
       this.setState({
@@ -97,24 +98,6 @@ class TransactionForm extends Component {
       }
     }
     return newTransactionModel;
-  }
-
-  setFirstPossibleDay() {
-    let possibleFirstDay = getPossibleFirstDate();
-    this.setState(prevState => ({
-      ...prevState,
-      transactionModel: {
-        ...prevState.transactionModel,
-        date: {
-          ...prevState.transactionModel.date,
-          possibleFirstDay: possibleFirstDay
-        },
-        endDate: {
-          ...prevState.transactionModel.endDate,
-          possibleFirstDay: possibleFirstDay
-        }
-      }
-    }));
   }
 
   handleModelValueChange(id, value, errorMessage) {
@@ -203,7 +186,7 @@ class TransactionForm extends Component {
       ? mainCategory.subCategoryModelSet : [];
 
     let endDateContainer = !monthly ? null : (
-      <ModelDateValue onChange={this.handleModelValueChange} id="endDate" model={endDate}
+      <ModelDateValue onChange={this.handleModelValueChange} id="endDate" model={endDate} possibleFirstDay={date.value}
                       labelTitle="End date" placeHolder="Click to select the end of monthly transaction."/>);
 
     let editMainCategoryPopUp = editAbleMainCategory === null ? null : (
