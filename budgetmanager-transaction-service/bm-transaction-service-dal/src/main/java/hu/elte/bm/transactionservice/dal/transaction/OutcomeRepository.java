@@ -14,6 +14,9 @@ public interface OutcomeRepository extends CrudRepository<OutcomeEntity, Long> {
         + "or (o.monthly = true and (o.endDate >= :start or o.endDate = null)))")
     Iterable<OutcomeEntity> findAll(@Param("start") Date start, @Param("end") Date end, @Param("userId") Long userId);
 
+    @Query("select o from OutcomeEntity o where o.userId = :userId")
+    Iterable<OutcomeEntity> findAll(@Param("userId") Long userId);
+
     Optional<OutcomeEntity> findByIdAndUserId(Long id, Long userId);
 
     Iterable<OutcomeEntity> findByTitleAndUserId(String title, Long userID);

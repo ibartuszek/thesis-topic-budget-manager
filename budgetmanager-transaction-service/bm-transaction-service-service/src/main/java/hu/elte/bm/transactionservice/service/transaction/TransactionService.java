@@ -93,8 +93,8 @@ public class TransactionService {
         return transactionDaoProxy.delete(transaction, context);
     }
 
-    public LocalDate getTheFirstDateOfTheNewPeriod(final TransactionContext context) {
-        return dateValidator.getTheFirstDateOfTheNewPeriod(context);
+    public LocalDate getTheFirstDateOfTheNewPeriod(final Long userId) {
+        return dateValidator.getTheFirstDateOfTheNewPeriod(userId);
     }
 
     private void validate(final TransactionContext context) {

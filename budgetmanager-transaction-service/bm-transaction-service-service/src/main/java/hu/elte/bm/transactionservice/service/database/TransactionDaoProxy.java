@@ -25,9 +25,9 @@ public class TransactionDaoProxy {
         return isIncome(context) ? incomeDao.findAll(start, end, context.getUserId()) : outcomeDao.findAll(start, end, context.getUserId());
     }
 
-    public List<Transaction> getTransactionListBothTypes(final LocalDate start, final LocalDate end, final Long userId) {
-        List<Transaction> transactionList = incomeDao.findAll(start, end, userId);
-        transactionList.addAll(outcomeDao.findAll(start, end, userId));
+    public List<Transaction> getTransactionListBothTypes(final Long userId) {
+        List<Transaction> transactionList = incomeDao.findAll(userId);
+        transactionList.addAll(outcomeDao.findAll(userId));
         return transactionList;
     }
 

@@ -94,11 +94,11 @@ public class TransactionDaoProxyTest {
         List<Transaction> expectedList = List.of(createExampleIncome(), createExampleOutcome());
         List<Transaction> incomeList = new ArrayList<>();
         incomeList.add(createExampleIncome());
-        EasyMock.expect(incomeDao.findAll(START, END, USER_ID)).andReturn(incomeList);
-        EasyMock.expect(outcomeDao.findAll(START, END, USER_ID)).andReturn(List.of(createExampleOutcome()));
+        EasyMock.expect(incomeDao.findAll(USER_ID)).andReturn(incomeList);
+        EasyMock.expect(outcomeDao.findAll(USER_ID)).andReturn(List.of(createExampleOutcome()));
         control.replay();
         // WHEN
-        List<Transaction> result = underTest.getTransactionListBothTypes(START, END, USER_ID);
+        List<Transaction> result = underTest.getTransactionListBothTypes(USER_ID);
         // THEN
         Assert.assertEquals(result, expectedList);
     }

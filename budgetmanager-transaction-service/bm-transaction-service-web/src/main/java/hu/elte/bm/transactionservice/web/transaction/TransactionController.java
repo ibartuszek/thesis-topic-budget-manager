@@ -56,24 +56,26 @@ public class TransactionController {
     public TransactionResponse createTransaction(@Valid @RequestBody final TransactionRequestContext context) {
         TransactionContext transactionContext = transformer.transform(context);
         Transaction transaction = transactionService.save(context.getTransaction(), transactionContext);
-        LocalDate firstPossibleDay = transactionService.getTheFirstDateOfTheNewPeriod(transactionContext);
-        return TransactionResponse.createSuccessfulTransactionResponse(transaction, firstPossibleDay, transactionHasBeenSaved);
+        return TransactionResponse.createSuccessfulTransactionResponse(transaction, transactionHasBeenSaved);
     }
 
     @RequestMapping(value = "/bm/transactions/update", method = RequestMethod.PUT, produces = APPLICATION_JSON)
     public TransactionResponse updateTransaction(@Valid @RequestBody final TransactionRequestContext context) {
         TransactionContext transactionContext = transformer.transform(context);
         Transaction transaction = transactionService.update(context.getTransaction(), transactionContext);
-        LocalDate firstPossibleDay = transactionService.getTheFirstDateOfTheNewPeriod(transactionContext);
-        return TransactionResponse.createSuccessfulTransactionResponse(transaction, firstPossibleDay, transactionHasBeenUpdated);
+        return TransactionResponse.createSuccessfulTransactionResponse(transaction, transactionHasBeenUpdated);
     }
 
     @RequestMapping(value = "/bm/transactions/delete", method = RequestMethod.DELETE, produces = APPLICATION_JSON)
     public TransactionResponse deleteTransaction(@Valid @RequestBody final TransactionRequestContext context) {
         TransactionContext transactionContext = transformer.transform(context);
         Transaction transaction = transactionService.delete(context.getTransaction(), transactionContext);
-        LocalDate firstPossibleDay = transactionService.getTheFirstDateOfTheNewPeriod(transactionContext);
-        return TransactionResponse.createSuccessfulTransactionResponse(transaction, firstPossibleDay, transactionHasBeenDeleted);
+        return TransactionResponse.createSuccessfulTransactionResponse(transaction, transactionHasBeenDeleted);
+    }
+
+    @RequestMapping(value = "/bm/transactions/getFirstPossibleDay")
+    public LocalDate getFirstPossibleDay(@NotNull @RequestParam(value = "userId") final Long userId) {
+        return transactionService.getTheFirstDateOfTheNewPeriod(userId);
     }
 
 }

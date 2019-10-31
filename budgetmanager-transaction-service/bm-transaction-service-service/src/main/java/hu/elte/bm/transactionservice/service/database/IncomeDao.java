@@ -10,6 +10,8 @@ public interface IncomeDao {
 
     List<Transaction> findAll(LocalDate start, LocalDate end, Long userId);
 
+    List<Transaction> findAll(Long userId);
+
     Optional<Transaction> findById(Long id, Long userId);
 
     List<Transaction> findByTitle(String title, Long userId);

@@ -39,6 +39,14 @@ public class DefaultIncomeDao implements IncomeDao {
     }
 
     @Override
+    public List<Transaction> findAll(final Long userId) {
+        List<Transaction> transactionList = new ArrayList<>();
+        incomeRepository.findAll(userId)
+            .forEach(entity -> transactionList.add(entityTransformer.transformToTransaction(entity)));
+        return transactionList;
+    }
+
+    @Override
     public Optional<Transaction> findById(final Long id, final Long userId) {
         return incomeRepository.findByIdAndUserId(id, userId)
             .map(entityTransformer::transformToTransaction);

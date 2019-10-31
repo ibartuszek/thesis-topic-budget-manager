@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -54,7 +53,6 @@ public class TransactionDateValidatorTest {
         control = EasyMock.createControl();
         transactionDaoProxy = control.createMock(TransactionDaoProxy.class);
         underTest = new TransactionDateValidator(transactionDaoProxy);
-        ReflectionTestUtils.setField(underTest, "daysToSubtract", DAYS_TO_SUBTRACT);
     }
 
     @BeforeMethod
@@ -70,57 +68,39 @@ public class TransactionDateValidatorTest {
     @Test
     public void testGetTheFirstDateOfTheNewPeriodWhenRepositoryReturnsWithEmptyList() {
         // GIVEN
-        TransactionContext context = createTransactionContext();
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(Collections.emptyList());
+        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
-        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
+        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(USER_ID);
         // THEN
-        Assert.assertEquals(result, START);
+        Assert.assertNull(result);
     }
 
     @Test
     public void testGetTheFirstDateOfTheNewPeriodWhenThereCannotBeFoundALockedDate() {
         // GIVEN
-        TransactionContext context = createTransactionContext();
         List<Transaction> transactionList = List.of(
             createExampleTransactionBuilder().withDate(LocalDate.now()).build(),
             createExampleTransactionBuilder().withDate(LocalDate.now().minusDays(DAYS_TO_SUBTRACT)).build()
         );
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(transactionList);
+        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(USER_ID)).andReturn(transactionList);
         control.replay();
         // WHEN
-        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
+        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(USER_ID);
         // THEN
-        Assert.assertEquals(result, START);
+        Assert.assertNull(result);
     }
 
     @Test
     public void testGetTheFirstDateOfTheNewPeriodWhenThereCanBeFoundALockedDate() {
         // GIVEN
-        TransactionContext context = createTransactionContext();
         List<Transaction> transactionList = createExampleListForEndOfLastPeriodWithCalls();
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(transactionList);
+        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(USER_ID)).andReturn(transactionList);
         control.replay();
         // WHEN
-        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
+        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(USER_ID);
         // THEN
         Assert.assertEquals(result, EXPECTED_LAST_DATE.plusDays(1));
-    }
-
-    @Test(expectedExceptions = IllegalTransactionException.class)
-    public void testValidateWhenDateIsBeforeTheFirstPossibleDate() {
-        // GIVEN
-        TransactionContext context = createTransactionContext();
-        LocalDate transactionDate = START.minusDays(1);
-        Transaction transaction = createExampleTransactionBuilder()
-            .withDate(transactionDate)
-            .build();
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(Collections.emptyList());
-        control.replay();
-        // WHEN
-        underTest.validate(transaction, context);
-        // THEN
     }
 
     @Test
@@ -132,7 +112,7 @@ public class TransactionDateValidatorTest {
             .withDate(transactionDate)
             .withEndDate(null)
             .build();
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(Collections.emptyList());
+        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
         underTest.validate(transaction, context);
@@ -148,7 +128,7 @@ public class TransactionDateValidatorTest {
             .withEndDate(TRANSACTION_END_DATE)
             .withMonthly(NOT_MONTHLY)
             .build();
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(Collections.emptyList());
+        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
         underTest.validate(transaction, context);
@@ -165,7 +145,7 @@ public class TransactionDateValidatorTest {
             .withEndDate(transactionEndDate)
             .withMonthly(MONTHLY)
             .build();
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(Collections.emptyList());
+        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
         underTest.validate(transaction, context);
@@ -181,7 +161,7 @@ public class TransactionDateValidatorTest {
             .withEndDate(TRANSACTION_DATE)
             .withMonthly(MONTHLY)
             .build();
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(Collections.emptyList());
+        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
         underTest.validate(transaction, context);
@@ -197,7 +177,7 @@ public class TransactionDateValidatorTest {
             .withEndDate(TRANSACTION_END_DATE)
             .withMonthly(MONTHLY)
             .build();
-        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(START, END, USER_ID)).andReturn(Collections.emptyList());
+        EasyMock.expect(transactionDaoProxy.getTransactionListBothTypes(USER_ID)).andReturn(Collections.emptyList());
         control.replay();
         // WHEN
         underTest.validate(transaction, context);

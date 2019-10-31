@@ -23,8 +23,8 @@ import hu.elte.bm.transactionservice.domain.Currency;
 import hu.elte.bm.transactionservice.domain.categories.MainCategory;
 import hu.elte.bm.transactionservice.domain.categories.SubCategory;
 import hu.elte.bm.transactionservice.domain.exceptions.transaction.IllegalTransactionException;
-import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.exceptions.transaction.TransactionConflictException;
+import hu.elte.bm.transactionservice.domain.transaction.Transaction;
 import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.database.TransactionDaoProxy;
 
@@ -225,8 +225,8 @@ public class TransactionServiceTest {
     public void testUpdateWhenTransactionIdIsNull() {
         // GIVEN
         Transaction transaction = createExampleTransactionBuilder()
-                .withId(null)
-                .build();
+            .withId(null)
+            .build();
         control.replay();
         // WHEN
         underTest.update(transaction, createTransactionContext(INCOME, USER_ID));
@@ -237,8 +237,8 @@ public class TransactionServiceTest {
     public void testUpdateWhenValidationFails(final Transaction.Builder builder) {
         // GIVEN
         Transaction transaction = builder
-                .withId(EXPECTED_ID)
-                .build();
+            .withId(EXPECTED_ID)
+            .build();
         control.replay();
         // WHEN
         underTest.update(transaction, createTransactionContext(INCOME, USER_ID));
@@ -363,11 +363,10 @@ public class TransactionServiceTest {
     @Test
     public void testGetTheFirstDateOfTheNewPeriod() {
         // GIVEN
-        TransactionContext context = createTransactionContext(INCOME, USER_ID);
-        EasyMock.expect(dateValidator.getTheFirstDateOfTheNewPeriod(context)).andReturn(EXPECTED_DATE);
+        EasyMock.expect(dateValidator.getTheFirstDateOfTheNewPeriod(USER_ID)).andReturn(EXPECTED_DATE);
         control.replay();
         // WHEN
-        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(context);
+        LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(USER_ID);
         // THEN
         Assert.assertEquals(result, EXPECTED_DATE);
     }
