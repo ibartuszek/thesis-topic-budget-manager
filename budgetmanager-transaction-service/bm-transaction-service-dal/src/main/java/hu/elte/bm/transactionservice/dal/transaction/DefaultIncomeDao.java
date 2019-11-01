@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -34,6 +35,14 @@ public class DefaultIncomeDao implements IncomeDao {
     public List<Transaction> findAll(final LocalDate start, final LocalDate end, final Long userId) {
         List<Transaction> transactionList = new ArrayList<>();
         incomeRepository.findAll(convertToDate(start), convertToDate(end), userId)
+            .forEach(entity -> transactionList.add(entityTransformer.transformToTransaction(entity)));
+        return transactionList;
+    }
+
+    @Override
+    public List<Transaction> findAll(final LocalDate end, final Long userId) {
+        List<Transaction> transactionList = new ArrayList<>();
+        incomeRepository.findAll(convertToDate(end), userId)
             .forEach(entity -> transactionList.add(entityTransformer.transformToTransaction(entity)));
         return transactionList;
     }
@@ -71,6 +80,15 @@ public class DefaultIncomeDao implements IncomeDao {
     @Override
     public Transaction update(final Transaction transaction, final Long userId) {
         return save(transaction, userId);
+    }
+
+    @Override
+    @Transactional
+    public void update(final List<Transaction> transactionList, final Long userId) {
+        List<IncomeEntity> entityListToSave = transactionList.stream()
+            .map(transaction -> createIncomeEntity(transaction, userId))
+            .collect(Collectors.toList());
+        incomeRepository.saveAll(entityListToSave);
     }
 
     @Override

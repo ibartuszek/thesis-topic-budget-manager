@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.testng.Assert;
@@ -34,6 +35,7 @@ public class TransactionServiceTest {
     private static final long ID_2 = 2L;
     private static final Long NEW_ID = 5L;
     private static final String EXPECTED_TITLE = "title";
+    private static final String OTHER_TITLE = "other transaction";
     private static final double AMOUNT = 10.0d;
     private static final Currency CURRENCY = Currency.EUR;
     private static final long CATEGORY_ID = 1L;
@@ -43,6 +45,9 @@ public class TransactionServiceTest {
     private static final String NEW_TITLE = "new Title";
     private static final Long USER_ID = 1L;
     private static final LocalDate START = LocalDate.now().minusDays(DAYS_TO_SUBTRACT);
+    private static final boolean LOCKED = true;
+    private static final boolean MONTHLY = true;
+    private static final LocalDate END = LocalDate.now().minusDays(5);
 
     private TransactionService underTest;
     private IMocksControl control;
@@ -369,6 +374,40 @@ public class TransactionServiceTest {
         LocalDate result = underTest.getTheFirstDateOfTheNewPeriod(USER_ID);
         // THEN
         Assert.assertEquals(result, EXPECTED_DATE);
+    }
+
+    @Test
+    public void testLockTransactions() {
+        // GIVEN
+        TransactionContext context = createTransactionContext(INCOME, USER_ID);
+        Transaction lockedTransaction = createExampleTransactionBuilder()
+            .withLocked(LOCKED)
+            .build();
+        Transaction monthlyTransactionWithoutEndDate = createExampleTransactionBuilder()
+            .withMonthly(MONTHLY)
+            .build();
+        Transaction monthlyTransactionEndDateAfterEnd = createExampleTransactionBuilder()
+            .withMonthly(MONTHLY)
+            .withEndDate(LocalDate.now())
+            .build();
+        Transaction monthlyTransactionEndDateAtEnd = createExampleTransactionBuilder()
+            .withMonthly(MONTHLY)
+            .withEndDate(END)
+            .build();
+        Transaction transactionWtihDateBeforeEnd = createExampleTransactionBuilder().build();
+        List<Transaction> transactionList = List.of(lockedTransaction, transactionWtihDateBeforeEnd, monthlyTransactionWithoutEndDate,
+            monthlyTransactionEndDateAfterEnd, monthlyTransactionEndDateAtEnd);
+        EasyMock.expect(transactionDaoProxy.getTransactionList(END, context)).andReturn(transactionList);
+        Capture<List<Transaction>> capture = Capture.newInstance();
+        transactionDaoProxy.update(EasyMock.capture(capture), EasyMock.isA(TransactionContext.class));
+        control.replay();
+        // WHEN
+        underTest.lockTransactions(END, context);
+        // THEN
+        List<Transaction> capturedList = capture.getValue();
+        Assert.assertEquals(capturedList.size(), 2);
+        Assert.assertEquals(capturedList.get(0), transactionWtihDateBeforeEnd);
+        Assert.assertEquals(capturedList.get(1), monthlyTransactionEndDateAtEnd);
     }
 
     private List<Transaction> createExampleTransActionList() {

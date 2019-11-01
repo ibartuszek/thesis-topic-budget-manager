@@ -5,9 +5,13 @@ public class ResponseModel {
     private String message;
     private boolean successful;
 
-    public ResponseModel(final String message, final boolean successful) {
+    protected ResponseModel(final String message, final boolean successful) {
         this.message = message;
         this.successful = successful;
+    }
+
+    public static ResponseModel createSuccessfulResponse(final String message) {
+        return new ResponseModel(message, true);
     }
 
     public String getMessage() {

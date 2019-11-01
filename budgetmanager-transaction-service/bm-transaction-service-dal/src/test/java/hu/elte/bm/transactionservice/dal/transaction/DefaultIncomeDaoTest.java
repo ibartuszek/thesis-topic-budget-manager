@@ -92,6 +92,34 @@ public class DefaultIncomeDaoTest {
     }
 
     @Test
+    public void testFindAllWithUserIdAndEndDate() {
+        // GIVEN
+        List<IncomeEntity> incomeEntityList = createExampleIncomeEntityList();
+        List<Transaction> expectedTransactionList = List.of(createTransactionBuilderWithDefaultValues().build());
+        EasyMock.expect(incomeRepository.findAll(Date.valueOf(END), USER_ID)).andReturn(incomeEntityList);
+        EasyMock.expect(transformer.transformToTransaction(incomeEntityList.get(0))).andReturn(expectedTransactionList.get(0));
+        control.replay();
+        // WHEN
+        List<Transaction> result = underTest.findAll(END, USER_ID);
+        // THEN
+        Assert.assertEquals(result, expectedTransactionList);
+    }
+
+    @Test
+    public void testFindAllWithUserId() {
+        // GIVEN
+        List<IncomeEntity> incomeEntityList = createExampleIncomeEntityList();
+        List<Transaction> expectedTransactionList = List.of(createTransactionBuilderWithDefaultValues().build());
+        EasyMock.expect(incomeRepository.findAll(USER_ID)).andReturn(incomeEntityList);
+        EasyMock.expect(transformer.transformToTransaction(incomeEntityList.get(0))).andReturn(expectedTransactionList.get(0));
+        control.replay();
+        // WHEN
+        List<Transaction> result = underTest.findAll(USER_ID);
+        // THEN
+        Assert.assertEquals(result, expectedTransactionList);
+    }
+
+    @Test
     public void testFindByIdWhenCannotBeFound() {
         // GIVEN
         EasyMock.expect(incomeRepository.findByIdAndUserId(EXPECTED_ID, USER_ID)).andReturn(Optional.empty());
@@ -192,6 +220,31 @@ public class DefaultIncomeDaoTest {
         Transaction result = underTest.delete(transactionToDelete, USER_ID);
         // THEN
         Assert.assertEquals(result, expectedTransaction);
+    }
+
+    @Test
+    public void testUpdateList() {
+        // GIVEN
+        Transaction transactionToUpate = createTransactionBuilderWithDefaultValues()
+            .withLocked(true)
+            .build();
+        IncomeEntity transformedEntity = createExampleIncomeEntity();
+        transformedEntity.setLocked(true);
+        MainCategoryEntity mainCategoryEntity = transformedEntity.getMainCategoryEntity();
+        List<Transaction> transactionListToUpdate = List.of(transactionToUpate);
+        List<IncomeEntity> incomeEntityList = List.of(transformedEntity);
+        TransactionEntityContext context = TransactionEntityContext.builder()
+            .withTransaction(transactionToUpate)
+            .withMainCategoryEntity(mainCategoryEntity)
+            .withUserId(USER_ID)
+            .build();
+        EasyMock.expect(contextFactory.create(transactionToUpate, USER_ID)).andReturn(context);
+        EasyMock.expect(transformer.transformToIncomeEntity(context)).andReturn(transformedEntity);
+        EasyMock.expect(incomeRepository.saveAll(incomeEntityList)).andReturn(incomeEntityList);
+        control.replay();
+        // WHEN
+        underTest.update(transactionListToUpdate, USER_ID);
+        // THEN
     }
 
     private List<IncomeEntity> createExampleIncomeEntityList() {

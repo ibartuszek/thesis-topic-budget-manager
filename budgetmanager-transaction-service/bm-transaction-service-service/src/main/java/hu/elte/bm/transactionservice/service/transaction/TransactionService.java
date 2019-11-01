@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -97,6 +98,16 @@ public class TransactionService {
         return dateValidator.getTheFirstDateOfTheNewPeriod(userId);
     }
 
+    public void lockTransactions(final LocalDate end, final TransactionContext context) {
+        List<Transaction> transactionsBeforeTheEndDate = transactionDaoProxy.getTransactionList(end, context);
+        List<Transaction> updatableTransactionList = transactionsBeforeTheEndDate.stream()
+            .filter(transaction -> !transaction.isLocked())
+            .filter(transaction -> closeableMonthlyTransaction(transaction, end))
+            .map(this::createLockedTransaction)
+            .collect(Collectors.toList());
+        transactionDaoProxy.update(updatableTransactionList, context);
+    }
+
     private void validate(final TransactionContext context) {
         Assert.notNull(context.getTransactionType(), typeCannotBeNull);
         Assert.notNull(context.getUserId(), userIdCannotBeNull);
@@ -181,6 +192,24 @@ public class TransactionService {
         validateTransactionWithIdForUpdate(transaction);
         Transaction originalTransaction = getOriginalTransaction(transaction, context);
         validateTransactionIsNotLocked(transaction, originalTransaction, transactionIsLockedForDelete);
+    }
+
+    private boolean closeableMonthlyTransaction(final Transaction transaction, final LocalDate end) {
+        boolean result = true;
+        if (transaction.isMonthly()) {
+            if (transaction.getEndDate() == null) {
+                result = false;
+            } else {
+                result = !transaction.getEndDate().isAfter(end);
+            }
+        }
+        return result;
+    }
+
+    private Transaction createLockedTransaction(final Transaction transaction) {
+        return Transaction.builder(transaction)
+            .withLocked(true)
+            .build();
     }
 
 }

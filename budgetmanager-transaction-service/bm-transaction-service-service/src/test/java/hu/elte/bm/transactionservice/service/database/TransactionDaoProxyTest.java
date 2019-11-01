@@ -200,6 +200,28 @@ public class TransactionDaoProxyTest {
     }
 
     @Test
+    public void testUpdateListWhenContextIsIncome() {
+        // GIVEN
+        List<Transaction> transactionList = List.of(createExampleIncome());
+        incomeDao.update(transactionList, USER_ID);
+        control.replay();
+        // WHEN
+        underTest.update(transactionList, INCOME_CONTEXT);
+        // THEN verify
+    }
+
+    @Test
+    public void testUpdateListWhenContextIsOutcome() {
+        // GIVEN
+        List<Transaction> transactionList = List.of(createExampleOutcome());
+        outcomeDao.update(transactionList, USER_ID);
+        control.replay();
+        // WHEN
+        underTest.update(transactionList, OUTCOME_CONTEXT);
+        // THEN verify
+    }
+
+    @Test
     public void testDeleteWhenContextIsIncome() {
         // GIVEN
         Transaction transaction = createExampleIncome();

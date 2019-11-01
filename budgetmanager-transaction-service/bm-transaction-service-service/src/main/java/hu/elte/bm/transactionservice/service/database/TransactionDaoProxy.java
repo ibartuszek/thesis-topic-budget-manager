@@ -21,6 +21,10 @@ public class TransactionDaoProxy {
         this.outcomeDao = outcomeDao;
     }
 
+    public List<Transaction> getTransactionList(final LocalDate end, final TransactionContext context) {
+        return isIncome(context) ? incomeDao.findAll(end, context.getUserId()) : outcomeDao.findAll(end, context.getUserId());
+    }
+
     public List<Transaction> getTransactionList(final LocalDate start, final LocalDate end, final TransactionContext context) {
         return isIncome(context) ? incomeDao.findAll(start, end, context.getUserId()) : outcomeDao.findAll(start, end, context.getUserId());
     }
@@ -45,6 +49,14 @@ public class TransactionDaoProxy {
 
     public Transaction update(final Transaction transaction, final TransactionContext context) {
         return isIncome(context) ? incomeDao.update(transaction, context.getUserId()) : outcomeDao.update(transaction, context.getUserId());
+    }
+
+    public void update(final List<Transaction> transactionList, final TransactionContext context) {
+        if (isIncome(context)) {
+            incomeDao.update(transactionList, context.getUserId());
+        } else {
+            outcomeDao.update(transactionList, context.getUserId());
+        }
     }
 
     public Transaction delete(final Transaction transaction, final TransactionContext context) {

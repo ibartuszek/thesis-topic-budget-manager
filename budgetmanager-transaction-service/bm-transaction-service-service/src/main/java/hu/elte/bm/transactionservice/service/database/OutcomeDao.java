@@ -10,6 +10,8 @@ public interface OutcomeDao {
 
     List<Transaction> findAll(LocalDate start, LocalDate end, Long userId);
 
+    List<Transaction> findAll(LocalDate end, Long userId);
+
     List<Transaction> findAll(Long userId);
 
     Optional<Transaction> findById(Long id, Long userId);
@@ -19,6 +21,8 @@ public interface OutcomeDao {
     Transaction save(Transaction transaction, Long userId);
 
     Transaction update(Transaction transaction, Long userId);
+
+    void update(List<Transaction> transaction, Long userId);
 
     Transaction delete(Transaction transaction, Long userId);
 

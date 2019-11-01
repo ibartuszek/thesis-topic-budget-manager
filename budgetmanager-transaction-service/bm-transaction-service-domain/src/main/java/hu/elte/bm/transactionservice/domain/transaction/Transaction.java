@@ -68,6 +68,10 @@ public final class Transaction {
         return new Builder();
     }
 
+    public static Builder builder(final Transaction transaction) {
+        return new Builder(transaction);
+    }
+
     public Long getId() {
         return id;
     }
@@ -168,7 +172,7 @@ public final class Transaction {
             + '}';
     }
 
-    public static class Builder {
+    public static final class Builder {
         private Long id;
         private String title;
         private double amount;
@@ -183,6 +187,26 @@ public final class Transaction {
         private boolean locked;
         private Coordinate coordinate;
         private Long pictureId;
+
+        private Builder() {
+        }
+
+        private Builder(final Transaction transaction) {
+            this.id = transaction.id;
+            this.title = transaction.title;
+            this.amount = transaction.amount;
+            this.currency = transaction.currency;
+            this.transactionType = transaction.transactionType;
+            this.mainCategory = transaction.mainCategory;
+            this.subCategory = transaction.subCategory;
+            this.monthly = transaction.monthly;
+            this.date = transaction.date;
+            this.endDate = transaction.endDate;
+            this.description = transaction.description;
+            this.locked = transaction.locked;
+            this.coordinate = transaction.coordinate;
+            this.pictureId = transaction.pictureId;
+        }
 
         public Builder withId(final Long id) {
             this.id = id;

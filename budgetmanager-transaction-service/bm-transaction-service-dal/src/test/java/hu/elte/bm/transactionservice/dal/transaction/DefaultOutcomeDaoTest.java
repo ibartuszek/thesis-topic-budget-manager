@@ -1,6 +1,5 @@
 package hu.elte.bm.transactionservice.dal.transaction;
 
-import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.INCOME;
 import static hu.elte.bm.transactionservice.domain.transaction.TransactionType.OUTCOME;
 
 import java.sql.Date;
@@ -89,6 +88,34 @@ public class DefaultOutcomeDaoTest {
         control.replay();
         // WHEN
         List<Transaction> result = underTest.findAll(START, END, USER_ID);
+        // THEN
+        Assert.assertEquals(result, expectedTransactionList);
+    }
+
+    @Test
+    public void testFindAllWithUserIdAndEndDate() {
+        // GIVEN
+        List<OutcomeEntity> outcomeEntityList = createExampleOutcomeEntityList();
+        List<Transaction> expectedTransactionList = List.of(createTransactionBuilderWithDefaultValues().build());
+        EasyMock.expect(outcomeRepository.findAll(Date.valueOf(END), USER_ID)).andReturn(outcomeEntityList);
+        EasyMock.expect(transformer.transformToTransaction(outcomeEntityList.get(0))).andReturn(expectedTransactionList.get(0));
+        control.replay();
+        // WHEN
+        List<Transaction> result = underTest.findAll(END, USER_ID);
+        // THEN
+        Assert.assertEquals(result, expectedTransactionList);
+    }
+
+    @Test
+    public void testFindAllWithUserId() {
+        // GIVEN
+        List<OutcomeEntity> outcomeEntityList = createExampleOutcomeEntityList();
+        List<Transaction> expectedTransactionList = List.of(createTransactionBuilderWithDefaultValues().build());
+        EasyMock.expect(outcomeRepository.findAll(USER_ID)).andReturn(outcomeEntityList);
+        EasyMock.expect(transformer.transformToTransaction(outcomeEntityList.get(0))).andReturn(expectedTransactionList.get(0));
+        control.replay();
+        // WHEN
+        List<Transaction> result = underTest.findAll(USER_ID);
         // THEN
         Assert.assertEquals(result, expectedTransactionList);
     }
@@ -197,6 +224,31 @@ public class DefaultOutcomeDaoTest {
         Assert.assertEquals(result, expectedTransaction);
     }
 
+    @Test
+    public void testUpdateList() {
+        // GIVEN
+        Transaction transactionToUpate = createTransactionBuilderWithDefaultValues()
+            .withLocked(true)
+            .build();
+        OutcomeEntity transformedEntity = createExampleOutcomeEntity();
+        transformedEntity.setLocked(true);
+        MainCategoryEntity mainCategoryEntity = transformedEntity.getMainCategoryEntity();
+        List<Transaction> transactionListToUpdate = List.of(transactionToUpate);
+        List<OutcomeEntity> outcomeEntityList = List.of(transformedEntity);
+        TransactionEntityContext context = TransactionEntityContext.builder()
+            .withTransaction(transactionToUpate)
+            .withMainCategoryEntity(mainCategoryEntity)
+            .withUserId(USER_ID)
+            .build();
+        EasyMock.expect(contextFactory.create(transactionToUpate, USER_ID)).andReturn(context);
+        EasyMock.expect(transformer.transformToOutcomeEntity(context)).andReturn(transformedEntity);
+        EasyMock.expect(outcomeRepository.saveAll(outcomeEntityList)).andReturn(outcomeEntityList);
+        control.replay();
+        // WHEN
+        underTest.update(transactionListToUpdate, USER_ID);
+        // THEN
+    }
+
     private List<OutcomeEntity> createExampleOutcomeEntityList() {
         List<OutcomeEntity> outcomeEntityList = new ArrayList<>();
         outcomeEntityList.add(createExampleOutcomeEntity());
@@ -218,7 +270,7 @@ public class DefaultOutcomeDaoTest {
         return MainCategoryEntity.builder()
             .withId(CATEGORY_ID)
             .withName(CATEGORY_NAME)
-            .withTransactionType(INCOME)
+            .withTransactionType(OUTCOME)
             .withSubCategoryEntitySet(new HashSet<>())
             .withUserId(USER_ID)
             .build();
@@ -228,7 +280,7 @@ public class DefaultOutcomeDaoTest {
         return SubCategoryEntity.builder()
             .withId(CATEGORY_ID)
             .withName(CATEGORY_NAME)
-            .withTransactionType(INCOME)
+            .withTransactionType(OUTCOME)
             .withUserId(USER_ID)
             .build();
     }

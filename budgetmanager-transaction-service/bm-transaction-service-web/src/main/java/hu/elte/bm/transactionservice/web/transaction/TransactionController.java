@@ -19,6 +19,7 @@ import hu.elte.bm.transactionservice.domain.transaction.TransactionType;
 import hu.elte.bm.transactionservice.service.transaction.TransactionContext;
 import hu.elte.bm.transactionservice.service.transaction.TransactionService;
 import hu.elte.bm.transactionservice.web.common.ContextTransformer;
+import hu.elte.bm.transactionservice.web.common.ResponseModel;
 
 @RestController
 public class TransactionController {
@@ -36,6 +37,9 @@ public class TransactionController {
 
     @Value("${transaction.transaction_has_been_deleted}")
     private String transactionHasBeenDeleted;
+
+    @Value("${transaction.transactions_has_been_locked}")
+    private String transactionsLocked;
 
     public TransactionController(final TransactionService transactionService, final ContextTransformer transformer) {
         this.transactionService = transactionService;
@@ -74,8 +78,16 @@ public class TransactionController {
     }
 
     @RequestMapping(value = "/bm/transactions/getFirstPossibleDay")
-    public LocalDate getFirstPossibleDay(@NotNull @RequestParam(value = "userId") final Long userId) {
-        return transactionService.getTheFirstDateOfTheNewPeriod(userId);
+    public FirstPossibleDayResponse getFirstPossibleDay(@NotNull @RequestParam(value = "userId") final Long userId) {
+        return FirstPossibleDayResponse.createSuccessfulFirstPossibleDayResponse(transactionService.getTheFirstDateOfTheNewPeriod(userId));
     }
 
+    @RequestMapping(value = "/bm/transactions/lockTransactions")
+    public ResponseModel lockTransactions(
+        @NotNull @RequestParam(value = "end") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate end,
+        @NotNull @RequestParam(value = "userId") final Long userId) {
+        transactionService.lockTransactions(end, transformer.transform(TransactionType.INCOME, userId));
+        transactionService.lockTransactions(end, transformer.transform(TransactionType.OUTCOME, userId));
+        return ResponseModel.createSuccessfulResponse(transactionsLocked);
+    }
 }
