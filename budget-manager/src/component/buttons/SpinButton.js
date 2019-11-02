@@ -3,7 +3,8 @@ import React, {Component} from 'react';
 class SpinButton extends Component {
 
   render() {
-    const {buttonLabel, icon, loading} = this.props;
+    const {altButtonStyle, buttonLabel, icon, handleSubmit, loading} = this.props;
+    let buttonClass = altButtonStyle !== undefined ? altButtonStyle : "btn btn-outline-success mt-3 mb-2";
 
     let buttonInner = loading ? (
       <React.Fragment>
@@ -19,11 +20,13 @@ class SpinButton extends Component {
       </React.Fragment>
     );
 
-    return (
-      <button className="btn btn-outline-success mt-3 mb-2">
+    return handleSubmit === undefined
+      ? (<button className={buttonClass}>
         {buttonInner}
-      </button>
-    );
+      </button>)
+      : (<button className={buttonClass} onClick={handleSubmit}>
+        {buttonInner}
+      </button>);
   }
 }
 

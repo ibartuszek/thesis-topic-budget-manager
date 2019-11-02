@@ -126,6 +126,28 @@ const TransactionReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
       });
+    case 'TRANSACTIONS_LOCKED_SUCCESS':
+      key = "transactionsLockedSuccess";
+      addMessage(action.messages, createMessage(key, action.message, true));
+      return Object.assign({}, state, {
+        ...state,
+        incomesAreLoaded: false,
+        incomes: [],
+        outcomesAreLoaded: false,
+        outcomes: [],
+        firstPossibleDay: null
+      });
+    case 'TRANSACTIONS_LOCKED_ERROR':
+      key = "transactionsLockedError";
+      addMessage(action.messages, createMessage(key, action.message, false));
+      return Object.assign({}, state, {
+        ...state,
+        incomesAreLoaded: false,
+        incomes: [],
+        outcomesAreLoaded: false,
+        outcomes: [],
+        firstPossibleDay: null
+      });
 
     default:
       return state;

@@ -1,22 +1,43 @@
 import React, {Component} from 'react';
-import {dateProperties} from "../../../../store/Properties";
-import DatePicker from "react-datepicker";
-import {convertDate} from "../../../../actions/date/dateActions";
 import moment from "moment";
+import DatePicker from "react-datepicker";
+import SpinButton from "../../../buttons/SpinButton";
+import {convertDate} from "../../../../actions/date/dateActions";
+import {dateProperties} from "../../../../store/Properties";
 
 class TransactionTableSearchBar extends Component {
+
+  state = {
+    locking: false
+  };
+
+  constructor(props) {
+    super(props);
+    this.handleLock = this.handleLock.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState, nextContext) {
+    if (this.state.locking && !nextProps.locking) {
+      this.setState({
+        locking: false
+      })
+    }
+  }
 
   handleChange(value, id) {
     this.props.handleDateChange(id, convertDate(value));
   }
 
   handleLock() {
+    this.setState({
+      locking: true
+    });
     this.props.handleLock();
   }
 
   render() {
     const {endDateId, endDate, endDatePlaceHolder, handleSearch, startDateId, startDate, startDatePlaceHolder} = this.props;
-    const {buttonName, buttonIcon, lockStatisticsButtonEnabled, handleLock} = this.props;
+    const {buttonName, buttonIcon, lockStatisticsButtonEnabled} = this.props;
 
     let buttonText = buttonName === undefined ? " Search " : (" " + buttonName + " ");
     let buttonIconText = buttonIcon === undefined ? "fas fa-search" : buttonIcon;
@@ -33,10 +54,9 @@ class TransactionTableSearchBar extends Component {
 
     let lockButton = null;
     if (lockStatisticsButtonEnabled === true) {
-      lockButton = (<button className="btn btn-outline-danger my-2 mr-3 ml-auto" onClick={handleLock}>
-        <span className="fas fa-lock"/>
-        <span> Lock statistics</span>
-      </button>);
+      lockButton = <SpinButton buttonLabel="Lock statistics" icon="fas fa-pencil-alt"
+                               altButtonStyle="btn btn-outline-danger my-2 mr-3 ml-auto"
+                               loading={this.state.locking} handleSubmit={this.handleLock}/>
     }
 
     return (

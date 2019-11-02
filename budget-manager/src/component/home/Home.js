@@ -7,6 +7,11 @@ import {getAccessCookie} from "../../actions/user/cookie/getAccessCookie";
 import {getUser} from "../../actions/user/getUser";
 import {removeMessage} from "../../actions/message/messageActions";
 import {setAccessToken} from "../../actions/user/setAccessToken";
+import {createContext} from "../../actions/common/createContext";
+import {fetchSchemas} from "../../actions/schema/fetchSchemas";
+import {fetchMainCategories} from "../../actions/category/fetchMainCategories";
+import {fetchSubCategories} from "../../actions/category/fetchSubCategories";
+import {getFirstPossibleDay} from "../../actions/transaction/getFirstPossibleDay";
 
 class Home extends Component {
   state = {
@@ -14,11 +19,6 @@ class Home extends Component {
     email: {
       value: ''
     }
-  };
-
-  chartDetails = {
-    height: 350,
-    width: 400,
   };
 
   componentDidMount() {
@@ -50,17 +50,44 @@ class Home extends Component {
     }
   }
 
+  fetchAdditionalUserData() {
+    const {categoryHolder, logHolder, statisticsHolder, transactionHolder, userHolder} = this.props;
+    let context = createContext(userHolder, logHolder);
+    if (!categoryHolder.incomeMainCategoriesAreLoaded) {
+      this.props.fetchMainCategories(context, 'INCOME');
+    }
+    if (!categoryHolder.outcomeMainCategoriesAreLoaded) {
+      this.props.fetchMainCategories(context, 'OUTCOME');
+    }
+    if (!categoryHolder.incomeSubCategoriesAreLoaded) {
+      this.props.fetchSubCategories(context, 'INCOME');
+    }
+    if (!categoryHolder.outcomeSubCategoriesAreLoaded) {
+      this.props.fetchSubCategories(context, 'OUTCOME');
+    }
+    if (!statisticsHolder.schemasAreLoaded) {
+      this.props.getStatisticsSchemas(context);
+    }
+    if (transactionHolder.firstPossibleDay === null) {
+      this.props.getFirstPossibleDay(context);
+    }
+  }
+
   render() {
     if (this.state.loggedOut) {
       return <Redirect to='/login'/>;
     }
 
     let logs = null;
-    if (this.props.userHolder.userIsLoggedIn === true && this.props.logHolder.messages.length > 0) {
-      logs = <LogContainer/>
+    if (this.props.userHolder.userIsLoggedIn === true) {
+      this.fetchAdditionalUserData();
+      if (this.props.logHolder.messages.length > 0) {
+        logs = <LogContainer/>
+      }
+    } else {
+      this.fetchUserData();
     }
 
-    this.fetchUserData();
     return (
       <main>
         {logs}
@@ -72,8 +99,11 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    categoryHolder: state.categoryHolder,
+    logHolder: state.logHolder,
+    statisticsHolder: state.statisticsHolder,
+    transactionHolder: state.transactionHolder,
     userHolder: state.userHolder,
-    logHolder: state.logHolder
   }
 };
 
@@ -82,6 +112,10 @@ const mapDispatchToProps = (dispatch) => {
     removeMessage: (messages, message) => dispatch(removeMessage(messages, message)),
     setAccessToken: (accessToken) => dispatch(setAccessToken(accessToken)),
     getUser: (email, jwtToken, messages) => dispatch(getUser(email, jwtToken, messages)),
+    getStatisticsSchemas: (context) => dispatch(fetchSchemas(context)),
+    fetchMainCategories: (context, transactionType) => dispatch(fetchMainCategories(context, transactionType)),
+    fetchSubCategories: (context, transactionType) => dispatch(fetchSubCategories(context, transactionType)),
+    getFirstPossibleDay: (context) => dispatch(getFirstPossibleDay(context))
   };
 };
 

@@ -7,6 +7,7 @@ const initState = {
   customStatistics: [],
   standardSchema: null,
   customSchemas: [],
+  schemasAreLoaded: undefined
 };
 
 const StatisticsReducer = (state = initState, action) => {
@@ -18,7 +19,8 @@ const StatisticsReducer = (state = initState, action) => {
       return Object.assign({}, state, {
         ...state,
         standardSchema: action['response'].standardSchema,
-        customSchemas: action['response'].customSchemas
+        customSchemas: action['response'].customSchemas,
+        schemasAreLoaded: true
       });
     case 'GET_SCHEMAS_ERROR':
       key = "getSchemasError";

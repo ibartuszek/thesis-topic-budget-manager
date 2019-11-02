@@ -20,7 +20,6 @@ class ModelDateValue extends Component {
   render() {
     const {id, model, labelTitle, placeHolder, possibleFirstDay} = this.props;
 
-    // TODO: check
     let date = model !== undefined && model !== null && model.value !== null ? new Date(model.value) : null;
     let errorMessage;
     if (possibleFirstDay !== undefined) {

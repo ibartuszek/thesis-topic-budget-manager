@@ -2,12 +2,16 @@ import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+import AlertMessageComponent from "../AlertMessageComponent";
 import CustomStatisticsPlaceProxy from "./customStatistics/CustomStatisticsPlaceProxy";
 import Loading from "../Loading";
 import StandardStatistics from "./standardStatistics/StandardStatistics";
 import TransactionTableSearchBar from "../transactions/transaction/table/TransactionTableSearchBar";
 import {createContext} from "../../actions/common/createContext";
+import {getFirstPossibleDay} from "../../actions/transaction/getFirstPossibleDay";
 import {getStandardStatistics} from "../../actions/statistics/getStandardStatistics";
+import {getMessage} from "../../actions/message/messageActions";
+import {lockTransactions} from "../../actions/transaction/lockTransactions";
 import {statisticsMessages} from "../../store/MessageHolder";
 
 class Statistics extends Component {
@@ -16,11 +20,13 @@ class Statistics extends Component {
     startDate: undefined,
     endDate: undefined,
     standardStatisticsAreLoaded: undefined,
+    locked: false
   };
 
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
+    this.handleDismissMessage = this.handleDismissMessage.bind(this);
     this.handleGetStandardStatistics = this.handleGetStandardStatistics.bind(this);
     this.handleLock = this.handleLock.bind(this);
   }
@@ -33,6 +39,9 @@ class Statistics extends Component {
         standardStatisticsAreLoaded: true
       })
     }
+    if (newProps.transactionHolder.firstPossibleDay === null) {
+      this.props.getFirstPossibleDay(createContext(newProps.userHolder, newProps.logHolder));
+    }
   }
 
   handleChange = (id, value) => {
@@ -41,26 +50,38 @@ class Statistics extends Component {
     });
   };
 
+  handleDismissMessage(message) {
+    this.props.removeMessage(this.props.logHolder.messages, message);
+  }
+
   handleGetStandardStatistics() {
     const {endDate, startDate} = this.state;
     const {userHolder, logHolder} = this.props;
     if (startDate !== undefined && startDate !== null && endDate !== undefined && endDate !== null) {
       let context = createContext(userHolder, logHolder);
       this.setState({
-        standardStatisticsAreLoaded: false
+        standardStatisticsAreLoaded: false,
+        locked: false
       });
       this.props.getStandardStatistics(context, startDate, endDate);
     }
   }
 
   handleLock() {
-    // TODO:
-    console.log("TODO: Lock statistics data!");
+    const {endDate, locked} = this.state;
+    const {userHolder, logHolder} = this.props;
+    if (!locked && endDate !== undefined && endDate !== null) {
+      let context = createContext(userHolder, logHolder);
+      this.setState({
+        locked: true
+      });
+      this.props.lockTransactions(context, endDate);
+    }
   }
 
   render() {
     const {startDate, endDate, standardStatisticsAreLoaded} = this.state;
-    const {statisticsHolder, userHolder} = this.props;
+    const {logHolder, statisticsHolder, userHolder} = this.props;
 
     if (userHolder == null || !userHolder.userIsLoggedIn) {
       return <Redirect to='/login'/>;
@@ -77,6 +98,10 @@ class Statistics extends Component {
       lockStatisticsButtonEnabled = true;
     }
 
+    let lockingSuccessMessage = getMessage(logHolder.messages, "transactionsLockedSuccess", true);
+    let lockingErrorMessage = getMessage(logHolder.messages, "transactionsLockedError", false);
+    let locking = lockingSuccessMessage.value === null && lockingErrorMessage.value === null;
+
     return (
       <main>
         <div className="card mt-3">
@@ -84,8 +109,10 @@ class Statistics extends Component {
                                      endDateId="endDate" endDate={endDate} endDatePlaceHolder={statisticsMessages.endDatePlaceHolder}
                                      buttonName="Get statistics" buttonIcon="fas fa-download" handleDateChange={this.handleChange}
                                      handleSearch={this.handleGetStandardStatistics} lockStatisticsButtonEnabled={lockStatisticsButtonEnabled}
-                                     handleLock={this.handleLock}/>
+                                     handleLock={this.handleLock} locking={locking}/>
         </div>
+        <AlertMessageComponent message={lockingSuccessMessage} onChange={this.handleDismissMessage}/>
+        <AlertMessageComponent message={lockingErrorMessage} onChange={this.handleDismissMessage}/>
         {standardStatistics}
         {customStatistics}
       </main>);
@@ -108,6 +135,7 @@ const mapStateToProps = (state) => {
   return {
     logHolder: state.logHolder,
     statisticsHolder: state.statisticsHolder,
+    transactionHolder: state.transactionHolder,
     userHolder: state.userHolder,
   }
 };
@@ -118,6 +146,8 @@ const mapDispatchToProps = (dispatch) => {
     ...bindActionCreators(
       {
         getStandardStatistics: getStandardStatistics,
+        lockTransactions: lockTransactions,
+        getFirstPossibleDay: getFirstPossibleDay
       },
       dispatch)
   }
