@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
 import {findElementById} from "../../../../actions/common/listActions";
 
 class TransactionTableRow extends Component {
@@ -17,9 +18,16 @@ class TransactionTableRow extends Component {
   }
 
   render() {
-    const {transactionList, id} = this.props;
-    const transaction = findElementById(transactionList, id);
-    const {amount, currency, date, description, endDate, locked, mainCategory, monthly, subCategory, title,} = transaction;
+    const {categoryHolder, transaction} = this.props;
+    const {amount, currency, date, description, endDate, locked, monthly, title,} = transaction;
+
+    let mainCategories = categoryHolder[transaction.transactionType.value.toLowerCase() + "MainCategories"];
+    let mainCategory = findElementById(mainCategories, transaction.mainCategory.id);
+    let subCategory = undefined;
+    if (transaction.subCategory !== undefined) {
+      let subCategories = categoryHolder[transaction.transactionType.value.toLowerCase() + "SubCategories"];
+      subCategory = findElementById(subCategories, transaction.subCategory.id);
+    }
 
     const editButton = locked ? null : (
       <button className="btn btn-warning btn-sm fas fa-edit" onClick={() => this.showTransactionEdit(transaction)}/>);
@@ -44,4 +52,10 @@ class TransactionTableRow extends Component {
 
 }
 
-export default TransactionTableRow;
+const mapStateToProps = (state) => {
+  return {
+    categoryHolder: state.categoryHolder,
+  }
+};
+
+export default connect(mapStateToProps)(TransactionTableRow);

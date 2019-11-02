@@ -5,7 +5,7 @@ import {dateProperties} from "../../store/Properties";
 export function validateModelDateValue(date, labelTitle) {
   let errorMessage = null;
   if (date !== undefined && date !== null && date.value !== null) {
-    errorMessage = validate(date, errorMessage, date.possibleFirstDay);
+    errorMessage = validate(date, labelTitle, date.possibleFirstDay);
   }
   return errorMessage;
 }

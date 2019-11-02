@@ -8,21 +8,14 @@ import {sortTransactions} from "../../../../actions/transaction/sortTransactions
 class TransactionTableBody extends Component {
 
   state = {
-    transactions: undefined,
+    transactions: [],
     editableTransaction: null,
     deletableTransaction: null,
   };
 
   constructor(props) {
     super(props);
-    this.refreshTransactions = this.refreshTransactions.bind(this);
     this.showTransactionEdit = this.showTransactionEdit.bind(this);
-  }
-
-  componentDidMount() {
-    this.setState({
-      transactions: this.props.transactions
-    })
   }
 
   showTransactionEdit = (transaction) => {
@@ -45,29 +38,20 @@ class TransactionTableBody extends Component {
     });
   }
 
-  refreshTransactions() {
-    const {transactionHolder, transactionType} = this.props;
-    let transactions = transactionHolder[transactionType.toLowerCase() + 's'];
-    console.log("refresh");
-    this.setState({
-      transactions: transactions
-    })
-  }
-
   render() {
     const {transactionType, transactionHolder} = this.props;
     const {deletableTransaction, editableTransaction} = this.state;
     let data = transactionHolder[transactionType.toLowerCase() + 's'];
 
     let tableBody = data.map((transaction, index) =>
-      <TransactionTableRow key={index} id={transaction.id} transactionList={data} index={index}
+      <TransactionTableRow key={index} transaction={transaction} index={index}
                            showTransactionEdit={this.showTransactionEdit}
                            showTransactionDelete={this.showTransactionDelete}/>
     );
 
     let editTransaction = editableTransaction === null ? null : (
       <TransactionEditPopUp transactionModel={editableTransaction} transactionType={transactionType}
-                            showTransactionEdit={this.showTransactionEdit} refreshTransactions={this.refreshTransactions}/>);
+                            showTransactionEdit={this.showTransactionEdit}/>);
 
     let deleteTransaction = deletableTransaction === null ? null : (
       <TransactionDeletePopUp transactionModel={deletableTransaction} transactionType={transactionType}

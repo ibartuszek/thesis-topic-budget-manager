@@ -24,7 +24,6 @@ class TransactionEditPopUp extends Component {
 
     const {transaction} = this.state;
     if (transaction !== null) {
-      this.refreshTransactions();
       this.setState({
         transaction: null
       })
