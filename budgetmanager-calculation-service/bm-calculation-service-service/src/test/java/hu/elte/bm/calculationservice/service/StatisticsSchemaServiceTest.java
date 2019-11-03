@@ -89,10 +89,10 @@ public class StatisticsSchemaServiceTest {
     public void testSaveWhenSchemaTitleIsReserved() {
         // GIVEN
         StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
-                .withId(null)
-                .build();
+            .withId(null)
+            .build();
         StatisticsSchema schemaWithSameTitle = createCustomScaleSchemaBuilder().build();
-        Mockito.when(schemaDao.findByTitle(schemaToSave, USER_ID)).thenReturn(List.of(schemaWithSameTitle));
+        Mockito.when(schemaDao.findByTitle(schemaToSave.getTitle(), USER_ID)).thenReturn(Optional.of(schemaWithSameTitle));
         // WHEN
         underTest.save(schemaToSave, USER_ID);
         // THEN
@@ -102,10 +102,10 @@ public class StatisticsSchemaServiceTest {
     public void testSaveWhenMainCategoryDoesNotExists() {
         // GIVEN
         StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
-                .withMainCategory(createMainCategoryBuilder().build())
-                .withId(null)
-                .build();
-        Mockito.when(schemaDao.findByTitle(schemaToSave, USER_ID)).thenReturn(Collections.emptyList());
+            .withMainCategory(createMainCategoryBuilder().build())
+            .withId(null)
+            .build();
+        Mockito.when(schemaDao.findByTitle(schemaToSave.getTitle(), USER_ID)).thenReturn(Optional.empty());
         Mockito.when(transactionServiceFacade.getMainCategories(TransactionType.OUTCOME, USER_ID)).thenReturn(Collections.emptyList());
         // WHEN
         underTest.save(schemaToSave, USER_ID);
@@ -117,14 +117,14 @@ public class StatisticsSchemaServiceTest {
         // GIVEN
         SubCategory subCategory = createSubCategoryBuilder().build();
         MainCategory mainCategory = createMainCategoryBuilder()
-                .withSubCategorySet(Set.of(subCategory))
-                .build();
+            .withSubCategorySet(Set.of(subCategory))
+            .build();
         StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
-                .withMainCategory(mainCategory)
-                .withSubCategory(subCategory)
-                .withId(null)
-                .build();
-        Mockito.when(schemaDao.findByTitle(schemaToSave, USER_ID)).thenReturn(Collections.emptyList());
+            .withMainCategory(mainCategory)
+            .withSubCategory(subCategory)
+            .withId(null)
+            .build();
+        Mockito.when(schemaDao.findByTitle(schemaToSave.getTitle(), USER_ID)).thenReturn(Optional.empty());
         Mockito.when(transactionServiceFacade.getMainCategories(TransactionType.OUTCOME, USER_ID)).thenReturn(List.of(mainCategory));
         Mockito.when(transactionServiceFacade.getSubCategories(TransactionType.OUTCOME, USER_ID)).thenReturn(Collections.emptyList());
         // WHEN
@@ -137,38 +137,37 @@ public class StatisticsSchemaServiceTest {
         // GIVEN
         SubCategory subCategory = createSubCategoryBuilder().build();
         MainCategory mainCategory = createMainCategoryBuilder()
-                .withSubCategorySet(Set.of(subCategory))
-                .build();
+            .withSubCategorySet(Set.of(subCategory))
+            .build();
         StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
-                .withMainCategory(mainCategory)
-                .withSubCategory(subCategory)
-                .withId(null)
-                .build();
+            .withMainCategory(mainCategory)
+            .withSubCategory(subCategory)
+            .withId(null)
+            .build();
         StatisticsSchema expectedSchema = createCustomScaleSchemaBuilder()
-                .withMainCategory(mainCategory)
-                .withSubCategory(subCategory)
-                .build();
-        Mockito.when(schemaDao.findByTitle(schemaToSave, USER_ID)).thenReturn(Collections.emptyList());
+            .withMainCategory(mainCategory)
+            .withSubCategory(subCategory)
+            .build();
+        Mockito.when(schemaDao.findByTitle(schemaToSave.getTitle(), USER_ID)).thenReturn(Optional.empty());
         Mockito.when(transactionServiceFacade.getMainCategories(TYPE, USER_ID)).thenReturn(List.of(mainCategory));
         Mockito.when(transactionServiceFacade.getSubCategories(TYPE, USER_ID)).thenReturn(List.of(subCategory));
         Mockito.when(schemaDao.save(schemaToSave, USER_ID)).thenReturn(expectedSchema);
         // WHEN
         var result = underTest.save(schemaToSave, USER_ID);
         // THEN
-        Mockito.verify(schemaDao).findByTitle(schemaToSave, USER_ID);
+        Mockito.verify(schemaDao).findByTitle(schemaToSave.getTitle(), USER_ID);
         Mockito.verify(transactionServiceFacade).getMainCategories(TYPE, USER_ID);
         Mockito.verify(transactionServiceFacade).getSubCategories(TYPE, USER_ID);
         Mockito.verify(schemaDao).save(schemaToSave, USER_ID);
         Assert.assertEquals(expectedSchema, result);
     }
 
-
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateWhenSchemaIdIsNull() {
         // GIVEN
         StatisticsSchema schemaToUpdate = createCustomScaleSchemaBuilder()
-                .withId(null)
-                .build();
+            .withId(null)
+            .build();
         // WHEN
         underTest.update(schemaToUpdate, USER_ID);
         // THEN
@@ -178,7 +177,8 @@ public class StatisticsSchemaServiceTest {
     public void testUpdateWhenOriginalSchemaCannotBeFound() {
         // GIVEN
         StatisticsSchema schemaToUpdate = createCustomScaleSchemaBuilder().build();
-        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(Optional.empty());
+        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID))
+            .thenThrow(new StatisticsSchemaNotFoundException(schemaToUpdate.getId(), null));
         // WHEN
         underTest.update(schemaToUpdate, USER_ID);
         // THEN
@@ -189,7 +189,7 @@ public class StatisticsSchemaServiceTest {
         // GIVEN
         StatisticsSchema schemaToUpdate = createCustomScaleSchemaBuilder().build();
         StatisticsSchema originalSchema = createCustomScaleSchemaBuilder().build();
-        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(Optional.of(originalSchema));
+        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(originalSchema);
         // WHEN
         underTest.update(schemaToUpdate, USER_ID);
         // THEN
@@ -200,13 +200,13 @@ public class StatisticsSchemaServiceTest {
         // GIVEN
         StatisticsSchema schemaToUpdate = createCustomScaleSchemaBuilder().build();
         StatisticsSchema originalSchema = createCustomScaleSchemaBuilder()
-                .withTitle(ORIGINAL_SCHEMA_TITLE)
-                .build();
+            .withTitle(ORIGINAL_SCHEMA_TITLE)
+            .build();
         StatisticsSchema schemaWithSameTitle = createCustomScaleSchemaBuilder()
-                .withId(OTHER_SCHEMA_ID)
-                .build();
-        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(Optional.of(originalSchema));
-        Mockito.when(schemaDao.findByTitle(schemaToUpdate, USER_ID)).thenReturn(List.of(schemaWithSameTitle));
+            .withId(OTHER_SCHEMA_ID)
+            .build();
+        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(originalSchema);
+        Mockito.when(schemaDao.findByTitle(schemaToUpdate.getTitle(), USER_ID)).thenReturn(Optional.of(schemaWithSameTitle));
         // WHEN
         underTest.update(schemaToUpdate, USER_ID);
         // THEN
@@ -216,11 +216,11 @@ public class StatisticsSchemaServiceTest {
     public void testUpdateWhenMainCategoryDoesNotExists() {
         // GIVEN
         StatisticsSchema schemaToUpdate = createCustomScaleSchemaBuilder()
-                .withMainCategory(createMainCategoryBuilder().build())
-                .build();
+            .withMainCategory(createMainCategoryBuilder().build())
+            .build();
         StatisticsSchema originalSchema = createCustomScaleSchemaBuilder().build();
-        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(Optional.of(originalSchema));
-        Mockito.when(schemaDao.findByTitle(schemaToUpdate, USER_ID)).thenReturn(List.of(originalSchema));
+        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(originalSchema);
+        Mockito.when(schemaDao.findByTitle(schemaToUpdate.getTitle(), USER_ID)).thenReturn(Optional.of(originalSchema));
         Mockito.when(transactionServiceFacade.getMainCategories(TYPE, USER_ID)).thenReturn(Collections.emptyList());
         // WHEN
         underTest.update(schemaToUpdate, USER_ID);
@@ -232,17 +232,17 @@ public class StatisticsSchemaServiceTest {
         // GIVEN
         SubCategory subCategory = createSubCategoryBuilder().build();
         MainCategory mainCategory = createMainCategoryBuilder()
-                .withSubCategorySet(Set.of(subCategory))
-                .build();
+            .withSubCategorySet(Set.of(subCategory))
+            .build();
         StatisticsSchema schemaToUpdate = createCustomScaleSchemaBuilder()
-                .withMainCategory(mainCategory)
-                .withSubCategory(subCategory)
-                .build();
+            .withMainCategory(mainCategory)
+            .withSubCategory(subCategory)
+            .build();
         StatisticsSchema originalSchema = createCustomScaleSchemaBuilder()
-                .withMainCategory(mainCategory)
-                .build();
-        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(Optional.of(originalSchema));
-        Mockito.when(schemaDao.findByTitle(schemaToUpdate, USER_ID)).thenReturn(List.of(originalSchema));
+            .withMainCategory(mainCategory)
+            .build();
+        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(originalSchema);
+        Mockito.when(schemaDao.findByTitle(schemaToUpdate.getTitle(), USER_ID)).thenReturn(Optional.of(originalSchema));
         Mockito.when(transactionServiceFacade.getMainCategories(TYPE, USER_ID)).thenReturn(List.of(mainCategory));
         Mockito.when(transactionServiceFacade.getSubCategories(TYPE, USER_ID)).thenReturn(Collections.emptyList());
         // WHEN
@@ -255,17 +255,17 @@ public class StatisticsSchemaServiceTest {
         // GIVEN
         SubCategory subCategory = createSubCategoryBuilder().build();
         MainCategory mainCategory = createMainCategoryBuilder()
-                .withSubCategorySet(Set.of(subCategory))
-                .build();
+            .withSubCategorySet(Set.of(subCategory))
+            .build();
         StatisticsSchema schemaToUpdate = createCustomScaleSchemaBuilder()
-                .withMainCategory(mainCategory)
-                .withSubCategory(subCategory)
-                .build();
+            .withMainCategory(mainCategory)
+            .withSubCategory(subCategory)
+            .build();
         StatisticsSchema originalSchema = createCustomScaleSchemaBuilder()
-                .withMainCategory(mainCategory)
-                .build();
-        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(Optional.of(originalSchema));
-        Mockito.when(schemaDao.findByTitle(schemaToUpdate, USER_ID)).thenReturn(List.of(originalSchema));
+            .withMainCategory(mainCategory)
+            .build();
+        Mockito.when(schemaDao.findById(schemaToUpdate.getId(), USER_ID)).thenReturn(originalSchema);
+        Mockito.when(schemaDao.findByTitle(schemaToUpdate.getTitle(), USER_ID)).thenReturn(Optional.of(originalSchema));
         Mockito.when(transactionServiceFacade.getMainCategories(TYPE, USER_ID)).thenReturn(List.of(mainCategory));
         Mockito.when(transactionServiceFacade.getSubCategories(TYPE, USER_ID)).thenReturn(List.of(subCategory));
         Mockito.when(schemaDao.update(schemaToUpdate, USER_ID)).thenReturn(schemaToUpdate);
@@ -273,7 +273,7 @@ public class StatisticsSchemaServiceTest {
         var result = underTest.update(schemaToUpdate, USER_ID);
         // THEN
         Mockito.verify(schemaDao).findById(schemaToUpdate.getId(), USER_ID);
-        Mockito.verify(schemaDao).findByTitle(schemaToUpdate, USER_ID);
+        Mockito.verify(schemaDao).findByTitle(schemaToUpdate.getTitle(), USER_ID);
         Mockito.verify(transactionServiceFacade).getMainCategories(TYPE, USER_ID);
         Mockito.verify(transactionServiceFacade).getSubCategories(TYPE, USER_ID);
         Mockito.verify(schemaDao).update(schemaToUpdate, USER_ID);
@@ -284,8 +284,8 @@ public class StatisticsSchemaServiceTest {
     public void testDeleteWhenSchemaIdIsNull() {
         // GIVEN
         StatisticsSchema schemaToDelete = createCustomScaleSchemaBuilder()
-                .withId(null)
-                .build();
+            .withId(null)
+            .build();
         // WHEN
         underTest.delete(schemaToDelete, USER_ID);
         // THEN
@@ -295,7 +295,8 @@ public class StatisticsSchemaServiceTest {
     public void testDeleteWhenOriginalSchemaCannotBeFound() {
         // GIVEN
         StatisticsSchema schemaToDelete = createCustomScaleSchemaBuilder().build();
-        Mockito.when(schemaDao.findById(schemaToDelete.getId(), USER_ID)).thenReturn(Optional.empty());
+        Mockito.when(schemaDao.findById(schemaToDelete.getId(), USER_ID))
+            .thenThrow(new StatisticsSchemaNotFoundException(schemaToDelete.getId(), null));
         // WHEN
         underTest.delete(schemaToDelete, USER_ID);
         // THEN
@@ -306,7 +307,7 @@ public class StatisticsSchemaServiceTest {
     public void testDelete() {
         // GIVEN
         StatisticsSchema schemaToDelete = createCustomScaleSchemaBuilder().build();
-        Mockito.when(schemaDao.findById(schemaToDelete.getId(), USER_ID)).thenReturn(Optional.of(schemaToDelete));
+        Mockito.when(schemaDao.findById(schemaToDelete.getId(), USER_ID)).thenReturn(schemaToDelete);
         Mockito.when(schemaDao.delete(schemaToDelete, USER_ID)).thenReturn(schemaToDelete);
         // WHEN
         var result = underTest.delete(schemaToDelete, USER_ID);
@@ -318,36 +319,36 @@ public class StatisticsSchemaServiceTest {
 
     private StatisticsSchema createStandardSchema() {
         return StatisticsSchema.builder()
-                .withId(STANDARD_SCHEMA_ID)
-                .withTitle(STANDARD_SCHEMA_TITLE)
-                .withType(StatisticsType.STANDARD)
-                .withChartType(ChartType.RADIAL)
-                .withCurrency(CURRENCY)
-                .build();
+            .withId(STANDARD_SCHEMA_ID)
+            .withTitle(STANDARD_SCHEMA_TITLE)
+            .withType(StatisticsType.STANDARD)
+            .withChartType(ChartType.RADIAL)
+            .withCurrency(CURRENCY)
+            .build();
     }
 
     private StatisticsSchema.Builder createCustomScaleSchemaBuilder() {
         return StatisticsSchema.builder()
-                .withId(CUSTOM_SCHEMA_ID)
-                .withTitle(CUSTOM_SCHEMA_TITLE)
-                .withType(StatisticsType.SCALE)
-                .withChartType(ChartType.BAR)
-                .withCurrency(CURRENCY);
+            .withId(CUSTOM_SCHEMA_ID)
+            .withTitle(CUSTOM_SCHEMA_TITLE)
+            .withType(StatisticsType.SCALE)
+            .withChartType(ChartType.BAR)
+            .withCurrency(CURRENCY);
     }
 
     private MainCategory.Builder createMainCategoryBuilder() {
         return MainCategory.builder()
-                .withId(MAIN_CATEGORY_ID)
-                .withName(MAIN_CATEGORY_NAME)
-                .withTransactionType(TYPE)
-                .withSubCategorySet(new HashSet<>());
+            .withId(MAIN_CATEGORY_ID)
+            .withName(MAIN_CATEGORY_NAME)
+            .withTransactionType(TYPE)
+            .withSubCategorySet(new HashSet<>());
     }
 
     private SubCategory.Builder createSubCategoryBuilder() {
         return SubCategory.builder()
-                .withId(SUBCATEGORY_ID)
-                .withName(SUBCATEGORY_NAME)
-                .withTransactionType(TYPE);
+            .withId(SUBCATEGORY_ID)
+            .withName(SUBCATEGORY_NAME)
+            .withTransactionType(TYPE);
     }
 
 }

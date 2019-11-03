@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaException;
+import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaNotFoundException;
+import hu.elte.bm.transactionservice.exceptions.maincategory.MainCategoryException;
+
 @Aspect
 @Component
 public class LoggerAspect {
@@ -34,20 +38,18 @@ public class LoggerAspect {
     @Value("${logging.logging_with_stack:false}")
     private Boolean loggingWithStackTrace;
 
-    // TODO:
-//    @Pointcut("execution(* hu.elte.bm.calculationservice.dal.transaction.*Repository.*(..))")
-//    public void repositoryClassMethods() {
-//    }
+    @Pointcut("execution(* hu.elte.bm.calculationservice.dal..*Repository.*(..))")
+    public void repositoryClassMethods() {
+    }
 
     @Pointcut("execution(* hu.elte.bm.calculationservice.web..*Controller.*(..))")
     public void controllerClassMethods() {
     }
 
-    // TODO:
-//    @Pointcut("execution(* hu.elte.bm.transactionservice.web.errorhandling.TransactionControllerAdvice.*(..))")
-//    public void controllerAdviceClassMethods() {
-//    }
-/*
+    @Pointcut("execution(* hu.elte.bm.calculationservice.web.errorhandling.ControllerAdvice.*(..))")
+    public void controllerAdviceClassMethods() {
+    }
+
     @Before("repositoryClassMethods()")
     public void logRepositoryCalls(final JoinPoint joinPoint) {
         logInfoWithParameters(joinPoint);
@@ -67,7 +69,7 @@ public class LoggerAspect {
     public void logControllerAdviceCalls(final JoinPoint joinPoint) {
         logError(joinPoint);
     }
-*/
+
     private void logInfoWithParameters(final JoinPoint joinPoint) {
         if ("INFO".equals(loggingLevel)) {
             LOGGER.info(createInfoLog(joinPoint.getSignature().toShortString(), joinPoint.getArgs()));
@@ -101,24 +103,34 @@ public class LoggerAspect {
 
     private String createErrorLog(final Object[] args) {
         Object e = args[0];
-        Object target = null;
-        // TODO:
+        Object target;
         target = e;
-//        if (e instanceof TransactionException) {
-//            TransactionException exception = (TransactionException) e;
-//            target = exception.getTransaction();
-//        } else if (e instanceof MainCategoryException) {
-//            MainCategoryException exception = (MainCategoryException) e;
-//            target = exception.getMainCategory();
-//        } else if (e instanceof SubCategoryException) {
-//            SubCategoryException exception = (SubCategoryException) e;
-//            target = exception.getSubCategory();
-//        } else if (e instanceof PictureNotFoundException) {
-//            PictureNotFoundException exception = (PictureNotFoundException) e;
-//            target = exception.getPicture() != null ? exception.getPicture() : exception.getPictureId();
-//        }
+        if (e instanceof StatisticsSchemaException) {
+            target = getTargetFromSchemaException(e);
+        } else if (e instanceof MainCategoryException) {
+            MainCategoryException exception = (MainCategoryException) e;
+            target = exception.getMainCategory();
+        }
         Object servletWebRequest = args[1];
         return createExceptionLog(e, target, servletWebRequest);
+    }
+
+    private Object getTargetFromSchemaException(final Object e) {
+        Object target;
+        if (e instanceof StatisticsSchemaNotFoundException) {
+            StatisticsSchemaNotFoundException exception = (StatisticsSchemaNotFoundException) e;
+            if (exception.getSchema() != null) {
+                target = exception.getSchema();
+            } else if (exception.getSchemaId() != null) {
+                target = "schemaId=" + exception.getSchemaId();
+            } else {
+                target = "schemaTitle=" + exception.getSchemaTitle();
+            }
+        } else {
+            StatisticsSchemaException exception = (StatisticsSchemaException) e;
+            target = exception.getSchema();
+        }
+        return target;
     }
 
     private String createExceptionLog(final Object e, final Object target, final Object servletWebRequest) {

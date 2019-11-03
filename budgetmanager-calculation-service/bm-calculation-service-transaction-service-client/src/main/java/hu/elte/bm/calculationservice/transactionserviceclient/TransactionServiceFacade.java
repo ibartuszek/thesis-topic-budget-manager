@@ -29,8 +29,8 @@ public class TransactionServiceFacade {
     public Optional<MainCategory> getMainCategoryById(final TransactionType type, final Long userId, final Long mainCategoryId) {
         List<MainCategory> mainCategoryList = getMainCategories(type, userId);
         return mainCategoryList.stream()
-                .filter(mainCategory -> mainCategory.getId().equals(mainCategoryId))
-                .findAny();
+            .filter(mainCategory -> mainCategory.getId().equals(mainCategoryId))
+            .findAny();
     }
 
     public List<SubCategory> getSubCategories(final TransactionType type, final Long userId) {
@@ -40,7 +40,7 @@ public class TransactionServiceFacade {
     public Optional<SubCategory> getSubCategoryById(final TransactionType type, final Long userId, final Long subCategoryId) {
         List<SubCategory> subCategoryList = getSubCategories(type, userId);
         return subCategoryList.stream()
-                .filter(subCategory -> subCategory.getId().equals(subCategoryId))
-                .findAny();
+            .filter(subCategory -> subCategory.getId().equals(subCategoryId))
+            .findAny();
     }
 }

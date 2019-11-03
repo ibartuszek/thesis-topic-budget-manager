@@ -1,11 +1,11 @@
-package hu.elte.bm.calculationservice.web;
+package hu.elte.bm.calculationservice.web.schema;
 
 import java.util.List;
 
 import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.web.common.ResponseModel;
 
-public final class StatisticsSchemaListResponse extends ResponseModel  {
+public final class StatisticsSchemaListResponse extends ResponseModel {
 
     private StatisticsSchema standardSchema;
     private List<StatisticsSchema> customSchemas;
@@ -18,7 +18,8 @@ public final class StatisticsSchemaListResponse extends ResponseModel  {
         return createSuccessfulResponse(standardSchema, customSchemas, null);
     }
 
-    static StatisticsSchemaListResponse createSuccessfulResponse(final StatisticsSchema standardSchema, final List<StatisticsSchema> customSchemas, final String message) {
+    static StatisticsSchemaListResponse createSuccessfulResponse(final StatisticsSchema standardSchema, final List<StatisticsSchema> customSchemas,
+        final String message) {
         StatisticsSchemaListResponse response = new StatisticsSchemaListResponse(message, true);
         response.standardSchema = standardSchema;
         response.customSchemas = customSchemas;
@@ -44,9 +45,9 @@ public final class StatisticsSchemaListResponse extends ResponseModel  {
     @Override
     public String toString() {
         return "StatisticsSchemaListResponse{"
-                + "message='" + getMessage() + '\''
-                + ", successful=" + isSuccessful()
-                + ", customSchemas=" + customSchemas
-                + '}';
+            + "message='" + getMessage() + '\''
+            + ", successful=" + isSuccessful()
+            + ", customSchemas=" + customSchemas
+            + '}';
     }
 }

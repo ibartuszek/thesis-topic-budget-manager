@@ -5,15 +5,15 @@ import java.util.Optional;
 
 import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
 
-public interface StatisticsSchemaDao  {
+public interface StatisticsSchemaDao {
 
     StatisticsSchema getStandardSchema(Long userId);
 
     List<StatisticsSchema> getCustomSchemas(Long userId);
 
-    Optional<StatisticsSchema> findById(Long id, Long userId);
+    StatisticsSchema findById(Long id, Long userId);
 
-    List<StatisticsSchema> findByTitle(StatisticsSchema schema, Long userId);
+    Optional<StatisticsSchema> findByTitle(String title, Long userId);
 
     StatisticsSchema save(StatisticsSchema schema, Long userId);
 

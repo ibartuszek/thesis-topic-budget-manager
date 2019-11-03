@@ -1,6 +1,5 @@
 package hu.elte.bm.calculationservice.transactionserviceclient.categories;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
-import hu.elte.bm.calculationservice.transactionserviceclient.exception.TransactionServiceException;
+import hu.elte.bm.calculationservice.transactionserviceclient.exceptions.TransactionServiceException;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.TransactionType;
 
@@ -43,8 +42,8 @@ public class MainCategoryProviderTest {
     @Test(expected = TransactionServiceException.class)
     public void testProvideWhenServerNotRespond() {
         // GIVEN
-        ResponseEntity<MainCategory[]> responseEntity = new ResponseEntity<>(new MainCategory[0], HttpStatus.REQUEST_TIMEOUT);
-        Mockito.when(restTemplate.getForEntity(CALLED_URL, MainCategory[].class)).thenReturn(responseEntity);
+        ResponseEntity<MainCategoryListResponse> responseEntity = new ResponseEntity<>(new MainCategoryListResponse(), HttpStatus.REQUEST_TIMEOUT);
+        Mockito.when(restTemplate.getForEntity(CALLED_URL, MainCategoryListResponse.class)).thenReturn(responseEntity);
         // WHEN
         underTest.provide(TYPE, USER_ID);
         // THEN
@@ -54,32 +53,34 @@ public class MainCategoryProviderTest {
     @Test
     public void testProvideWhenServerSendsEmptyList() {
         // GIVEN
-        ResponseEntity<MainCategory[]> responseEntity = new ResponseEntity<>(new MainCategory[0], HttpStatus.OK);
-        Mockito.when(restTemplate.getForEntity(CALLED_URL, MainCategory[].class)).thenReturn(responseEntity);
+        ResponseEntity<MainCategoryListResponse> responseEntity = new ResponseEntity<>(new MainCategoryListResponse(), HttpStatus.OK);
+        Mockito.when(restTemplate.getForEntity(CALLED_URL, MainCategoryListResponse.class)).thenReturn(responseEntity);
         // WHEN
         List<MainCategory> result = underTest.provide(TYPE, USER_ID);
         // THEN
-        Mockito.verify(restTemplate).getForEntity(CALLED_URL, MainCategory[].class);
-        Assert.assertEquals(Collections.emptyList(), result);
+        Mockito.verify(restTemplate).getForEntity(CALLED_URL, MainCategoryListResponse.class);
+        Assert.assertNull(result);
     }
 
     @Test
     public void testProvideWhenServerSendsAList() {
         // GIVEN
         MainCategory mainCategory = MainCategory.builder()
-                .withId(1L)
-                .withName("name")
-                .withTransactionType(TransactionType.OUTCOME)
-                .withSubCategorySet(new HashSet<>())
-                .build();
-        MainCategory[] mainCategories = {mainCategory};
-        ResponseEntity<MainCategory[]> responseEntity = new ResponseEntity<>(mainCategories, HttpStatus.OK);
-        Mockito.when(restTemplate.getForEntity(CALLED_URL, MainCategory[].class)).thenReturn(responseEntity);
+            .withId(1L)
+            .withName("name")
+            .withTransactionType(TransactionType.OUTCOME)
+            .withSubCategorySet(new HashSet<>())
+            .build();
+        List<MainCategory> mainCategories = List.of(mainCategory);
+        MainCategoryListResponse response = new MainCategoryListResponse();
+        response.setMainCategoryList(mainCategories);
+        ResponseEntity<MainCategoryListResponse> responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
+        Mockito.when(restTemplate.getForEntity(CALLED_URL, MainCategoryListResponse.class)).thenReturn(responseEntity);
         // WHEN
         List<MainCategory> result = underTest.provide(TYPE, USER_ID);
         // THEN
-        Mockito.verify(restTemplate).getForEntity(CALLED_URL, MainCategory[].class);
-        Assert.assertEquals(List.of(mainCategories), result);
+        Mockito.verify(restTemplate).getForEntity(CALLED_URL, MainCategoryListResponse.class);
+        Assert.assertEquals(mainCategories, result);
     }
 
 }

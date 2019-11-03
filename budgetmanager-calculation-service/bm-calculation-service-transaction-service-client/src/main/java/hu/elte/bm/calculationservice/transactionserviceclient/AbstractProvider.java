@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import hu.elte.bm.calculationservice.transactionserviceclient.exception.TransactionServiceException;
+import hu.elte.bm.calculationservice.transactionserviceclient.exceptions.TransactionServiceException;
 import hu.elte.bm.transactionservice.TransactionType;
 
 public abstract class AbstractProvider {
@@ -28,9 +28,9 @@ public abstract class AbstractProvider {
 
     protected String createUrlWithTransactionTypeAndUserId(final String baseUrl, final TransactionType type, final Long userId) {
         return UriComponentsBuilder.fromHttpUrl(baseUrl)
-                .queryParam("type", type)
-                .queryParam("userId", userId)
-                .toUriString();
+            .queryParam("type", type)
+            .queryParam("userId", userId)
+            .toUriString();
     }
 
     protected void checkResponseStatus(final ResponseEntity responseEntity, final String url) {

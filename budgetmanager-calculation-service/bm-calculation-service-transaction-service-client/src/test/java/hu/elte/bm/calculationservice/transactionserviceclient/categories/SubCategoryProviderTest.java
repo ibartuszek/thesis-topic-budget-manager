@@ -1,6 +1,5 @@
 package hu.elte.bm.calculationservice.transactionserviceclient.categories;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -16,7 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
-import hu.elte.bm.calculationservice.transactionserviceclient.exception.TransactionServiceException;
+import hu.elte.bm.calculationservice.transactionserviceclient.exceptions.TransactionServiceException;
+import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.TransactionType;
 
@@ -36,48 +36,50 @@ public class SubCategoryProviderTest {
 
     @Before
     public void setup() {
-        ReflectionTestUtils.setField(underTest, "findMainCategoriesUrl", BASE_URL);
+        ReflectionTestUtils.setField(underTest, "findSubCategoriesUrl", BASE_URL);
     }
 
     @Test(expected = TransactionServiceException.class)
     public void testProvideWhenServerNotRespond() {
         // GIVEN
-        ResponseEntity<SubCategory[]> responseEntity = new ResponseEntity<>(new SubCategory[0], HttpStatus.REQUEST_TIMEOUT);
-        Mockito.when(restTemplate.getForEntity(CALLED_URL, SubCategory[].class)).thenReturn(responseEntity);
+        ResponseEntity<SubCategoryListResponse> responseEntity = new ResponseEntity<>(new SubCategoryListResponse(), HttpStatus.REQUEST_TIMEOUT);
+        Mockito.when(restTemplate.getForEntity(CALLED_URL, SubCategoryListResponse.class)).thenReturn(responseEntity);
         // WHEN
         underTest.provide(TYPE, USER_ID);
         // THEN
-        Mockito.verify(restTemplate).getForEntity(CALLED_URL, SubCategory[].class);
+        Mockito.verify(restTemplate).getForEntity(CALLED_URL, MainCategory[].class);
     }
 
     @Test
     public void testProvideWhenServerSendsEmptyList() {
         // GIVEN
-        ResponseEntity<SubCategory[]> responseEntity = new ResponseEntity<>(new SubCategory[0], HttpStatus.OK);
-        Mockito.when(restTemplate.getForEntity(CALLED_URL, SubCategory[].class)).thenReturn(responseEntity);
+        ResponseEntity<SubCategoryListResponse> responseEntity = new ResponseEntity<>(new SubCategoryListResponse(), HttpStatus.OK);
+        Mockito.when(restTemplate.getForEntity(CALLED_URL, SubCategoryListResponse.class)).thenReturn(responseEntity);
         // WHEN
         List<SubCategory> result = underTest.provide(TYPE, USER_ID);
         // THEN
-        Mockito.verify(restTemplate).getForEntity(CALLED_URL, SubCategory[].class);
-        Assert.assertEquals(Collections.emptyList(), result);
+        Mockito.verify(restTemplate).getForEntity(CALLED_URL, SubCategoryListResponse.class);
+        Assert.assertNull(result);
     }
 
     @Test
     public void testProvideWhenServerSendsAList() {
         // GIVEN
         SubCategory subCategory = SubCategory.builder()
-                .withId(1L)
-                .withName("name")
-                .withTransactionType(TransactionType.OUTCOME)
-                .build();
-        SubCategory[] subCategories = {subCategory};
-        ResponseEntity<SubCategory[]> responseEntity = new ResponseEntity<>(subCategories, HttpStatus.OK);
-        Mockito.when(restTemplate.getForEntity(CALLED_URL, SubCategory[].class)).thenReturn(responseEntity);
+            .withId(1L)
+            .withName("name")
+            .withTransactionType(TransactionType.OUTCOME)
+            .build();
+        List<SubCategory> subCategoryList = List.of(subCategory);
+        SubCategoryListResponse response = new SubCategoryListResponse();
+        response.setSubCategoryList(subCategoryList);
+        ResponseEntity<SubCategoryListResponse> responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
+        Mockito.when(restTemplate.getForEntity(CALLED_URL, SubCategoryListResponse.class)).thenReturn(responseEntity);
         // WHEN
         List<SubCategory> result = underTest.provide(TYPE, USER_ID);
         // THEN
-        Mockito.verify(restTemplate).getForEntity(CALLED_URL, SubCategory[].class);
-        Assert.assertEquals(List.of(subCategories), result);
+        Mockito.verify(restTemplate).getForEntity(CALLED_URL, SubCategoryListResponse.class);
+        Assert.assertEquals(subCategoryList, result);
     }
 
 }

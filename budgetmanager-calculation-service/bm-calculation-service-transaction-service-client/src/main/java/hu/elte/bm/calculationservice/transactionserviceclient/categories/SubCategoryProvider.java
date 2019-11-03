@@ -1,7 +1,6 @@
 package hu.elte.bm.calculationservice.transactionserviceclient.categories;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +16,7 @@ import hu.elte.bm.transactionservice.TransactionType;
 public class SubCategoryProvider extends AbstractProvider {
 
     @Value("${bm.transactionservice.subcategories.findall}")
-    private String findMainCategoriesUrl;
+    private String findSubCategoriesUrl;
 
     @Autowired
     public SubCategoryProvider(final RestTemplate restTemplate) {
@@ -26,10 +25,10 @@ public class SubCategoryProvider extends AbstractProvider {
 
     @Override
     public List<SubCategory> provide(final TransactionType type, final Long userId) {
-        String url = createUrlWithTransactionTypeAndUserId(findMainCategoriesUrl, type, userId);
-        ResponseEntity<SubCategory[]> responseEntity = getRestTemplate().getForEntity(url, SubCategory[].class);
-        checkResponseStatus(responseEntity, findMainCategoriesUrl);
-        return List.of(Objects.requireNonNull(responseEntity.getBody()));
+        String url = createUrlWithTransactionTypeAndUserId(findSubCategoriesUrl, type, userId);
+        ResponseEntity<SubCategoryListResponse> responseEntity = getRestTemplate().getForEntity(url, SubCategoryListResponse.class);
+        checkResponseStatus(responseEntity, findSubCategoriesUrl);
+        return responseEntity.getBody().getSubCategoryList();
     }
 
 }

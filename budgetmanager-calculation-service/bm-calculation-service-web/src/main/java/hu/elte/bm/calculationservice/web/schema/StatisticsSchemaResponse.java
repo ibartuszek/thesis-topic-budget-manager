@@ -1,9 +1,9 @@
-package hu.elte.bm.calculationservice.web;
+package hu.elte.bm.calculationservice.web.schema;
 
 import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.web.common.ResponseModel;
 
-public final class StatisticsSchemaResponse extends ResponseModel  {
+public final class StatisticsSchemaResponse extends ResponseModel {
 
     private StatisticsSchema schema;
 
@@ -28,9 +28,9 @@ public final class StatisticsSchemaResponse extends ResponseModel  {
     @Override
     public String toString() {
         return "StatisticsSchemaResponse{"
-                + "message='" + getMessage() + '\''
-                + ", successful=" + isSuccessful()
-                + ", schema=" + schema
-                + '}';
+            + "message='" + getMessage() + '\''
+            + ", successful=" + isSuccessful()
+            + ", schema=" + schema
+            + '}';
     }
 }

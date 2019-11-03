@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.web;
+package hu.elte.bm.calculationservice.web.schema;
 
 import javax.validation.Valid;
 

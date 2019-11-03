@@ -9,7 +9,6 @@ import org.springframework.util.Assert;
 
 import hu.elte.bm.calculationservice.exceptions.schema.IllegalStatisticsSchemaException;
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaConflictException;
-import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaNotFoundException;
 import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.transactionserviceclient.TransactionServiceFacade;
 import hu.elte.bm.transactionservice.MainCategory;
@@ -30,9 +29,6 @@ public class StatisticsSchemaService {
 
     @Value("${schema.schema_not_changed:Schema has no changes!}")
     private String schemaNotChanged;
-
-    @Value("${schema.schema_not_found:Schema cannot be found!}")
-    private String schemaNotFound;
 
     @Value("${schema.schema_main_category_cannot_be_found:Schema's main category cannot be found!}")
     private String schemaMainCategoryCannotBeFound;
@@ -75,8 +71,8 @@ public class StatisticsSchemaService {
 
     private void validateForSave(final StatisticsSchema schema, final Long userId) {
         Assert.isNull(schema.getId(), schemaIdMustBeNull);
-        List<StatisticsSchema> schemaListWithSameTitle = schemaDao.findByTitle(schema, userId);
-        if (!schemaListWithSameTitle.isEmpty()) {
+        Optional<StatisticsSchema> schemaWithSameTitle = schemaDao.findByTitle(schema.getTitle(), userId);
+        if (schemaWithSameTitle.isPresent()) {
             throw new StatisticsSchemaConflictException(schema, schemaTitleIsReserved);
         }
     }
@@ -97,24 +93,20 @@ public class StatisticsSchemaService {
     }
 
     private void validateForUpdate(final StatisticsSchema schema, final Long userId) {
-        Optional<StatisticsSchema> optionalOriginalSchema = validateForDelete(schema, userId);
-        StatisticsSchema originalSchema = optionalOriginalSchema.get();
+        Assert.notNull(schema.getId(), schemaIdCannotBeNull);
+        StatisticsSchema originalSchema = schemaDao.findById(schema.getId(), userId);
         if (schema.equals(originalSchema)) {
             throw new IllegalStatisticsSchemaException(schema, schemaNotChanged);
         }
-        List<StatisticsSchema> schemaListWithSameTitle = schemaDao.findByTitle(schema, userId);
-        if (!schemaListWithSameTitle.isEmpty() && !schemaListWithSameTitle.contains(originalSchema)) {
+        Optional<StatisticsSchema> schemaWithSameTitle = schemaDao.findByTitle(schema.getTitle(), userId);
+        if (schemaWithSameTitle.isPresent() && !schemaWithSameTitle.get().equals(originalSchema)) {
             throw new StatisticsSchemaConflictException(schema, schemaTitleIsReserved);
         }
     }
 
-    private Optional<StatisticsSchema> validateForDelete(final StatisticsSchema schema, final Long userId) {
+    private void validateForDelete(final StatisticsSchema schema, final Long userId) {
         Assert.notNull(schema.getId(), schemaIdCannotBeNull);
-        Optional<StatisticsSchema> optionalOriginalSchema = schemaDao.findById(schema.getId(), userId);
-        if (optionalOriginalSchema.isEmpty()) {
-            throw new StatisticsSchemaNotFoundException(schema, schemaNotFound);
-        }
-        return optionalOriginalSchema;
+        schemaDao.findById(schema.getId(), userId);
     }
 
 }

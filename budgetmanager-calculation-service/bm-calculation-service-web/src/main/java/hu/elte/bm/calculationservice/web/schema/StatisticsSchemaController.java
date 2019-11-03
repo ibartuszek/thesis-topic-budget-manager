@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.web;
+package hu.elte.bm.calculationservice.web.schema;
 
 import java.util.List;
 
@@ -19,17 +19,13 @@ import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
 public class StatisticsSchemaController {
 
     private static final String APPLICATION_JSON = "application/json";
-
+    private final StatisticsSchemaService service;
     @Value("${schema.schema_has_been_saved:Schema has been saved.}")
     private String schemaHasBeenSaved;
-
     @Value("${schema.schema_has_been_updated:Schema has been updated.}")
     private String schemaHasBeenUpdated;
-
     @Value("${schema.schema_has_been_deleted:Schema has been deleted.}")
     private String schemaHasBeenDeleted;
-
-    private final StatisticsSchemaService service;
 
     public StatisticsSchemaController(final StatisticsSchemaService service) {
         this.service = service;
@@ -37,7 +33,7 @@ public class StatisticsSchemaController {
 
     @RequestMapping(value = "/bm/statistics/schema/findAll", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public StatisticsSchemaListResponse getSchemaList(
-            @NotNull @RequestParam(value = "userId") final Long userId) {
+        @NotNull @RequestParam(value = "userId") final Long userId) {
         StatisticsSchema standardSchema = service.getStandardSchema(userId);
         List<StatisticsSchema> customSchemas = service.getCustomSchemas(userId);
         return StatisticsSchemaListResponse.createSuccessfulResponse(standardSchema, customSchemas);

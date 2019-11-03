@@ -1,7 +1,6 @@
 package hu.elte.bm.calculationservice.transactionserviceclient.categories;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +26,9 @@ public class MainCategoryProvider extends AbstractProvider {
     @Override
     public List<MainCategory> provide(final TransactionType type, final Long userId) {
         String url = createUrlWithTransactionTypeAndUserId(findMainCategoriesUrl, type, userId);
-        ResponseEntity<MainCategory[]> responseEntity = getRestTemplate().getForEntity(url, MainCategory[].class);
+        ResponseEntity<MainCategoryListResponse> responseEntity = getRestTemplate().getForEntity(url, MainCategoryListResponse.class);
         checkResponseStatus(responseEntity, findMainCategoriesUrl);
-        return List.of(Objects.requireNonNull(responseEntity.getBody()));
+        return responseEntity.getBody().getMainCategoryList();
     }
 
 }

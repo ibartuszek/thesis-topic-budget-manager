@@ -12,7 +12,6 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-
 @JsonDeserialize(builder = Transaction.Builder.class)
 public final class Transaction {
 

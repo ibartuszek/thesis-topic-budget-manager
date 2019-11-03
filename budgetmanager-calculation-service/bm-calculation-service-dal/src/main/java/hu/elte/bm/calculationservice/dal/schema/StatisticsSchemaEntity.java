@@ -15,7 +15,7 @@ import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
 import hu.elte.bm.transactionservice.Currency;
 
 @Entity
-@Table(name = "schema", uniqueConstraints = { @UniqueConstraint(columnNames = {"title", "user_id"})})
+@Table(name = "schema", uniqueConstraints = { @UniqueConstraint(columnNames = { "title", "user_id" }) })
 public final class StatisticsSchemaEntity {
 
     private static final int MAXIMUM_TITLE_LENGTH = 20;
