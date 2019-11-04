@@ -2,6 +2,7 @@ package hu.elte.bm.calculationservice.dal.schema;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -29,12 +30,12 @@ public class CategoryProvider {
         this.transactionServiceFacade = transactionServiceFacade;
     }
 
-    List<MainCategory> provideMainCategoryList(final List<Long> mainCategoryIdList, final Long userId, final TransactionType type) {
+    List<MainCategory> provideMainCategoryList(final Set<Long> mainCategoryIdSet, final Long userId, final TransactionType type) {
         List<MainCategory> result;
-        if (mainCategoryIdList.isEmpty()) {
+        if (mainCategoryIdSet.isEmpty()) {
             result = Collections.emptyList();
         } else {
-            result = createMainCategoryList(mainCategoryIdList, userId, type);
+            result = createMainCategoryList(mainCategoryIdSet, userId, type);
         }
         return result;
     }
@@ -53,12 +54,12 @@ public class CategoryProvider {
             .orElseThrow(() -> new IllegalMainCategoryException(mainCategory, subCategoryNotFound));
     }
 
-    private List<MainCategory> createMainCategoryList(final List<Long> mainCategoryIdList, final Long userId, final TransactionType type) {
+    private List<MainCategory> createMainCategoryList(final Set<Long> mainCategoryIdSet, final Long userId, final TransactionType type) {
         List<MainCategory> result;
         result = transactionServiceFacade.getMainCategories(type, userId).stream()
-            .filter(mainCategory -> mainCategoryIdList.contains(mainCategory.getId()))
+            .filter(mainCategory -> mainCategoryIdSet.contains(mainCategory.getId()))
             .collect(Collectors.toList());
-        if (result.size() != mainCategoryIdList.size()) {
+        if (result.size() != mainCategoryIdSet.size()) {
             throw new MainCategoryNotFoundException(null, mainCategoryNotFound);
         }
         return result;

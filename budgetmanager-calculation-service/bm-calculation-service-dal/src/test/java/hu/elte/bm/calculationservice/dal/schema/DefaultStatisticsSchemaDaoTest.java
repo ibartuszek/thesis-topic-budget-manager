@@ -91,13 +91,13 @@ public class DefaultStatisticsSchemaDaoTest {
     public void testGetCustomSchemasWhenRepositoryReturnsWithEmptyList() {
         // GIVEN
         Mockito.when(repository.findAllSchema(USER_ID)).thenReturn(Collections.emptyList());
-        Mockito.when(categoryProvider.provideMainCategoryList(Collections.emptyList(), USER_ID, TYPE))
+        Mockito.when(categoryProvider.provideMainCategoryList(Collections.emptySet(), USER_ID, TYPE))
             .thenReturn(Collections.emptyList());
         // WHEN
         var result = underTest.getCustomSchemas(USER_ID);
         // THEN
         Mockito.verify(repository).findAllSchema(USER_ID);
-        Mockito.verify(categoryProvider).provideMainCategoryList(Collections.emptyList(), USER_ID, TYPE);
+        Mockito.verify(categoryProvider).provideMainCategoryList(Collections.emptySet(), USER_ID, TYPE);
         Assert.assertEquals(Collections.emptyList(), result);
     }
 
@@ -113,7 +113,7 @@ public class DefaultStatisticsSchemaDaoTest {
         MainCategory mainCategory = exampleSchema.getMainCategory();
         SubCategory subCategory = exampleSchema.getSubCategory();
         Mockito.when(repository.findAllSchema(USER_ID)).thenReturn(List.of(standardEntity, exampleEntity));
-        Mockito.when(categoryProvider.provideMainCategoryList(List.of(mainCategory.getId()), USER_ID, TYPE))
+        Mockito.when(categoryProvider.provideMainCategoryList(Set.of(mainCategory.getId()), USER_ID, TYPE))
             .thenReturn(List.of(mainCategory));
         Mockito.when(categoryProvider.provideSubCategory(subCategory.getId(), mainCategory)).thenReturn(subCategory);
         Mockito.when(transformer.transformToStatistcisSchema(exampleEntity, mainCategory, subCategory)).thenReturn(exampleSchema);
@@ -121,7 +121,7 @@ public class DefaultStatisticsSchemaDaoTest {
         var result = underTest.getCustomSchemas(USER_ID);
         // THEN
         Mockito.verify(repository).findAllSchema(USER_ID);
-        Mockito.verify(categoryProvider).provideMainCategoryList(List.of(mainCategory.getId()), USER_ID, TYPE);
+        Mockito.verify(categoryProvider).provideMainCategoryList(Set.of(mainCategory.getId()), USER_ID, TYPE);
         Mockito.verify(categoryProvider).provideSubCategory(subCategory.getId(), mainCategory);
         Assert.assertEquals(List.of(exampleSchema), result);
     }

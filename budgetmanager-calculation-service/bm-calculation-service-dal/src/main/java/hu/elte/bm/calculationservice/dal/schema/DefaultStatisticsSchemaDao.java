@@ -3,6 +3,7 @@ package hu.elte.bm.calculationservice.dal.schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -51,7 +52,7 @@ public class DefaultStatisticsSchemaDao implements StatisticsSchemaDao {
     @Override
     public List<StatisticsSchema> getCustomSchemas(final Long userId) {
         List<StatisticsSchemaEntity> schemaEntityList = getSchemaEntityList(userId);
-        List<Long> mainCategoryIdList = getMainCategoryIdList(schemaEntityList);
+        Set<Long> mainCategoryIdList = getMainCategoryIdSet(schemaEntityList);
         List<MainCategory> mainCategoryList = categoryProvider.provideMainCategoryList(mainCategoryIdList, userId, TransactionType.OUTCOME);
         return transformList(schemaEntityList, mainCategoryList);
     }
@@ -94,11 +95,11 @@ public class DefaultStatisticsSchemaDao implements StatisticsSchemaDao {
             .collect(Collectors.toList());
     }
 
-    private List<Long> getMainCategoryIdList(final List<StatisticsSchemaEntity> schemaEntityList) {
+    private Set<Long> getMainCategoryIdSet(final List<StatisticsSchemaEntity> schemaEntityList) {
         return schemaEntityList.stream()
             .filter(entity -> entity.getMainCategoryId() != null)
             .map(StatisticsSchemaEntity::getMainCategoryId)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     private MainCategory getMainCategory(final Long mainCategoryId, final List<MainCategory> mainCategoryList) {
@@ -112,7 +113,8 @@ public class DefaultStatisticsSchemaDao implements StatisticsSchemaDao {
         List<StatisticsSchema> result = new ArrayList<>();
         for (StatisticsSchemaEntity entity : schemaEntityList) {
             MainCategory mainCategory = getMainCategory(entity.getMainCategoryId(), mainCategoryList);
-            SubCategory subCategory = categoryProvider.provideSubCategory(entity.getSubCategoryId(), mainCategory);
+            SubCategory subCategory = entity.getSubCategoryId() != null
+                    ? categoryProvider.provideSubCategory(entity.getSubCategoryId(), mainCategory) : null;
             result.add(transformer.transformToStatistcisSchema(entity, mainCategory, subCategory));
         }
         return result;

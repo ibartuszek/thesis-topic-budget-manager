@@ -1,30 +1,17 @@
-package hu.elte.bm.calculationservice.transactionserviceclient;
+package hu.elte.bm.calculationservice.transactionserviceclient.categories;
 
 import java.text.MessageFormat;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import hu.elte.bm.calculationservice.transactionserviceclient.exceptions.TransactionServiceException;
 import hu.elte.bm.transactionservice.TransactionType;
 
-public abstract class AbstractProvider {
+public abstract class AbstractCategoryProxy {
 
     protected static final String EXCEPTION_MESSAGE = "Transaction service sent: {0} during: '{1}' call.";
-
-    private final RestTemplate restTemplate;
-
-    public AbstractProvider(final RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    public RestTemplate getRestTemplate() {
-        return restTemplate;
-    }
-
-    public abstract List provide(TransactionType type, Long userId);
 
     protected String createUrlWithTransactionTypeAndUserId(final String baseUrl, final TransactionType type, final Long userId) {
         return UriComponentsBuilder.fromHttpUrl(baseUrl)
@@ -33,8 +20,10 @@ public abstract class AbstractProvider {
             .toUriString();
     }
 
+    public abstract List getCategories(TransactionType type, Long userId);
+
     protected void checkResponseStatus(final ResponseEntity responseEntity, final String url) {
-        if (!responseEntity.getStatusCode().is2xxSuccessful()) {
+        if (!responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null) {
             throw new TransactionServiceException(MessageFormat.format(EXCEPTION_MESSAGE, responseEntity.getStatusCode(), url));
         }
     }

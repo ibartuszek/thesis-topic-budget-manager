@@ -10,6 +10,10 @@ public final class StatisticsSchemaListResponse extends ResponseModel {
     private StatisticsSchema standardSchema;
     private List<StatisticsSchema> customSchemas;
 
+    private StatisticsSchemaListResponse() {
+        super();
+    }
+
     private StatisticsSchemaListResponse(final String message, final boolean successful) {
         super(message, successful);
     }

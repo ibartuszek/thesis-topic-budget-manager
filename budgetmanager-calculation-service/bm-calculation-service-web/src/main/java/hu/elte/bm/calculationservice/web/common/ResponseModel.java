@@ -5,6 +5,9 @@ public class ResponseModel {
     private String message;
     private boolean successful;
 
+    protected ResponseModel() {
+    }
+
     public ResponseModel(final String message, final boolean successful) {
         this.message = message;
         this.successful = successful;

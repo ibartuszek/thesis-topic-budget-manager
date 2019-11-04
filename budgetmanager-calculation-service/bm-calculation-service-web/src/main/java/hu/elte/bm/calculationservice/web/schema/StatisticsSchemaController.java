@@ -20,10 +20,13 @@ public class StatisticsSchemaController {
 
     private static final String APPLICATION_JSON = "application/json";
     private final StatisticsSchemaService service;
+
     @Value("${schema.schema_has_been_saved:Schema has been saved.}")
     private String schemaHasBeenSaved;
+
     @Value("${schema.schema_has_been_updated:Schema has been updated.}")
     private String schemaHasBeenUpdated;
+
     @Value("${schema.schema_has_been_deleted:Schema has been deleted.}")
     private String schemaHasBeenDeleted;
 

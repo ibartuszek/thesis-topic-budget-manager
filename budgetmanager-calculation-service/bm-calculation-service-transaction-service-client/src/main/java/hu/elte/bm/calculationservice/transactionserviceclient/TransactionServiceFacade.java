@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.calculationservice.transactionserviceclient.categories.MainCategoryProvider;
-import hu.elte.bm.calculationservice.transactionserviceclient.categories.SubCategoryProvider;
+import hu.elte.bm.calculationservice.transactionserviceclient.categories.MainCategoryProxy;
+import hu.elte.bm.calculationservice.transactionserviceclient.categories.SubCategoryProxy;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.TransactionType;
@@ -14,16 +14,16 @@ import hu.elte.bm.transactionservice.TransactionType;
 @Component
 public class TransactionServiceFacade {
 
-    private final MainCategoryProvider mainCategoryProvider;
-    private final SubCategoryProvider subCategoryProvider;
+    private final MainCategoryProxy mainCategoryProxy;
+    private final SubCategoryProxy subCategoryProxy;
 
-    public TransactionServiceFacade(final MainCategoryProvider mainCategoryProvider, final SubCategoryProvider subCategoryProvider) {
-        this.mainCategoryProvider = mainCategoryProvider;
-        this.subCategoryProvider = subCategoryProvider;
+    public TransactionServiceFacade(final MainCategoryProxy mainCategoryProxy, final SubCategoryProxy subCategoryProxy) {
+        this.mainCategoryProxy = mainCategoryProxy;
+        this.subCategoryProxy = subCategoryProxy;
     }
 
     public List<MainCategory> getMainCategories(final TransactionType type, final Long userId) {
-        return mainCategoryProvider.provide(type, userId);
+        return mainCategoryProxy.getCategories(type, userId);
     }
 
     public Optional<MainCategory> getMainCategoryById(final TransactionType type, final Long userId, final Long mainCategoryId) {
@@ -34,7 +34,7 @@ public class TransactionServiceFacade {
     }
 
     public List<SubCategory> getSubCategories(final TransactionType type, final Long userId) {
-        return subCategoryProvider.provide(type, userId);
+        return subCategoryProxy.getCategories(type, userId);
     }
 
     public Optional<SubCategory> getSubCategoryById(final TransactionType type, final Long userId, final Long subCategoryId) {

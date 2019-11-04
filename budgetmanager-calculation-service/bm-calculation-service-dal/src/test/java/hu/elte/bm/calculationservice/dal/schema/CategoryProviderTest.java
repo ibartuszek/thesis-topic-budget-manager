@@ -49,7 +49,7 @@ public class CategoryProviderTest {
     public void testProvideMainCategoryListWhenMainCategoryIdListIsEmpty() {
         // GIVEN
         // WHEN
-        var result = underTest.provideMainCategoryList(Collections.emptyList(), USER_ID, TYPE);
+        var result = underTest.provideMainCategoryList(Collections.emptySet(), USER_ID, TYPE);
         // THEN
         Assert.assertEquals(Collections.emptyList(), result);
     }
@@ -57,22 +57,22 @@ public class CategoryProviderTest {
     @Test(expected = MainCategoryNotFoundException.class)
     public void testProvideMainCategoryListWhenOneMainCategoryCannotBeFound() {
         // GIVEN
-        List<Long> mainCategoryIdList = List.of(EXPECTED_MAIN_CATEGORY_ID, INVALID_MAIN_CATEGORY_ID);
+        Set<Long> mainCategoryIdSet = Set.of(EXPECTED_MAIN_CATEGORY_ID, INVALID_MAIN_CATEGORY_ID);
         MainCategory expectedMainCategory = createMainCategoryBuilder().build();
         setTransactionServiceFacadeResponse(expectedMainCategory);
         // WHEN
-        underTest.provideMainCategoryList(mainCategoryIdList, USER_ID, TYPE);
+        underTest.provideMainCategoryList(mainCategoryIdSet, USER_ID, TYPE);
         // THEN
     }
 
     @Test
     public void testProvideMainCategoryList() {
         // GIVEN
-        List<Long> mainCategoryIdList = List.of(EXPECTED_MAIN_CATEGORY_ID);
+        Set<Long> mainCategoryIdSet = Set.of(EXPECTED_MAIN_CATEGORY_ID);
         MainCategory expectedMainCategory = createMainCategoryBuilder().build();
         setTransactionServiceFacadeResponse(expectedMainCategory);
         // WHEN
-        var result = underTest.provideMainCategoryList(mainCategoryIdList, USER_ID, TYPE);
+        var result = underTest.provideMainCategoryList(mainCategoryIdSet, USER_ID, TYPE);
         // THEN
         Mockito.verify(transactionServiceFacade).getMainCategories(TYPE, USER_ID);
         Assert.assertEquals(List.of(expectedMainCategory), result);

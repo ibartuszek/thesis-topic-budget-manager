@@ -1,0 +1,137 @@
+{
+  "message": null,
+  "successful": true,
+  "mainCategoryList": [
+    {
+      "id": 4,
+      "name": "Lodging",
+      "transactionType": "OUTCOME",
+      "subCategorySet": [
+        {
+          "id": 3,
+          "name": "Common cost",
+          "transactionType": "OUTCOME"
+        },
+        {
+          "id": 5,
+          "name": "Internet",
+          "transactionType": "OUTCOME"
+        },
+        {
+          "id": 4,
+          "name": "Overhead",
+          "transactionType": "OUTCOME"
+        },
+        {
+          "id": 6,
+          "name": "Tax",
+          "transactionType": "OUTCOME"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Car",
+      "transactionType": "OUTCOME",
+      "subCategorySet": [
+        {
+          "id": 6,
+          "name": "Tax",
+          "transactionType": "OUTCOME"
+        },
+        {
+          "id": 7,
+          "name": "Insurance",
+          "transactionType": "OUTCOME"
+        },
+        {
+          "id": 8,
+          "name": "Petrol",
+          "transactionType": "OUTCOME"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Food",
+      "transactionType": "OUTCOME",
+      "subCategorySet": [
+        {
+          "id": 9,
+          "name": "Restaurant",
+          "transactionType": "OUTCOME"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Beatuy care",
+      "transactionType": "OUTCOME",
+      "subCategorySet": []
+    },
+    {
+      "id": 8,
+      "name": "Health care",
+      "transactionType": "OUTCOME",
+      "subCategorySet": [
+        {
+          "id": 10,
+          "name": "Vitamins",
+          "transactionType": "OUTCOME"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Education",
+      "transactionType": "OUTCOME",
+      "subCategorySet": [
+        {
+          "id": 11,
+          "name": "Private lesson",
+          "transactionType": "OUTCOME"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Entertainment",
+      "transactionType": "OUTCOME",
+      "subCategorySet": [
+        {
+          "id": 13,
+          "name": "Computer",
+          "transactionType": "OUTCOME"
+        },
+        {
+          "id": 14,
+          "name": "Hobby",
+          "transactionType": "OUTCOME"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Sport",
+      "transactionType": "OUTCOME",
+      "subCategorySet": [
+        {
+          "id": 15,
+          "name": "Fitness season ticket",
+          "transactionType": "OUTCOME"
+        },
+        {
+          "id": 16,
+          "name": "Clothes",
+          "transactionType": "OUTCOME"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Clothes",
+      "transactionType": "OUTCOME",
+      "subCategorySet": []
+    }
+  ]
+}
