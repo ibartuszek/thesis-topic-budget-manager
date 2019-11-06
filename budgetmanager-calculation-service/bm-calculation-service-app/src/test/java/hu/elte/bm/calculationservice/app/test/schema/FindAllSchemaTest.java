@@ -1,7 +1,7 @@
 package hu.elte.bm.calculationservice.app.test.schema;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.HttpStatus;
@@ -11,14 +11,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import hu.elte.bm.calculationservice.app.test.AbstractCalculationServiceApplicationTest;
-import hu.elte.bm.transactionservice.TransactionType;
 
 public class FindAllSchemaTest extends AbstractCalculationServiceApplicationTest {
 
     private static final String URL = "/bm/statistics/schema/findAll";
     private static final String FIND_ALL_MAIN_CATEGORIES_WITH_EMPTY_BODY = "findAllOutcomeMainCategoryWithEmptyList.json";
     private static final String FIND_ALL_MAIN_CATEGORIES_WITH_INVALID_MAIN_CATEGORY = "findAllOutcomeMainCategoryWithInvalidMainCategory.json";
-    private static final String FIND_ALL_MAIN_CATEGORIES_RESULT_BODY = "findAllOutcomeMainCategoryWithReponseOk.json";
     private static final Long STANDARD_SCHEMA_ID = 1L;
 
     @Test
@@ -28,51 +26,19 @@ public class FindAllSchemaTest extends AbstractCalculationServiceApplicationTest
 
         // WHEN
         ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("userId", USER_ID.toString()));
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("userId", USER_ID.toString()));
         MockHttpServletResponse result = resultAction.andReturn().getResponse();
 
         // THEN
-        Assert.assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatus());
-        Assert.assertEquals("Standard schema cannot be found!", result.getContentAsString());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatus());
+        Assertions.assertEquals("Standard schema cannot be found!", result.getContentAsString());
     }
 
     @Test
     public void testFindAllWhenMainCategoryCannotBeFound() throws Exception {
         // GIVEN
-        getWireMockService().setUpMainCategoriesResponse(TransactionType.OUTCOME, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_WITH_EMPTY_BODY);
-
-        // WHEN
-        ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("userId", USER_ID.toString()));
-        MockHttpServletResponse result = resultAction.andReturn().getResponse();
-
-        // THEN
-        Assert.assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatus());
-        Assert.assertEquals("Main category cannot be found!", result.getContentAsString());
-    }
-
-    @Test
-    public void testFindAllWhenMainCategoryDoesNotHaveSubCategory() throws Exception {
-        // GIVEN
-        getWireMockService().setUpMainCategoriesResponse(TransactionType.OUTCOME, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_WITH_INVALID_MAIN_CATEGORY);
-
-        // WHEN
-        ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("userId", USER_ID.toString()));
-        MockHttpServletResponse result = resultAction.andReturn().getResponse();
-
-        // THEN
-        Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), result.getStatus());
-        Assert.assertEquals("Sub category cannot be found!", result.getContentAsString());
-    }
-
-    @Test
-    public void testFindAll() throws Exception {
-        // GIVEN
-        getWireMockService().setUpMainCategoriesResponse(TransactionType.OUTCOME, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_RESULT_BODY);
+        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_WITH_EMPTY_BODY);
 
         // WHEN
         ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)
@@ -81,7 +47,40 @@ public class FindAllSchemaTest extends AbstractCalculationServiceApplicationTest
         MockHttpServletResponse result = resultAction.andReturn().getResponse();
 
         // THEN
-        Assert.assertEquals(HttpStatus.OK.value(), result.getStatus());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatus());
+        Assertions.assertEquals("Main category cannot be found!", result.getContentAsString());
+    }
+
+    @Test
+    public void testFindAllWhenMainCategoryDoesNotHaveSubCategory() throws Exception {
+        // GIVEN
+        getWireMockService()
+            .setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_WITH_INVALID_MAIN_CATEGORY);
+
+        // WHEN
+        ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("userId", USER_ID.toString()));
+        MockHttpServletResponse result = resultAction.andReturn().getResponse();
+
+        // THEN
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), result.getStatus());
+        Assertions.assertEquals("Sub category cannot be found!", result.getContentAsString());
+    }
+
+    @Test
+    public void testFindAll() throws Exception {
+        // GIVEN
+        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_RESULT_BODY);
+
+        // WHEN
+        ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("userId", USER_ID.toString()));
+        MockHttpServletResponse result = resultAction.andReturn().getResponse();
+
+        // THEN
+        Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
         JSONAssert.assertEquals(getExpectedResponseJsonFromFile("findAllSchemaOk.json"), getActualResponseFromResult(result), JSONCompareMode.LENIENT);
     }
 

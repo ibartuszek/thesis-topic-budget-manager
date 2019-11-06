@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.app.test;
+package hu.elte.bm.calculationservice.app.test.utils;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -25,6 +25,7 @@ public class WireMockService {
     private static final String CONTENT_TYPE_HEADER_KEY = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
     private static final String FIND_ALL_MAIN_CATEGORY_URL = "/bm/mainCategories/findAll?type={0}&userId={1}";
+    private static final String FIND_ALL_SUB_CATEGORY_URL = "/bm/subCategories/findAll?type={0}&userId={1}";
 
     private WireMockServer wireMockServer;
 
@@ -45,12 +46,20 @@ public class WireMockService {
         WireMock.reset();
     }
 
-    public void setUpMainCategoriesResponse(final TransactionType type, final Long userId, final int responseStatus, final String responseFileName) {
+    public void setUpFindAllMainCategoriesResponse(final TransactionType type, final Long userId, final int responseStatus, final String responseFileName) {
         stubFor(get(MessageFormat.format(FIND_ALL_MAIN_CATEGORY_URL, type, userId))
-                .willReturn(aResponse()
-                        .withStatus(responseStatus)
-                        .withHeader(CONTENT_TYPE_HEADER_KEY, APPLICATION_JSON)
-                        .withBodyFile(responseFileName)));
+            .willReturn(aResponse()
+                .withStatus(responseStatus)
+                .withHeader(CONTENT_TYPE_HEADER_KEY, APPLICATION_JSON)
+                .withBodyFile(responseFileName)));
+    }
+
+    public void setUpFindAllSubCategoriesResponse(final TransactionType type, final Long userId, final int responseStatus, final String responseFileName) {
+        stubFor(get(MessageFormat.format(FIND_ALL_SUB_CATEGORY_URL, type, userId))
+            .willReturn(aResponse()
+                .withStatus(responseStatus)
+                .withHeader(CONTENT_TYPE_HEADER_KEY, APPLICATION_JSON)
+                .withBodyFile(responseFileName)));
     }
 
 }

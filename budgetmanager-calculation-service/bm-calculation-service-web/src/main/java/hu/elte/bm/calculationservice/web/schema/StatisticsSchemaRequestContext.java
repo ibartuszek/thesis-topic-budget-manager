@@ -1,12 +1,14 @@
 package hu.elte.bm.calculationservice.web.schema;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.web.common.RequestContext;
 
 public final class StatisticsSchemaRequestContext extends RequestContext {
 
+    @NotNull(message = "Schema cannot be null!")
     @Valid
     private StatisticsSchema schema;
 
