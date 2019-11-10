@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
 import hu.elte.bm.calculationservice.web.schema.StatisticsSchemaRequestContext;
 
 public class CreateSchemaTest extends AbstractSchemaTest {
@@ -86,6 +87,26 @@ public class CreateSchemaTest extends AbstractSchemaTest {
         // THEN
         Assertions.assertEquals(statusCode, result.getStatus());
         Assertions.assertEquals(exceptionMessage, result.getContentAsString());
+    }
+
+    @Test
+    public void testCreateWhenSchemaIsStandard() throws Exception {
+        // GIVEN
+        StatisticsSchema schema = createSchemaBuilderWithDefaultValues()
+            .withId(null)
+            .withType(StatisticsType.STANDARD)
+            .build();
+        StatisticsSchemaRequestContext context = createContext(USER_ID, schema);
+
+        // WHEN
+        ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.post(URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(createRequestBody(context)));
+        MockHttpServletResponse result = resultAction.andReturn().getResponse();
+
+        // THEN
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), result.getStatus());
+        Assertions.assertEquals("Standard schema cannot be created!", result.getContentAsString());
     }
 
     @Test

@@ -85,6 +85,18 @@ public class StatisticsSchemaServiceTest {
         // THEN
     }
 
+    @Test(expected = IllegalStatisticsSchemaException.class)
+    public void testSaveWhenSchemaIsStandardSchema() {
+        // GIVEN
+        StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
+            .withId(null)
+            .withType(StatisticsType.STANDARD)
+            .build();
+        // WHEN
+        underTest.save(schemaToSave, USER_ID);
+        // THEN
+    }
+
     @Test(expected = StatisticsSchemaConflictException.class)
     public void testSaveWhenSchemaTitleIsReserved() {
         // GIVEN
@@ -170,6 +182,17 @@ public class StatisticsSchemaServiceTest {
             .build();
         // WHEN
         underTest.update(schemaToUpdate, USER_ID);
+        // THEN
+    }
+
+    @Test(expected = IllegalStatisticsSchemaException.class)
+    public void testUpdateWhenSchemaIsStandardSchema() {
+        // GIVEN
+        StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
+            .withType(StatisticsType.STANDARD)
+            .build();
+        // WHEN
+        underTest.update(schemaToSave, USER_ID);
         // THEN
     }
 
@@ -288,6 +311,17 @@ public class StatisticsSchemaServiceTest {
             .build();
         // WHEN
         underTest.delete(schemaToDelete, USER_ID);
+        // THEN
+    }
+
+    @Test(expected = IllegalStatisticsSchemaException.class)
+    public void testDeleteWhenSchemaIsStandardSchema() {
+        // GIVEN
+        StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
+            .withType(StatisticsType.STANDARD)
+            .build();
+        // WHEN
+        underTest.delete(schemaToSave, USER_ID);
         // THEN
     }
 
