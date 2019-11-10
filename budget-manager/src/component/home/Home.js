@@ -18,7 +18,8 @@ class Home extends Component {
     loggedOut: false,
     email: {
       value: ''
-    }
+    },
+    fetched: false
   };
 
   componentDidMount() {
@@ -33,8 +34,25 @@ class Home extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const {userIsLoggedIn} = this.props.userHolder;
+  async componentDidUpdate(prevProps) {
+    const {userData, userIsLoggedIn} = this.props.userHolder;
+
+    if (userIsLoggedIn && userData === null) {
+      this.fetchUserData();
+    }
+    if (userIsLoggedIn && userData !== null && !this.state.fetched) {
+      this.setState({
+        fetched: true
+      });
+      await this.fetchAdditionalUserData().then(
+        () => {
+          let fetched = this.getFetchingStatus();
+          this.setState({
+            fetched: fetched
+          });
+        }
+      );
+    }
     if (userIsLoggedIn !== prevProps.userHolder.userIsLoggedIn) {
       this.setState({
         loggedOut: !userIsLoggedIn
@@ -50,27 +68,38 @@ class Home extends Component {
     }
   }
 
-  fetchAdditionalUserData() {
+  async fetchAdditionalUserData() {
     const {categoryHolder, logHolder, statisticsHolder, transactionHolder, userHolder} = this.props;
     let context = createContext(userHolder, logHolder);
     if (!categoryHolder.incomeMainCategoriesAreLoaded) {
-      this.props.fetchMainCategories(context, 'INCOME');
+      await this.props.fetchMainCategories(context, 'INCOME')
     }
     if (!categoryHolder.outcomeMainCategoriesAreLoaded) {
-      this.props.fetchMainCategories(context, 'OUTCOME');
+      await this.props.fetchMainCategories(context, 'OUTCOME');
     }
     if (!categoryHolder.incomeSubCategoriesAreLoaded) {
-      this.props.fetchSubCategories(context, 'INCOME');
+      await this.props.fetchSubCategories(context, 'INCOME');
     }
     if (!categoryHolder.outcomeSubCategoriesAreLoaded) {
-      this.props.fetchSubCategories(context, 'OUTCOME');
+      await this.props.fetchSubCategories(context, 'OUTCOME');
     }
     if (!statisticsHolder.schemasAreLoaded) {
-      this.props.getStatisticsSchemas(context);
+      await this.props.getStatisticsSchemas(context);
     }
     if (transactionHolder.firstPossibleDay === null) {
-      this.props.getFirstPossibleDay(context);
+      await this.props.getFirstPossibleDay(context);
     }
+  }
+
+  getFetchingStatus() {
+    const {categoryHolder, statisticsHolder, transactionHolder} = this.props;
+    let fetched = categoryHolder.incomeMainCategoriesAreLoaded
+      && categoryHolder.outcomeMainCategoriesAreLoaded
+      && categoryHolder.incomeSubCategoriesAreLoaded
+      && categoryHolder.outcomeSubCategoriesAreLoaded
+      && statisticsHolder.schemasAreLoaded
+      && transactionHolder.firstPossibleDay !== null;
+    return fetched;
   }
 
   render() {
@@ -80,12 +109,9 @@ class Home extends Component {
 
     let logs = null;
     if (this.props.userHolder.userIsLoggedIn === true) {
-      this.fetchAdditionalUserData();
       if (this.props.logHolder.messages.length > 0) {
         logs = <LogContainer/>
       }
-    } else {
-      this.fetchUserData();
     }
 
     return (

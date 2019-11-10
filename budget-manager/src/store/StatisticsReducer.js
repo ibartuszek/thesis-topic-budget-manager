@@ -30,8 +30,6 @@ const StatisticsReducer = (state = initState, action) => {
       });
     case 'CREATE_SCHEMA_SUCCESS':
       key = "createSchemaSuccess";
-      console.log(action['schemaModel']);
-      console.log(state.customSchemas);
       addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
@@ -45,8 +43,6 @@ const StatisticsReducer = (state = initState, action) => {
       });
     case 'UPDATE_SCHEMA_SUCCESS':
       key = "updateSchemaSuccess";
-      console.log(action['schemaModel']);
-      console.log(state.customSchemas);
       addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
@@ -60,8 +56,6 @@ const StatisticsReducer = (state = initState, action) => {
       });
     case 'DELETE_SCHEMA_SUCCESS':
       key = "deleteSchemaSuccess";
-      console.log(action['schemaModel']);
-      console.log(state.customSchemas);
       addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,

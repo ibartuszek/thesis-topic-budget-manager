@@ -11,10 +11,9 @@ export function createEmptySchema() {
       maximumLength: 20,
     },
     type: {
-      value: "STANDARD",
+      value: "SCALE",
       errorMessage: null,
       possibleEnumValues: [
-        "STANDARD",
         "SCALE",
         "SUM"
       ]

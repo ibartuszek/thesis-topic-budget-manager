@@ -50,7 +50,6 @@ class SchemaForm extends Component {
   }
 
   handleModelValueChange(id, value, errorMessage) {
-    console.log(id, value);
     this.setState(prevState => ({
       schema: {
         ...prevState.schema,
