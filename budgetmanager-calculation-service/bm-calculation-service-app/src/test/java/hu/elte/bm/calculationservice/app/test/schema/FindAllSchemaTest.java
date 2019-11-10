@@ -81,7 +81,7 @@ public class FindAllSchemaTest extends AbstractCalculationServiceApplicationTest
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("findAllSchemaOk.json"), getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("schema/findAllSchemaOk.json"), getActualResponseFromResult(result), JSONCompareMode.LENIENT);
     }
 
 }

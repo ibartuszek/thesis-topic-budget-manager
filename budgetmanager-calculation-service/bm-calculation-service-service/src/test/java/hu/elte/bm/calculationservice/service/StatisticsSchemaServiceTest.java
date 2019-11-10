@@ -303,6 +303,20 @@ public class StatisticsSchemaServiceTest {
 
     }
 
+    @Test(expected = IllegalStatisticsSchemaException.class)
+    public void testDeleteWhenSchemaHasBeenChanged() {
+        // GIVEN
+        StatisticsSchema schemaToDelete = createCustomScaleSchemaBuilder()
+            .build();
+        StatisticsSchema originalSchema = createCustomScaleSchemaBuilder()
+            .withTitle(ORIGINAL_SCHEMA_TITLE)
+            .build();
+        Mockito.when(schemaDao.findById(schemaToDelete.getId(), USER_ID)).thenReturn(originalSchema);
+        // WHEN
+        underTest.delete(schemaToDelete, USER_ID);
+        // THEN
+    }
+
     @Test
     public void testDelete() {
         // GIVEN

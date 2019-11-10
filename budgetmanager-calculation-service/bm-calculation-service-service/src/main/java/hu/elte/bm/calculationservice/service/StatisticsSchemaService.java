@@ -39,6 +39,9 @@ public class StatisticsSchemaService {
     @Value("${schema.schema_title_is_reserved:Schema's title is reserved!}")
     private String schemaTitleIsReserved;
 
+    @Value("${schema.schema_cannot_be_changed:Schema cannot be changed during deleting!}")
+    private String schemaCannotBeChangeBeforeDelete;
+
     public StatisticsSchemaService(final StatisticsSchemaDao schemaDao, final TransactionServiceFacade transactionServiceFacade) {
         this.schemaDao = schemaDao;
         this.transactionServiceFacade = transactionServiceFacade;
@@ -106,7 +109,10 @@ public class StatisticsSchemaService {
 
     private void validateForDelete(final StatisticsSchema schema, final Long userId) {
         Assert.notNull(schema.getId(), schemaIdCannotBeNull);
-        schemaDao.findById(schema.getId(), userId);
+        StatisticsSchema originalSchema = schemaDao.findById(schema.getId(), userId);
+        if (!originalSchema.equals(schema)) {
+            throw new IllegalStatisticsSchemaException(schema, schemaCannotBeChangeBeforeDelete);
+        }
     }
 
 }

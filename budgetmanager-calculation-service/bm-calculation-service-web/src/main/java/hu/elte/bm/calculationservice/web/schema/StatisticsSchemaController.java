@@ -51,13 +51,13 @@ public class StatisticsSchemaController {
     @RequestMapping(value = "/bm/statistics/schema/update", method = RequestMethod.PUT, produces = APPLICATION_JSON)
     public StatisticsSchemaResponse updateTransaction(@Valid @RequestBody final StatisticsSchemaRequestContext context) {
         StatisticsSchema schema = service.update(context.getSchema(), context.getUserId());
-        return StatisticsSchemaResponse.createSuccessfulResponse(schema, schemaHasBeenSaved);
+        return StatisticsSchemaResponse.createSuccessfulResponse(schema, schemaHasBeenUpdated);
     }
 
     @RequestMapping(value = "/bm/statistics/schema/delete", method = RequestMethod.DELETE, produces = APPLICATION_JSON)
     public StatisticsSchemaResponse deleteTransaction(@Valid @RequestBody final StatisticsSchemaRequestContext context) {
         StatisticsSchema schema = service.delete(context.getSchema(), context.getUserId());
-        return StatisticsSchemaResponse.createSuccessfulResponse(schema, schemaHasBeenSaved);
+        return StatisticsSchemaResponse.createSuccessfulResponse(schema, schemaHasBeenDeleted);
     }
 
 }

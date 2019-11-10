@@ -8,14 +8,24 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.http.HttpStatus;
 
 import hu.elte.bm.calculationservice.app.test.AbstractCalculationServiceApplicationTest;
+import hu.elte.bm.calculationservice.statistics.schema.ChartType;
 import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
 import hu.elte.bm.calculationservice.web.schema.StatisticsSchemaRequestContext;
+import hu.elte.bm.transactionservice.Currency;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 
 public abstract class AbstractSchemaTest extends AbstractCalculationServiceApplicationTest {
 
     protected static final String RESERVED_SCHEMA_TITLE = "Standard schema";
+    protected static final String MODIFIED_TITLE = "New schema title";
+    protected static final Long INVALID_SCHEMA_ID = 6L;
+    private static final long EXISTING_SCHEMA_ID = 2L;
+    private static final String EXISTING_SCHEMA_TITLE = "Example scale";
+    private static final Currency EXISTING_SCHEMA_CURRENCY = Currency.HUF;
+    private static final StatisticsType EXISTING_SCHEMA_TYPE = StatisticsType.SCALE;
+    private static final ChartType EXISTING_SCHEMA_CHART_TYPE = ChartType.BAR;
     private static final String EMPTY_STRING = "";
     private static final String TOO_LONG_SCHEMA_TITLE = "Tooooo Loooong title!";
     private static final String NOT_EXISTED_MAIN_CATEGORY_NAME = "not existed main category name";
@@ -76,6 +86,15 @@ public abstract class AbstractSchemaTest extends AbstractCalculationServiceAppli
         context.setSchema(schema);
         context.setUserId(userId);
         return context;
+    }
+
+    protected StatisticsSchema.Builder createExampleBuilderForUpdate() {
+        return StatisticsSchema.builder()
+            .withId(EXISTING_SCHEMA_ID)
+            .withTitle(EXISTING_SCHEMA_TITLE)
+            .withCurrency(EXISTING_SCHEMA_CURRENCY)
+            .withType(EXISTING_SCHEMA_TYPE)
+            .withChartType(EXISTING_SCHEMA_CHART_TYPE);
     }
 
 }
