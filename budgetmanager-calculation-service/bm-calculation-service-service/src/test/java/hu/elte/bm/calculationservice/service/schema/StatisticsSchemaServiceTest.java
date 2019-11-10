@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.service;
+package hu.elte.bm.calculationservice.service.schema;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,9 +17,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import hu.elte.bm.calculationservice.exceptions.schema.IllegalStatisticsSchemaException;
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaConflictException;
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaNotFoundException;
-import hu.elte.bm.calculationservice.statistics.schema.ChartType;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
+import hu.elte.bm.calculationservice.schema.ChartType;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsType;
 import hu.elte.bm.calculationservice.transactionserviceclient.TransactionServiceFacade;
 import hu.elte.bm.transactionservice.Currency;
 import hu.elte.bm.transactionservice.MainCategory;
@@ -91,6 +91,19 @@ public class StatisticsSchemaServiceTest {
         StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
             .withId(null)
             .withType(StatisticsType.STANDARD)
+            .build();
+        // WHEN
+        underTest.save(schemaToSave, USER_ID);
+        // THEN
+    }
+
+    @Test(expected = IllegalStatisticsSchemaException.class)
+    public void testSaveWhenSchemaIsSumSchemaAndNotHaveAnyCategory() {
+        // GIVEN
+        StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
+            .withId(null)
+            .withType(StatisticsType.SUM)
+            .withMainCategory(null)
             .build();
         // WHEN
         underTest.save(schemaToSave, USER_ID);
@@ -190,6 +203,18 @@ public class StatisticsSchemaServiceTest {
         // GIVEN
         StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
             .withType(StatisticsType.STANDARD)
+            .build();
+        // WHEN
+        underTest.update(schemaToSave, USER_ID);
+        // THEN
+    }
+
+    @Test(expected = IllegalStatisticsSchemaException.class)
+    public void testUpdateWhenSchemaIsSumSchemaAndNotHaveAnyCategory() {
+        // GIVEN
+        StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
+            .withType(StatisticsType.SUM)
+            .withMainCategory(null)
             .build();
         // WHEN
         underTest.update(schemaToSave, USER_ID);

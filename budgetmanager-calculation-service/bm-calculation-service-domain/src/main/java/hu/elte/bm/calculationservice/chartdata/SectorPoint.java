@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.statistics.chartdata;
+package hu.elte.bm.calculationservice.chartdata;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
@@ -50,25 +50,25 @@ public final class SectorPoint {
         SectorPoint that = (SectorPoint) o;
 
         return new EqualsBuilder()
-                .append(angle, that.angle)
-                .append(label, that.label)
-                .isEquals();
+            .append(angle, that.angle)
+            .append(label, that.label)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(angle)
-                .append(label)
-                .toHashCode();
+            .append(angle)
+            .append(label)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return "SectorPoint{"
-                + "angle=" + angle
-                + ", label='" + label + '\''
-                + '}';
+            + "angle=" + angle
+            + ", label='" + label + '\''
+            + '}';
     }
 
     public static final class Builder {

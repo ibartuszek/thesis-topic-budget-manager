@@ -10,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import hu.elte.bm.calculationservice.statistics.schema.ChartType;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
+import hu.elte.bm.calculationservice.schema.ChartType;
+import hu.elte.bm.calculationservice.schema.StatisticsType;
 import hu.elte.bm.transactionservice.Currency;
 
 @Entity

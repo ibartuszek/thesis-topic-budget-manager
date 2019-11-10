@@ -2,29 +2,12 @@ package hu.elte.bm.calculationservice.transactionserviceclient.categories;
 
 import java.util.List;
 
+import hu.elte.bm.calculationservice.transactionserviceclient.BaseResponse;
 import hu.elte.bm.transactionservice.SubCategory;
 
-public final class SubCategoryListResponse {
+public final class SubCategoryListResponse extends BaseResponse {
 
-    private String message;
-    private boolean successful;
     private List<SubCategory> subCategoryList;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(final String message) {
-        this.message = message;
-    }
-
-    public boolean isSuccessful() {
-        return successful;
-    }
-
-    public void setSuccessful(final boolean successful) {
-        this.successful = successful;
-    }
 
     public List<SubCategory> getSubCategoryList() {
         return subCategoryList;
@@ -37,8 +20,8 @@ public final class SubCategoryListResponse {
     @Override
     public String toString() {
         return "SubCategoryListResponse{"
-            + "message='" + message + '\''
-            + ", successful=" + successful
+            + "message='" + getMessage() + '\''
+            + ", successful=" + isSuccessful()
             + ", subCategoryList=" + subCategoryList
             + '}';
     }

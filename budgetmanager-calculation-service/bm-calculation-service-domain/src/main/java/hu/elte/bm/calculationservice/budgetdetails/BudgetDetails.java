@@ -1,6 +1,6 @@
 package hu.elte.bm.calculationservice.budgetdetails;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -13,8 +13,8 @@ public final class BudgetDetails {
     private final BudgetDetailsElement totalIncomes;
     private final BudgetDetailsElement totalExpenses;
     private final BudgetDetailsElement savings;
-    private final TransactionData[] incomes;
-    private final TransactionData[] outcomes;
+    private final List<TransactionData> incomes;
+    private final List<TransactionData> outcomes;
 
     private BudgetDetails(final Builder builder) {
         this.totalIncomes = builder.totalIncomes;
@@ -40,11 +40,11 @@ public final class BudgetDetails {
         return savings;
     }
 
-    public TransactionData[] getIncomes() {
+    public List<TransactionData> getIncomes() {
         return incomes;
     }
 
-    public TransactionData[] getOutcomes() {
+    public List<TransactionData> getOutcomes() {
         return outcomes;
     }
 
@@ -61,34 +61,34 @@ public final class BudgetDetails {
         BudgetDetails that = (BudgetDetails) o;
 
         return new EqualsBuilder()
-                .append(totalIncomes, that.totalIncomes)
-                .append(totalExpenses, that.totalExpenses)
-                .append(savings, that.savings)
-                .append(incomes, that.incomes)
-                .append(outcomes, that.outcomes)
-                .isEquals();
+            .append(totalIncomes, that.totalIncomes)
+            .append(totalExpenses, that.totalExpenses)
+            .append(savings, that.savings)
+            .append(incomes, that.incomes)
+            .append(outcomes, that.outcomes)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(totalIncomes)
-                .append(totalExpenses)
-                .append(savings)
-                .append(incomes)
-                .append(outcomes)
-                .toHashCode();
+            .append(totalIncomes)
+            .append(totalExpenses)
+            .append(savings)
+            .append(incomes)
+            .append(outcomes)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return "BudgetDetails{"
-                + "totalIncomes=" + totalIncomes
-                + ", totalExpenses=" + totalExpenses
-                + ", savings=" + savings
-                + ", incomes=" + Arrays.toString(incomes)
-                + ", outcomes=" + Arrays.toString(outcomes)
-                + '}';
+            + "totalIncomes=" + totalIncomes
+            + ", totalExpenses=" + totalExpenses
+            + ", savings=" + savings
+            + ", incomes=" + incomes
+            + ", outcomes=" + outcomes
+            + '}';
     }
 
     public static final class Builder {
@@ -96,8 +96,8 @@ public final class BudgetDetails {
         private BudgetDetailsElement totalIncomes;
         private BudgetDetailsElement totalExpenses;
         private BudgetDetailsElement savings;
-        private TransactionData[] incomes;
-        private TransactionData[] outcomes;
+        private List<TransactionData> incomes;
+        private List<TransactionData> outcomes;
 
         private Builder() {
         }
@@ -117,12 +117,12 @@ public final class BudgetDetails {
             return this;
         }
 
-        public Builder withIncomes(final TransactionData[] incomes) {
+        public Builder withIncomes(final List<TransactionData> incomes) {
             this.incomes = incomes;
             return this;
         }
 
-        public Builder withOutcomes(final  TransactionData[] outcomes) {
+        public Builder withOutcomes(final List<TransactionData> outcomes) {
             this.outcomes = outcomes;
             return this;
         }

@@ -8,8 +8,9 @@ import javax.validation.constraints.PastOrPresent;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import hu.elte.bm.calculationservice.statistics.chartdata.ChartData;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.budgetdetails.BudgetDetails;
+import hu.elte.bm.calculationservice.chartdata.ChartData;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 
 @JsonDeserialize(builder = Statistics.Builder.class)
 public final class Statistics {
@@ -22,12 +23,15 @@ public final class Statistics {
     private final StatisticsSchema schema;
     @Valid
     private final ChartData chartData;
+    @Valid
+    private final BudgetDetails budgetDetails;
 
     private Statistics(final Builder builder) {
         this.startDate = builder.startDate;
         this.endDate = builder.endDate;
         this.schema = builder.schema;
         this.chartData = builder.chartData;
+        this.budgetDetails = builder.budgetDetails;
     }
 
     public static Builder builder() {
@@ -50,14 +54,19 @@ public final class Statistics {
         return chartData;
     }
 
+    public BudgetDetails getBudgetDetails() {
+        return budgetDetails;
+    }
+
     @Override
     public String toString() {
         return "Statistics{"
-                + "startDate=" + startDate
-                + ", endDate=" + endDate
-                + ", schema=" + schema
-                + ", chartData=" + chartData
-                + '}';
+            + "startDate=" + startDate
+            + ", endDate=" + endDate
+            + ", schema=" + schema
+            + ", chartData=" + chartData
+            + ", budgetDetails=" + budgetDetails
+            + '}';
     }
 
     public static final class Builder {
@@ -66,6 +75,7 @@ public final class Statistics {
         private LocalDate endDate;
         private StatisticsSchema schema;
         private ChartData chartData;
+        private BudgetDetails budgetDetails;
 
         private Builder() {
         }
@@ -87,6 +97,11 @@ public final class Statistics {
 
         public Builder withChartData(final ChartData chartData) {
             this.chartData = chartData;
+            return this;
+        }
+
+        public Builder withBudgetDetails(final BudgetDetails budgetDetails) {
+            this.budgetDetails = budgetDetails;
             return this;
         }
 

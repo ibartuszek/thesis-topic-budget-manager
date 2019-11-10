@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaNotFoundException;
-import hu.elte.bm.calculationservice.service.StatisticsSchemaDao;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsType;
+import hu.elte.bm.calculationservice.service.schema.StatisticsSchemaDao;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.TransactionType;
@@ -114,7 +114,7 @@ public class DefaultStatisticsSchemaDao implements StatisticsSchemaDao {
         for (StatisticsSchemaEntity entity : schemaEntityList) {
             MainCategory mainCategory = getMainCategory(entity.getMainCategoryId(), mainCategoryList);
             SubCategory subCategory = entity.getSubCategoryId() != null
-                    ? categoryProvider.provideSubCategory(entity.getSubCategoryId(), mainCategory) : null;
+                ? categoryProvider.provideSubCategory(entity.getSubCategoryId(), mainCategory) : null;
             result.add(transformer.transformToStatistcisSchema(entity, mainCategory, subCategory));
         }
         return result;

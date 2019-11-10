@@ -2,7 +2,7 @@ package hu.elte.bm.calculationservice.web.schema;
 
 import java.util.List;
 
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.web.common.ResponseModel;
 
 public final class StatisticsSchemaListResponse extends ResponseModel {

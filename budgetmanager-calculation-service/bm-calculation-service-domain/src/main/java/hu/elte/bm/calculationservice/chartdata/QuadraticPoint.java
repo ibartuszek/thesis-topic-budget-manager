@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.statistics.chartdata;
+package hu.elte.bm.calculationservice.chartdata;
 
 import java.time.LocalDate;
 
@@ -64,31 +64,31 @@ public final class QuadraticPoint {
         QuadraticPoint that = (QuadraticPoint) o;
 
         return new EqualsBuilder()
-                .append(x, that.x)
-                .append(y, that.y)
-                .append(label, that.label)
-                .append(date, that.date)
-                .isEquals();
+            .append(x, that.x)
+            .append(y, that.y)
+            .append(label, that.label)
+            .append(date, that.date)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(x)
-                .append(y)
-                .append(label)
-                .append(date)
-                .toHashCode();
+            .append(x)
+            .append(y)
+            .append(label)
+            .append(date)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return "SectorPoint{"
-                + "x=" + x
-                + ", y=" + y
-                + ", label='" + label + '\''
-                + ", date='" + date + '\''
-                + '}';
+            + "x=" + x
+            + ", y=" + y
+            + ", label='" + label + '\''
+            + ", date='" + date + '\''
+            + '}';
     }
 
     public static final class Builder {

@@ -1,9 +1,9 @@
-package hu.elte.bm.calculationservice.service;
+package hu.elte.bm.calculationservice.service.schema;
 
 import java.util.List;
 import java.util.Optional;
 
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 
 public interface StatisticsSchemaDao {
 

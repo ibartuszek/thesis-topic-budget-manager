@@ -12,8 +12,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsType;
 import hu.elte.bm.calculationservice.web.schema.StatisticsSchemaRequestContext;
 
 public class UpdateSchemaTest extends AbstractSchemaTest {
@@ -115,6 +115,7 @@ public class UpdateSchemaTest extends AbstractSchemaTest {
         StatisticsSchema schema = createSchemaBuilderWithDefaultValues()
             .withId(INVALID_SCHEMA_ID)
             .withTitle(MODIFIED_TITLE)
+            .withMainCategory(createDefaultMainCategoryBuilder().build())
             .build();
         StatisticsSchemaRequestContext context = createContext(USER_ID, schema);
 

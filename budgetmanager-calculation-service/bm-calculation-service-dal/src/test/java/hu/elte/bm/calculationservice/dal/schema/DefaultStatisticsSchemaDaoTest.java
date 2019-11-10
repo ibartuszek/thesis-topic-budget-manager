@@ -16,9 +16,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaNotFoundException;
-import hu.elte.bm.calculationservice.statistics.schema.ChartType;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
+import hu.elte.bm.calculationservice.schema.ChartType;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsType;
 import hu.elte.bm.transactionservice.Currency;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;

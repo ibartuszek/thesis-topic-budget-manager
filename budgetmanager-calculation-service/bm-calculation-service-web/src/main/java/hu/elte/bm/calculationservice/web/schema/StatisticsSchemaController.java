@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import hu.elte.bm.calculationservice.service.StatisticsSchemaService;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.service.schema.StatisticsSchemaService;
 
 @RestController
 public class StatisticsSchemaController {

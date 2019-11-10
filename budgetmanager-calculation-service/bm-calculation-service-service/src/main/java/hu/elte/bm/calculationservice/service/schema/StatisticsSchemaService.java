@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.service;
+package hu.elte.bm.calculationservice.service.schema;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,8 +9,8 @@ import org.springframework.util.Assert;
 
 import hu.elte.bm.calculationservice.exceptions.schema.IllegalStatisticsSchemaException;
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaConflictException;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsType;
 import hu.elte.bm.calculationservice.transactionserviceclient.TransactionServiceFacade;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
@@ -52,6 +52,9 @@ public class StatisticsSchemaService {
     @Value("${schema.standard_schema_cannot_be_deleted:Standard schema cannot be deleted!}")
     private String standardSchemaCannotBeDeleted;
 
+    @Value("${schema.sum_must_have_category:Sum schema must have a category!}")
+    private String sumStatisticsMustHaveCategory;
+
     public StatisticsSchemaService(final StatisticsSchemaDao schemaDao, final TransactionServiceFacade transactionServiceFacade) {
         this.schemaDao = schemaDao;
         this.transactionServiceFacade = transactionServiceFacade;
@@ -85,6 +88,7 @@ public class StatisticsSchemaService {
     private void validateForSave(final StatisticsSchema schema, final Long userId) {
         Assert.isNull(schema.getId(), schemaIdMustBeNull);
         validateNotStandardSchema(schema, standardSchemaCannotBeCreated);
+        validateSumHasCategory(schema);
         Optional<StatisticsSchema> schemaWithSameTitle = schemaDao.findByTitle(schema.getTitle(), userId);
         if (schemaWithSameTitle.isPresent()) {
             throw new StatisticsSchemaConflictException(schema, schemaTitleIsReserved);
@@ -109,6 +113,7 @@ public class StatisticsSchemaService {
     private void validateForUpdate(final StatisticsSchema schema, final Long userId) {
         Assert.notNull(schema.getId(), schemaIdCannotBeNull);
         validateNotStandardSchema(schema, standardSchemaCannotBeModified);
+        validateSumHasCategory(schema);
         StatisticsSchema originalSchema = schemaDao.findById(schema.getId(), userId);
         if (schema.equals(originalSchema)) {
             throw new IllegalStatisticsSchemaException(schema, schemaNotChanged);
@@ -131,6 +136,12 @@ public class StatisticsSchemaService {
     private void validateNotStandardSchema(final StatisticsSchema schema, final String errorMessage) {
         if (schema.getType().equals(StatisticsType.STANDARD)) {
             throw new IllegalStatisticsSchemaException(schema, errorMessage);
+        }
+    }
+
+    private void validateSumHasCategory(final StatisticsSchema schema) {
+        if (schema.getType().equals(StatisticsType.SUM) && schema.getMainCategory() == null) {
+            throw new IllegalStatisticsSchemaException(schema, sumStatisticsMustHaveCategory);
         }
     }
 

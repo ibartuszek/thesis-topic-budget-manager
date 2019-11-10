@@ -2,7 +2,7 @@ package hu.elte.bm.calculationservice.dal.schema;
 
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 

@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.statistics.chartdata;
+package hu.elte.bm.calculationservice.chartdata;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-@JsonDeserialize(builder = QuadraticChartData.Builder.class)
-public final class QuadraticChartData implements ChartData {
+@JsonDeserialize(builder = RadialChartData.Builder.class)
+public final class RadialChartData implements ChartData {
 
     private static final int MAXIMUM_LEGEND_LENGTH = 20;
 
@@ -21,11 +21,11 @@ public final class QuadraticChartData implements ChartData {
     private final String legend;
     @NotEmpty
     @Valid
-    private final List<QuadraticPoint> dataPoints;
+    private final List<SectorPoint> sectorPoints;
 
-    private QuadraticChartData(final Builder builder) {
+    private RadialChartData(final Builder builder) {
         this.legend = builder.legend;
-        this.dataPoints = builder.dataPoints;
+        this.sectorPoints = builder.sectorPoints;
     }
 
     public static Builder builder() {
@@ -39,7 +39,7 @@ public final class QuadraticChartData implements ChartData {
 
     @Override
     public Object[] getDataPoints() {
-        return dataPoints.toArray();
+        return sectorPoints.toArray();
     }
 
     @Override
@@ -52,34 +52,34 @@ public final class QuadraticChartData implements ChartData {
             return false;
         }
 
-        QuadraticChartData that = (QuadraticChartData) o;
+        RadialChartData that = (RadialChartData) o;
 
         return new EqualsBuilder()
-                .append(legend, that.legend)
-                .append(dataPoints, that.dataPoints)
-                .isEquals();
+            .append(legend, that.legend)
+            .append(sectorPoints, that.sectorPoints)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(legend)
-                .append(dataPoints)
-                .toHashCode();
+            .append(legend)
+            .append(sectorPoints)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return "RadialChartData{"
-                + "legend='" + legend + '\''
-                + ", dataPoints=" + dataPoints
-                + '}';
+            + "legend='" + legend + '\''
+            + ", sectorPoints=" + sectorPoints
+            + '}';
     }
 
     public static final class Builder {
 
         private String legend;
-        private List<QuadraticPoint> dataPoints;
+        private List<SectorPoint> sectorPoints;
 
         private Builder() {
         }
@@ -89,13 +89,13 @@ public final class QuadraticChartData implements ChartData {
             return this;
         }
 
-        public Builder withDataPoints(final List<QuadraticPoint> dataPoints) {
-            this.dataPoints = dataPoints;
+        public Builder withSectorPoints(final List<SectorPoint> sectorPoints) {
+            this.sectorPoints = sectorPoints;
             return this;
         }
 
-        public QuadraticChartData build() {
-            return new QuadraticChartData(this);
+        public RadialChartData build() {
+            return new RadialChartData(this);
         }
 
     }

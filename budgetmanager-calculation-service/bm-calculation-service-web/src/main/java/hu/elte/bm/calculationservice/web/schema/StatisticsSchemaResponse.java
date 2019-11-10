@@ -1,6 +1,6 @@
 package hu.elte.bm.calculationservice.web.schema;
 
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.web.common.ResponseModel;
 
 public final class StatisticsSchemaResponse extends ResponseModel {

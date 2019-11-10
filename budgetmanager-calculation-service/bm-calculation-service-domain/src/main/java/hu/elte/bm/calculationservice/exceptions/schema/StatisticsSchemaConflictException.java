@@ -1,6 +1,6 @@
 package hu.elte.bm.calculationservice.exceptions.schema;
 
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 
 public class StatisticsSchemaConflictException extends RuntimeException implements StatisticsSchemaException {
 

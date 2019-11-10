@@ -1,25 +1,31 @@
 package hu.elte.bm.calculationservice.transactionserviceclient;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import hu.elte.bm.calculationservice.transactionserviceclient.categories.MainCategoryProxy;
+import hu.elte.bm.calculationservice.transactionserviceclient.categories.AbstractCategoryProxy;
 import hu.elte.bm.calculationservice.transactionserviceclient.categories.SubCategoryProxy;
+import hu.elte.bm.calculationservice.transactionserviceclient.transactions.TransactionProxy;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
+import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
 @Component
 public class TransactionServiceFacade {
 
-    private final MainCategoryProxy mainCategoryProxy;
+    private final AbstractCategoryProxy mainCategoryProxy;
     private final SubCategoryProxy subCategoryProxy;
+    private final TransactionProxy transactionProxy;
 
-    public TransactionServiceFacade(final MainCategoryProxy mainCategoryProxy, final SubCategoryProxy subCategoryProxy) {
+    public TransactionServiceFacade(final AbstractCategoryProxy mainCategoryProxy, final SubCategoryProxy subCategoryProxy,
+        final TransactionProxy transactionProxy) {
         this.mainCategoryProxy = mainCategoryProxy;
         this.subCategoryProxy = subCategoryProxy;
+        this.transactionProxy = transactionProxy;
     }
 
     public List<MainCategory> getMainCategories(final TransactionType type, final Long userId) {
@@ -42,5 +48,10 @@ public class TransactionServiceFacade {
         return subCategoryList.stream()
             .filter(subCategory -> subCategory.getId().equals(subCategoryId))
             .findAny();
+    }
+
+    public List<Transaction> getTransactions(final TransactionType type, final Long userId,
+        final LocalDate start, final LocalDate end) {
+        return transactionProxy.getTransactions(type, userId, start, end);
     }
 }

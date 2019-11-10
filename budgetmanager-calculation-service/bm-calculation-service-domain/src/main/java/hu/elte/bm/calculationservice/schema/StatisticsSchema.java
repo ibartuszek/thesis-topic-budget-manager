@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.statistics.schema;
+package hu.elte.bm.calculationservice.schema;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -86,38 +86,38 @@ public final class StatisticsSchema {
         StatisticsSchema that = (StatisticsSchema) o;
 
         return new EqualsBuilder()
-                .append(title, that.title)
-                .append(type, that.type)
-                .append(currency, that.currency)
-                .append(chartType, that.chartType)
-                .append(mainCategory, that.mainCategory)
-                .append(subCategory, that.subCategory)
-                .isEquals();
+            .append(title, that.title)
+            .append(type, that.type)
+            .append(currency, that.currency)
+            .append(chartType, that.chartType)
+            .append(mainCategory, that.mainCategory)
+            .append(subCategory, that.subCategory)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(title)
-                .append(type)
-                .append(currency)
-                .append(chartType)
-                .append(mainCategory)
-                .append(subCategory)
-                .toHashCode();
+            .append(title)
+            .append(type)
+            .append(currency)
+            .append(chartType)
+            .append(mainCategory)
+            .append(subCategory)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
         return "StatisticsSchema{"
-                + "id=" + id
-                + ", title='" + title + '\''
-                + ", type=" + type
-                + ", currency=" + currency
-                + ", chartType=" + chartType
-                + ", mainCategory=" + mainCategory
-                + ", subCategory=" + subCategory
-                + '}';
+            + "id=" + id
+            + ", title='" + title + '\''
+            + ", type=" + type
+            + ", currency=" + currency
+            + ", chartType=" + chartType
+            + ", mainCategory=" + mainCategory
+            + ", subCategory=" + subCategory
+            + '}';
     }
 
     public static final class Builder {

@@ -8,9 +8,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.http.HttpStatus;
 
 import hu.elte.bm.calculationservice.app.test.AbstractCalculationServiceApplicationTest;
-import hu.elte.bm.calculationservice.statistics.schema.ChartType;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsSchema;
-import hu.elte.bm.calculationservice.statistics.schema.StatisticsType;
+import hu.elte.bm.calculationservice.schema.ChartType;
+import hu.elte.bm.calculationservice.schema.StatisticsSchema;
+import hu.elte.bm.calculationservice.schema.StatisticsType;
 import hu.elte.bm.calculationservice.web.schema.StatisticsSchemaRequestContext;
 import hu.elte.bm.transactionservice.Currency;
 import hu.elte.bm.transactionservice.MainCategory;
@@ -63,6 +63,10 @@ public abstract class AbstractSchemaTest extends AbstractCalculationServiceAppli
         MainCategory mainCategory = createDefaultMainCategoryBuilder()
             .build();
 
+        StatisticsSchema.Builder sumSchemaBuilderWithNoCategory = createSchemaBuilderWithDefaultValues()
+            .withType(StatisticsType.SUM)
+            .withMainCategory(null);
+
         StatisticsSchema.Builder schemaBuilderWithNotExistedMainCategory = createSchemaBuilderWithDefaultValues()
             .withMainCategory(notExistingMainCategory);
 
@@ -75,6 +79,7 @@ public abstract class AbstractSchemaTest extends AbstractCalculationServiceAppli
             .withSubCategory(notExistingSubCategory);
 
         return Stream.of(
+            Arguments.of(sumSchemaBuilderWithNoCategory, HttpStatus.BAD_REQUEST.value(), "Sum schema must have a category!"),
             Arguments.of(schemaBuilderWithNotExistedMainCategory, HttpStatus.BAD_REQUEST.value(), "Schema's main category cannot be found!"),
             Arguments.of(schemaBuilderWithMainCategoryWithNotExistedSubCategory, HttpStatus.BAD_REQUEST.value(), "Schema's main category cannot be found!"),
             Arguments.of(schemaBuilderWithNotExistedSubCategory, HttpStatus.BAD_REQUEST.value(), "Schema's supplementary category cannot be found!")
