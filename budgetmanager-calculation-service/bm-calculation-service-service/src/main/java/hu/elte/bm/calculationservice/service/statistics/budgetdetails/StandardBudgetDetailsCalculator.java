@@ -46,7 +46,8 @@ public class StandardBudgetDetailsCalculator {
         for (MainCategory mainCategory : mainCategorySet) {
             List<Transaction> filteredTransactions = utils.filterTransactionListOnMainCategory(mainCategory, transactionList);
             double amount = utils.getAmountFromTransactionList(filteredTransactions);
-            getTransactionData(mainCategory.getName(), amount).map(transactionDataList::add);
+            getTransactionData(mainCategory.getName(), null, amount)
+                .map(transactionDataList::add);
             addTransactionDataOfSubCategories(mainCategory, filteredTransactions, transactionDataList);
         }
         return transactionDataList;
@@ -58,16 +59,17 @@ public class StandardBudgetDetailsCalculator {
         for (SubCategory subCategory : subCategorySet) {
             List<Transaction> filteredTransactions = utils.filterTransactionListOnSubCategory(subCategory, transactionList);
             double amount = utils.getAmountFromTransactionList(filteredTransactions);
-            getTransactionData(mainCategory.getName(), amount)
+            getTransactionData(mainCategory.getName(), subCategory.getName(), amount)
                 .map(transactionDataList::add);
         }
     }
 
-    private Optional<TransactionData> getTransactionData(final String categoryName, final double amount) {
+    private Optional<TransactionData> getTransactionData(final String mainCategoryName, final String subCategoryName, final double amount) {
         return amount == utils.getZero() ? Optional.empty()
             : Optional.of(TransactionData.builder()
             .withAmount(amount)
-            .withMainCategoryName(categoryName)
+            .withMainCategoryName(mainCategoryName)
+            .withSubCategoryName(subCategoryName)
             .build());
     }
 

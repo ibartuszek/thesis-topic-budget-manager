@@ -18,19 +18,15 @@ public class BudgetCalculatorUtils {
     private static final String TOTAL_INCOMES_LABEL = "Total incomes";
     private static final String TOTAL_EXPENSES_LABEL = "Total expenses";
 
-    public double getZero() {
+    double getZero() {
         return ZERO;
     }
 
-    public String getSavingsLabel() {
-        return SAVINGS_LABEL;
-    }
-
-    public String getTotalIncomesLabel() {
+    String getTotalIncomesLabel() {
         return TOTAL_INCOMES_LABEL;
     }
 
-    public String getTotalExpensesLabel() {
+    String getTotalExpensesLabel() {
         return TOTAL_EXPENSES_LABEL;
     }
 
@@ -42,7 +38,7 @@ public class BudgetCalculatorUtils {
 
     List<Transaction> filterTransactionListOnSubCategory(final SubCategory subCategory, final List<Transaction> transactionList) {
         return transactionList.stream()
-            .filter(transaction -> transaction.getSubCategory() != null && subCategory.equals(transaction.getSubCategory()))
+            .filter(transaction -> transaction.getSubCategory() != null && transaction.getSubCategory().equals(subCategory))
             .collect(Collectors.toList());
     }
 

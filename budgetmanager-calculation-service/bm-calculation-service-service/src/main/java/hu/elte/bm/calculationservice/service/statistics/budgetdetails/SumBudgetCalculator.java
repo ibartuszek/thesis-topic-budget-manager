@@ -44,9 +44,9 @@ public class SumBudgetCalculator {
     private String createLabelForSum(final StatisticsSchema schema, final String baseLabel) {
         String result;
         if (schema.getSubCategory() != null) {
-            result = MessageFormat.format(baseLabel, schema.getSubCategory());
+            result = MessageFormat.format(baseLabel, schema.getSubCategory().getName());
         } else {
-            result = MessageFormat.format(baseLabel, schema.getMainCategory());
+            result = MessageFormat.format(baseLabel, schema.getMainCategory().getName());
         }
         return result;
     }
