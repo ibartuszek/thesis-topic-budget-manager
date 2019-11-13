@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 import hu.elte.bm.calculationservice.budgetdetails.BudgetDetails;
 import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.service.schema.StatisticsSchemaService;
+import hu.elte.bm.calculationservice.service.statistics.transactionprovider.TransactionProvider;
+import hu.elte.bm.calculationservice.service.statistics.transactionprovider.TransactionProviderContext;
 import hu.elte.bm.calculationservice.statistics.Statistics;
-import hu.elte.bm.calculationservice.transactionserviceclient.TransactionServiceFacade;
 import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
@@ -18,19 +19,27 @@ public class StatisticsFactory {
 
     private final StatisticsSchemaService schemaService;
     private final CalculationService calculationService;
-    private final TransactionServiceFacade transactionServiceFacade;
+    private final TransactionProvider transactionProvider;
 
     public StatisticsFactory(final StatisticsSchemaService schemaService, final CalculationService calculationService,
-        final TransactionServiceFacade transactionServiceFacade) {
+        final TransactionProvider transactionProvider) {
         this.schemaService = schemaService;
         this.calculationService = calculationService;
-        this.transactionServiceFacade = transactionServiceFacade;
+        this.transactionProvider = transactionProvider;
     }
 
     public Statistics createStandardStatistics(final Long userId, final LocalDate start, final LocalDate end) {
         StatisticsSchema schema = schemaService.getStandardSchema(userId);
-        List<Transaction> incomes = transactionServiceFacade.getTransactions(TransactionType.INCOME, userId, start, end);
-        List<Transaction> outcomes = transactionServiceFacade.getTransactions(TransactionType.OUTCOME, userId, start, end);
+        TransactionProviderContext context = TransactionProviderContext.builder()
+            .withUserId(userId)
+            .withCurrency(schema.getCurrency())
+            .withStart(start)
+            .withEnd(end)
+            .withExchangeRates(transactionProvider.provideExchangeRates())
+            .build();
+        transactionProvider.provideExchangeRates();
+        List<Transaction> incomes = transactionProvider.getTransactions(TransactionType.INCOME, context);
+        List<Transaction> outcomes = transactionProvider.getTransactions(TransactionType.OUTCOME, context);
         BudgetDetails details = calculationService.calculateDetails(incomes, outcomes, schema);
         return Statistics.builder()
             .withSchema(schema)
@@ -45,4 +54,5 @@ public class StatisticsFactory {
         // TODO:
         return null;
     }
+
 }

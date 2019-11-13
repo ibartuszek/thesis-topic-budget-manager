@@ -12,6 +12,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import hu.elte.bm.calculationservice.exceptions.schema.IllegalStatisticsSchemaException;
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaConflictException;
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaNotFoundException;
+import hu.elte.bm.calculationservice.forexclient.ForexClientException;
+import hu.elte.bm.calculationservice.transactionserviceclient.exceptions.TransactionServiceException;
 import hu.elte.bm.transactionservice.exceptions.maincategory.IllegalMainCategoryException;
 import hu.elte.bm.transactionservice.exceptions.maincategory.MainCategoryNotFoundException;
 
@@ -44,4 +46,9 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({ ForexClientException.class, TransactionServiceException.class })
+    protected ResponseEntity<Object> handleServiceNotAvailable(final RuntimeException e, final WebRequest request) {
+        String bodyOfResponse = e.getMessage();
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }
