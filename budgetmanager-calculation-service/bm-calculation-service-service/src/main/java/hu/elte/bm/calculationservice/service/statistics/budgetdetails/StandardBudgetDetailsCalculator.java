@@ -3,8 +3,6 @@ package hu.elte.bm.calculationservice.service.statistics.budgetdetails;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -40,9 +38,7 @@ public class StandardBudgetDetailsCalculator {
 
     private List<TransactionData> createTransactionDataList(final List<Transaction> transactionList) {
         List<TransactionData> transactionDataList = new ArrayList<>();
-        Set<MainCategory> mainCategorySet = transactionList.stream()
-            .map(Transaction::getMainCategory)
-            .collect(Collectors.toSet());
+        List<MainCategory> mainCategorySet = getMainCategoryList(transactionList);
         for (MainCategory mainCategory : mainCategorySet) {
             List<Transaction> filteredTransactions = utils.filterTransactionListOnMainCategory(mainCategory, transactionList);
             double amount = utils.getAmountFromTransactionList(filteredTransactions);
@@ -53,10 +49,19 @@ public class StandardBudgetDetailsCalculator {
         return transactionDataList;
     }
 
+    private List<MainCategory> getMainCategoryList(final List<Transaction> transactionList) {
+        List<MainCategory> result = new ArrayList<>();
+        for (Transaction transaction : transactionList) {
+            if (!result.contains(transaction.getMainCategory())) {
+                result.add(transaction.getMainCategory());
+            }
+        }
+        return result;
+    }
+
     private void addTransactionDataOfSubCategories(final MainCategory mainCategory, final List<Transaction> transactionList,
         final List<TransactionData> transactionDataList) {
-        Set<SubCategory> subCategorySet = mainCategory.getSubCategorySet();
-        for (SubCategory subCategory : subCategorySet) {
+        for (SubCategory subCategory :  mainCategory.getSubCategorySet()) {
             List<Transaction> filteredTransactions = utils.filterTransactionListOnSubCategory(subCategory, transactionList);
             double amount = utils.getAmountFromTransactionList(filteredTransactions);
             getTransactionData(mainCategory.getName(), subCategory.getName(), amount)

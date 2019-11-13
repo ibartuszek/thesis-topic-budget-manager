@@ -24,6 +24,14 @@ class AbstractBudgetCalculatorTest {
     protected static final String SAVINGS_LABEL = "Savings";
     protected static final String TOTAL_INCOMES_LABEL = "Total incomes";
     protected static final String TOTAL_EXPENSES_LABEL = "Total expenses";
+    protected static final double DEFAULT_TRANSACTION_AMOUNT = 10.0d;
+    protected static final double OTHER_TRANSACTION_AMOUNT = 20.0d;
+    protected static final double ANOTHER_TRANSACTION_AMOUNT = 25.0d;
+    protected static final String DEFAULT_MAIN_CATEGORY_NAME = "Main category";
+    protected static final String OTHER_MAIN_CATEGORY_NAME = "Other main category";
+    protected static final String ANOTHER_MAIN_CATEGORY_NAME = "Another main category";
+    protected static final String DEFAULT_SUB_CATEGORY_NAME = "Supplementary category";
+    protected static final String OTHER_SUB_CATEGORY_NAME = "Other supplementary category";
 
     private static final Long DEFAULT_TRANSACTION_ID = 1L;
     private static final Long OTHER_TRANSACTION_ID = 2L;
@@ -31,9 +39,6 @@ class AbstractBudgetCalculatorTest {
     private static final String DEFAULT_TRANSACTION_TITLE = "Transation";
     private static final String OTHER_TRANSACTION_TITLE = "Other transation";
     private static final String ANOTHER_TRANSACTION_TITLE = "Another transation";
-    private static final double DEFAULT_TRANSACTION_AMOUNT = 10.0d;
-    private static final double OTHER_TRANSACTION_AMOUNT = 20.0d;
-    private static final double ANOTHER_TRANSACTION_AMOUNT = 25.0d;
     private static final LocalDate DEFAULT_TRANSACTION_DATE = LocalDate.now().minusDays(3);
     private static final LocalDate OTHER_TRANSACTION_DATE = LocalDate.now().minusDays(2);
     private static final LocalDate ANOTHER_TRANSACTION_DATE = LocalDate.now().minusDays(1);
@@ -41,13 +46,8 @@ class AbstractBudgetCalculatorTest {
     private static final Long DEFAULT_MAIN_CATEGORY_ID = 1L;
     private static final Long OTHER_MAIN_CATEGORY_ID = 2L;
     private static final Long ANOTHER_MAIN_CATEGORY_ID = 3L;
-    private static final String DEFAULT_MAIN_CATEGORY_NAME = "Main category";
-    private static final String OTHER_MAIN_CATEGORY_NAME = "Other main category";
-    private static final String ANOTHER_MAIN_CATEGORY_NAME = "Another main category";
     private static final Long DEFAULT_SUB_CATEGORY_ID = 1L;
     private static final Long OTHER_SUB_CATEGORY_ID = 2L;
-    private static final String DEFAULT_SUB_CATEGORY_NAME = "Supplementary category";
-    private static final String OTHER_SUB_CATEGORY_NAME = "Other supplementary category";
 
     private static final Long DEFAULT_SCHEMA_ID = 1L;
     private static final String DEFAULT_SCHEMA_TITLE = "Schema";

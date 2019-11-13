@@ -1,69 +1,77 @@
 package hu.elte.bm.calculationservice.service.statistics.budgetdetails;
 
-import java.util.Collections;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import hu.elte.bm.calculationservice.budgetdetails.BudgetDetails;
+import hu.elte.bm.calculationservice.budgetdetails.BudgetDetailsElement;
+import hu.elte.bm.calculationservice.budgetdetails.TransactionData;
 import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
-@ExtendWith(MockitoExtension.class)
 class StandardBudgetDetailsCalculatorTest extends AbstractBudgetCalculatorTest {
 
-    public static final double FIRST_MAIN_CATEGORY_SUM = 30.0d;
-    public static final double FIRST_SUB_CATEGORY_SUM = 20.0d;
-    @InjectMocks
-    private StandardBudgetDetailsCalculator underTest;
-
-    @Mock
-    private BudgetCalculatorUtils utils;
+    private static final Double DEFAULT_MAIN_CATEGORY_SUM_AMOUNT = DEFAULT_TRANSACTION_AMOUNT + OTHER_TRANSACTION_AMOUNT;
+    private static final Double EXPECTED_TOTAL_INCOMES_AMOUNT = EXPECTED_SUM_AMOUNT;
+    private static final Double EXPECTED_TOTAL_EXPENSE_AMOUNT = DEFAULT_TRANSACTION_AMOUNT + OTHER_TRANSACTION_AMOUNT;
+    private static final Double EXPECTED_SAVINGS_AMOUNT = EXPECTED_TOTAL_INCOMES_AMOUNT - EXPECTED_TOTAL_EXPENSE_AMOUNT;
+    private StandardBudgetDetailsCalculator underTest = new StandardBudgetDetailsCalculator(new BudgetCalculatorUtils());
 
     @Test
     public void testCalculateStandardDetails() {
         // GIVEN
         List<Transaction> incomeList = createExampleTransactionList(TransactionType.INCOME, DEFAULT_CURRENCY);
-        List<Transaction> outcomeList = Collections.emptyList();
-        // List<Transaction> outcomeList = createExampleOutcomeList();
-        List<Transaction> filteredIncomeListOnFirstMainCategory = List.of(incomeList.get(0), incomeList.get(1));
-        List<Transaction> filteredIncomeListOnFirstSubCategory = List.of(incomeList.get(1));
-        List<Transaction> filteredIncomeListOnSecondMainCategory = List.of(incomeList.get(2));
+        List<Transaction> outcomeList = createExampleOutcomeList();
+        List<TransactionData> expectedIncomes = createExpectedIncomesDataLis();
+        List<TransactionData> expectedOutcomes = createExpectedOutcomesDataLis();
+        BudgetDetailsElement expectedTotalIncomes = createBudgetDetailsElement(EXPECTED_TOTAL_INCOMES_AMOUNT, TOTAL_INCOMES_LABEL);
+        BudgetDetailsElement expectedTotalExpenses = createBudgetDetailsElement(EXPECTED_TOTAL_EXPENSE_AMOUNT, TOTAL_EXPENSES_LABEL);
+        BudgetDetailsElement expectedSavings = createBudgetDetailsElement(EXPECTED_SAVINGS_AMOUNT, SAVINGS_LABEL);
+        BudgetDetails expected = BudgetDetails.builder()
+                .withIncomes(expectedIncomes)
+                .withOutcomes(expectedOutcomes)
+                .withTotalIncomes(expectedTotalIncomes)
+                .withTotalExpenses(expectedTotalExpenses)
+                .withSavings(expectedSavings)
+                .build();
 
-        Mockito.when(utils.filterTransactionListOnMainCategory(incomeList.get(0).getMainCategory(), incomeList))
-            .thenReturn(filteredIncomeListOnFirstMainCategory);
-        Mockito.when(utils.getAmountFromTransactionList(filteredIncomeListOnFirstMainCategory)).thenReturn(FIRST_MAIN_CATEGORY_SUM);
-        Mockito.when(utils.filterTransactionListOnSubCategory(incomeList.get(1).getSubCategory(), filteredIncomeListOnFirstMainCategory))
-            .thenReturn(filteredIncomeListOnFirstSubCategory);
-        Mockito.when(utils.getAmountFromTransactionList(filteredIncomeListOnFirstSubCategory)).thenReturn(FIRST_SUB_CATEGORY_SUM);
-
-        Mockito.when(utils.filterTransactionListOnMainCategory(incomeList.get(2).getMainCategory(), incomeList))
-            .thenReturn(filteredIncomeListOnSecondMainCategory);
-        Mockito.when(utils.getZero()).thenReturn(ZERO);
         // WHEN
         var result = underTest.calculateStandardDetails(incomeList, outcomeList);
+
         // THEN
-
+        Assertions.assertEquals(expected, result);
     }
 
-    /*
-    private List<TransactionData> createTransactionDataList(final List<Transaction> transactionList) {
-        List<TransactionData> transactionDataList = new ArrayList<>();
-        Set<MainCategory> mainCategorySet = transactionList.stream()
-            .map(Transaction::getMainCategory)
-            .collect(Collectors.toSet());
-        for (MainCategory mainCategory : mainCategorySet) {
-            List<Transaction> filteredTransactions = utils.filterTransactionListOnMainCategory(mainCategory, transactionList);
-            double amount = utils.getAmountFromTransactionList(filteredTransactions);
-            getTransactionData(mainCategory.getName(), amount).map(transactionDataList::add);
-            addTransactionDataOfSubCategories(mainCategory, filteredTransactions, transactionDataList);
-        }
-        return transactionDataList;
+    private List<TransactionData> createExpectedIncomesDataLis() {
+        TransactionData first = TransactionData.builder()
+                .withAmount(DEFAULT_MAIN_CATEGORY_SUM_AMOUNT)
+                .withMainCategoryName(DEFAULT_MAIN_CATEGORY_NAME)
+                .build();
+        TransactionData second = TransactionData.builder()
+                .withAmount(OTHER_TRANSACTION_AMOUNT)
+                .withMainCategoryName(DEFAULT_MAIN_CATEGORY_NAME)
+                .withSubCategoryName(DEFAULT_SUB_CATEGORY_NAME)
+                .build();
+        TransactionData third = TransactionData.builder()
+                .withAmount(ANOTHER_TRANSACTION_AMOUNT)
+                .withMainCategoryName(ANOTHER_MAIN_CATEGORY_NAME)
+                .build();
+        return List.of(first, second, third);
     }
-     */
+
+    private List<TransactionData> createExpectedOutcomesDataLis() {
+        TransactionData first = TransactionData.builder()
+                .withAmount(DEFAULT_MAIN_CATEGORY_SUM_AMOUNT)
+                .withMainCategoryName(DEFAULT_MAIN_CATEGORY_NAME)
+                .build();
+        TransactionData second = TransactionData.builder()
+                .withAmount(OTHER_TRANSACTION_AMOUNT)
+                .withMainCategoryName(DEFAULT_MAIN_CATEGORY_NAME)
+                .withSubCategoryName(DEFAULT_SUB_CATEGORY_NAME)
+                .build();
+        return List.of(first, second);
+    }
 
 }
