@@ -16,12 +16,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import hu.elte.bm.calculationservice.transactionserviceclient.exceptions.TransactionServiceException;
-import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.TransactionType;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultSubCategoryProxyTest {
+public class SubCategoryProxyTest {
 
     private static final Long USER_ID = 1L;
     private static final TransactionType TYPE = TransactionType.OUTCOME;
@@ -40,18 +39,18 @@ public class DefaultSubCategoryProxyTest {
     }
 
     @Test(expected = TransactionServiceException.class)
-    public void testProvideWhenServerNotRespond() {
+    public void testGetCategoriesWhenServerNotRespond() {
         // GIVEN
         ResponseEntity<SubCategoryListResponse> responseEntity = new ResponseEntity<>(new SubCategoryListResponse(), HttpStatus.REQUEST_TIMEOUT);
         Mockito.when(restTemplate.getForEntity(CALLED_URL, SubCategoryListResponse.class)).thenReturn(responseEntity);
         // WHEN
         underTest.getCategories(TYPE, USER_ID);
         // THEN
-        Mockito.verify(restTemplate).getForEntity(CALLED_URL, MainCategory[].class);
+        Mockito.verify(restTemplate).getForEntity(CALLED_URL, SubCategoryListResponse.class);
     }
 
     @Test
-    public void testProvideWhenServerSendsEmptyList() {
+    public void testGetCategoriesWhenServerSendsEmptyList() {
         // GIVEN
         ResponseEntity<SubCategoryListResponse> responseEntity = new ResponseEntity<>(new SubCategoryListResponse(), HttpStatus.OK);
         Mockito.when(restTemplate.getForEntity(CALLED_URL, SubCategoryListResponse.class)).thenReturn(responseEntity);
@@ -63,7 +62,7 @@ public class DefaultSubCategoryProxyTest {
     }
 
     @Test
-    public void testProvideWhenServerSendsAList() {
+    public void testGetCategoriesWhenServerSendsAList() {
         // GIVEN
         SubCategory subCategory = SubCategory.builder()
             .withId(1L)

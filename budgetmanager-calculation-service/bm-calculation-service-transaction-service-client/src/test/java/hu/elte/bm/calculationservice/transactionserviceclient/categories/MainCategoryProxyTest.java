@@ -40,18 +40,18 @@ public class MainCategoryProxyTest {
     }
 
     @Test(expected = TransactionServiceException.class)
-    public void testProvideWhenServerNotRespond() {
+    public void testGetCategoriesWhenServerNotRespond() {
         // GIVEN
         ResponseEntity<MainCategoryListResponse> responseEntity = new ResponseEntity<>(new MainCategoryListResponse(), HttpStatus.REQUEST_TIMEOUT);
         Mockito.when(restTemplate.getForEntity(CALLED_URL, MainCategoryListResponse.class)).thenReturn(responseEntity);
         // WHEN
         underTest.getCategories(TYPE, USER_ID);
         // THEN
-        Mockito.verify(restTemplate).getForEntity(CALLED_URL, MainCategory[].class);
+        Mockito.verify(restTemplate).getForEntity(CALLED_URL, MainCategoryListResponse.class);
     }
 
     @Test
-    public void testProvideWhenServerSendsEmptyList() {
+    public void testGetCategoriesWhenServerSendsEmptyList() {
         // GIVEN
         ResponseEntity<MainCategoryListResponse> responseEntity = new ResponseEntity<>(new MainCategoryListResponse(), HttpStatus.OK);
         Mockito.when(restTemplate.getForEntity(CALLED_URL, MainCategoryListResponse.class)).thenReturn(responseEntity);
@@ -63,7 +63,7 @@ public class MainCategoryProxyTest {
     }
 
     @Test
-    public void testProvideWhenServerSendsAList() {
+    public void testGetCategoriesWhenServerSendsAList() {
         // GIVEN
         MainCategory mainCategory = MainCategory.builder()
             .withId(1L)
