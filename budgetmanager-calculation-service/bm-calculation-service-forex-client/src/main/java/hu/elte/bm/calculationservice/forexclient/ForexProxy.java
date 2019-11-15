@@ -16,6 +16,7 @@ public class ForexProxy {
     private static final String EXCEPTION_MESSAGE = "Forex client sent: {0} during: '{1}' call.";
     private static final String BASE_URL = "http://freeforexapi.com/api/live";
     private static final String PAIRS = "USDEUR,USDHUF";
+
     private final RestTemplate restTemplate;
 
     @Autowired
@@ -41,7 +42,8 @@ public class ForexProxy {
     }
 
     private void checkResponseStatus(final ResponseEntity responseEntity) {
-        if (!responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null) {
+        if ((!responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null)
+            || responseEntity.getBody() == "") {
             throw new ForexClientException(MessageFormat.format(EXCEPTION_MESSAGE, responseEntity.getStatusCode(), BASE_URL));
         }
     }

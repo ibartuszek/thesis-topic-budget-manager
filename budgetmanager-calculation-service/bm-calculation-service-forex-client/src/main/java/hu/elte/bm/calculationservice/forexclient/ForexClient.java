@@ -19,10 +19,14 @@ public class ForexClient {
     public List<Rate> getExchangeRates() {
         List<Rate> exchangeRates = new ArrayList<>();
         ForexRates rates = proxy.getForexResponse().getRates();
+        double rateEurToHuf = 1 / rates.getUSDEUR().getRate() * rates.getUSDHUF().getRate();
+        double rateHufToEur = 1 / rateEurToHuf;
         exchangeRates.add(createRate(Currency.USD, Currency.EUR, rates.getUSDEUR().getRate()));
         exchangeRates.add(createRate(Currency.EUR, Currency.USD, 1 / rates.getUSDEUR().getRate()));
         exchangeRates.add(createRate(Currency.USD, Currency.HUF, rates.getUSDHUF().getRate()));
         exchangeRates.add(createRate(Currency.HUF, Currency.USD, 1 / rates.getUSDHUF().getRate()));
+        exchangeRates.add(createRate(Currency.EUR, Currency.HUF, rateEurToHuf));
+        exchangeRates.add(createRate(Currency.HUF, Currency.EUR, rateHufToEur));
         return exchangeRates;
     }
 
