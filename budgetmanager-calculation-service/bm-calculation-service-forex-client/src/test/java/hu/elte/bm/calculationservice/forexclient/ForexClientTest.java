@@ -7,18 +7,20 @@ import static hu.elte.bm.transactionservice.Currency.USD;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.google.gson.Gson;
 
 import hu.elte.bm.transactionservice.Currency;
 
-@RunWith(MockitoJUnitRunner.class)
-class ForexClientTest {
+@ExtendWith(MockitoExtension.class)
+public class ForexClientTest {
 
     private static final double USD_EUR_RATE = 0.90878d;
     private static final double EUR_USD_RATE = 1 / USD_EUR_RATE;
@@ -27,9 +29,9 @@ class ForexClientTest {
     private static final double EUR_HUF_RATE = EUR_USD_RATE * USD_HUF_RATE;
     private static final double HUF_EUR_RATE = 1 / EUR_HUF_RATE;
     private static final String RESPONSE_STRING = "{\"rates\":"
-            + "{\"USDEUR\":{\"rate\":0.90878,\"timestamp\":1573675086},"
-            + "\"USDHUF\":{\"rate\":303.709769,\"timestamp\":1573675086}},"
-            + "\"code\":200}";
+        + "{\"USDEUR\":{\"rate\":0.90878,\"timestamp\":1573675086},"
+        + "\"USDHUF\":{\"rate\":303.709769,\"timestamp\":1573675086}},"
+        + "\"code\":200}";
 
     @InjectMocks
     private ForexClient underTest;
@@ -48,12 +50,14 @@ class ForexClientTest {
         expectedRates.add(createRate(HUF, USD, HUF_USD_RATE));
         expectedRates.add(createRate(EUR, HUF, EUR_HUF_RATE));
         expectedRates.add(createRate(HUF, EUR, HUF_EUR_RATE));
+        Mockito.when(forexProxy.getForexResponse()).thenReturn(createExampleForexResponse());
 
         // WHEN
         var result = underTest.getExchangeRates();
 
         // THEN
-
+        Mockito.verify(forexProxy).getForexResponse();
+        Assertions.assertEquals(expectedRates, result);
     }
 
     private ForexResponse createExampleForexResponse() {
@@ -62,9 +66,9 @@ class ForexClientTest {
 
     private Rate createRate(final Currency originalCurrency, final Currency newCurrency, final double rate) {
         return Rate.builder()
-                .withOriginalCurrency(originalCurrency)
-                .withNewCurrency(newCurrency)
-                .withRate(rate)
-                .build();
+            .withOriginalCurrency(originalCurrency)
+            .withNewCurrency(newCurrency)
+            .withRate(rate)
+            .build();
     }
 }

@@ -1,6 +1,7 @@
 package hu.elte.bm.calculationservice.forexclient;
 
 import java.text.MessageFormat;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class ForexProxy {
 
     private void checkResponseStatus(final ResponseEntity responseEntity) {
         if ((!responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null)
-            || responseEntity.getBody() == "") {
+            || Objects.equals(responseEntity.getBody(), "")) {
             throw new ForexClientException(MessageFormat.format(EXCEPTION_MESSAGE, responseEntity.getStatusCode(), BASE_URL));
         }
     }

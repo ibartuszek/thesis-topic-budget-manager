@@ -1,5 +1,6 @@
 package hu.elte.bm.calculationservice.service.statistics.transactionprovider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -24,13 +25,11 @@ public class TransactionProvider {
         this.exchanger = exchanger;
     }
 
-    public List<Rate> provideExchangeRates() {
-        return forexClient.getExchangeRates();
-    }
-
     public List<Transaction> getTransactions(final TransactionType type, final TransactionProviderContext context) {
+        List<Transaction> result = new ArrayList<>();
         List<Transaction> transactionList = transactionServiceFacade.getTransactions(type, context.getUserId(), context.getStart(), context.getEnd());
-        transactionList.forEach(transaction -> exchanger.exchangeCurrency(transaction, context.getCurrency(), context.getExchangeRates()));
-        return transactionList;
+        List<Rate> exchangeRates = forexClient.getExchangeRates();
+        transactionList.forEach(transaction -> result.add(exchanger.exchangeCurrency(transaction, context.getCurrency(), exchangeRates)));
+        return result;
     }
 }

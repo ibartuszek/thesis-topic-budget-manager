@@ -35,9 +35,7 @@ public class StatisticsFactory {
             .withCurrency(schema.getCurrency())
             .withStart(start)
             .withEnd(end)
-            .withExchangeRates(transactionProvider.provideExchangeRates())
             .build();
-        transactionProvider.provideExchangeRates();
         List<Transaction> incomes = transactionProvider.getTransactions(TransactionType.INCOME, context);
         List<Transaction> outcomes = transactionProvider.getTransactions(TransactionType.OUTCOME, context);
         BudgetDetails details = calculationService.calculateDetails(incomes, outcomes, schema);

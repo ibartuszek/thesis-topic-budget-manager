@@ -36,6 +36,7 @@ public class TransactionCurrencyExchanger {
         return Transaction.builder()
             .withId(transaction.getId())
             .withTitle(transaction.getTitle())
+            .withTransactionType(transaction.getTransactionType())
             .withAmount(newAmount)
             .withCurrency(newCurrency)
             .withMainCategory(transaction.getMainCategory())

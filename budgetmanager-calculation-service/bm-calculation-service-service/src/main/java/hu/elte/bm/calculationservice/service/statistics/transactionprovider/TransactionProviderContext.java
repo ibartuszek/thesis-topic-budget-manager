@@ -1,10 +1,8 @@
 package hu.elte.bm.calculationservice.service.statistics.transactionprovider;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
-import hu.elte.bm.calculationservice.forexclient.Rate;
 import hu.elte.bm.transactionservice.Currency;
 
 public final class TransactionProviderContext {
@@ -13,14 +11,12 @@ public final class TransactionProviderContext {
     private final Currency currency;
     private final LocalDate start;
     private final LocalDate end;
-    private final List<Rate> exchangeRates;
 
     private TransactionProviderContext(final Builder builder) {
         this.userId = builder.userId;
         this.currency = builder.currency;
         this.start = builder.start;
         this.end = builder.end;
-        this.exchangeRates = builder.exchangeRates;
     }
 
     public static Builder builder() {
@@ -43,10 +39,6 @@ public final class TransactionProviderContext {
         return end;
     }
 
-    public List<Rate> getExchangeRates() {
-        return exchangeRates;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -59,13 +51,12 @@ public final class TransactionProviderContext {
         return userId.equals(context.userId)
             && currency == context.currency
             && start.equals(context.start)
-            && end.equals(context.end)
-            && exchangeRates.equals(context.exchangeRates);
+            && end.equals(context.end);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, currency, start, end, exchangeRates);
+        return Objects.hash(userId, currency, start, end);
     }
 
     @Override
@@ -75,7 +66,6 @@ public final class TransactionProviderContext {
             + ", currency=" + currency
             + ", start=" + start
             + ", end=" + end
-            + ", exchangeRates=" + exchangeRates
             + '}';
     }
 
@@ -84,7 +74,6 @@ public final class TransactionProviderContext {
         private Currency currency;
         private LocalDate start;
         private LocalDate end;
-        private List<Rate> exchangeRates;
 
         private Builder() {
         }
@@ -106,11 +95,6 @@ public final class TransactionProviderContext {
 
         public Builder withEnd(final LocalDate end) {
             this.end = end;
-            return this;
-        }
-
-        public Builder withExchangeRates(final List<Rate> exchangeRates) {
-            this.exchangeRates = exchangeRates;
             return this;
         }
 
