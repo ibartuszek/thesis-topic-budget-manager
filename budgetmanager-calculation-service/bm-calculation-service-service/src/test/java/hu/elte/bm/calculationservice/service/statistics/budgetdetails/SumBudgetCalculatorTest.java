@@ -15,12 +15,13 @@ import hu.elte.bm.calculationservice.budgetdetails.BudgetDetails;
 import hu.elte.bm.calculationservice.budgetdetails.BudgetDetailsElement;
 import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.schema.StatisticsType;
+import hu.elte.bm.calculationservice.service.statistics.AbstractCalculatorTest;
 import hu.elte.bm.transactionservice.Currency;
 import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
 @ExtendWith(MockitoExtension.class)
-public class SumBudgetCalculatorTest extends AbstractBudgetCalculatorTest {
+public class SumBudgetCalculatorTest extends AbstractCalculatorTest {
 
     private static final String TOTAL_INCOMES_LABEL = "Total income of Main category";
     private static final String TOTAL_EXPENSES_LABEL = "Total cost of Main category";

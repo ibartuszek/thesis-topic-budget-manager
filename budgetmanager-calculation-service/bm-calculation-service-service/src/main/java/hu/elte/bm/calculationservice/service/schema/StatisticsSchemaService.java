@@ -68,6 +68,10 @@ public class StatisticsSchemaService {
         return schemaDao.getCustomSchemas(userId);
     }
 
+    public StatisticsSchema getCustomSchemaById(final Long schemaId, final Long userId) {
+        return schemaDao.findById(schemaId, userId);
+    }
+
     public StatisticsSchema save(final StatisticsSchema schema, final Long userId) {
         validateForSave(schema, userId);
         validateCategories(schema, userId);

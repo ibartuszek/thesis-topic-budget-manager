@@ -1,6 +1,7 @@
 package hu.elte.bm.calculationservice.statistics;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Past;
@@ -56,6 +57,27 @@ public final class Statistics {
 
     public BudgetDetails getBudgetDetails() {
         return budgetDetails;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Statistics that = (Statistics) o;
+        return startDate.equals(that.startDate)
+            && endDate.equals(that.endDate)
+            && schema.equals(that.schema)
+            && chartData.equals(that.chartData)
+            && budgetDetails.equals(that.budgetDetails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startDate, endDate, schema, chartData, budgetDetails);
     }
 
     @Override

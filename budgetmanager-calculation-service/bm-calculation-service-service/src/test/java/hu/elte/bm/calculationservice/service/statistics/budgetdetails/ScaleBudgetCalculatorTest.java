@@ -13,11 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.elte.bm.calculationservice.budgetdetails.BudgetDetails;
 import hu.elte.bm.calculationservice.budgetdetails.BudgetDetailsElement;
+import hu.elte.bm.calculationservice.service.statistics.AbstractCalculatorTest;
 import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
 @ExtendWith(MockitoExtension.class)
-class ScaleBudgetCalculatorTest extends AbstractBudgetCalculatorTest {
+class ScaleBudgetCalculatorTest extends AbstractCalculatorTest {
 
     private static final double EXPECTED_EXPENSE_SUM_AMOUNT = 45.0d;
     private static final double EXPECTED_SAVINGS_AMOUNT = 10.0d;
@@ -78,7 +79,7 @@ class ScaleBudgetCalculatorTest extends AbstractBudgetCalculatorTest {
     public void testCalculateScaleDetails() {
         // GIVEN
         List<Transaction> incomeList = createExampleTransactionList(TransactionType.INCOME, DEFAULT_CURRENCY);
-        List<Transaction> outcomeList = createExampleOutcomeList();
+        List<Transaction> outcomeList = createOtherExampleList(TransactionType.OUTCOME, DEFAULT_CURRENCY);
         BudgetDetailsElement totalIncomes = createBudgetDetailsElement(EXPECTED_SUM_AMOUNT, TOTAL_INCOMES_LABEL);
         BudgetDetailsElement totalExpenses = createBudgetDetailsElement(EXPECTED_EXPENSE_SUM_AMOUNT, TOTAL_EXPENSES_LABEL);
         BudgetDetailsElement savings = createBudgetDetailsElement(EXPECTED_SAVINGS_AMOUNT, SAVINGS_LABEL);

@@ -7,11 +7,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import hu.elte.bm.calculationservice.budgetdetails.BudgetDetailsElement;
+import hu.elte.bm.calculationservice.service.statistics.AbstractCalculatorTest;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.Transaction;
 
-class BudgetCalculatorUtilsTest extends AbstractBudgetCalculatorTest {
+class BudgetCalculatorUtilsTest extends AbstractCalculatorTest {
 
     private static final double TOTAL_INCOMES_AMOUNT = 35.0d;
     private static final double TOTAL_EXPENSES_AMOUNT = 30.0d;

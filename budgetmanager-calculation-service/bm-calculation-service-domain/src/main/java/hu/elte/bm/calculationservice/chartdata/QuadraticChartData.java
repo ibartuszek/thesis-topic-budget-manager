@@ -70,7 +70,7 @@ public final class QuadraticChartData implements ChartData {
 
     @Override
     public String toString() {
-        return "RadialChartData{"
+        return "QuadraticChartData{"
             + "legend='" + legend + '\''
             + ", dataPoints=" + dataPoints
             + '}';

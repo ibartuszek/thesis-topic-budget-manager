@@ -178,6 +178,7 @@
     <module name="MagicNumber">
       <property name="ignoreHashCodeMethod" value="true"/>
       <property name="severity" value="error"/>
+      <property name="id" value="magicNumberError"/>
     </module>
     <module name="MissingSwitchDefault"/>
     <module name="SimplifyBooleanExpression">

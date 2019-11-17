@@ -1,4 +1,4 @@
-package hu.elte.bm.calculationservice.service.statistics.budgetdetails;
+package hu.elte.bm.calculationservice.service.statistics;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
-class AbstractBudgetCalculatorTest {
+public abstract class AbstractCalculatorTest {
 
     protected static final TransactionType DEFAULT_TRANSACTION_TYPE = TransactionType.OUTCOME;
     protected static final Currency DEFAULT_CURRENCY = Currency.EUR;
@@ -32,15 +32,15 @@ class AbstractBudgetCalculatorTest {
     protected static final String ANOTHER_MAIN_CATEGORY_NAME = "Another main category";
     protected static final String DEFAULT_SUB_CATEGORY_NAME = "Supplementary category";
     protected static final String OTHER_SUB_CATEGORY_NAME = "Other supplementary category";
+    protected static final String OTHER_TRANSACTION_TITLE = "Other transation";
+    protected static final LocalDate DEFAULT_TRANSACTION_DATE = LocalDate.now().minusDays(3);
+    protected static final LocalDate OTHER_TRANSACTION_DATE = LocalDate.now().minusDays(2);
 
     private static final Long DEFAULT_TRANSACTION_ID = 1L;
     private static final Long OTHER_TRANSACTION_ID = 2L;
     private static final Long ANOTHER_TRANSACTION_ID = 3L;
     private static final String DEFAULT_TRANSACTION_TITLE = "Transation";
-    private static final String OTHER_TRANSACTION_TITLE = "Other transation";
     private static final String ANOTHER_TRANSACTION_TITLE = "Another transation";
-    private static final LocalDate DEFAULT_TRANSACTION_DATE = LocalDate.now().minusDays(3);
-    private static final LocalDate OTHER_TRANSACTION_DATE = LocalDate.now().minusDays(2);
     private static final LocalDate ANOTHER_TRANSACTION_DATE = LocalDate.now().minusDays(1);
 
     private static final Long DEFAULT_MAIN_CATEGORY_ID = 1L;
@@ -52,6 +52,10 @@ class AbstractBudgetCalculatorTest {
     private static final Long DEFAULT_SCHEMA_ID = 1L;
     private static final String DEFAULT_SCHEMA_TITLE = "Schema";
     private static final ChartType DEFAULT_SCHEMA_CHART_TYPE = ChartType.BAR;
+
+    private static final long SCHEMA_ID = 1L;
+    private static final String SCHEMA_TITLE = "Schema";
+    private static final ChartType SCHEMA_TYPE = ChartType.BAR;
 
     protected List<Transaction> createExampleTransactionList(final TransactionType type, final Currency currency) {
         SubCategory defaultSubCategory = createExampleSubCategoryBuilder(type)
@@ -106,6 +110,16 @@ class AbstractBudgetCalculatorTest {
             .withDate(DEFAULT_TRANSACTION_DATE);
     }
 
+    protected Transaction.Builder createOtherExampleTransactionBuilder(final TransactionType type, final Currency currency) {
+        return Transaction.builder()
+            .withId(OTHER_TRANSACTION_ID)
+            .withTitle(OTHER_TRANSACTION_TITLE)
+            .withAmount(OTHER_TRANSACTION_AMOUNT)
+            .withCurrency(currency)
+            .withTransactionType(type)
+            .withDate(OTHER_TRANSACTION_DATE);
+    }
+
     protected MainCategory.Builder createExampleMainCategoryBuilder(final TransactionType type) {
         return MainCategory.builder()
             .withId(DEFAULT_MAIN_CATEGORY_ID)
@@ -137,12 +151,21 @@ class AbstractBudgetCalculatorTest {
             .withCurrency(currency);
     }
 
-    protected List<Transaction> createExampleOutcomeList() {
+    protected List<Transaction> createOtherExampleList(final TransactionType type, final Currency currency) {
         List<Transaction> outcomeList = new ArrayList<>();
-        List<Transaction> fullList = createExampleTransactionList(TransactionType.OUTCOME, DEFAULT_CURRENCY);
+        List<Transaction> fullList = createExampleTransactionList(type, DEFAULT_CURRENCY);
         outcomeList.add(fullList.get(0));
         outcomeList.add(fullList.get(1));
         return outcomeList;
+    }
+
+    protected StatisticsSchema.Builder createExampleSchemaBuilder(final StatisticsType type) {
+        return StatisticsSchema.builder()
+            .withId(SCHEMA_ID)
+            .withTitle(SCHEMA_TITLE)
+            .withCurrency(DEFAULT_CURRENCY)
+            .withType(type)
+            .withChartType(SCHEMA_TYPE);
     }
 
 }

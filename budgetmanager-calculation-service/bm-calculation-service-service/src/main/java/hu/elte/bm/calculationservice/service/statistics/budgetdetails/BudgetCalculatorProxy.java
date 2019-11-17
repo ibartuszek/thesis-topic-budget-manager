@@ -17,7 +17,7 @@ public class BudgetCalculatorProxy {
     private final SumBudgetCalculator sumCalculator;
 
     public BudgetCalculatorProxy(final BudgetCalculatorUtils utils, final StandardBudgetDetailsCalculator standardCalculator,
-            final ScaleBudgetCalculator scaleCalculator, final SumBudgetCalculator sumCalculator) {
+        final ScaleBudgetCalculator scaleCalculator, final SumBudgetCalculator sumCalculator) {
         this.utils = utils;
         this.standardCalculator = standardCalculator;
         this.scaleCalculator = scaleCalculator;
@@ -29,18 +29,16 @@ public class BudgetCalculatorProxy {
     }
 
     public BudgetDetails calculateScaleDetails(final List<Transaction> incomes, final List<Transaction> outcomes, final StatisticsSchema schema) {
-        List<Transaction> filteredIncomeList = createFilteredTransactionList(incomes, schema);
         List<Transaction> filteredOutcomeList = createFilteredTransactionList(outcomes, schema);
-        return scaleCalculator.calculateScaleDetails(filteredIncomeList, filteredOutcomeList);
+        return scaleCalculator.calculateScaleDetails(incomes, filteredOutcomeList);
     }
 
     public BudgetDetails calculateSumDetails(final List<Transaction> incomes, final List<Transaction> outcomes, final StatisticsSchema schema) {
-        List<Transaction> filteredIncomeList = createFilteredTransactionList(incomes, schema);
         List<Transaction> filteredOutcomeList = createFilteredTransactionList(outcomes, schema);
-        return sumCalculator.calculateSumDetails(filteredIncomeList, filteredOutcomeList, schema);
+        return sumCalculator.calculateSumDetails(incomes, filteredOutcomeList, schema);
     }
 
-    private List<Transaction> createFilteredTransactionList(final List<Transaction> transactionList, final StatisticsSchema schema) {
+    public List<Transaction> createFilteredTransactionList(final List<Transaction> transactionList, final StatisticsSchema schema) {
         List<Transaction> filteredTransactionList;
         if (schema.getMainCategory() != null) {
             filteredTransactionList = utils.filterTransactionListOnMainCategory(schema.getMainCategory(), transactionList);

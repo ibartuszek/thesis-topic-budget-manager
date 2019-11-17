@@ -15,5 +15,6 @@
   <suppress id="noWhiteSpaceAfterError" files="hu.elte.bm.*Test"/>
   <suppress id="memberNameError" files="ForexRates"/>
   <suppress id="parameterNameError" files="ForexRates"/>
+  <suppress id="magicNumberError" files="ChartDataCalculatorTest"/>
 
 </suppressions>

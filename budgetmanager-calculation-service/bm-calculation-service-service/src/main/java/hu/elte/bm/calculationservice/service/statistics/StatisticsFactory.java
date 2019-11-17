@@ -30,27 +30,36 @@ public class StatisticsFactory {
 
     public Statistics createStandardStatistics(final Long userId, final LocalDate start, final LocalDate end) {
         StatisticsSchema schema = schemaService.getStandardSchema(userId);
-        TransactionProviderContext context = TransactionProviderContext.builder()
-            .withUserId(userId)
-            .withCurrency(schema.getCurrency())
-            .withStart(start)
-            .withEnd(end)
-            .build();
+        TransactionProviderContext context = createContext(userId, start, end, schema);
+        return createStatistics(schema, context);
+    }
+
+    public Statistics createCustomStatistics(final Long userId, final Long schemaId, final LocalDate start, final LocalDate end) {
+        StatisticsSchema schema = schemaService.getCustomSchemaById(schemaId, userId);
+        TransactionProviderContext context = createContext(userId, start, end, schema);
+        return createStatistics(schema, context);
+    }
+
+    private Statistics createStatistics(final StatisticsSchema schema, final TransactionProviderContext context) {
         List<Transaction> incomes = transactionProvider.getTransactions(TransactionType.INCOME, context);
         List<Transaction> outcomes = transactionProvider.getTransactions(TransactionType.OUTCOME, context);
         BudgetDetails details = calculationService.calculateDetails(incomes, outcomes, schema);
         return Statistics.builder()
             .withSchema(schema)
-            .withStartDate(start)
-            .withEndDate(end)
-            //            .withChartData(calculationService.createChartData(schema, userId, ))
+            .withStartDate(context.getStart())
+            .withEndDate(context.getEnd())
+            .withChartData(calculationService.createChartData(incomes, outcomes, schema, details))
             .withBudgetDetails(details)
             .build();
     }
 
-    public Statistics createCustomStatistics(final Long userId, final Long schemaId, final LocalDate start, final LocalDate end) {
-        // TODO:
-        return null;
+    private TransactionProviderContext createContext(final Long userId, final LocalDate start, final LocalDate end, final StatisticsSchema schema) {
+        return TransactionProviderContext.builder()
+            .withUserId(userId)
+            .withCurrency(schema.getCurrency())
+            .withStart(start)
+            .withEnd(end)
+            .build();
     }
 
 }
