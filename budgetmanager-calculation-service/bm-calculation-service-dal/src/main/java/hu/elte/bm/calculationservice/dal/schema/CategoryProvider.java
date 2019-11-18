@@ -1,5 +1,6 @@
 package hu.elte.bm.calculationservice.dal.schema;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -40,8 +41,10 @@ public class CategoryProvider {
         return result;
     }
 
-    MainCategory provideMainCategory(final Long mainCategoryId, final Long userId, final TransactionType type) {
-        return transactionServiceFacade.getMainCategories(type, userId).stream()
+    MainCategory provideMainCategory(final Long mainCategoryId, final Long userId) {
+        List<MainCategory> mainCategoryList = new ArrayList<>(transactionServiceFacade.getMainCategories(TransactionType.INCOME, userId));
+        mainCategoryList.addAll(transactionServiceFacade.getMainCategories(TransactionType.OUTCOME, userId));
+        return mainCategoryList.stream()
             .filter(mainCategory -> mainCategory.getId().equals(mainCategoryId))
             .findAny()
             .orElseThrow(() -> new MainCategoryNotFoundException(null, mainCategoryNotFound));

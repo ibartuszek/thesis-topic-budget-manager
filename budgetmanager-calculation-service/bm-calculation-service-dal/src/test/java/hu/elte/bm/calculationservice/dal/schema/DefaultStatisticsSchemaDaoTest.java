@@ -143,14 +143,14 @@ public class DefaultStatisticsSchemaDaoTest {
         MainCategory mainCategory = exampleSchema.getMainCategory();
         SubCategory subCategory = exampleSchema.getSubCategory();
         Mockito.when(repository.findByIdAndUserId(SCHEMA_ID, USER_ID)).thenReturn(Optional.of(exampleEntity));
-        Mockito.when(categoryProvider.provideMainCategory(mainCategory.getId(), USER_ID, TYPE)).thenReturn(mainCategory);
+        Mockito.when(categoryProvider.provideMainCategory(mainCategory.getId(), USER_ID)).thenReturn(mainCategory);
         Mockito.when(categoryProvider.provideSubCategory(subCategory.getId(), mainCategory)).thenReturn(subCategory);
         Mockito.when(transformer.transformToStatistcisSchema(exampleEntity, mainCategory, subCategory)).thenReturn(exampleSchema);
         // WHEN
         var result = underTest.findById(SCHEMA_ID, USER_ID);
         // THEN
         Mockito.verify(repository).findByIdAndUserId(SCHEMA_ID, USER_ID);
-        Mockito.verify(categoryProvider).provideMainCategory(mainCategory.getId(), USER_ID, TYPE);
+        Mockito.verify(categoryProvider).provideMainCategory(mainCategory.getId(), USER_ID);
         Mockito.verify(categoryProvider).provideSubCategory(subCategory.getId(), mainCategory);
         Mockito.verify(transformer).transformToStatistcisSchema(exampleEntity, mainCategory, subCategory);
         Assert.assertEquals(exampleSchema, result);
@@ -175,14 +175,14 @@ public class DefaultStatisticsSchemaDaoTest {
         MainCategory mainCategory = exampleSchema.getMainCategory();
         SubCategory subCategory = exampleSchema.getSubCategory();
         Mockito.when(repository.findByTitleAndUserId(SCHEMA_TITLE, USER_ID)).thenReturn(Optional.of(exampleEntity));
-        Mockito.when(categoryProvider.provideMainCategory(mainCategory.getId(), USER_ID, TYPE)).thenReturn(mainCategory);
+        Mockito.when(categoryProvider.provideMainCategory(mainCategory.getId(), USER_ID)).thenReturn(mainCategory);
         Mockito.when(categoryProvider.provideSubCategory(subCategory.getId(), mainCategory)).thenReturn(subCategory);
         Mockito.when(transformer.transformToStatistcisSchema(exampleEntity, mainCategory, subCategory)).thenReturn(exampleSchema);
         // WHEN
         var result = underTest.findByTitle(SCHEMA_TITLE, USER_ID);
         // THEN
         Mockito.verify(repository).findByTitleAndUserId(SCHEMA_TITLE, USER_ID);
-        Mockito.verify(categoryProvider).provideMainCategory(mainCategory.getId(), USER_ID, TYPE);
+        Mockito.verify(categoryProvider).provideMainCategory(mainCategory.getId(), USER_ID);
         Mockito.verify(categoryProvider).provideSubCategory(subCategory.getId(), mainCategory);
         Mockito.verify(transformer).transformToStatistcisSchema(exampleEntity, mainCategory, subCategory);
         Assert.assertTrue(result.isPresent());

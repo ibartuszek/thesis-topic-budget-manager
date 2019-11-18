@@ -26,6 +26,8 @@ public class WireMockService {
     private static final String APPLICATION_JSON = "application/json";
     private static final String FIND_ALL_MAIN_CATEGORY_URL = "/bm/mainCategories/findAll?type={0}&userId={1}";
     private static final String FIND_ALL_SUB_CATEGORY_URL = "/bm/subCategories/findAll?type={0}&userId={1}";
+    private static final String FIND_ALL_TRANSACTION_URL = "/bm/transactions/findAll?type={0}&userId={1}&start={2}&end={3}";
+    private static final String GET_EXCHANGE_RATES_URL = "/freeforexapi.com/api/live?pairs=USDEUR,USDHUF";
 
     private WireMockServer wireMockServer;
 
@@ -56,6 +58,22 @@ public class WireMockService {
 
     public void setUpFindAllSubCategoriesResponse(final TransactionType type, final Long userId, final int responseStatus, final String responseFileName) {
         stubFor(get(MessageFormat.format(FIND_ALL_SUB_CATEGORY_URL, type, userId))
+            .willReturn(aResponse()
+                .withStatus(responseStatus)
+                .withHeader(CONTENT_TYPE_HEADER_KEY, APPLICATION_JSON)
+                .withBodyFile(responseFileName)));
+    }
+
+    public void setUpFindAllTransactionsResponse(final TransactionServiceContext context, final int responseStatus, final String responseFileName) {
+        stubFor(get(MessageFormat.format(FIND_ALL_TRANSACTION_URL, context.getType(), context.getUserId(), context.getStart(), context.getEnd()))
+            .willReturn(aResponse()
+                .withStatus(responseStatus)
+                .withHeader(CONTENT_TYPE_HEADER_KEY, APPLICATION_JSON)
+                .withBodyFile(responseFileName)));
+    }
+
+    public void setUpGetExchangeRates(final int responseStatus, final String responseFileName) {
+        stubFor(get(GET_EXCHANGE_RATES_URL)
             .willReturn(aResponse()
                 .withStatus(responseStatus)
                 .withHeader(CONTENT_TYPE_HEADER_KEY, APPLICATION_JSON)

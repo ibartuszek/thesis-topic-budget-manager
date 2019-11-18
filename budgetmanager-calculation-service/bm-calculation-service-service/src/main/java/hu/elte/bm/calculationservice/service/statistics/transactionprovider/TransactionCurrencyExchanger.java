@@ -19,10 +19,16 @@ public class TransactionCurrencyExchanger {
 
     public Transaction exchangeCurrency(final Transaction transaction, final Currency newCurrency,
         final List<Rate> exchangeRates) {
-        Rate rate = getRate(transaction.getCurrency(), newCurrency, exchangeRates)
-            .orElseThrow(() -> new NotSupportedRateException(MessageFormat.format(notSupportedCurrencyMessage, transaction.getCurrency(), newCurrency)));
-        Double newAmount = transaction.getAmount() * rate.getRate();
-        return createNewTransaction(transaction, newCurrency, newAmount);
+        Transaction result;
+        if (newCurrency.equals(transaction.getCurrency())) {
+            result = transaction;
+        } else {
+            Rate rate = getRate(transaction.getCurrency(), newCurrency, exchangeRates)
+                .orElseThrow(() -> new NotSupportedRateException(MessageFormat.format(notSupportedCurrencyMessage, transaction.getCurrency(), newCurrency)));
+            Double newAmount = transaction.getAmount() * rate.getRate();
+            result = createNewTransaction(transaction, newCurrency, newAmount);
+        }
+        return result;
     }
 
     private Optional<Rate> getRate(final Currency originalCurrency, final Currency newCurrency, final List<Rate> exchangeRates) {

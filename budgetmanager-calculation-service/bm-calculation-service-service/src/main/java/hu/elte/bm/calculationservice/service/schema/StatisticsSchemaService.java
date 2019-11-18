@@ -55,6 +55,9 @@ public class StatisticsSchemaService {
     @Value("${schema.sum_must_have_category:Sum schema must have a category!}")
     private String sumStatisticsMustHaveCategory;
 
+    @Value("${schema.scale_can_have_only_outcome_type_category:Scale schema can have only categories from expenses!}")
+    private String scaleStatisticsCanHaveOutcomeCategory;
+
     public StatisticsSchemaService(final StatisticsSchemaDao schemaDao, final TransactionServiceFacade transactionServiceFacade) {
         this.schemaDao = schemaDao;
         this.transactionServiceFacade = transactionServiceFacade;
@@ -93,6 +96,7 @@ public class StatisticsSchemaService {
         Assert.isNull(schema.getId(), schemaIdMustBeNull);
         validateNotStandardSchema(schema, standardSchemaCannotBeCreated);
         validateSumHasCategory(schema);
+        validateScaleHasOnlyOutcomeTypeCategory(schema);
         Optional<StatisticsSchema> schemaWithSameTitle = schemaDao.findByTitle(schema.getTitle(), userId);
         if (schemaWithSameTitle.isPresent()) {
             throw new StatisticsSchemaConflictException(schema, schemaTitleIsReserved);
@@ -118,6 +122,7 @@ public class StatisticsSchemaService {
         Assert.notNull(schema.getId(), schemaIdCannotBeNull);
         validateNotStandardSchema(schema, standardSchemaCannotBeModified);
         validateSumHasCategory(schema);
+        validateScaleHasOnlyOutcomeTypeCategory(schema);
         StatisticsSchema originalSchema = schemaDao.findById(schema.getId(), userId);
         if (schema.equals(originalSchema)) {
             throw new IllegalStatisticsSchemaException(schema, schemaNotChanged);
@@ -144,8 +149,17 @@ public class StatisticsSchemaService {
     }
 
     private void validateSumHasCategory(final StatisticsSchema schema) {
-        if (schema.getType().equals(StatisticsType.SUM) && schema.getMainCategory() == null) {
+        if (schema.getType().equals(StatisticsType.SUM)
+            && schema.getMainCategory() == null) {
             throw new IllegalStatisticsSchemaException(schema, sumStatisticsMustHaveCategory);
+        }
+    }
+
+    private void validateScaleHasOnlyOutcomeTypeCategory(final StatisticsSchema schema) {
+        if (schema.getType().equals(StatisticsType.SCALE)
+            && schema.getMainCategory() != null
+            && schema.getMainCategory().getTransactionType().equals(TransactionType.INCOME)) {
+            throw new IllegalStatisticsSchemaException(schema, scaleStatisticsCanHaveOutcomeCategory);
         }
     }
 

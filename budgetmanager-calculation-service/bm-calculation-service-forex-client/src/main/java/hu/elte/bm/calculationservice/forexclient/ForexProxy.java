@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -15,10 +16,10 @@ import com.google.gson.Gson;
 public class ForexProxy {
 
     private static final String EXCEPTION_MESSAGE = "Forex client sent: {0} during: '{1}' call.";
-    private static final String BASE_URL = "http://freeforexapi.com/api/live";
     private static final String PAIRS = "USDEUR,USDHUF";
-
     private final RestTemplate restTemplate;
+    @Value("${forex.client.url:http://freeforexapi.com/api/live}")
+    private String baseUrl;
 
     @Autowired
     ForexProxy(final RestTemplate restTemplate) {
@@ -33,7 +34,7 @@ public class ForexProxy {
     }
 
     private String createUrl() {
-        return UriComponentsBuilder.fromHttpUrl(BASE_URL)
+        return UriComponentsBuilder.fromHttpUrl(baseUrl)
             .queryParam("pairs", PAIRS)
             .toUriString();
     }
@@ -45,7 +46,7 @@ public class ForexProxy {
     private void checkResponseStatus(final ResponseEntity responseEntity) {
         if ((!responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null)
             || Objects.equals(responseEntity.getBody(), "")) {
-            throw new ForexClientException(MessageFormat.format(EXCEPTION_MESSAGE, responseEntity.getStatusCode(), BASE_URL));
+            throw new ForexClientException(MessageFormat.format(EXCEPTION_MESSAGE, responseEntity.getStatusCode(), baseUrl));
         }
     }
 

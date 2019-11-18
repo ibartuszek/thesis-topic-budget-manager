@@ -1,6 +1,7 @@
 package hu.elte.bm.calculationservice.forexclient;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +34,11 @@ public class ForexProxyTest {
 
     @Mock
     private RestTemplate restTemplate;
+
+    @BeforeEach
+    public void setup() {
+        ReflectionTestUtils.setField(underTest, "baseUrl", BASE_URL);
+    }
 
     @Test
     public void testGetForexResponseWhenServerNotRespond() {

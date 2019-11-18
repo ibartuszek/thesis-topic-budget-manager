@@ -127,7 +127,7 @@ public class DefaultStatisticsSchemaDao implements StatisticsSchemaDao {
 
     private StatisticsSchema createStatisticsSchema(final Long userId, final StatisticsSchemaEntity entity) {
         MainCategory mainCategory = entity.getMainCategoryId() == null ? null
-            : categoryProvider.provideMainCategory(entity.getMainCategoryId(), userId, TransactionType.OUTCOME);
+            : categoryProvider.provideMainCategory(entity.getMainCategoryId(), userId);
         SubCategory subCategory = mainCategory == null || entity.getSubCategoryId() == null ? null
             : categoryProvider.provideSubCategory(entity.getSubCategoryId(), mainCategory);
         return transformer.transformToStatistcisSchema(entity, mainCategory, subCategory);

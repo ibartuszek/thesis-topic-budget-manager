@@ -84,7 +84,7 @@ public class CategoryProviderTest {
         MainCategory expectedMainCategory = createMainCategoryBuilder().build();
         setTransactionServiceFacadeResponse(expectedMainCategory);
         // WHEN
-        underTest.provideMainCategory(INVALID_MAIN_CATEGORY_ID, USER_ID, TYPE);
+        underTest.provideMainCategory(INVALID_MAIN_CATEGORY_ID, USER_ID);
         // THEN
     }
 
@@ -94,9 +94,10 @@ public class CategoryProviderTest {
         MainCategory expectedMainCategory = createMainCategoryBuilder().build();
         setTransactionServiceFacadeResponse(expectedMainCategory);
         // WHEN
-        var result = underTest.provideMainCategory(EXPECTED_MAIN_CATEGORY_ID, USER_ID, TYPE);
+        var result = underTest.provideMainCategory(EXPECTED_MAIN_CATEGORY_ID, USER_ID);
         // THEN
-        Mockito.verify(transactionServiceFacade).getMainCategories(TYPE, USER_ID);
+        Mockito.verify(transactionServiceFacade).getMainCategories(TransactionType.INCOME, USER_ID);
+        Mockito.verify(transactionServiceFacade).getMainCategories(TransactionType.OUTCOME, USER_ID);
         Assert.assertEquals(expectedMainCategory, result);
     }
 
@@ -137,7 +138,8 @@ public class CategoryProviderTest {
             .withTransactionType(TYPE)
             .build();
         List<MainCategory> mainCategoryList = List.of(other, expectedMainCategory, another);
-        Mockito.when(transactionServiceFacade.getMainCategories(TYPE, USER_ID)).thenReturn(mainCategoryList);
+        Mockito.when(transactionServiceFacade.getMainCategories(TransactionType.INCOME, USER_ID)).thenReturn(mainCategoryList);
+        Mockito.when(transactionServiceFacade.getMainCategories(TransactionType.OUTCOME, USER_ID)).thenReturn(mainCategoryList);
     }
 
     private Set<SubCategory> createSubCategorySet(final SubCategory subCategory) {

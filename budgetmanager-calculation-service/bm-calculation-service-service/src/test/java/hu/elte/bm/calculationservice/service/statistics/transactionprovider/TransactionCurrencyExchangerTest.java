@@ -77,6 +77,18 @@ public class TransactionCurrencyExchangerTest {
     }
 
     @Test
+    public void testExchangeCurrencyWhenNewCurrencyEqualsWithOriginalCurrency() {
+        // GIVEN
+        Transaction transaction = createExampleTransaction(NEW_CURRENCY, ORIGINAL_AMOUNT);
+
+        // WHEN
+        var result = underTest.exchangeCurrency(transaction, NEW_CURRENCY, new ArrayList<>());
+
+        // THEN
+        Assertions.assertEquals(transaction, result);
+    }
+
+    @Test
     public void testExchangeCurrency() {
         // GIVEN
         Transaction transaction = createExampleTransaction(ORIGINAL_CURRENCY, ORIGINAL_AMOUNT);

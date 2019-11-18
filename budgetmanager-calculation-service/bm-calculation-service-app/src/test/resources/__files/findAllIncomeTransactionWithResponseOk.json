@@ -1,0 +1,184 @@
+{
+  "message": null,
+  "successful": true,
+  "transactionList": [
+    {
+      "id": 1,
+      "title": "Salary",
+      "amount": 9999.0,
+      "currency": "EUR",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 1,
+        "name": "Salary",
+        "transactionType": "INCOME",
+        "subCategorySet": [
+          {
+            "id": 1,
+            "name": "Allowance",
+            "transactionType": "INCOME"
+          },
+          {
+            "id": 2,
+            "name": "Reward",
+            "transactionType": "INCOME"
+          }
+        ]
+      },
+      "subCategory": null,
+      "monthly": true,
+      "date": "2019-06-21",
+      "endDate": "2019-11-03",
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 2,
+      "title": "Fringe benefit",
+      "amount": 10000.0,
+      "currency": "HUF",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 1,
+        "name": "Salary",
+        "transactionType": "INCOME",
+        "subCategorySet": [
+          {
+            "id": 1,
+            "name": "Allowance",
+            "transactionType": "INCOME"
+          },
+          {
+            "id": 2,
+            "name": "Reward",
+            "transactionType": "INCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 1,
+        "name": "Allowance",
+        "transactionType": "INCOME"
+      },
+      "monthly": true,
+      "date": "2019-06-21",
+      "endDate": "2019-11-03",
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 3,
+      "title": "Birthday present from grandparents",
+      "amount": 100.0,
+      "currency": "USD",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 3,
+        "name": "Gift",
+        "transactionType": "INCOME",
+        "subCategorySet": []
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-11-08",
+      "endDate": null,
+      "description": null,
+      "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 4,
+      "title": "Salary",
+      "amount": 10000.0,
+      "currency": "EUR",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 1,
+        "name": "Salary",
+        "transactionType": "INCOME",
+        "subCategorySet": [
+          {
+            "id": 1,
+            "name": "Allowance",
+            "transactionType": "INCOME"
+          },
+          {
+            "id": 2,
+            "name": "Reward",
+            "transactionType": "INCOME"
+          }
+        ]
+      },
+      "subCategory": null,
+      "monthly": true,
+      "date": "2019-11-04",
+      "endDate": null,
+      "description": null,
+      "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 5,
+      "title": "Fringe benefit",
+      "amount": 10000.0,
+      "currency": "HUF",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 1,
+        "name": "Salary",
+        "transactionType": "INCOME",
+        "subCategorySet": [
+          {
+            "id": 1,
+            "name": "Allowance",
+            "transactionType": "INCOME"
+          },
+          {
+            "id": 2,
+            "name": "Reward",
+            "transactionType": "INCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 1,
+        "name": "Allowance",
+        "transactionType": "INCOME"
+      },
+      "monthly": true,
+      "date": "2019-11-04",
+      "endDate": null,
+      "description": null,
+      "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 6,
+      "title": "Found money",
+      "amount": 1000.0,
+      "currency": "HUF",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 3,
+        "name": "Gift",
+        "transactionType": "INCOME",
+        "subCategorySet": []
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-11-13",
+      "endDate": null,
+      "description": null,
+      "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    }
+  ]
+}

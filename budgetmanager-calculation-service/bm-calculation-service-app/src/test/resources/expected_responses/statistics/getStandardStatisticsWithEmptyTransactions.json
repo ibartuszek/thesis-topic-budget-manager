@@ -1,0 +1,37 @@
+{
+  "message": "Standard statistics successfully created.",
+  "successful": true,
+  "statistics": {
+    "startDate": "2019-10-19",
+    "endDate": "2019-11-18",
+    "schema": {
+      "id": 1,
+      "title": "Standard schema",
+      "type": "STANDARD",
+      "currency": "EUR",
+      "chartType": "RADIAL",
+      "mainCategory": null,
+      "subCategory": null
+    },
+    "chartData": {
+      "legend": "Expenses",
+      "dataPoints": []
+    },
+    "budgetDetails": {
+      "totalIncomes": {
+        "amount": 0.0,
+        "label": "Total incomes"
+      },
+      "totalExpenses": {
+        "amount": 0.0,
+        "label": "Total expenses"
+      },
+      "savings": {
+        "amount": 0.0,
+        "label": "Savings"
+      },
+      "incomes": [],
+      "outcomes": []
+    }
+  }
+}

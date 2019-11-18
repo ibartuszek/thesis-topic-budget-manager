@@ -138,7 +138,7 @@ public class CreateSchemaTest extends AbstractSchemaTest {
         StatisticsSchema schema = schemaBuilder.withId(null)
             .build();
         StatisticsSchemaRequestContext context = createContext(USER_ID, schema);
-        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_RESULT_BODY);
+        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_OUTCOME_MAIN_CATEGORIES);
         getWireMockService().setUpFindAllSubCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_SUB_CATEGORIES_RESULT_BODY);
 
         // WHEN
@@ -161,7 +161,7 @@ public class CreateSchemaTest extends AbstractSchemaTest {
             .withSubCategory(createDefaultSubCategoryBuilder().build())
             .build();
         StatisticsSchemaRequestContext context = createContext(USER_ID, schema);
-        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_RESULT_BODY);
+        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_OUTCOME_MAIN_CATEGORIES);
         getWireMockService().setUpFindAllSubCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_SUB_CATEGORIES_RESULT_BODY);
 
         // WHEN

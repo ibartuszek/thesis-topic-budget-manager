@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -19,6 +20,8 @@ import hu.elte.bm.transactionservice.exceptions.maincategory.MainCategoryNotFoun
 
 @RestControllerAdvice
 public class ControllerAdvice extends ResponseEntityExceptionHandler {
+
+    private static final String INTERNAL_SERVER_ERROR = "Something went wrong!";
 
     @ExceptionHandler({ IllegalArgumentException.class, IllegalStatisticsSchemaException.class,
         IllegalMainCategoryException.class })
@@ -46,9 +49,23 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({ ForexClientException.class, TransactionServiceException.class })
+    @ExceptionHandler({ ForexClientException.class, TransactionServiceException.class, HttpServerErrorException.class })
     protected ResponseEntity<Object> handleServiceNotAvailable(final RuntimeException e, final WebRequest request) {
-        String bodyOfResponse = e.getMessage();
-        return new ResponseEntity<>(bodyOfResponse, HttpStatus.SERVICE_UNAVAILABLE);
+        String bodyOfResponse;
+        HttpStatus status;
+        if (e instanceof HttpServerErrorException) {
+            HttpServerErrorException exception = (HttpServerErrorException) e;
+            bodyOfResponse = exception.getStatusText();
+            status = exception.getStatusCode();
+        } else {
+            bodyOfResponse = e.getMessage();
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(bodyOfResponse, status);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<Object> handleInternalServerError(final RuntimeException e, final WebRequest request) {
+        return new ResponseEntity<>(INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

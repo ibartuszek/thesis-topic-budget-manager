@@ -1,0 +1,52 @@
+{
+  "message": "Custom statistics:5 successfully created.",
+  "successful": true,
+  "statistics": {
+    "startDate": "2019-10-19",
+    "endDate": "2019-11-18",
+    "schema": {
+      "id": 5,
+      "title": "Example sum 2",
+      "type": "SUM",
+      "currency": "USD",
+      "chartType": "LINEAR",
+      "mainCategory": {
+        "id": 10,
+        "name": "Entertainment",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 12,
+            "name": "Cinema",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 14,
+            "name": "Hobby",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 13,
+            "name": "Computer",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": null
+    },
+    "chartData": {
+      "legend": "Example sum 2",
+      "dataPoints": []
+    },
+    "budgetDetails": {
+      "totalIncomes": null,
+      "totalExpenses": {
+        "amount": 0.0,
+        "label": "Total cost of Entertainment"
+      },
+      "savings": null,
+      "incomes": null,
+      "outcomes": null
+    }
+  }
+}

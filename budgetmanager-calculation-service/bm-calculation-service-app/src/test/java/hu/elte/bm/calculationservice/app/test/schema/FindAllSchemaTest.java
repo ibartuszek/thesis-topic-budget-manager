@@ -15,7 +15,6 @@ import hu.elte.bm.calculationservice.app.test.AbstractCalculationServiceApplicat
 public class FindAllSchemaTest extends AbstractCalculationServiceApplicationTest {
 
     private static final String URL = "/bm/statistics/schema/findAll";
-    private static final String FIND_ALL_MAIN_CATEGORIES_WITH_EMPTY_BODY = "findAllOutcomeMainCategoryWithEmptyList.json";
     private static final String FIND_ALL_MAIN_CATEGORIES_WITH_INVALID_MAIN_CATEGORY = "findAllOutcomeMainCategoryWithInvalidMainCategory.json";
     private static final Long STANDARD_SCHEMA_ID = 1L;
 
@@ -71,7 +70,7 @@ public class FindAllSchemaTest extends AbstractCalculationServiceApplicationTest
     @Test
     public void testFindAll() throws Exception {
         // GIVEN
-        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_MAIN_CATEGORIES_RESULT_BODY);
+        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_OUTCOME_MAIN_CATEGORIES);
 
         // WHEN
         ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)

@@ -1,0 +1,68 @@
+{
+  "message": "Custom statistics:2 successfully created.",
+  "successful": true,
+  "statistics": {
+    "startDate": "2019-10-19",
+    "endDate": "2019-11-18",
+    "schema": {
+      "id": 2,
+      "title": "Example scale",
+      "type": "SCALE",
+      "currency": "HUF",
+      "chartType": "BAR",
+      "mainCategory": null,
+      "subCategory": null
+    },
+    "chartData": {
+      "legend": "Example scale",
+      "dataPoints": [
+        {
+          "x": 0,
+          "y": 3341950.4060388645,
+          "label": "Salary",
+          "date": "2019-11-04"
+        },
+        {
+          "x": 1,
+          "y": 3351950.4060388645,
+          "label": "Fringe benefit",
+          "date": "2019-11-04"
+        },
+        {
+          "x": 2,
+          "y": 3382321.3829388646,
+          "label": "Birthday present from grandparents",
+          "date": "2019-11-08"
+        },
+        {
+          "x": 3,
+          "y": 3383321.3829388646,
+          "label": "Found money",
+          "date": "2019-11-13"
+        },
+        {
+          "x": 4,
+          "y": 6724937.593937125,
+          "label": "Salary",
+          "date": "2019-06-21"
+        },
+        {
+          "x": 5,
+          "y": 6734937.593937125,
+          "label": "Fringe benefit",
+          "date": "2019-06-21"
+        }
+      ]
+    },
+    "budgetDetails": {
+      "totalIncomes": {
+        "amount": 6734937.593937125,
+        "label": "Total incomes"
+      },
+      "totalExpenses": null,
+      "savings": null,
+      "incomes": null,
+      "outcomes": null
+    }
+  }
+}

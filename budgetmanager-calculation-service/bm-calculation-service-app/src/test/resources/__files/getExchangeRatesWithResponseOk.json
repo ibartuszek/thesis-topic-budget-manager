@@ -1,0 +1,13 @@
+{
+  "rates": {
+    "USDEUR": {
+      "rate": 0.90878,
+      "timestamp": 1573675086
+    },
+    "USDHUF": {
+      "rate": 303.709769,
+      "timestamp": 1573675086
+    }
+  },
+  "code": 200
+}

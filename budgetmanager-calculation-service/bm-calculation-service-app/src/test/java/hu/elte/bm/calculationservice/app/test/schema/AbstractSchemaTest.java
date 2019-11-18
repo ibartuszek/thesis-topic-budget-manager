@@ -20,7 +20,7 @@ public abstract class AbstractSchemaTest extends AbstractCalculationServiceAppli
 
     protected static final String RESERVED_SCHEMA_TITLE = "Standard schema";
     protected static final String MODIFIED_TITLE = "New schema title";
-    protected static final Long INVALID_SCHEMA_ID = 6L;
+    protected static final Long INVALID_SCHEMA_ID = 7L;
     private static final long EXISTING_SCHEMA_ID = 2L;
     private static final String EXISTING_SCHEMA_TITLE = "Example scale";
     private static final Currency EXISTING_SCHEMA_CURRENCY = Currency.HUF;

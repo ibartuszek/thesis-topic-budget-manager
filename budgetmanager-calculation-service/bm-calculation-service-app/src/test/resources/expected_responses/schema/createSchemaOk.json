@@ -2,7 +2,7 @@
   "message": "Schema has been saved.",
   "successful": true,
   "schema": {
-    "id": 6,
+    "id": 7,
     "title": "Schema",
     "type": "SUM",
     "currency": "EUR",

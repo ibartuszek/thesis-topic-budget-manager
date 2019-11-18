@@ -26,6 +26,7 @@ import com.google.gson.stream.JsonReader;
 import hu.elte.bm.calculationservice.app.CalculationServiceApplication;
 import hu.elte.bm.calculationservice.app.test.utils.LocalDateAdapter;
 import hu.elte.bm.calculationservice.app.test.utils.WireMockService;
+import hu.elte.bm.calculationservice.dal.schema.StatisticsSchemaEntity;
 import hu.elte.bm.calculationservice.dal.schema.StatisticsSchemaRepository;
 import hu.elte.bm.calculationservice.schema.ChartType;
 import hu.elte.bm.calculationservice.schema.StatisticsSchema;
@@ -44,8 +45,12 @@ public abstract class AbstractCalculationServiceApplicationTest {
 
     protected static final Long USER_ID = 1L;
     protected static final TransactionType TRANSACTION_TYPE = TransactionType.OUTCOME;
-    protected static final String FIND_ALL_MAIN_CATEGORIES_RESULT_BODY = "findAllOutcomeMainCategoryWithReponseOk.json";
+    protected static final String FIND_ALL_OUTCOME_MAIN_CATEGORIES = "findAllOutcomeMainCategoryWithReponseOk.json";
     protected static final String FIND_ALL_SUB_CATEGORIES_RESULT_BODY = "findAllOutcomeSubCategoryWithReponseOk.json";
+    protected static final String FIND_ALL_MAIN_CATEGORIES_WITH_EMPTY_BODY = "findAllOutcomeMainCategoryWithEmptyList.json";
+    protected static final String FIND_ALL_INCOME_MAIN_CATEGORIES = "findAllIncomeMainCategoryWithResponseOk.json";
+    protected static final Long NEW_SCHEMA_ID = 7L;
+    protected static final long INVALID_MAIN_CATEGORY_ID = 13L;
 
     private static final Long DEFAULT_SCHEMA_ID = 2L;
     private static final String DEFAULT_SCHEMA_TITLE = "Schema";
@@ -60,6 +65,7 @@ public abstract class AbstractCalculationServiceApplicationTest {
     private static final String DEFAULT_SUB_CATEGORY_NAME = "Cinema";
     private static final String OTHER_SUB_CATEGORY_NAME = "Computer";
     private static final String ANOTHER_SUB_CATEGORY_NAME = "Hobby";
+    private static final String INVALID_SCHEMA = "Invalid schema";
 
     @Autowired
     private MockMvc mvc;
@@ -144,6 +150,18 @@ public abstract class AbstractCalculationServiceApplicationTest {
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .create()
             .toJson(object);
+    }
+
+    protected void insertSchemaIntoDb(final StatisticsType type, final Long mainCategoryId) {
+        StatisticsSchemaEntity schema = StatisticsSchemaEntity.builder()
+            .withTitle(INVALID_SCHEMA)
+            .withType(type)
+            .withChartType(DEFAULT_CHART_TYPE)
+            .withCurrency(DEFAULT_CURRENCY)
+            .withMainCategoryId(mainCategoryId)
+            .withUserId(USER_ID)
+            .build();
+        getRepository().save(schema);
     }
 
 }

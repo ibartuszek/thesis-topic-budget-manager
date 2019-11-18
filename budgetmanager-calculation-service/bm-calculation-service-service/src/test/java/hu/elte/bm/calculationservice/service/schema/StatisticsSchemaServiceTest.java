@@ -110,6 +110,22 @@ public class StatisticsSchemaServiceTest {
         // THEN
     }
 
+    @Test(expected = IllegalStatisticsSchemaException.class)
+    public void testSaveWhenSchemaIsScaleSchemaAndHaveIncomeCategory() {
+        // GIVEN
+        MainCategory mainCategory = createMainCategoryBuilder()
+            .withTransactionType(TransactionType.INCOME)
+            .build();
+        StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
+            .withId(null)
+            .withType(StatisticsType.SCALE)
+            .withMainCategory(mainCategory)
+            .build();
+        // WHEN
+        underTest.save(schemaToSave, USER_ID);
+        // THEN
+    }
+
     @Test(expected = StatisticsSchemaConflictException.class)
     public void testSaveWhenSchemaTitleIsReserved() {
         // GIVEN
@@ -215,6 +231,21 @@ public class StatisticsSchemaServiceTest {
         StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
             .withType(StatisticsType.SUM)
             .withMainCategory(null)
+            .build();
+        // WHEN
+        underTest.update(schemaToSave, USER_ID);
+        // THEN
+    }
+
+    @Test(expected = IllegalStatisticsSchemaException.class)
+    public void testUpdateWhenSchemaIsScaleSchemaAndHaveIncomeCategory() {
+        // GIVEN
+        MainCategory mainCategory = createMainCategoryBuilder()
+            .withTransactionType(TransactionType.INCOME)
+            .build();
+        StatisticsSchema schemaToSave = createCustomScaleSchemaBuilder()
+            .withType(StatisticsType.SCALE)
+            .withMainCategory(mainCategory)
             .build();
         // WHEN
         underTest.update(schemaToSave, USER_ID);

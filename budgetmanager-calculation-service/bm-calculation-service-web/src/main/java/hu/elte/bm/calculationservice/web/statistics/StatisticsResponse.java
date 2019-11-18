@@ -21,6 +21,10 @@ public final class StatisticsResponse extends ResponseModel {
         return response;
     }
 
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
     @Override
     public String toString() {
         return "StatisticsSchemaListResponse{"
