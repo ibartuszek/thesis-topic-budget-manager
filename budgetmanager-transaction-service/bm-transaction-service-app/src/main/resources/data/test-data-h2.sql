@@ -48,7 +48,7 @@ INSERT INTO category_join_table(main_category_id, sub_category_id) VALUES (11, 1
 
 
 INSERT INTO incomes (title, amount, currency, date, description, end_date, monthly, main_category_id, sub_category_id, locked, user_id)
-VALUES ('Salary', 9999, 'EUR', CURRENT_DATE - 150, NULL, CURRENT_DATE - 15, 1, 1, NULL, 1, 1);
+VALUES ('Salary', 2350, 'EUR', CURRENT_DATE - 150, NULL, CURRENT_DATE - 15, 1, 1, NULL, 1, 1);
 INSERT INTO incomes
 (title, amount, currency, date, description, end_date, monthly, main_category_id, sub_category_id, locked, user_id)
 VALUES ('Fringe benefit', 10000, 'HUF', CURRENT_DATE - 150, NULL, CURRENT_DATE - 15, 1, 1, 1, 1, 1);
@@ -56,7 +56,7 @@ INSERT INTO incomes
 (title, amount, currency, date, description, end_date, monthly, main_category_id, sub_category_id, locked, user_id)
 VALUES ('Birthday present from grandparents', 100, 'USD', CURRENT_DATE - 10, NULL, NULL, 0, 3, NULL, 0, 1);
 INSERT INTO incomes (title, amount, currency, date, description, end_date, monthly, main_category_id, sub_category_id, locked, user_id)
-VALUES ('Salary', 10000, 'EUR', CURRENT_DATE - 14, NULL, NULL, 1, 1, NULL, 0, 1);
+VALUES ('Salary', 2500, 'EUR', CURRENT_DATE - 14, NULL, NULL, 1, 1, NULL, 0, 1);
 INSERT INTO incomes
 (title, amount, currency, date, description, end_date, monthly, main_category_id, sub_category_id, locked, user_id)
 VALUES ('Fringe benefit', 10000, 'HUF', CURRENT_DATE - 14, NULL, NULL, 1, 1, 1, 0, 1);

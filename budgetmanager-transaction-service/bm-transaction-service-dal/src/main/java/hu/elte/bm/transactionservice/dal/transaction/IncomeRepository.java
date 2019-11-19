@@ -11,7 +11,8 @@ public interface IncomeRepository extends CrudRepository<IncomeEntity, Long> {
 
     @Query("select i from IncomeEntity i where i.userId = :userId "
         + "and (i.date >= :start and i.date <= :end "
-        + "or (i.monthly = true and (i.endDate >= :start or i.endDate = null)))")
+        + "or (i.monthly = true and i.date <= :start and "
+        + "(i.endDate > :start or i.endDate = null)))")
     Iterable<IncomeEntity> findAll(@Param("start") Date start, @Param("end") Date end, @Param("userId") Long userId);
 
     @Query("select i from IncomeEntity i where i.userId = :userId "
