@@ -65,6 +65,9 @@ public class TransactionProviderTest {
     @Mock
     private TransactionCurrencyExchanger exchanger;
 
+    @Mock
+    private MonthlyTransactionProvider monthlyTransactionProvider;
+
     @Test
     public void testGetTransactions() {
         // GIVEN
@@ -75,12 +78,15 @@ public class TransactionProviderTest {
             .thenReturn(List.of(originalTransaction));
         Mockito.when(forexClient.getExchangeRates()).thenReturn(exchangeRates);
         Mockito.when(exchanger.exchangeCurrency(originalTransaction, NEW_CURRENCY, exchangeRates)).thenReturn(expectedTransaction);
+        Mockito.when(monthlyTransactionProvider.provide(List.of(expectedTransaction), TRANSACTION_DATE, TRANSACTION_END_DATE))
+                .thenReturn(List.of(expectedTransaction));
         // WHEN
         var result = underTest.getTransactions(TRANSACTION_TYPE, createContext());
         // THEN
         Mockito.verify(transactionServiceFacade).getTransactions(TRANSACTION_TYPE, USER_ID, TRANSACTION_DATE, TRANSACTION_END_DATE);
         Mockito.verify(forexClient).getExchangeRates();
         Mockito.verify(exchanger).exchangeCurrency(originalTransaction, NEW_CURRENCY, exchangeRates);
+        Mockito.verify(monthlyTransactionProvider).provide(List.of(expectedTransaction), TRANSACTION_DATE, TRANSACTION_END_DATE);
         Assertions.assertEquals(List.of(expectedTransaction), result);
     }
 

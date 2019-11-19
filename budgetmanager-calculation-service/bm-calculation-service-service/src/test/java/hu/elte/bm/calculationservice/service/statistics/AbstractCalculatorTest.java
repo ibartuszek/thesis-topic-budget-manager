@@ -34,25 +34,21 @@ public abstract class AbstractCalculatorTest {
     protected static final String OTHER_SUB_CATEGORY_NAME = "Other supplementary category";
     protected static final String OTHER_TRANSACTION_TITLE = "Other transation";
     protected static final LocalDate DEFAULT_TRANSACTION_DATE = LocalDate.now().minusDays(3);
-    protected static final LocalDate OTHER_TRANSACTION_DATE = LocalDate.now().minusDays(2);
-
+    protected static final String ANOTHER_TRANSACTION_TITLE = "Another transation";
+    protected static final LocalDate ANOTHER_TRANSACTION_DATE = LocalDate.now().minusDays(1);
+    protected static final Long OTHER_MAIN_CATEGORY_ID = 2L;
+    protected static final Long ANOTHER_MAIN_CATEGORY_ID = 3L;
+    protected static final Long OTHER_SUB_CATEGORY_ID = 2L;
     private static final Long DEFAULT_TRANSACTION_ID = 1L;
     private static final Long OTHER_TRANSACTION_ID = 2L;
     private static final Long ANOTHER_TRANSACTION_ID = 3L;
     private static final String DEFAULT_TRANSACTION_TITLE = "Transation";
-    private static final String ANOTHER_TRANSACTION_TITLE = "Another transation";
-    private static final LocalDate ANOTHER_TRANSACTION_DATE = LocalDate.now().minusDays(1);
-
+    private static final LocalDate OTHER_TRANSACTION_DATE = LocalDate.now().minusDays(2);
     private static final Long DEFAULT_MAIN_CATEGORY_ID = 1L;
-    private static final Long OTHER_MAIN_CATEGORY_ID = 2L;
-    private static final Long ANOTHER_MAIN_CATEGORY_ID = 3L;
     private static final Long DEFAULT_SUB_CATEGORY_ID = 1L;
-    private static final Long OTHER_SUB_CATEGORY_ID = 2L;
-
     private static final Long DEFAULT_SCHEMA_ID = 1L;
     private static final String DEFAULT_SCHEMA_TITLE = "Schema";
     private static final ChartType DEFAULT_SCHEMA_CHART_TYPE = ChartType.BAR;
-
     private static final long SCHEMA_ID = 1L;
     private static final String SCHEMA_TITLE = "Schema";
     private static final ChartType SCHEMA_TYPE = ChartType.BAR;
