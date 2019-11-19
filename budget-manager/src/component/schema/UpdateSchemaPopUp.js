@@ -40,6 +40,7 @@ class UpdateSchemaPopUp extends Component {
 
   render() {
     const {categoryHolder, logHolder, schema} = this.props;
+    let incomeMainCategories = categoryHolder.incomeMainCategories;
     let outcomeMainCategories = categoryHolder.outcomeMainCategories;
 
     let successMessage = getMessage(logHolder.messages, "updateSchemaSuccess", true);
@@ -51,8 +52,8 @@ class UpdateSchemaPopUp extends Component {
         <div className='custom-popup'>
           <div className="card card-body custom-popup-inner">
             <div className="container overflow-auto">
-              <SchemaForm formTitle="Update schema" mainCategoryList={outcomeMainCategories} loading={loading}
-                          handleSubmit={this.handleSubmit} editableSchema={schema} showSchemaEdit={this.closePopUp}/>
+              <SchemaForm formTitle="Update schema" incomeMainCategories={incomeMainCategories} outcomeMainCategoryList={outcomeMainCategories}
+                          loading={loading} handleSubmit={this.handleSubmit} editableSchema={schema} showSchemaEdit={this.closePopUp}/>
               <AlertMessageComponent message={successMessage} onChange={this.handleDismissMessage}/>
               <AlertMessageComponent message={errorMessage} onChange={this.handleDismissMessage}/>
             </div>

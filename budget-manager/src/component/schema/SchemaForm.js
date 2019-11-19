@@ -79,7 +79,9 @@ class SchemaForm extends Component {
   render() {
     const {chartType, currency, mainCategory, subCategory, title, type} = this.state.schema;
     const {loading} = this.state;
-    const {formTitle, mainCategoryList, editableSchema} = this.props;
+    const {formTitle, editableSchema, incomeMainCategories, outcomeMainCategoryList} = this.props;
+
+    let mainCategoryList = type.value === "SCALE" ? outcomeMainCategoryList : incomeMainCategories.concat(outcomeMainCategoryList);
 
     let subCategoryList = mainCategory !== undefined && mainCategory !== null ? mainCategory.subCategoryModelSet : [];
 

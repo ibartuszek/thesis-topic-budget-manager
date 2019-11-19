@@ -58,7 +58,7 @@ class CustomStatisticsPlaceProxy extends Component {
             <div className="spinner-border spinner-border-sm" role="status">
               <span className="sr-only">Loading...</span>
             </div>
-            <span>{" Get " + schema.title}</span>
+            <span>{" Get " + schema.title.value}</span>
           </button>
         </div>);
     } else {

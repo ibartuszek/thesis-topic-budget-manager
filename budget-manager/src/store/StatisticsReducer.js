@@ -73,7 +73,7 @@ const StatisticsReducer = (state = initState, action) => {
       addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
-        standardStatistics: action['response'].standardStatistics,
+        standardStatistics: action['response'].statistics,
         standardStatisticsAreLoaded: true
       });
     case 'GET_STANDARD_STATISTICS_ERROR':
@@ -87,7 +87,7 @@ const StatisticsReducer = (state = initState, action) => {
       addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
-        customStatistics: addElementToArray(state.customStatistics, action['response'].customStatistics),
+        customStatistics: addElementToArray(state.customStatistics, action['response'].statistics),
       });
     case 'GET_CUSTOM_STATISTICS_ERROR':
       key = "getCustomStatisticsError";

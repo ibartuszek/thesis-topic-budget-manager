@@ -12,13 +12,13 @@ class CustomRadialChart extends Component {
     const {value} = this.state;
     const {currency, title} = this.props.schema;
     const {height, width} = this.props.chartDetails;
-    const {sectorPoints} = this.props.chartData;
+    const {dataPoints} = this.props.chartData;
 
     let hint = value !== false ?
       (<Hint value={value}>
         <div className="custom-crosshair">
           <div>{value.label + ":"}</div>
-          <div>{this.getHint(value, sectorPoints) + " " + currency}</div>
+          <div>{this.getHint(value, dataPoints) + " " + currency}</div>
         </div>
       </Hint>) : null;
 
@@ -26,12 +26,12 @@ class CustomRadialChart extends Component {
 
       <div className="custom-chart-container">
         <h4 className="text-center mt-3">{title}</h4>
-        <RadialChart data={sectorPoints}
+        <RadialChart data={dataPoints}
                      colorRange={['#064789', '#3F7D20', '#CE0606', '#EBD500', '#427AA1', '#FF6C13']}
                      onValueMouseOver={v => this.setState({value: v})}
                      onSeriesMouseOut={v => this.setState({value: false})}
                      className="my-3 mx-auto" height={height} width={width}
-                     showLabels={true} labelsRadiusMultiplier={1.5}
+                     showLabels={true} labelsRadiusMultiplier={1.3}
                      padAngle={0.05} innerRadius={90} radius={140}>
           {hint}
         </RadialChart>

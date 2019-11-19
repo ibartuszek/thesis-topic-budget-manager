@@ -26,6 +26,7 @@ class CreateNewSchemaCard extends Component {
 
   render() {
     const {categoryHolder, logHolder, target} = this.props;
+    let incomeMainCategories = categoryHolder.incomeMainCategories;
     let outcomeMainCategories = categoryHolder.outcomeMainCategories;
 
     let successMessage = getMessage(logHolder.messages, "createSchemaSuccess", true);
@@ -36,7 +37,7 @@ class CreateNewSchemaCard extends Component {
       <React.Fragment>
         <div className="collapse multi-collapse" id={target}>
           <div className="card card-body">
-            <SchemaForm formTitle="Create schema" mainCategoryList={outcomeMainCategories}
+            <SchemaForm formTitle="Create schema" incomeMainCategories={incomeMainCategories} outcomeMainCategoryList={outcomeMainCategories}
                         handleSubmit={this.handleSubmit} loading={loading}/>
             <AlertMessageComponent message={successMessage} onChange={this.handleDismiss}/>
             <AlertMessageComponent message={errorMessage} onChange={this.handleDismiss}/>

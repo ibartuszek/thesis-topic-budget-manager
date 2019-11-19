@@ -17,7 +17,6 @@ class TransactionDeletePopUp extends Component {
 
   handleSubmit = (transaction) => {
     const {userHolder, logHolder, transactionType, deleteTransaction} = this.props;
-    console.log(transaction);
     if (validateTransaction(transaction)) {
       let context = createTransactionContext(userHolder, logHolder, transactionType);
       deleteTransaction(context, transaction);

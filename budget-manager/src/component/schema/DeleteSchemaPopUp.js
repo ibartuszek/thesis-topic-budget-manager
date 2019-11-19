@@ -17,9 +17,7 @@ class DeleteSchemaPopUp extends Component {
 
   handleSubmit = (schema) => {
     const {userHolder, logHolder, deleteSchema} = this.props;
-    console.log("delete");
     if (validateSchema(schema)) {
-      console.log("delete");
       let context = createContext(userHolder, logHolder);
       deleteSchema(context, schema);
     }
