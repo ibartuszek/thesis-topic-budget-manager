@@ -2,8 +2,6 @@ package hu.elte.bm.calculationservice.app.test.statistics;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -36,8 +34,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getSumStatisticsWithEmptyTransactions.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyTransactions.json", result);
     }
 
     @Test
@@ -57,8 +54,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getSumStatisticsWithEmptyIncomes.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyIncomes.json", result);
     }
 
     @Test
@@ -78,8 +74,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getSumStatisticsWithEmptyOutcomes.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyOutcomes.json", result);
     }
 
     @Test
@@ -99,8 +94,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getSumStatistics.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getSumStatistics.json", result);
     }
 
     @Test
@@ -125,8 +119,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getSumStatisticsWithSubCategory.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithSubCategory.json", result);
     }
 
     @Test

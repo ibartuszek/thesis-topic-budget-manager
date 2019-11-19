@@ -2,8 +2,6 @@ package hu.elte.bm.calculationservice.app.test.statistics;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -35,8 +33,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getScaleStatisticsWithEmptyTransactions.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyTransactions.json", result);
     }
 
     @Test
@@ -54,8 +51,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getScaleStatisticsWithEmptyIncomes.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyIncomes.json", result);
     }
 
     @Test
@@ -73,8 +69,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getScaleStatisticsWithEmptyOutcomes.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyOutcomes.json", result);
     }
 
     @Test
@@ -92,8 +87,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getScaleStatistics.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatistics.json", result);
     }
 
     @Test
@@ -118,8 +112,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getScaleStatisticsWithMainCategory.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithMainCategory.json", result);
     }
 
     @Test
@@ -144,8 +137,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getScaleStatisticsWithSubCategory.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithSubCategory.json", result);
     }
 
     @Test

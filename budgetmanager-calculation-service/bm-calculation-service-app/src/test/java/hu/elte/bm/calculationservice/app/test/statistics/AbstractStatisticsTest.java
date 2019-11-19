@@ -1,6 +1,5 @@
 package hu.elte.bm.calculationservice.app.test.statistics;
 
-import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,8 +10,6 @@ import hu.elte.bm.transactionservice.TransactionType;
 
 public abstract class AbstractStatisticsTest extends AbstractCalculationServiceApplicationTest {
 
-    protected static final LocalDate START = LocalDate.now().minusDays(30);
-    protected static final LocalDate END = LocalDate.now();
     protected static final Long CUSTOM_SCHEMA_ID = 2L;
     protected static final String FIND_ALL_INCOME_FILE = "findAllIncomeTransactionWithResponseOk.json";
     protected static final String FIND_ALL_OUTCOME_FILE = "findAllOutcomeTransactionWithResponseOk.json";

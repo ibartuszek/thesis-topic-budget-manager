@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -102,8 +100,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getStandardStatisticsWithEmptyTransactions.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyTransactions.json", result);
     }
 
     @Test
@@ -121,8 +118,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getStandardStatisticsWithEmptyIncomes.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyIncomes.json", result);
     }
 
     @Test
@@ -140,8 +136,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getStandardStatisticsWithEmptyOutcomes.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyOutcomes.json", result);
     }
 
     @Test
@@ -158,8 +153,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("statistics/getStandardStatistics.json"),
-            getActualResponseFromResult(result), JSONCompareMode.LENIENT);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatistics.json", result);
     }
 
     private RequestBuilder createDefaultMvcRequest() {
