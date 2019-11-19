@@ -1,0 +1,196 @@
+{
+  "message": "Standard statistics successfully created.",
+  "successful": true,
+  "statistics": {
+    "startDate": "2019-10-19",
+    "endDate": "2019-11-18",
+    "schema": {
+      "id": 7,
+      "title": "Standard schema",
+      "type": "STANDARD",
+      "currency": "EUR",
+      "chartType": "RADIAL",
+      "mainCategory": null,
+      "subCategory": null
+    },
+    "chartData": {
+      "legend": "Expenses",
+      "dataPoints": [
+        {
+          "angle": 628.3755726013543,
+          "label": "Lodging"
+        },
+        {
+          "angle": 140.0,
+          "label": "Car"
+        },
+        {
+          "angle": 30.0,
+          "label": "Beatuy care"
+        },
+        {
+          "angle": 27.2634,
+          "label": "Education"
+        },
+        {
+          "angle": 18.1756,
+          "label": "Sport"
+        },
+        {
+          "angle": 115.05556734330797,
+          "label": "Food"
+        },
+        {
+          "angle": 21.631700000000002,
+          "label": "Health care"
+        },
+        {
+          "angle": 23.1756,
+          "label": "Entertainment"
+        },
+        {
+          "angle": 35.99,
+          "label": "Clothes"
+        }
+      ]
+    },
+    "budgetDetails": {
+      "totalIncomes": {
+        "amount": 20152.715557260133,
+        "label": "Total incomes"
+      },
+      "totalExpenses": {
+        "amount": 1039.6674399446624,
+        "label": "Total expenses"
+      },
+      "savings": {
+        "amount": 19113.04811731547,
+        "label": "Savings"
+      },
+      "incomes": [
+        {
+          "mainCategoryName": "Salary",
+          "subCategoryName": null,
+          "amount": 20058.8452926287
+        },
+        {
+          "mainCategoryName": "Salary",
+          "subCategoryName": "Allowance",
+          "amount": 59.845292628700406
+        },
+        {
+          "mainCategoryName": "Gift",
+          "subCategoryName": null,
+          "amount": 93.87026463143502
+        }
+      ],
+      "outcomes": [
+        {
+          "mainCategoryName": "Lodging",
+          "subCategoryName": null,
+          "amount": 628.3755726013543
+        },
+        {
+          "mainCategoryName": "Lodging",
+          "subCategoryName": "Internet",
+          "amount": 14.961323157175102
+        },
+        {
+          "mainCategoryName": "Lodging",
+          "subCategoryName": "Tax",
+          "amount": 89.76793894305061
+        },
+        {
+          "mainCategoryName": "Lodging",
+          "subCategoryName": "Overhead",
+          "amount": 44.883969471525305
+        },
+        {
+          "mainCategoryName": "Lodging",
+          "subCategoryName": "Common cost",
+          "amount": 29.922646314350203
+        },
+        {
+          "mainCategoryName": "Car",
+          "subCategoryName": null,
+          "amount": 140.0
+        },
+        {
+          "mainCategoryName": "Car",
+          "subCategoryName": "Tax",
+          "amount": 30.0
+        },
+        {
+          "mainCategoryName": "Car",
+          "subCategoryName": "Petrol",
+          "amount": 80.0
+        },
+        {
+          "mainCategoryName": "Car",
+          "subCategoryName": "Insurance",
+          "amount": 30.0
+        },
+        {
+          "mainCategoryName": "Beatuy care",
+          "subCategoryName": null,
+          "amount": 30.0
+        },
+        {
+          "mainCategoryName": "Education",
+          "subCategoryName": null,
+          "amount": 27.2634
+        },
+        {
+          "mainCategoryName": "Education",
+          "subCategoryName": "Private lesson",
+          "amount": 27.2634
+        },
+        {
+          "mainCategoryName": "Sport",
+          "subCategoryName": null,
+          "amount": 18.1756
+        },
+        {
+          "mainCategoryName": "Sport",
+          "subCategoryName": "Fitness season ticket",
+          "amount": 18.1756
+        },
+        {
+          "mainCategoryName": "Food",
+          "subCategoryName": null,
+          "amount": 115.05556734330797
+        },
+        {
+          "mainCategoryName": "Health care",
+          "subCategoryName": null,
+          "amount": 21.631700000000002
+        },
+        {
+          "mainCategoryName": "Health care",
+          "subCategoryName": "Vitamins",
+          "amount": 21.631700000000002
+        },
+        {
+          "mainCategoryName": "Entertainment",
+          "subCategoryName": null,
+          "amount": 23.1756
+        },
+        {
+          "mainCategoryName": "Entertainment",
+          "subCategoryName": "Cinema",
+          "amount": 5.0
+        },
+        {
+          "mainCategoryName": "Entertainment",
+          "subCategoryName": "Computer",
+          "amount": 18.1756
+        },
+        {
+          "mainCategoryName": "Clothes",
+          "subCategoryName": null,
+          "amount": 35.99
+        }
+      ]
+    }
+  }
+}

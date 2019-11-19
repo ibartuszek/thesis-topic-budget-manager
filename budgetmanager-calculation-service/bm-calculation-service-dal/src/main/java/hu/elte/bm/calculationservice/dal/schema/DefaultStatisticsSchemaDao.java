@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.calculationservice.exceptions.schema.StatisticsSchemaNotFoundException;
+import hu.elte.bm.calculationservice.schema.ChartType;
 import hu.elte.bm.calculationservice.schema.StatisticsSchema;
 import hu.elte.bm.calculationservice.schema.StatisticsType;
 import hu.elte.bm.calculationservice.service.schema.StatisticsSchemaDao;
+import hu.elte.bm.transactionservice.Currency;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.TransactionType;
@@ -29,8 +31,8 @@ public class DefaultStatisticsSchemaDao implements StatisticsSchemaDao {
     @Value("${schema.schema_standard_title:Standard schema}")
     private String standardSchemaTitle;
 
-    @Value("${schema.standard_schema_not_found:Standard schema cannot be found!}")
-    private String standardSchemaNotFound;
+    @Value("${schema.schema_standard_currency:HUF}")
+    private String standardSchemaCurrency;
 
     @Value("${schema.schema_not_found:Schema cannot be found!!}")
     private String schemaNotFound;
@@ -46,7 +48,7 @@ public class DefaultStatisticsSchemaDao implements StatisticsSchemaDao {
     public StatisticsSchema getStandardSchema(final Long userId) {
         return repository.findByTitleAndUserId(standardSchemaTitle, userId)
             .map(entity -> transformer.transformToStatistcisSchema(entity, null, null))
-            .orElseThrow(() -> new StatisticsSchemaNotFoundException(standardSchemaTitle, standardSchemaNotFound));
+            .orElseGet(() -> save(createStandardSchema(), userId));
     }
 
     @Override
@@ -131,6 +133,15 @@ public class DefaultStatisticsSchemaDao implements StatisticsSchemaDao {
         SubCategory subCategory = mainCategory == null || entity.getSubCategoryId() == null ? null
             : categoryProvider.provideSubCategory(entity.getSubCategoryId(), mainCategory);
         return transformer.transformToStatistcisSchema(entity, mainCategory, subCategory);
+    }
+
+    private StatisticsSchema createStandardSchema() {
+        return StatisticsSchema.builder()
+            .withTitle(standardSchemaTitle)
+            .withType(StatisticsType.STANDARD)
+            .withChartType(ChartType.RADIAL)
+            .withCurrency(Currency.valueOf(standardSchemaCurrency))
+            .build();
     }
 
 }

@@ -22,6 +22,7 @@ public class FindAllSchemaTest extends AbstractCalculationServiceApplicationTest
     public void testFindAllWhenStandardSchemaCannotBeFound() throws Exception {
         // GIVEN
         getRepository().deleteById(STANDARD_SCHEMA_ID);
+        getWireMockService().setUpFindAllMainCategoriesResponse(TRANSACTION_TYPE, USER_ID, HttpStatus.OK.value(), FIND_ALL_OUTCOME_MAIN_CATEGORIES);
 
         // WHEN
         ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)
@@ -30,8 +31,9 @@ public class FindAllSchemaTest extends AbstractCalculationServiceApplicationTest
         MockHttpServletResponse result = resultAction.andReturn().getResponse();
 
         // THEN
-        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatus());
-        Assertions.assertEquals("Standard schema cannot be found!", result.getContentAsString());
+        Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
+        JSONAssert.assertEquals(getExpectedResponseJsonFromFile("schema/findAllSchemaWihNewStandardSchema.json"), getActualResponseFromResult(result),
+            JSONCompareMode.LENIENT);
     }
 
     @Test

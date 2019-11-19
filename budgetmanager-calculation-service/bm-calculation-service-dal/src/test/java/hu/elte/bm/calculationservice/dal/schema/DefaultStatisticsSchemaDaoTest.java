@@ -8,6 +8,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -37,6 +38,7 @@ public class DefaultStatisticsSchemaDaoTest {
     private static final long SUB_CATEGORY_ID = 1L;
     private static final String SUBCATEGORY_NAME = "Subcategory name";
     private static final long USER_ID = 1L;
+    private static final String STANDARD_SCHEMA_CURRENCY = "HUF";
 
     @InjectMocks
     private DefaultStatisticsSchemaDao underTest;
@@ -53,15 +55,44 @@ public class DefaultStatisticsSchemaDaoTest {
     @Before
     public void setUnderTest() {
         ReflectionTestUtils.setField(underTest, "standardSchemaTitle", STANDARD_SCHEMA_TITLE);
+        ReflectionTestUtils.setField(underTest, "standardSchemaCurrency", STANDARD_SCHEMA_CURRENCY);
     }
 
-    @Test(expected = StatisticsSchemaNotFoundException.class)
+    @Test
     public void testGetStandardSchemaWhenRepositoryReturnsWithOptionalEmpty() {
         // GIVEN
+        StatisticsSchemaEntity.Builder standardSchemaEntityBuilder = createStatisticsSchemaEntityBuilder()
+            .withTitle(STANDARD_SCHEMA_TITLE)
+            .withType(StatisticsType.STANDARD)
+            .withChartType(ChartType.RADIAL)
+            .withCurrency(Currency.valueOf(STANDARD_SCHEMA_CURRENCY))
+            .withUserId(USER_ID);
+        StatisticsSchema.Builder standardSchemaBuilder = createStatisticsSchemaBuilder()
+            .withTitle(STANDARD_SCHEMA_TITLE)
+            .withType(StatisticsType.STANDARD)
+            .withChartType(ChartType.RADIAL)
+            .withCurrency(Currency.valueOf(STANDARD_SCHEMA_CURRENCY));
+        StatisticsSchemaEntity standardSchemaEntityToSave = standardSchemaEntityBuilder
+            .withId(SCHEMA_ID)
+            .build();
+        StatisticsSchemaEntity standardSchemaEntity = standardSchemaEntityBuilder.build();
+        StatisticsSchema standardSchemaToSave = standardSchemaBuilder
+            .withId(null)
+            .build();
+        StatisticsSchema standardSchema = standardSchemaBuilder.build();
         Mockito.when(repository.findByTitleAndUserId(STANDARD_SCHEMA_TITLE, USER_ID)).thenReturn(Optional.empty());
+        Mockito.when(transformer.transformToStatisticsSchemaEntity(standardSchemaToSave, USER_ID)).thenReturn(standardSchemaEntityToSave);
+        Mockito.when(repository.save(standardSchemaEntityToSave)).thenReturn(standardSchemaEntity);
+        Mockito.when(transformer.transformToStatistcisSchema(standardSchemaEntity, null, null))
+            .thenReturn(standardSchema);
         // WHEN
-        underTest.getStandardSchema(USER_ID);
+        var result = underTest.getStandardSchema(USER_ID);
         // THEN
+        Mockito.verify(repository).findByTitleAndUserId(STANDARD_SCHEMA_TITLE, USER_ID);
+        Mockito.verify(transformer).transformToStatisticsSchemaEntity(standardSchemaToSave, USER_ID);
+        Mockito.verify(repository).save(standardSchemaEntityToSave);
+        Mockito.verify(transformer).transformToStatistcisSchema(standardSchemaEntity, null, null);
+        Assertions.assertEquals(result, standardSchema);
     }
 
     @Test

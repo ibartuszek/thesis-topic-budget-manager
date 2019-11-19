@@ -38,24 +38,6 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
     }
 
     @Test
-    public void testGetStandardStatisticsWhenSchemaNotFound() throws Exception {
-        // GIVEN
-        getRepository().deleteById(STANDARD_SCHEMA_ID);
-
-        // WHEN
-        ResultActions resultAction = getMvc().perform(MockMvcRequestBuilders.get(URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .param("userId", USER_ID.toString())
-            .param("startDate", START.toString())
-            .param("endDate", END.toString()));
-        MockHttpServletResponse result = resultAction.andReturn().getResponse();
-
-        // THEN
-        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatus());
-        Assertions.assertEquals("Standard schema cannot be found!", result.getContentAsString());
-    }
-
-    @Test
     public void testGetStandardStatisticsWhenTransactionServiceUnavailable() throws Exception {
         // GIVEN
         getWireMockService().setUpFindAllTransactionsResponse(createDefaultContext(TransactionType.INCOME), HttpStatus.SERVICE_UNAVAILABLE.value(), null);
@@ -147,6 +129,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
         getWireMockService().setUpFindAllTransactionsResponse(
             createDefaultContext(TransactionType.OUTCOME), HttpStatus.OK.value(), FIND_ALL_OUTCOME_FILE);
         getWireMockService().setUpGetExchangeRates(HttpStatus.OK.value(), GET_EXCHANGE_RATES_FILE);
+
         // WHEN
         ResultActions resultAction = getMvc().perform(createDefaultMvcRequest());
         MockHttpServletResponse result = resultAction.andReturn().getResponse();
@@ -154,6 +137,25 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
         assertExpectedJsonFileWithDates("statistics/getStandardStatistics.json", result);
+    }
+
+    @Test
+    public void testGetStandardStatisticsWhenSchemaNotFound() throws Exception {
+        // GIVEN
+        getRepository().deleteById(STANDARD_SCHEMA_ID);
+        getWireMockService().setUpFindAllTransactionsResponse(
+            createDefaultContext(TransactionType.INCOME), HttpStatus.OK.value(), FIND_ALL_INCOME_FILE);
+        getWireMockService().setUpFindAllTransactionsResponse(
+            createDefaultContext(TransactionType.OUTCOME), HttpStatus.OK.value(), FIND_ALL_OUTCOME_FILE);
+        getWireMockService().setUpGetExchangeRates(HttpStatus.OK.value(), GET_EXCHANGE_RATES_FILE);
+
+        // WHEN
+        ResultActions resultAction = getMvc().perform(createDefaultMvcRequest());
+        MockHttpServletResponse result = resultAction.andReturn().getResponse();
+
+        // THEN
+        Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
+        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithNewStandardStatistics.json", result);
     }
 
     private RequestBuilder createDefaultMvcRequest() {
