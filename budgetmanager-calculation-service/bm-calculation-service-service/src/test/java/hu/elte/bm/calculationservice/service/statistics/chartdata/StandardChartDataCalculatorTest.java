@@ -11,12 +11,13 @@ import hu.elte.bm.calculationservice.budgetdetails.TransactionData;
 import hu.elte.bm.calculationservice.chartdata.RadialChartData;
 import hu.elte.bm.calculationservice.chartdata.SectorPoint;
 import hu.elte.bm.calculationservice.service.statistics.AbstractCalculatorTest;
+import hu.elte.bm.calculationservice.service.statistics.RounderUtil;
 
 public class StandardChartDataCalculatorTest extends AbstractCalculatorTest {
 
     private static final String CHART_LABEL = "Expenses";
 
-    private final StandardChartDataCalculator underTest = new StandardChartDataCalculator();
+    private final StandardChartDataCalculator underTest = new StandardChartDataCalculator(new RounderUtil());
 
     @BeforeEach
     public void setup() {

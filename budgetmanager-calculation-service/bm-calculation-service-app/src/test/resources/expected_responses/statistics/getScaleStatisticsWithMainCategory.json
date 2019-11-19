@@ -2,8 +2,8 @@
   "message": "Custom statistics:3 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-19",
-    "endDate": "2019-11-18",
+    "startDate": "2019-10-20",
+    "endDate": "2019-11-19",
     "schema": {
       "id": 3,
       "title": "Example scale 2",
@@ -16,13 +16,13 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 14,
-            "name": "Hobby",
+            "id": 13,
+            "name": "Computer",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 13,
-            "name": "Computer",
+            "id": 14,
+            "name": "Hobby",
             "transactionType": "OUTCOME"
           },
           {
@@ -39,49 +39,49 @@
       "dataPoints": [
         {
           "x": 0,
-          "y": -1670.9752030194322,
+          "y": -1670.98,
           "label": "I am legend",
           "date": "2019-11-03"
         },
         {
           "x": 1,
-          "y": 3340279.430835845,
+          "y": 3340279.43,
           "label": "Salary",
           "date": "2019-11-04"
         },
         {
           "x": 2,
-          "y": 3350279.430835845,
+          "y": 3350279.43,
           "label": "Fringe benefit",
           "date": "2019-11-04"
         },
         {
           "x": 3,
-          "y": 3344205.235455845,
+          "y": 3344205.24,
           "label": "New convinient keyboard",
           "date": "2019-10-24"
         },
         {
           "x": 4,
-          "y": 3374576.212355845,
+          "y": 3374576.21,
           "label": "Birthday present from grandparents",
           "date": "2019-11-08"
         },
         {
           "x": 5,
-          "y": 3375576.212355845,
+          "y": 3375576.21,
           "label": "Found money",
           "date": "2019-11-13"
         },
         {
           "x": 6,
-          "y": 6717192.423354106,
+          "y": 6717192.42,
           "label": "Salary",
           "date": "2019-06-21"
         },
         {
           "x": 7,
-          "y": 6727192.423354106,
+          "y": 6727192.42,
           "label": "Fringe benefit",
           "date": "2019-06-21"
         }
@@ -89,15 +89,15 @@
     },
     "budgetDetails": {
       "totalIncomes": {
-        "amount": 6734937.593937125,
+        "amount": 6734937.59,
         "label": "Total incomes"
       },
       "totalExpenses": {
-        "amount": 7745.170583019432,
+        "amount": 7745.17,
         "label": "Total expenses"
       },
       "savings": {
-        "amount": 6727192.423354106,
+        "amount": 6727192.42,
         "label": "Savings"
       },
       "incomes": null,

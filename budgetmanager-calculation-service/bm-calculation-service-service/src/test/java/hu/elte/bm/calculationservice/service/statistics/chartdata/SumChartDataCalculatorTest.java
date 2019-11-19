@@ -9,6 +9,7 @@ import hu.elte.bm.calculationservice.chartdata.ChartData;
 import hu.elte.bm.calculationservice.chartdata.QuadraticChartData;
 import hu.elte.bm.calculationservice.chartdata.QuadraticPoint;
 import hu.elte.bm.calculationservice.service.statistics.AbstractCalculatorTest;
+import hu.elte.bm.calculationservice.service.statistics.RounderUtil;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.Transaction;
 
@@ -16,7 +17,7 @@ public class SumChartDataCalculatorTest extends AbstractCalculatorTest {
 
     private static final String CHART_LABEL = "Sum";
 
-    private final SumChartDataCalculator underTest = new SumChartDataCalculator();
+    private final SumChartDataCalculator underTest = new SumChartDataCalculator(new RounderUtil());
 
     @Test
     public void testCalculateSumChartData() {

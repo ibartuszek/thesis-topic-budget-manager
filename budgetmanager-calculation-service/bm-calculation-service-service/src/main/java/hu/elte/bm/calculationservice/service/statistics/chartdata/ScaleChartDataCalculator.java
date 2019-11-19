@@ -8,11 +8,18 @@ import org.springframework.stereotype.Component;
 import hu.elte.bm.calculationservice.chartdata.ChartData;
 import hu.elte.bm.calculationservice.chartdata.QuadraticChartData;
 import hu.elte.bm.calculationservice.chartdata.QuadraticPoint;
+import hu.elte.bm.calculationservice.service.statistics.RounderUtil;
 import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
 @Component
 public class ScaleChartDataCalculator {
+
+    private final RounderUtil rounderUtil;
+
+    public ScaleChartDataCalculator(final RounderUtil rounderUtil) {
+        this.rounderUtil = rounderUtil;
+    }
 
     ChartData calculateScaleChartData(final List<Transaction> transactionList, final String title) {
         return QuadraticChartData.builder()
@@ -30,7 +37,7 @@ public class ScaleChartDataCalculator {
                 ? amount + transaction.getAmount() : amount - transaction.getAmount();
             dataPoints.add(QuadraticPoint.builder()
                 .withX(index++)
-                .withY(amount)
+                .withY(rounderUtil.round(amount))
                 .withDate(transaction.getDate())
                 .withLabel(transaction.getTitle())
                 .build());

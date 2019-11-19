@@ -2,8 +2,8 @@
   "message": "Custom statistics:2 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-19",
-    "endDate": "2019-11-18",
+    "startDate": "2019-10-20",
+    "endDate": "2019-11-19",
     "schema": {
       "id": 2,
       "title": "Example scale",
@@ -18,37 +18,37 @@
       "dataPoints": [
         {
           "x": 0,
-          "y": 3341950.4060388645,
+          "y": 3341950.41,
           "label": "Salary",
           "date": "2019-11-04"
         },
         {
           "x": 1,
-          "y": 3351950.4060388645,
+          "y": 3351950.41,
           "label": "Fringe benefit",
           "date": "2019-11-04"
         },
         {
           "x": 2,
-          "y": 3382321.3829388646,
+          "y": 3382321.38,
           "label": "Birthday present from grandparents",
           "date": "2019-11-08"
         },
         {
           "x": 3,
-          "y": 3383321.3829388646,
+          "y": 3383321.38,
           "label": "Found money",
           "date": "2019-11-13"
         },
         {
           "x": 4,
-          "y": 6724937.593937125,
+          "y": 6724937.59,
           "label": "Salary",
           "date": "2019-06-21"
         },
         {
           "x": 5,
-          "y": 6734937.593937125,
+          "y": 6734937.59,
           "label": "Fringe benefit",
           "date": "2019-06-21"
         }
@@ -56,7 +56,7 @@
     },
     "budgetDetails": {
       "totalIncomes": {
-        "amount": 6734937.593937125,
+        "amount": 6734937.59,
         "label": "Total incomes"
       },
       "totalExpenses": null,

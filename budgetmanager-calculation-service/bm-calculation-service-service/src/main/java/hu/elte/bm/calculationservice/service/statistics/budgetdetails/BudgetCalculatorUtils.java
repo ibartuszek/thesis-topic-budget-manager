@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import hu.elte.bm.calculationservice.budgetdetails.BudgetDetailsElement;
+import hu.elte.bm.calculationservice.service.statistics.RounderUtil;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.Transaction;
@@ -17,6 +18,12 @@ public class BudgetCalculatorUtils {
     private static final String SAVINGS_LABEL = "Savings";
     private static final String TOTAL_INCOMES_LABEL = "Total incomes";
     private static final String TOTAL_EXPENSES_LABEL = "Total expenses";
+
+    private final RounderUtil rounderUtil;
+
+    public BudgetCalculatorUtils(final RounderUtil rounderUtil) {
+        this.rounderUtil = rounderUtil;
+    }
 
     double getZero() {
         return ZERO;
@@ -43,15 +50,16 @@ public class BudgetCalculatorUtils {
     }
 
     Double getAmountFromTransactionList(final List<Transaction> transactionList) {
-        return transactionList.stream()
+        double sum = transactionList.stream()
             .map(Transaction::getAmount)
             .reduce(Double::sum)
             .orElse(ZERO);
+        return rounderUtil.round(sum);
     }
 
     BudgetDetailsElement createBudgetDetailsElement(final double amount, final String label) {
         return BudgetDetailsElement.builder()
-            .withAmount(amount)
+            .withAmount(rounderUtil.round(amount))
             .withLabel(label)
             .build();
     }
@@ -59,7 +67,7 @@ public class BudgetCalculatorUtils {
     BudgetDetailsElement createSavings(final BudgetDetailsElement totalIncomes, final BudgetDetailsElement totalExpenses) {
         double amount = totalIncomes.getAmount() - totalExpenses.getAmount();
         return BudgetDetailsElement.builder()
-            .withAmount(amount)
+            .withAmount(rounderUtil.round(amount))
             .withLabel(SAVINGS_LABEL)
             .build();
     }

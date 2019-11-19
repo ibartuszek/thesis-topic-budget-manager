@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import hu.elte.bm.calculationservice.budgetdetails.BudgetDetailsElement;
 import hu.elte.bm.calculationservice.service.statistics.AbstractCalculatorTest;
+import hu.elte.bm.calculationservice.service.statistics.RounderUtil;
 import hu.elte.bm.transactionservice.MainCategory;
 import hu.elte.bm.transactionservice.SubCategory;
 import hu.elte.bm.transactionservice.Transaction;
@@ -20,7 +21,7 @@ class BudgetCalculatorUtilsTest extends AbstractCalculatorTest {
     private static final String TOTAL_INCOMES_LABEL = "Total incomes";
     private static final String TOTAL_EXPENSES_LABEL = "Total expenses";
 
-    private final BudgetCalculatorUtils underTest = new BudgetCalculatorUtils();
+    private final BudgetCalculatorUtils underTest = new BudgetCalculatorUtils(new RounderUtil());
 
     @Test
     public void testFilterTransactionListOnMainCategoryWhenMainCategoryIsNull() {

@@ -9,6 +9,7 @@ import hu.elte.bm.calculationservice.chartdata.ChartData;
 import hu.elte.bm.calculationservice.chartdata.QuadraticChartData;
 import hu.elte.bm.calculationservice.chartdata.QuadraticPoint;
 import hu.elte.bm.calculationservice.service.statistics.AbstractCalculatorTest;
+import hu.elte.bm.calculationservice.service.statistics.RounderUtil;
 import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
@@ -16,7 +17,7 @@ public class ScaleChartDataCalculatorTest extends AbstractCalculatorTest {
 
     private static final String CHART_LABEL = "Scale";
 
-    private final ScaleChartDataCalculator underTest = new ScaleChartDataCalculator();
+    private final ScaleChartDataCalculator underTest = new ScaleChartDataCalculator(new RounderUtil());
 
     @Test
     public void testCalculateScaleChartData() {

@@ -9,6 +9,7 @@ import hu.elte.bm.calculationservice.budgetdetails.BudgetDetails;
 import hu.elte.bm.calculationservice.budgetdetails.BudgetDetailsElement;
 import hu.elte.bm.calculationservice.budgetdetails.TransactionData;
 import hu.elte.bm.calculationservice.service.statistics.AbstractCalculatorTest;
+import hu.elte.bm.calculationservice.service.statistics.RounderUtil;
 import hu.elte.bm.transactionservice.Transaction;
 import hu.elte.bm.transactionservice.TransactionType;
 
@@ -18,7 +19,9 @@ class StandardBudgetDetailsCalculatorTest extends AbstractCalculatorTest {
     private static final Double EXPECTED_TOTAL_INCOMES_AMOUNT = EXPECTED_SUM_AMOUNT;
     private static final Double EXPECTED_TOTAL_EXPENSE_AMOUNT = DEFAULT_TRANSACTION_AMOUNT + OTHER_TRANSACTION_AMOUNT;
     private static final Double EXPECTED_SAVINGS_AMOUNT = EXPECTED_TOTAL_INCOMES_AMOUNT - EXPECTED_TOTAL_EXPENSE_AMOUNT;
-    private final StandardBudgetDetailsCalculator underTest = new StandardBudgetDetailsCalculator(new BudgetCalculatorUtils());
+
+    private final BudgetCalculatorUtils budgetCalculatorUtils = new BudgetCalculatorUtils(new RounderUtil());
+    private final StandardBudgetDetailsCalculator underTest = new StandardBudgetDetailsCalculator(budgetCalculatorUtils);
 
     @Test
     public void testCalculateStandardDetails() {

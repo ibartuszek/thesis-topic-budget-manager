@@ -5,10 +5,7 @@ INSERT INTO schema(id, title, statistics_type, currency, chart_type, main_catego
 VALUES (NULL, 'Example scale', 'SCALE', 'HUF', 'BAR', NULL, NULL, 1);
 
 INSERT INTO schema(id, title, statistics_type, currency, chart_type, main_category_id, sub_category_id, user_id)
-VALUES (NULL, 'Example sum', 'SUM', 'USD', 'LINEAR', NULL, NULL, 1);
+VALUES (NULL, 'Example sum', 'SUM', 'USD', 'LINEAR', 10, NULL, 1);
 
 INSERT INTO schema(id, title, statistics_type, currency, chart_type, main_category_id, sub_category_id, user_id)
-VALUES (NULL, 'Example sum 2', 'SUM', 'USD', 'LINEAR', 10, NULL, 1);
-
-INSERT INTO schema(id, title, statistics_type, currency, chart_type, main_category_id, sub_category_id, user_id)
-VALUES (NULL, 'Example sum 3',  'SUM', 'USD', 'LINEAR', 10, 12, 1);
+VALUES (NULL, 'Example sum 2',  'SUM', 'USD', 'LINEAR', 10, 12, 1);
