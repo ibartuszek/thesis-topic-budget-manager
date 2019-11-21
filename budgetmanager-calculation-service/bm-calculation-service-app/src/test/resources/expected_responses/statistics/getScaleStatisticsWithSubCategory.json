@@ -2,8 +2,8 @@
   "message": "Custom statistics:4 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-20",
-    "endDate": "2019-11-19",
+    "startDate": "2019-10-22",
+    "endDate": "2019-11-21",
     "schema": {
       "id": 4,
       "title": "Example scale 3",
@@ -16,8 +16,8 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 13,
-            "name": "Computer",
+            "id": 12,
+            "name": "Cinema",
             "transactionType": "OUTCOME"
           },
           {
@@ -26,8 +26,8 @@
             "transactionType": "OUTCOME"
           },
           {
-            "id": 12,
-            "name": "Cinema",
+            "id": 13,
+            "name": "Computer",
             "transactionType": "OUTCOME"
           }
         ]
@@ -75,13 +75,13 @@
           "x": 5,
           "y": 6723266.62,
           "label": "Salary",
-          "date": "2019-06-21"
+          "date": "2019-10-21"
         },
         {
           "x": 6,
           "y": 6733266.62,
           "label": "Fringe benefit",
-          "date": "2019-06-21"
+          "date": "2019-10-21"
         }
       ]
     },

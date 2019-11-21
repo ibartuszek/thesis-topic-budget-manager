@@ -2,8 +2,8 @@
   "message": "Custom statistics:2 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-20",
-    "endDate": "2019-11-19",
+    "startDate": "2019-10-22",
+    "endDate": "2019-11-21",
     "schema": {
       "id": 2,
       "title": "Example scale",
@@ -20,163 +20,199 @@
           "x": 0,
           "y": -5000.0,
           "label": "Internet",
-          "date": "2019-07-01"
+          "date": "2019-10-01"
         },
         {
           "x": 1,
-          "y": -17027.68,
-          "label": "New shirt",
-          "date": "2019-11-02"
+          "y": -10000.0,
+          "label": "Internet",
+          "date": "2019-11-01"
         },
         {
           "x": 2,
-          "y": -18698.65,
-          "label": "I am legend",
-          "date": "2019-11-03"
+          "y": 3331950.41,
+          "label": "Salary",
+          "date": "2019-11-04"
         },
         {
           "x": 3,
-          "y": 3323251.75,
-          "label": "Salary",
+          "y": 3341950.41,
+          "label": "Fringe benefit",
           "date": "2019-11-04"
         },
         {
           "x": 4,
-          "y": 3333251.75,
-          "label": "Fringe benefit",
-          "date": "2019-11-04"
-        },
-        {
-          "x": 5,
-          "y": 3363622.73,
-          "label": "Birthday present from grandparents",
-          "date": "2019-11-08"
-        },
-        {
-          "x": 6,
-          "y": 3348622.73,
-          "label": "Big shopping",
-          "date": "2019-11-08"
-        },
-        {
-          "x": 7,
-          "y": 3338596.88,
-          "label": "Tax",
-          "date": "2019-08-10"
-        },
-        {
-          "x": 8,
-          "y": 3328571.03,
-          "label": "Insurance",
-          "date": "2019-08-10"
-        },
-        {
-          "x": 9,
-          "y": 3329571.03,
-          "label": "Found money",
-          "date": "2019-11-13"
-        },
-        {
-          "x": 10,
-          "y": 3322887.12,
-          "label": "Massage",
-          "date": "2019-09-19"
-        },
-        {
-          "x": 11,
-          "y": 3313775.83,
-          "label": "English",
-          "date": "2019-09-19"
-        },
-        {
-          "x": 12,
-          "y": 3307701.64,
-          "label": "Fitness ticket",
-          "date": "2019-09-19"
-        },
-        {
-          "x": 13,
-          "y": 3295361.64,
+          "y": 3329610.41,
           "label": "Shopping",
           "date": "2019-10-19"
         },
         {
-          "x": 14,
-          "y": 6636977.85,
-          "label": "Salary",
-          "date": "2019-06-21"
-        },
-        {
-          "x": 15,
-          "y": 6646977.85,
-          "label": "Fringe benefit",
-          "date": "2019-06-21"
-        },
-        {
-          "x": 16,
-          "y": 6496977.85,
-          "label": "Lodging",
-          "date": "2019-06-21"
-        },
-        {
-          "x": 17,
-          "y": 6486977.85,
-          "label": "Common cost",
-          "date": "2019-06-21"
-        },
-        {
-          "x": 18,
-          "y": 6471977.85,
-          "label": "Overhead",
-          "date": "2019-07-21"
-        },
-        {
-          "x": 19,
-          "y": 6441977.85,
-          "label": "Tax",
-          "date": "2019-06-21"
-        },
-        {
-          "x": 20,
-          "y": 6438635.9,
+          "x": 5,
+          "y": 3326268.46,
           "label": "Hairdresser",
           "date": "2019-10-24"
         },
         {
-          "x": 21,
-          "y": 6436964.92,
+          "x": 6,
+          "y": 3324597.48,
           "label": "D vitamin",
           "date": "2019-10-24"
         },
         {
-          "x": 22,
-          "y": 6435962.34,
+          "x": 7,
+          "y": 3323594.9,
           "label": "C vitamin",
           "date": "2019-10-24"
         },
         {
-          "x": 23,
-          "y": 6431406.69,
+          "x": 8,
+          "y": 3319039.25,
           "label": "Online course",
           "date": "2019-10-24"
         },
         {
-          "x": 24,
-          "y": 6425332.49,
+          "x": 9,
+          "y": 3312965.05,
           "label": "New convinient keyboard",
           "date": "2019-10-24"
         },
         {
-          "x": 25,
-          "y": 6398596.89,
+          "x": 10,
+          "y": 3286229.45,
           "label": "Petrol",
           "date": "2019-10-29"
         },
         {
-          "x": 26,
-          "y": 6387485.89,
+          "x": 11,
+          "y": 3275118.45,
           "label": "Shopping",
           "date": "2019-10-29"
+        },
+        {
+          "x": 12,
+          "y": 3263090.77,
+          "label": "New shirt",
+          "date": "2019-11-02"
+        },
+        {
+          "x": 13,
+          "y": 3261419.8,
+          "label": "I am legend",
+          "date": "2019-11-03"
+        },
+        {
+          "x": 14,
+          "y": 3291790.77,
+          "label": "Birthday present from grandparents",
+          "date": "2019-11-08"
+        },
+        {
+          "x": 15,
+          "y": 3276790.77,
+          "label": "Big shopping",
+          "date": "2019-11-08"
+        },
+        {
+          "x": 16,
+          "y": 3266764.92,
+          "label": "Tax",
+          "date": "2019-10-10"
+        },
+        {
+          "x": 17,
+          "y": 3256739.07,
+          "label": "Tax",
+          "date": "2019-11-10"
+        },
+        {
+          "x": 18,
+          "y": 3246713.22,
+          "label": "Insurance",
+          "date": "2019-10-10"
+        },
+        {
+          "x": 19,
+          "y": 3236687.37,
+          "label": "Insurance",
+          "date": "2019-11-10"
+        },
+        {
+          "x": 20,
+          "y": 3237687.37,
+          "label": "Found money",
+          "date": "2019-11-13"
+        },
+        {
+          "x": 21,
+          "y": 3231003.47,
+          "label": "Massage",
+          "date": "2019-10-19"
+        },
+        {
+          "x": 22,
+          "y": 3224319.57,
+          "label": "Massage",
+          "date": "2019-11-19"
+        },
+        {
+          "x": 23,
+          "y": 3215208.27,
+          "label": "English",
+          "date": "2019-10-19"
+        },
+        {
+          "x": 24,
+          "y": 3206096.98,
+          "label": "English",
+          "date": "2019-11-19"
+        },
+        {
+          "x": 25,
+          "y": 3200022.78,
+          "label": "Fitness ticket",
+          "date": "2019-10-19"
+        },
+        {
+          "x": 26,
+          "y": 3193948.59,
+          "label": "Fitness ticket",
+          "date": "2019-11-19"
+        },
+        {
+          "x": 27,
+          "y": 6535564.8,
+          "label": "Salary",
+          "date": "2019-10-21"
+        },
+        {
+          "x": 28,
+          "y": 6545564.8,
+          "label": "Fringe benefit",
+          "date": "2019-10-21"
+        },
+        {
+          "x": 29,
+          "y": 6395564.8,
+          "label": "Lodging",
+          "date": "2019-10-21"
+        },
+        {
+          "x": 30,
+          "y": 6385564.8,
+          "label": "Common cost",
+          "date": "2019-10-21"
+        },
+        {
+          "x": 31,
+          "y": 6370564.8,
+          "label": "Overhead",
+          "date": "2019-10-21"
+        },
+        {
+          "x": 32,
+          "y": 6340564.8,
+          "label": "Tax",
+          "date": "2019-10-21"
         }
       ]
     },
@@ -186,11 +222,11 @@
         "label": "Total incomes"
       },
       "totalExpenses": {
-        "amount": 347451.7,
+        "amount": 394372.79,
         "label": "Total expenses"
       },
       "savings": {
-        "amount": 6387485.89,
+        "amount": 6340564.8,
         "label": "Savings"
       },
       "incomes": null,

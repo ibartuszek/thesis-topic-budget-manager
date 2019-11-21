@@ -2,8 +2,8 @@
   "message": "Custom statistics:2 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-20",
-    "endDate": "2019-11-19",
+    "startDate": "2019-10-22",
+    "endDate": "2019-11-21",
     "schema": {
       "id": 2,
       "title": "Example scale",
@@ -44,13 +44,13 @@
           "x": 4,
           "y": 6724937.59,
           "label": "Salary",
-          "date": "2019-06-21"
+          "date": "2019-10-21"
         },
         {
           "x": 5,
           "y": 6734937.59,
           "label": "Fringe benefit",
-          "date": "2019-06-21"
+          "date": "2019-10-21"
         }
       ]
     },
