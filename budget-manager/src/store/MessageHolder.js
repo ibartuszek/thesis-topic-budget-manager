@@ -14,6 +14,27 @@ export const defaultMessages = {
   defaultErrorMessage: "Something went wrong, please try again!",
 };
 
+export const homeMessages = {
+  homeIntroduction: "This application is made as a pet-project to develop a web-service. A registered user after sign-in can use its functionality. " +
+    "It can store different type of incomes and expenses with unique categories and dates. The stored data can be shown in tables. " +
+    "Different type of calculation can be executed on this transaction elements. This calculation runs on the fly on the backend services, " +
+    "of which result can be shown different types of charts and tables.",
+  homeExampleTransaction: "On this example can be shown how to manage incomes with categories and how to check them on a summarize table. " +
+    "Categories can be modified, transactions can be modified and deleted as well. " +
+    "Supplementary category cannot be removed from saved main categories. " +
+    "Income categories can be applied on income transactions and outcome categories on outcome transactions. " +
+    "Transactions has compulsory fields: title, amount, currency, main category and date; the other fields are optionals. " +
+    "Monthly transaction can have end date, after its end date it won't be counted in statistics. " +
+    "If tracking enabled frontend application will send your device coordinates to backend services, which will be saved on outcome data. " +
+    "You can upload an shown pictures at outcomes.",
+  homeExampleSchemas: "On this example can be shown how to manage schemas. They can be shown separately: standard, and custom schemas. The user can create" +
+    "its own custom schema to specify what would like to show on his/her statistics. Standard statistics cannot be deleted or modified and it shows the " +
+    "chosen period data on the basis of categories. Scale is a sum of all incomes reduced by the specified category (if there is not any category, the service" +
+    "subtract all of them). Sum is a basic calculation where the main category is compulsory. (it can be both income and outcome).",
+  homeExampleCalculateStatistics: "On this example can be shown how to create a statistics. The calculation is made on the basis of the schema type, the chosen" +
+    "dates and the type of the chart. Because of the calculation is executed \"on-the-fly\" it can take a couple of seconds."
+};
+
 export const statisticsMessages = {
   endDatePlaceHolder: "Select end date",
   startDatePlaceHolder: "Select end date"

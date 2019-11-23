@@ -15,7 +15,6 @@ const StatisticsReducer = (state = initState, action) => {
   switch (action.type) {
     case 'GET_SCHEMAS_SUCCESS':
       key = "getSchemasSuccess";
-      addMessage(action.messages, createMessage(key, action.message, true));
       return Object.assign({}, state, {
         ...state,
         standardSchema: action['response'].standardSchema,

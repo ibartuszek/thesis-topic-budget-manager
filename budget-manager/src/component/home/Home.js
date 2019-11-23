@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
-import Loading from '../Loading'
+import ExampleContainer from "./ExampleContainer";
 import LogContainer from "./LogContainer";
 import {connect} from "react-redux";
 import {getAccessCookie} from "../../actions/user/cookie/getAccessCookie";
@@ -12,6 +12,10 @@ import {fetchSchemas} from "../../actions/schema/fetchSchemas";
 import {fetchMainCategories} from "../../actions/category/fetchMainCategories";
 import {fetchSubCategories} from "../../actions/category/fetchSubCategories";
 import {getFirstPossibleDay} from "../../actions/transaction/getFirstPossibleDay";
+import {homeMessages} from "../../store/MessageHolder";
+import incomesVideo from "../../video/incomes.mp4";
+import schemasVideo from "../../video/schemas.mp4";
+import statisticsVideo from "../../video/statistics.mp4";
 
 class Home extends Component {
   state = {
@@ -117,7 +121,16 @@ class Home extends Component {
     return (
       <main>
         {logs}
-        <Loading/>
+        <div className="card card-body mt-3">
+          <h4>Aim of the site</h4>
+          <p className="list-group-item-secondary my-2 p-2 border border-success border-1 rounded mx-2 text-justify">{homeMessages.homeIntroduction}</p>
+        </div>
+        <div className="card card-body mt-3 min-w-600">
+          <h4>Example use cases</h4>
+          <ExampleContainer video={incomesVideo} title={"Manage transactions"} message={homeMessages.homeExampleTransaction}/>
+          <ExampleContainer video={schemasVideo} title={"Manage schemas"} message={homeMessages.homeExampleSchemas}/>
+          <ExampleContainer video={statisticsVideo} title={"Calculate statistics"} message={homeMessages.homeExampleCalculateStatistics}/>
+        </div>
       </main>
     )
   }

@@ -53,6 +53,11 @@ label.input-group-addon.input-group-text {
     color: var(--danger);
 }
 
+.custom-example-container {
+    min-width: 550px;
+    width: 100%;
+}
+
 .custom-form-control-select {
     height: 2.5rem;
 }

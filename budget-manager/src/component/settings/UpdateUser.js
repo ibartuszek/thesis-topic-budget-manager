@@ -83,7 +83,7 @@ class UpdateUser extends Component {
           <form className="form-group mb-0" onSubmit={this.handleSubmit}>
             <h1 className="mt-3 mx-auto">User data</h1>
             <ModelStringValue onChange={this.handleModelValueChange}
-                              id="email" model={email}
+                              id="email" model={email} disabled={true}
                               labelTitle={emailLabel} placeHolder={emailMessage} type="email"/>
             <ModelStringValue onChange={this.handleModelValueChange}
                               id="password" model={password}
