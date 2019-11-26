@@ -36,7 +36,6 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
         assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyTransactions.json", result);
     }
 
-    @Test
     public void testGetScaleStatisticsWhenIncomesAreEmpty() throws Exception {
         // GIVEN
         getWireMockService().setUpFindAllTransactionsResponse(
@@ -54,7 +53,6 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
         assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyIncomes.json", result);
     }
 
-    @Test
     public void testGetScaleStatisticsWhenOutcomesAreEmpty() throws Exception {
         // GIVEN
         getWireMockService().setUpFindAllTransactionsResponse(
@@ -72,7 +70,6 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
         assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyOutcomes.json", result);
     }
 
-    @Test
     public void testGetScaleStatistics() throws Exception {
         // GIVEN
         getWireMockService().setUpFindAllTransactionsResponse(
@@ -90,7 +87,6 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
         assertExpectedJsonFileWithDates("statistics/getScaleStatistics.json", result);
     }
 
-    @Test
     public void testGetScaleStatisticsWithMainCategory() throws Exception {
         // GIVEN
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(URL)
@@ -115,7 +111,6 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
         assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithMainCategory.json", result);
     }
 
-    @Test
     public void testGetScaleStatisticsWithSubCategory() throws Exception {
         // GIVEN
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(URL)
