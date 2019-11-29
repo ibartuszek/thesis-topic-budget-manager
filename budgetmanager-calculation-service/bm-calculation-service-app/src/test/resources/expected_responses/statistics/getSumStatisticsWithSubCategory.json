@@ -2,8 +2,8 @@
   "message": "Custom statistics:6 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-20",
-    "endDate": "2019-11-19",
+    "startDate": "2019-09-29",
+    "endDate": "2019-11-29",
     "schema": {
       "id": 6,
       "title": "Example sum 3",
@@ -44,15 +44,21 @@
         {
           "x": 0,
           "y": 5.0,
+          "label": "Bad boys",
+          "date": "2019-10-25"
+        },
+        {
+          "x": 1,
+          "y": 10.0,
           "label": "I am legend",
-          "date": "2019-11-03"
+          "date": "2019-11-14"
         }
       ]
     },
     "budgetDetails": {
       "totalIncomes": null,
       "totalExpenses": {
-        "amount": 5.5,
+        "amount": 11.0,
         "label": "Total cost of Cinema"
       },
       "savings": null,

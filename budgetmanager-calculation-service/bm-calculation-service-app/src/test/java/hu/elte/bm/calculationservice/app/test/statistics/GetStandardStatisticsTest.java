@@ -40,7 +40,8 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
     @Test
     public void testGetStandardStatisticsWhenTransactionServiceUnavailable() throws Exception {
         // GIVEN
-        getWireMockService().setUpFindAllTransactionsResponse(createDefaultContext(TransactionType.INCOME), HttpStatus.SERVICE_UNAVAILABLE.value(), null);
+        getWireMockService().setUpFindAllTransactionsResponse(
+                createDefaultContext(TransactionType.INCOME), HttpStatus.SERVICE_UNAVAILABLE.value(), FIND_ALL_TRANSACTION_WITH_EMPTY_BODY);
 
         // WHEN
         ResultActions resultAction = getMvc().perform(createDefaultMvcRequest());
@@ -85,6 +86,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
         assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyTransactions.json", result);
     }
 
+    @Test
     public void testGetStandardStatisticsWhenIncomesAreEmpty() throws Exception {
         // GIVEN
         getWireMockService().setUpFindAllTransactionsResponse(
@@ -120,6 +122,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
         assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyOutcomes.json", result);
     }
 
+    @Test
     public void testGetStandardStatistics() throws Exception {
         // GIVEN
         getWireMockService().setUpFindAllTransactionsResponse(
@@ -137,6 +140,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
         assertExpectedJsonFileWithDates("statistics/getStandardStatistics.json", result);
     }
 
+    @Test
     public void testGetStandardStatisticsWhenSchemaNotFound() throws Exception {
         // GIVEN
         getRepository().deleteById(STANDARD_SCHEMA_ID);

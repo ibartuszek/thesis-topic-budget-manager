@@ -2,8 +2,8 @@
   "message": "Custom statistics:5 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-20",
-    "endDate": "2019-11-19",
+    "startDate": "2019-09-29",
+    "endDate": "2019-11-29",
     "schema": {
       "id": 5,
       "title": "Example sum 2",
@@ -16,13 +16,13 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 12,
-            "name": "Cinema",
+            "id": 13,
+            "name": "Computer",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 13,
-            "name": "Computer",
+            "id": 12,
+            "name": "Cinema",
             "transactionType": "OUTCOME"
           },
           {
@@ -40,21 +40,33 @@
         {
           "x": 0,
           "y": 5.0,
-          "label": "I am legend",
-          "date": "2019-11-03"
+          "label": "Bad boys",
+          "date": "2019-10-25"
         },
         {
           "x": 1,
-          "y": 25.0,
+          "y": 10.0,
+          "label": "I am legend",
+          "date": "2019-11-14"
+        },
+        {
+          "x": 2,
+          "y": 100.0,
+          "label": "New video card",
+          "date": "2019-09-30"
+        },
+        {
+          "x": 3,
+          "y": 120.0,
           "label": "New convinient keyboard",
-          "date": "2019-10-24"
+          "date": "2019-11-04"
         }
       ]
     },
     "budgetDetails": {
       "totalIncomes": null,
       "totalExpenses": {
-        "amount": 25.5,
+        "amount": 121.0,
         "label": "Total cost of Entertainment"
       },
       "savings": null,

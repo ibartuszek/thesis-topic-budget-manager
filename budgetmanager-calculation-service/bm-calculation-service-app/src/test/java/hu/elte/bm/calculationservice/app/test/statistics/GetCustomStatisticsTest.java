@@ -59,7 +59,8 @@ public class GetCustomStatisticsTest extends AbstractStatisticsTest {
     @Test
     public void testGetCustomStatisticsWhenTransactionServiceUnavailable() throws Exception {
         // GIVEN
-        getWireMockService().setUpFindAllTransactionsResponse(createDefaultContext(TransactionType.INCOME), HttpStatus.SERVICE_UNAVAILABLE.value(), null);
+        getWireMockService().setUpFindAllTransactionsResponse(createDefaultContext(TransactionType.INCOME),
+                HttpStatus.SERVICE_UNAVAILABLE.value(), FIND_ALL_TRANSACTION_WITH_EMPTY_BODY);
 
         // WHEN
         ResultActions resultAction = getMvc().perform(createDefaultMvcRequest());

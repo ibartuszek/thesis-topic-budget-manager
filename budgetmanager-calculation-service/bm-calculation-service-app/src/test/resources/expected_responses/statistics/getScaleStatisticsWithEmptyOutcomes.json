@@ -2,8 +2,8 @@
   "message": "Custom statistics:2 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-22",
-    "endDate": "2019-11-21",
+    "startDate": "2019-09-29",
+    "endDate": "2019-11-29",
     "schema": {
       "id": 2,
       "title": "Example scale",
@@ -18,45 +18,69 @@
       "dataPoints": [
         {
           "x": 0,
-          "y": 3341950.41,
+          "y": 785358.35,
           "label": "Salary",
-          "date": "2019-11-04"
+          "date": "2019-09-02"
         },
         {
           "x": 1,
-          "y": 3351950.41,
-          "label": "Fringe benefit",
-          "date": "2019-11-04"
+          "y": 1570716.69,
+          "label": "Salary",
+          "date": "2019-10-02"
         },
         {
           "x": 2,
-          "y": 3382321.38,
-          "label": "Birthday present from grandparents",
-          "date": "2019-11-08"
+          "y": 2356075.04,
+          "label": "Salary",
+          "date": "2019-11-02"
         },
         {
           "x": 3,
-          "y": 3383321.38,
-          "label": "Found money",
-          "date": "2019-11-13"
+          "y": 2366075.04,
+          "label": "Fringe benefit",
+          "date": "2019-09-02"
         },
         {
           "x": 4,
-          "y": 6724937.59,
-          "label": "Salary",
-          "date": "2019-10-21"
+          "y": 2376075.04,
+          "label": "Fringe benefit",
+          "date": "2019-10-02"
         },
         {
           "x": 5,
-          "y": 6734937.59,
+          "y": 2386075.04,
           "label": "Fringe benefit",
-          "date": "2019-10-21"
+          "date": "2019-11-02"
+        },
+        {
+          "x": 6,
+          "y": 3221562.64,
+          "label": "Salary",
+          "date": "2019-11-15"
+        },
+        {
+          "x": 7,
+          "y": 3231562.64,
+          "label": "Fringe benefit",
+          "date": "2019-11-15"
+        },
+        {
+          "x": 8,
+          "y": 3261933.61,
+          "label": "Birthday present from grandparents",
+          "date": "2019-11-19"
+        },
+        {
+          "x": 9,
+          "y": 3262933.61,
+          "label": "Found money",
+          "date": "2019-11-24"
         }
       ]
     },
     "budgetDetails": {
       "totalIncomes": {
-        "amount": 6734937.59,
+        "amount": 3262933.61,
         "label": "Total incomes"
       },
       "totalExpenses": null,

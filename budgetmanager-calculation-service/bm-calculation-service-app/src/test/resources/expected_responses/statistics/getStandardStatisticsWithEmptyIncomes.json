@@ -2,8 +2,8 @@
   "message": "Standard statistics successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-22",
-    "endDate": "2019-11-21",
+    "startDate": "2019-09-29",
+    "endDate": "2019-11-29",
     "schema": {
       "id": 1,
       "title": "Standard schema",
@@ -17,40 +17,40 @@
       "legend": "Expenses",
       "dataPoints": [
         {
-          "angle": 200.0,
+          "angle": 420.0,
           "label": "Car"
         },
         {
-          "angle": 115.06,
+          "angle": 187.67,
           "label": "Food"
         },
         {
-          "angle": 50.0,
+          "angle": 60.0,
           "label": "Beatuy care"
         },
         {
-          "angle": 21.63,
+          "angle": 29.63,
           "label": "Health care"
         },
         {
-          "angle": 23.18,
+          "angle": 109.97,
           "label": "Entertainment"
         },
         {
-          "angle": 35.99,
+          "angle": 96.34,
+          "label": "Sport"
+        },
+        {
+          "angle": 165.96,
           "label": "Clothes"
         },
         {
-          "angle": 643.34,
+          "angle": 1885.13,
           "label": "Lodging"
         },
         {
           "angle": 54.53,
           "label": "Education"
-        },
-        {
-          "angle": 36.35,
-          "label": "Sport"
         }
       ]
     },
@@ -60,11 +60,11 @@
         "label": "Total incomes"
       },
       "totalExpenses": {
-        "amount": 1180.08,
+        "amount": 3009.23,
         "label": "Total expenses"
       },
       "savings": {
-        "amount": -1180.08,
+        "amount": -3009.23,
         "label": "Savings"
       },
       "incomes": [],
@@ -72,87 +72,102 @@
         {
           "mainCategoryName": "Car",
           "subCategoryName": null,
-          "amount": 200.0
+          "amount": 420.0
         },
         {
           "mainCategoryName": "Car",
           "subCategoryName": "Tax",
-          "amount": 60.0
+          "amount": 90.0
         },
         {
           "mainCategoryName": "Car",
           "subCategoryName": "Insurance",
-          "amount": 60.0
+          "amount": 90.0
         },
         {
           "mainCategoryName": "Car",
           "subCategoryName": "Petrol",
-          "amount": 80.0
+          "amount": 240.0
         },
         {
           "mainCategoryName": "Food",
           "subCategoryName": null,
-          "amount": 115.06
+          "amount": 187.67
         },
         {
           "mainCategoryName": "Beatuy care",
           "subCategoryName": null,
-          "amount": 50.0
+          "amount": 60.0
         },
         {
           "mainCategoryName": "Health care",
           "subCategoryName": null,
-          "amount": 21.63
+          "amount": 29.63
         },
         {
           "mainCategoryName": "Health care",
           "subCategoryName": "Vitamins",
-          "amount": 21.63
+          "amount": 29.63
         },
         {
           "mainCategoryName": "Entertainment",
           "subCategoryName": null,
-          "amount": 23.18
-        },
-        {
-          "mainCategoryName": "Entertainment",
-          "subCategoryName": "Computer",
-          "amount": 18.18
+          "amount": 109.97
         },
         {
           "mainCategoryName": "Entertainment",
           "subCategoryName": "Cinema",
-          "amount": 5.0
+          "amount": 10.0
+        },
+        {
+          "mainCategoryName": "Entertainment",
+          "subCategoryName": "Computer",
+          "amount": 99.97
+        },
+        {
+          "mainCategoryName": "Sport",
+          "subCategoryName": null,
+          "amount": 96.34
+        },
+        {
+          "mainCategoryName": "Sport",
+          "subCategoryName": "Fitness season ticket",
+          "amount": 36.35
+        },
+        {
+          "mainCategoryName": "Sport",
+          "subCategoryName": "Clothes",
+          "amount": 59.99
         },
         {
           "mainCategoryName": "Clothes",
           "subCategoryName": null,
-          "amount": 35.99
+          "amount": 165.96
         },
         {
           "mainCategoryName": "Lodging",
           "subCategoryName": null,
-          "amount": 643.34
-        },
-        {
-          "mainCategoryName": "Lodging",
-          "subCategoryName": "Overhead",
-          "amount": 44.88
+          "amount": 1885.13
         },
         {
           "mainCategoryName": "Lodging",
           "subCategoryName": "Internet",
-          "amount": 29.92
+          "amount": 44.88
         },
         {
           "mainCategoryName": "Lodging",
           "subCategoryName": "Tax",
-          "amount": 89.77
+          "amount": 269.3
+        },
+        {
+          "mainCategoryName": "Lodging",
+          "subCategoryName": "Overhead",
+          "amount": 134.65
         },
         {
           "mainCategoryName": "Lodging",
           "subCategoryName": "Common cost",
-          "amount": 29.92
+          "amount": 89.77
         },
         {
           "mainCategoryName": "Education",
@@ -163,16 +178,6 @@
           "mainCategoryName": "Education",
           "subCategoryName": "Private lesson",
           "amount": 54.53
-        },
-        {
-          "mainCategoryName": "Sport",
-          "subCategoryName": null,
-          "amount": 36.35
-        },
-        {
-          "mainCategoryName": "Sport",
-          "subCategoryName": "Fitness season ticket",
-          "amount": 36.35
         }
       ]
     }

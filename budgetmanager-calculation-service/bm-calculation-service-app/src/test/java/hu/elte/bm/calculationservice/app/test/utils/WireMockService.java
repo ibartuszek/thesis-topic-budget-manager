@@ -4,11 +4,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -30,6 +32,9 @@ public class WireMockService {
     private static final String GET_EXCHANGE_RATES_URL = "/freeforexapi.com/api/live?pairs=USDEUR,USDHUF";
 
     private WireMockServer wireMockServer;
+
+    @Autowired
+    private RelativeLocalDateChanger dateChanger;
 
     @PostConstruct
     public void init() {
@@ -64,12 +69,12 @@ public class WireMockService {
                 .withBodyFile(responseFileName)));
     }
 
-    public void setUpFindAllTransactionsResponse(final TransactionServiceContext context, final int responseStatus, final String responseFileName) {
+    public void setUpFindAllTransactionsResponse(final TransactionServiceContext context, final int responseStatus, final String responseFileName) throws IOException {
         stubFor(get(MessageFormat.format(FIND_ALL_TRANSACTION_URL, context.getType(), context.getUserId(), context.getStart(), context.getEnd()))
             .willReturn(aResponse()
                 .withStatus(responseStatus)
                 .withHeader(CONTENT_TYPE_HEADER_KEY, APPLICATION_JSON)
-                .withBodyFile(responseFileName)));
+                .withBody(dateChanger.getResponseAsStringWithDates(responseFileName))));
     }
 
     public void setUpGetExchangeRates(final int responseStatus, final String responseFileName) {

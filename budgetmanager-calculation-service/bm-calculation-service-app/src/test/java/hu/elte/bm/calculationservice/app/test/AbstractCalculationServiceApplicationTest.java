@@ -56,7 +56,7 @@ public abstract class AbstractCalculationServiceApplicationTest {
     protected static final String FIND_ALL_SUB_CATEGORIES_RESULT_BODY = "findAllOutcomeSubCategoryWithReponseOk.json";
     protected static final String FIND_ALL_MAIN_CATEGORIES_WITH_EMPTY_BODY = "findAllOutcomeMainCategoryWithEmptyList.json";
     protected static final String FIND_ALL_INCOME_MAIN_CATEGORIES = "findAllIncomeMainCategoryWithResponseOk.json";
-    protected static final LocalDate START = LocalDate.now().minusDays(30);
+    protected static final LocalDate START = LocalDate.now().minusMonths(2);
     protected static final LocalDate END = LocalDate.now();
     protected static final Long NEW_SCHEMA_ID = 7L;
     protected static final long INVALID_MAIN_CATEGORY_ID = 13L;

@@ -2,8 +2,8 @@
   "message": "Custom statistics:3 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-22",
-    "endDate": "2019-11-21",
+    "startDate": "2019-09-29",
+    "endDate": "2019-11-29",
     "schema": {
       "id": 3,
       "title": "Example scale 2",
@@ -16,6 +16,11 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
+            "id": 13,
+            "name": "Computer",
+            "transactionType": "OUTCOME"
+          },
+          {
             "id": 12,
             "name": "Cinema",
             "transactionType": "OUTCOME"
@@ -23,11 +28,6 @@
           {
             "id": 14,
             "name": "Hobby",
-            "transactionType": "OUTCOME"
-          },
-          {
-            "id": 13,
-            "name": "Computer",
             "transactionType": "OUTCOME"
           }
         ]
@@ -39,65 +39,101 @@
       "dataPoints": [
         {
           "x": 0,
-          "y": -1670.98,
-          "label": "I am legend",
-          "date": "2019-11-03"
+          "y": 785358.35,
+          "label": "Salary",
+          "date": "2019-09-02"
         },
         {
           "x": 1,
-          "y": 3340279.43,
+          "y": 1570716.69,
           "label": "Salary",
-          "date": "2019-11-04"
+          "date": "2019-10-02"
         },
         {
           "x": 2,
-          "y": 3350279.43,
-          "label": "Fringe benefit",
-          "date": "2019-11-04"
+          "y": 2356075.04,
+          "label": "Salary",
+          "date": "2019-11-02"
         },
         {
           "x": 3,
-          "y": 3344205.24,
-          "label": "New convinient keyboard",
-          "date": "2019-10-24"
+          "y": 2366075.04,
+          "label": "Fringe benefit",
+          "date": "2019-09-02"
         },
         {
           "x": 4,
-          "y": 3374576.21,
-          "label": "Birthday present from grandparents",
-          "date": "2019-11-08"
+          "y": 2376075.04,
+          "label": "Fringe benefit",
+          "date": "2019-10-02"
         },
         {
           "x": 5,
-          "y": 3375576.21,
-          "label": "Found money",
-          "date": "2019-11-13"
+          "y": 2386075.04,
+          "label": "Fringe benefit",
+          "date": "2019-11-02"
         },
         {
           "x": 6,
-          "y": 6717192.42,
-          "label": "Salary",
-          "date": "2019-10-21"
+          "y": 2380000.84,
+          "label": "New convinient keyboard",
+          "date": "2019-11-04"
         },
         {
           "x": 7,
-          "y": 6727192.42,
+          "y": 3215488.44,
+          "label": "Salary",
+          "date": "2019-11-15"
+        },
+        {
+          "x": 8,
+          "y": 3225488.44,
           "label": "Fringe benefit",
-          "date": "2019-10-21"
+          "date": "2019-11-15"
+        },
+        {
+          "x": 9,
+          "y": 3198154.56,
+          "label": "New video card",
+          "date": "2019-09-30"
+        },
+        {
+          "x": 10,
+          "y": 3196483.59,
+          "label": "Bad boys",
+          "date": "2019-10-25"
+        },
+        {
+          "x": 11,
+          "y": 3194812.61,
+          "label": "I am legend",
+          "date": "2019-11-14"
+        },
+        {
+          "x": 12,
+          "y": 3225183.59,
+          "label": "Birthday present from grandparents",
+          "date": "2019-11-19"
+        },
+        {
+          "x": 13,
+          "y": 3226183.59,
+          "label": "Found money",
+          "date": "2019-11-24"
         }
       ]
     },
     "budgetDetails": {
       "totalIncomes": {
-        "amount": 6734937.59,
+        "amount": 3262933.61,
         "label": "Total incomes"
       },
       "totalExpenses": {
-        "amount": 7745.17,
+        "amount": 36750.02,
         "label": "Total expenses"
       },
       "savings": {
-        "amount": 6727192.42,
+        "amount": 3226183.59,
         "label": "Savings"
       },
       "incomes": null,
