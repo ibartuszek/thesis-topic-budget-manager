@@ -12,12 +12,13 @@ class UploadPicture extends Component {
 
   uploadPicture(picture) {
     const {userHolder, logHolder, uploadPicture, getPictureId} = this.props;
+    const regex = /data:image\/jpe?g;base64,|data:image\/png;base64,|data:image\/gif;base64,|data:image\/bmp;base64,/gi;
     let file = picture[0];
     let reader = new FileReader();
     let context = createContext(userHolder, logHolder);
     reader.addEventListener("load", function () {
       let result = reader.result;
-      result = result.replace("data:image/png;base64,", "");
+      result = result.replace(regex, "");
       uploadPicture(result, context).then(function (response) {
         if ("UPLOAD_PICTURE_SUCCESS" === response['type']) {
           getPictureId(response['picture'].id);
