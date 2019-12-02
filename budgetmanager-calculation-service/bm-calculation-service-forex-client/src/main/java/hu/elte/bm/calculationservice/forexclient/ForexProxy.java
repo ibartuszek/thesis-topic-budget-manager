@@ -18,8 +18,15 @@ public class ForexProxy {
     private static final String EXCEPTION_MESSAGE = "Forex client sent: {0} during: '{1}' call.";
     private static final String PAIRS = "USDEUR,USDHUF";
     private final RestTemplate restTemplate;
+
     @Value("${forex.client.url:http://freeforexapi.com/api/live}")
     private String baseUrl;
+
+    @Value("${USDEUR}")
+    private double usdeur;
+
+    @Value("${USDHUF}")
+    private double usdhuf;
 
     @Autowired
     ForexProxy(final RestTemplate restTemplate) {
@@ -30,7 +37,11 @@ public class ForexProxy {
         String url = createUrl();
         ResponseEntity<String> responseEntity = getResponseEntity(url);
         checkResponseStatus(responseEntity);
-        return new Gson().fromJson(responseEntity.getBody(), ForexResponse.class);
+        ForexResponse response = new Gson().fromJson(responseEntity.getBody(), ForexResponse.class);
+        if (response.getRates() == null) {
+            response.setRates(createReserveRates());
+        }
+        return response;
     }
 
     private String createUrl() {
@@ -48,6 +59,19 @@ public class ForexProxy {
             || Objects.equals(responseEntity.getBody(), "")) {
             throw new ForexClientException(MessageFormat.format(EXCEPTION_MESSAGE, responseEntity.getStatusCode(), baseUrl));
         }
+    }
+
+    private ForexRates createReserveRates() {
+        ForexRate usdToEur = ForexRate.builder()
+            .withRate(usdeur)
+            .build();
+        ForexRate usdToHuf = ForexRate.builder()
+            .withRate(usdhuf)
+            .build();
+        ForexRates rates = new ForexRates();
+        rates.setUSDEUR(usdToEur);
+        rates.setUSDHUF(usdToHuf);
+        return rates;
     }
 
 }
