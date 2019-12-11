@@ -2,8 +2,8 @@
   "message": "Custom statistics:4 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-12",
-    "endDate": "2019-12-11",
+    "startDate": "${today-60d}",
+    "endDate": "${today-0d}",
     "schema": {
       "id": 4,
       "title": "Example scale 3",
@@ -45,61 +45,61 @@
           "x": 0,
           "y": 785358.35,
           "label": "Salary",
-          "date": "2019-10-14"
+          "date": "${today-58d}"
         },
         {
           "x": 1,
           "y": 795358.35,
           "label": "Fringe benefit",
-          "date": "2019-10-14"
+          "date": "${today-58d}"
         },
         {
           "x": 2,
           "y": 793687.37,
           "label": "Bad boys",
-          "date": "2019-11-06"
+          "date": "${today-35d}"
         },
         {
           "x": 3,
           "y": 1579045.72,
           "label": "Salary",
-          "date": "2019-11-14"
+          "date": "${today-27d}"
         },
         {
           "x": 4,
           "y": 1589045.72,
           "label": "Fringe benefit",
-          "date": "2019-11-14"
+          "date": "${today-27d}"
         },
         {
           "x": 5,
           "y": 1587374.74,
           "label": "I am legend",
-          "date": "2019-11-26"
+          "date": "${today-15d}"
         },
         {
           "x": 6,
           "y": 2422862.34,
           "label": "Salary",
-          "date": "2019-11-27"
+          "date": "${today-14d}"
         },
         {
           "x": 7,
           "y": 2432862.34,
           "label": "Fringe benefit",
-          "date": "2019-11-27"
+          "date": "${today-14d}"
         },
         {
           "x": 8,
           "y": 2463233.32,
           "label": "Birthday present from grandparents",
-          "date": "2019-12-01"
+          "date": "${today-10d}"
         },
         {
           "x": 9,
           "y": 2464233.32,
           "label": "Found money",
-          "date": "2019-12-06"
+          "date": "${today-5d}"
         }
       ]
     },

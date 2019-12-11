@@ -2,8 +2,8 @@
   "message": "Custom statistics:5 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-12",
-    "endDate": "2019-12-11",
+    "startDate": "${today-60d}",
+    "endDate": "${today-0d}",
     "schema": {
       "id": 5,
       "title": "Example sum 2",
@@ -41,25 +41,25 @@
           "x": 0,
           "y": 5.0,
           "label": "Bad boys",
-          "date": "2019-11-06"
+          "date": "${today-35d}"
         },
         {
           "x": 1,
           "y": 10.0,
           "label": "I am legend",
-          "date": "2019-11-26"
+          "date": "${today-15d}"
         },
         {
           "x": 2,
           "y": 100.0,
           "label": "New video card",
-          "date": "2019-10-12"
+          "date": "${today-60d}"
         },
         {
           "x": 3,
           "y": 120.0,
           "label": "New convinient keyboard",
-          "date": "2019-11-16"
+          "date": "${today-25d}"
         }
       ]
     },

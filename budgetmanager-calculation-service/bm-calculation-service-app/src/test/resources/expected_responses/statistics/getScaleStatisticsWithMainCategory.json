@@ -2,8 +2,8 @@
   "message": "Custom statistics:3 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-12",
-    "endDate": "2019-12-11",
+    "startDate": "${today-60d}",
+    "endDate": "${today-0d}",
     "schema": {
       "id": 3,
       "title": "Example scale 2",
@@ -41,73 +41,73 @@
           "x": 0,
           "y": -27333.88,
           "label": "New video card",
-          "date": "2019-10-12"
+          "date": "${today-60d}"
         },
         {
           "x": 1,
           "y": 758024.47,
           "label": "Salary",
-          "date": "2019-10-14"
+          "date": "${today-58d}"
         },
         {
           "x": 2,
           "y": 768024.47,
           "label": "Fringe benefit",
-          "date": "2019-10-14"
+          "date": "${today-58d}"
         },
         {
           "x": 3,
           "y": 766353.49,
           "label": "Bad boys",
-          "date": "2019-11-06"
+          "date": "${today-35d}"
         },
         {
           "x": 4,
           "y": 1551711.84,
           "label": "Salary",
-          "date": "2019-11-14"
+          "date": "${today-27d}"
         },
         {
           "x": 5,
           "y": 1561711.84,
           "label": "Fringe benefit",
-          "date": "2019-11-14"
+          "date": "${today-27d}"
         },
         {
           "x": 6,
           "y": 1555637.64,
           "label": "New convinient keyboard",
-          "date": "2019-11-16"
+          "date": "${today-25d}"
         },
         {
           "x": 7,
           "y": 1553966.67,
           "label": "I am legend",
-          "date": "2019-11-26"
+          "date": "${today-15d}"
         },
         {
           "x": 8,
           "y": 2389454.27,
           "label": "Salary",
-          "date": "2019-11-27"
+          "date": "${today-14d}"
         },
         {
           "x": 9,
           "y": 2399454.27,
           "label": "Fringe benefit",
-          "date": "2019-11-27"
+          "date": "${today-14d}"
         },
         {
           "x": 10,
           "y": 2429825.24,
           "label": "Birthday present from grandparents",
-          "date": "2019-12-01"
+          "date": "${today-10d}"
         },
         {
           "x": 11,
           "y": 2430825.24,
           "label": "Found money",
-          "date": "2019-12-06"
+          "date": "${today-5d}"
         }
       ]
     },

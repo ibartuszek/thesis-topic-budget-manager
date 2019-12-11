@@ -2,8 +2,8 @@
   "message": "Custom statistics:2 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-12",
-    "endDate": "2019-12-11",
+    "startDate": "${today-60d}",
+    "endDate": "${today-0d}",
     "schema": {
       "id": 2,
       "title": "Example scale",
@@ -20,49 +20,49 @@
           "x": 0,
           "y": 785358.35,
           "label": "Salary",
-          "date": "2019-10-14"
+          "date": "${today-58d}"
         },
         {
           "x": 1,
           "y": 795358.35,
           "label": "Fringe benefit",
-          "date": "2019-10-14"
+          "date": "${today-58d}"
         },
         {
           "x": 2,
           "y": 1580716.69,
           "label": "Salary",
-          "date": "2019-11-14"
+          "date": "${today-27d}"
         },
         {
           "x": 3,
           "y": 1590716.69,
           "label": "Fringe benefit",
-          "date": "2019-11-14"
+          "date": "${today-27d}"
         },
         {
           "x": 4,
           "y": 2426204.29,
           "label": "Salary",
-          "date": "2019-11-27"
+          "date": "${today-14d}"
         },
         {
           "x": 5,
           "y": 2436204.29,
           "label": "Fringe benefit",
-          "date": "2019-11-27"
+          "date": "${today-14d}"
         },
         {
           "x": 6,
           "y": 2466575.27,
           "label": "Birthday present from grandparents",
-          "date": "2019-12-01"
+          "date": "${today-10d}"
         },
         {
           "x": 7,
           "y": 2467575.27,
           "label": "Found money",
-          "date": "2019-12-06"
+          "date": "${today-5d}"
         }
       ]
     },

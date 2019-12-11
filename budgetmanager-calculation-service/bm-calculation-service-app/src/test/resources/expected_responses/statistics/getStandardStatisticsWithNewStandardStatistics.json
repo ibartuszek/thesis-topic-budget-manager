@@ -2,8 +2,8 @@
   "message": "Standard statistics successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-12",
-    "endDate": "2019-12-11",
+    "startDate": "${today-60d}",
+    "endDate": "${today-0d}",
     "schema": {
       "id": 7,
       "title": "Standard schema",
