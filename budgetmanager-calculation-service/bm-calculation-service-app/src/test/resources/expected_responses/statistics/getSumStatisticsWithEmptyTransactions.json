@@ -2,8 +2,8 @@
   "message": "Custom statistics:5 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-10-19",
-    "endDate": "2019-11-18",
+    "startDate": "2019-10-12",
+    "endDate": "2019-12-11",
     "schema": {
       "id": 5,
       "title": "Example sum 2",

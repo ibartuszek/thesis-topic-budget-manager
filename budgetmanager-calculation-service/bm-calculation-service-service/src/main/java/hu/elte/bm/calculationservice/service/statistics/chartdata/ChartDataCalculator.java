@@ -18,7 +18,7 @@ public class ChartDataCalculator {
     private final SumChartDataCalculator sumCalculator;
 
     public ChartDataCalculator(final StandardChartDataCalculator standardCalculator,
-        final ScaleChartDataCalculator scaleCalculator, final SumChartDataCalculator sumCalculator) {
+            final ScaleChartDataCalculator scaleCalculator, final SumChartDataCalculator sumCalculator) {
         this.standardCalculator = standardCalculator;
         this.scaleCalculator = scaleCalculator;
         this.sumCalculator = sumCalculator;
@@ -45,19 +45,11 @@ public class ChartDataCalculator {
     }
 
     private int sortTransactions(final Transaction first, final Transaction second) {
-        int result;
-        if (first.isMonthly() || second.isMonthly()) {
-            int firstDateDays = first.getDate().getDayOfMonth();
-            int secondDateDays = second.getDate().getDayOfMonth();
-            result = Integer.compare(firstDateDays, secondDateDays);
-        } else {
-            LocalDate firstDate = first.getDate();
-            LocalDate secondDate = second.getDate();
-            result = firstDate.isAfter(secondDate) ? 1
+        LocalDate firstDate = first.getDate();
+        LocalDate secondDate = second.getDate();
+        return firstDate.isAfter(secondDate) ? 1
                 : secondDate.isAfter(firstDate) ? -1
                 : 0;
-        }
-        return result;
     }
 
 }

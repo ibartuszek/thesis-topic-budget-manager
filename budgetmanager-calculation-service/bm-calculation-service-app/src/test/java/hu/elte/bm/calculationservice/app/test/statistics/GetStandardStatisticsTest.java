@@ -83,7 +83,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyTransactions.json", result);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyTransactions.json", result.getContentAsString());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyIncomes.json", result);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyIncomes.json", result.getContentAsString());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyOutcomes.json", result);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithEmptyOutcomes.json", result.getContentAsString());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getStandardStatistics.json", result);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatistics.json", result.getContentAsString());
     }
 
     @Test
@@ -156,7 +156,7 @@ public class GetStandardStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithNewStandardStatistics.json", result);
+        assertExpectedJsonFileWithDates("statistics/getStandardStatisticsWithNewStandardStatistics.json", result.getContentAsString());
     }
 
     private RequestBuilder createDefaultMvcRequest() {

@@ -69,7 +69,7 @@ public class ChartDataCalculatorTest extends AbstractCalculatorTest {
             .build();
         incomes.add(monthlyIncome);
         List<Transaction> outcomes = createOtherExampleList(TransactionType.OUTCOME, DEFAULT_CURRENCY);
-        List<Transaction> orderedList = List.of(incomes.get(0), outcomes.get(0), incomes.get(1), incomes.get(3), outcomes.get(1), incomes.get(2));
+        List<Transaction> orderedList = List.of(incomes.get(3), incomes.get(0), outcomes.get(0), incomes.get(1), outcomes.get(1), incomes.get(2));
         QuadraticChartData expected = QuadraticChartData.builder()
             .withLegend(SCALE_CHART_LEGEND)
             .withDataPoints(new ArrayList<>())

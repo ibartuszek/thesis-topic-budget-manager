@@ -34,7 +34,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyTransactions.json", result);
+        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyTransactions.json", result.getContentAsString());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyIncomes.json", result);
+        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyIncomes.json", result.getContentAsString());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyOutcomes.json", result);
+        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithEmptyOutcomes.json", result.getContentAsString());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getSumStatistics.json", result);
+        assertExpectedJsonFileWithDates("statistics/getSumStatistics.json", result.getContentAsString());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class GetSumStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithSubCategory.json", result);
+        assertExpectedJsonFileWithDates("statistics/getSumStatisticsWithSubCategory.json", result.getContentAsString());
     }
 
     @Test

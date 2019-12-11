@@ -19,27 +19,52 @@ import com.google.gson.stream.JsonReader;
 public class RelativeLocalDateChanger {
 
     private static final String RESPONSE_FILE_FOLDER = "__files/";
+    private static final String STATISTICS_RESPONSE_FILE_FOLDER = "expected_responses/";
     private static final String DATE = "date";
+    private static final String START_DATE = "startDate";
     private static final String END_DATE = "endDate";
 
     String getResponseAsStringWithDates(final String responseFileName) throws IOException {
-        Resource resource = new ClassPathResource(RESPONSE_FILE_FOLDER + responseFileName);
-        JsonReader reader = new JsonReader(new FileReader(resource.getFile()));
-        JsonObject responseObject = new Gson().fromJson(reader, JsonObject.class);
+        JsonObject responseObject = getResponseObject(RESPONSE_FILE_FOLDER + responseFileName);
         JsonArray transactionList = responseObject.get("transactionList").getAsJsonArray();
         for (JsonElement jsonElement : transactionList) {
-            Optional<LocalDate> date = getNewDate(jsonElement, DATE);
-            date.ifPresent(localDate -> ((JsonObject) jsonElement).addProperty(DATE, localDate.toString()));
-            Optional<LocalDate> endDate = getNewDate(jsonElement, END_DATE);
-            endDate.ifPresent(localDate -> ((JsonObject) jsonElement).addProperty(END_DATE, localDate.toString()));
+            getNewDate(jsonElement, DATE)
+                    .ifPresent(localDate -> ((JsonObject) jsonElement).addProperty(DATE, localDate.toString()));
+            getNewDate(jsonElement, END_DATE)
+                    .ifPresent(localDate -> ((JsonObject) jsonElement).addProperty(END_DATE, localDate.toString()));
         }
         return responseObject.toString();
     }
 
+    public String getExpectedResponseAsStringWithDates(final String responseFileName) throws IOException {
+        JsonObject responseObject = getResponseObject(STATISTICS_RESPONSE_FILE_FOLDER + responseFileName);
+        JsonObject statistics = (JsonObject) responseObject.get("statistics");
+        getNewDate(statistics, START_DATE)
+                .ifPresent(localDate -> statistics.addProperty(START_DATE, localDate.toString()));
+        getNewDate(statistics, END_DATE)
+                .ifPresent(localDate -> statistics.addProperty(END_DATE, localDate.toString()));
+        JsonArray dataPoints = statistics.getAsJsonObject("chartData").get("dataPoints").getAsJsonArray();
+        for (JsonElement jsonElement : dataPoints) {
+            getNewDate(jsonElement, DATE)
+                    .ifPresent(localDate -> ((JsonObject) jsonElement).addProperty(DATE, localDate.toString()));
+        }
+        return responseObject.toString();
+    }
+
+    private JsonObject getResponseObject(final String responseFileName) throws IOException {
+        Resource resource = new ClassPathResource(responseFileName);
+        JsonReader reader = new JsonReader(new FileReader(resource.getFile()));
+        return new Gson().fromJson(reader, JsonObject.class);
+    }
+
     private Optional<LocalDate> getNewDate(final JsonElement jsonElement, final String fieldName) {
+        return getNewDate((JsonObject) jsonElement, fieldName);
+    }
+
+    private Optional<LocalDate> getNewDate(final JsonObject jsonObject, final String fieldName) {
         LocalDate result = null;
-        JsonElement element = ((JsonObject) jsonElement).get(fieldName);
-        if (!element.isJsonNull() && element.getAsString().contains("today")) {
+        JsonElement element = jsonObject.get(fieldName);
+        if (element != null && !element.isJsonNull() && element.getAsString().contains("today")) {
             String[] modifierArray = getDateModifier(element.getAsString());
             result = calculateNewDate(modifierArray[0], Integer.parseInt(modifierArray[1]), modifierArray[2]);
         }

@@ -7,13 +7,10 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import org.json.JSONException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,11 +24,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 import hu.elte.bm.calculationservice.app.CalculationServiceApplication;
 import hu.elte.bm.calculationservice.app.test.utils.LocalDateAdapter;
+import hu.elte.bm.calculationservice.app.test.utils.RelativeLocalDateChanger;
 import hu.elte.bm.calculationservice.app.test.utils.WireMockService;
 import hu.elte.bm.calculationservice.dal.schema.StatisticsSchemaEntity;
 import hu.elte.bm.calculationservice.dal.schema.StatisticsSchemaRepository;
@@ -56,7 +53,7 @@ public abstract class AbstractCalculationServiceApplicationTest {
     protected static final String FIND_ALL_SUB_CATEGORIES_RESULT_BODY = "findAllOutcomeSubCategoryWithReponseOk.json";
     protected static final String FIND_ALL_MAIN_CATEGORIES_WITH_EMPTY_BODY = "findAllOutcomeMainCategoryWithEmptyList.json";
     protected static final String FIND_ALL_INCOME_MAIN_CATEGORIES = "findAllIncomeMainCategoryWithResponseOk.json";
-    protected static final LocalDate START = LocalDate.now().minusMonths(2);
+    protected static final LocalDate START = LocalDate.now().minusDays(60);
     protected static final LocalDate END = LocalDate.now();
     protected static final Long NEW_SCHEMA_ID = 7L;
     protected static final long INVALID_MAIN_CATEGORY_ID = 13L;
@@ -87,6 +84,9 @@ public abstract class AbstractCalculationServiceApplicationTest {
 
     @Autowired
     private StatisticsSchemaRepository repository;
+
+    @Autowired
+    private RelativeLocalDateChanger dateChanger;
 
     protected static StatisticsSchema.Builder createSchemaBuilderWithDefaultValues() {
         return StatisticsSchema.builder()
@@ -173,20 +173,10 @@ public abstract class AbstractCalculationServiceApplicationTest {
         getRepository().save(schema);
     }
 
-    protected void assertExpectedJsonFileWithDates(final String expectedBodyFileName, final MockHttpServletResponse result)
+    protected void assertExpectedJsonFileWithDates(final String expectedBodyFileName, final String result)
             throws IOException, JSONException {
-        JsonObject jsonObject = new Gson().toJsonTree(new Gson().fromJson(result.getContentAsString(), Object.class)).getAsJsonObject();
-        JSONAssert.assertEquals(getExpectedResponseJsonFromFile(expectedBodyFileName),
-                jsonObject.toString(), new CustomComparator(JSONCompareMode.LENIENT,
-                        new Customization("statistics.startDate", (o1, o2) -> true),
-                        new Customization("statistics.endDate", (o1, o2) -> true)));
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                .create();
-        LocalDate startDate = gson.fromJson(jsonObject.getAsJsonObject("statistics").get("startDate"), LocalDate.class);
-        LocalDate endDate = gson.fromJson(jsonObject.getAsJsonObject("statistics").get("endDate"), LocalDate.class);
-        Assertions.assertEquals(START, startDate);
-        Assertions.assertEquals(END, endDate);
+        String expected = dateChanger.getExpectedResponseAsStringWithDates(expectedBodyFileName);
+        JSONAssert.assertEquals(expected, result, JSONCompareMode.LENIENT);
     }
 
 }

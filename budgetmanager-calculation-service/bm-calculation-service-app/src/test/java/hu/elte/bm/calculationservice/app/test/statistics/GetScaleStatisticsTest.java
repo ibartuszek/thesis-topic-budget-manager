@@ -33,7 +33,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyTransactions.json", result);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyTransactions.json", result.getContentAsString());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyIncomes.json", result);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyIncomes.json", result.getContentAsString());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyOutcomes.json", result);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithEmptyOutcomes.json", result.getContentAsString());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getScaleStatistics.json", result);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatistics.json", result.getContentAsString());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithMainCategory.json", result);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithMainCategory.json", result.getContentAsString());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class GetScaleStatisticsTest extends AbstractStatisticsTest {
 
         // THEN
         Assertions.assertEquals(HttpStatus.OK.value(), result.getStatus());
-        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithSubCategory.json", result);
+        assertExpectedJsonFileWithDates("statistics/getScaleStatisticsWithSubCategory.json", result.getContentAsString());
     }
 
     @Test

@@ -2,8 +2,8 @@
   "message": "Standard statistics successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "2019-09-29",
-    "endDate": "2019-11-29",
+    "startDate": "2019-10-12",
+    "endDate": "2019-12-11",
     "schema": {
       "id": 1,
       "title": "Standard schema",
@@ -45,7 +45,7 @@
           "label": "Clothes"
         },
         {
-          "angle": 1885.13,
+          "angle": 1256.75,
           "label": "Lodging"
         },
         {
@@ -60,11 +60,11 @@
         "label": "Total incomes"
       },
       "totalExpenses": {
-        "amount": 3009.23,
+        "amount": 2380.85,
         "label": "Total expenses"
       },
       "savings": {
-        "amount": -3009.23,
+        "amount": -2380.85,
         "label": "Savings"
       },
       "incomes": [],
@@ -131,13 +131,13 @@
         },
         {
           "mainCategoryName": "Sport",
-          "subCategoryName": "Fitness season ticket",
-          "amount": 36.35
+          "subCategoryName": "Clothes",
+          "amount": 59.99
         },
         {
           "mainCategoryName": "Sport",
-          "subCategoryName": "Clothes",
-          "amount": 59.99
+          "subCategoryName": "Fitness season ticket",
+          "amount": 36.35
         },
         {
           "mainCategoryName": "Clothes",
@@ -147,27 +147,27 @@
         {
           "mainCategoryName": "Lodging",
           "subCategoryName": null,
-          "amount": 1885.13
-        },
-        {
-          "mainCategoryName": "Lodging",
-          "subCategoryName": "Internet",
-          "amount": 44.88
+          "amount": 1256.75
         },
         {
           "mainCategoryName": "Lodging",
           "subCategoryName": "Tax",
-          "amount": 269.3
+          "amount": 179.54
         },
         {
           "mainCategoryName": "Lodging",
           "subCategoryName": "Overhead",
-          "amount": 134.65
+          "amount": 89.77
+        },
+        {
+          "mainCategoryName": "Lodging",
+          "subCategoryName": "Internet",
+          "amount": 29.92
         },
         {
           "mainCategoryName": "Lodging",
           "subCategoryName": "Common cost",
-          "amount": 89.77
+          "amount": 59.85
         },
         {
           "mainCategoryName": "Education",
