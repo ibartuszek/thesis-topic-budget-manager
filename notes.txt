@@ -1,0 +1,6 @@
+Currency:
+https://www.quora.com/Is-there-any-API-to-get-forex-real-time-data-for-free-and-also-to-make-buy-sell-requests
+https://www.freeforexapi.com/api/live?pairs=EURGBP,USDJPY
+http://freeforexapi.com/api/live?pairs=USDEUR,USDHUF
+
+https://uber.github.io/react-vis/documentation/other-charts/radar-chart

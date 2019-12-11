@@ -1,0 +1,35 @@
+{
+  "message": null,
+  "successful": true,
+  "mainCategoryList": [
+    {
+      "id": 1,
+      "name": "Salary",
+      "transactionType": "INCOME",
+      "subCategorySet": [
+        {
+          "id": 1,
+          "name": "Allowance",
+          "transactionType": "INCOME"
+        },
+        {
+          "id": 2,
+          "name": "Reward",
+          "transactionType": "INCOME"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Moon lighting",
+      "transactionType": "INCOME",
+      "subCategorySet": []
+    },
+    {
+      "id": 3,
+      "name": "Gift",
+      "transactionType": "INCOME",
+      "subCategorySet": []
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "message": "Custom statistics:6 successfully created.",
+  "successful": true,
+  "statistics": {
+    "startDate": "${today-60d}",
+    "endDate": "${today-0d}",
+    "schema": {
+      "id": 6,
+      "title": "Example sum 3",
+      "type": "SUM",
+      "currency": "USD",
+      "chartType": "LINEAR",
+      "mainCategory": {
+        "id": 10,
+        "name": "Entertainment",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 14,
+            "name": "Hobby",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 13,
+            "name": "Computer",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 12,
+            "name": "Cinema",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 12,
+        "name": "Cinema",
+        "transactionType": "OUTCOME"
+      }
+    },
+    "chartData": {
+      "legend": "Example sum 3",
+      "dataPoints": [
+        {
+          "x": 0,
+          "y": 5.0,
+          "label": "Bad boys",
+          "date": "${today-35d}"
+        },
+        {
+          "x": 1,
+          "y": 10.0,
+          "label": "I am legend",
+          "date": "${today-15d}"
+        }
+      ]
+    },
+    "budgetDetails": {
+      "totalIncomes": null,
+      "totalExpenses": {
+        "amount": 11.0,
+        "label": "Total cost of Cinema"
+      },
+      "savings": null,
+      "incomes": null,
+      "outcomes": null
+    }
+  }
+}

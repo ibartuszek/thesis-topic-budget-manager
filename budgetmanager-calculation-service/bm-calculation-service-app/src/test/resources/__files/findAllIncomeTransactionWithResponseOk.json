@@ -1,0 +1,184 @@
+{
+  "message": null,
+  "successful": true,
+  "transactionList": [
+    {
+      "id": 1,
+      "title": "Salary",
+      "amount": 2350.0,
+      "currency": "EUR",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 1,
+        "name": "Salary",
+        "transactionType": "INCOME",
+        "subCategorySet": [
+          {
+            "id": 1,
+            "name": "Allowance",
+            "transactionType": "INCOME"
+          },
+          {
+            "id": 2,
+            "name": "Reward",
+            "transactionType": "INCOME"
+          }
+        ]
+      },
+      "subCategory": null,
+      "monthly": true,
+      "date": "${today-150d}",
+      "endDate": "${today-15d}",
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 2,
+      "title": "Fringe benefit",
+      "amount": 10000.0,
+      "currency": "HUF",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 1,
+        "name": "Salary",
+        "transactionType": "INCOME",
+        "subCategorySet": [
+          {
+            "id": 1,
+            "name": "Allowance",
+            "transactionType": "INCOME"
+          },
+          {
+            "id": 2,
+            "name": "Reward",
+            "transactionType": "INCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 1,
+        "name": "Allowance",
+        "transactionType": "INCOME"
+      },
+      "monthly": true,
+      "date": "${today-150d}",
+      "endDate": "${today-15d}",
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 3,
+      "title": "Birthday present from grandparents",
+      "amount": 100.0,
+      "currency": "USD",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 3,
+        "name": "Gift",
+        "transactionType": "INCOME",
+        "subCategorySet": []
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "${today-10d}",
+      "endDate": null,
+      "description": null,
+      "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 4,
+      "title": "Salary",
+      "amount": 2500.0,
+      "currency": "EUR",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 1,
+        "name": "Salary",
+        "transactionType": "INCOME",
+        "subCategorySet": [
+          {
+            "id": 1,
+            "name": "Allowance",
+            "transactionType": "INCOME"
+          },
+          {
+            "id": 2,
+            "name": "Reward",
+            "transactionType": "INCOME"
+          }
+        ]
+      },
+      "subCategory": null,
+      "monthly": true,
+      "date": "${today-14d}",
+      "endDate": null,
+      "description": null,
+      "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 5,
+      "title": "Fringe benefit",
+      "amount": 10000.0,
+      "currency": "HUF",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 1,
+        "name": "Salary",
+        "transactionType": "INCOME",
+        "subCategorySet": [
+          {
+            "id": 1,
+            "name": "Allowance",
+            "transactionType": "INCOME"
+          },
+          {
+            "id": 2,
+            "name": "Reward",
+            "transactionType": "INCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 1,
+        "name": "Allowance",
+        "transactionType": "INCOME"
+      },
+      "monthly": true,
+      "date": "${today-14d}",
+      "endDate": null,
+      "description": null,
+      "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 6,
+      "title": "Found money",
+      "amount": 1000.0,
+      "currency": "HUF",
+      "transactionType": "INCOME",
+      "mainCategory": {
+        "id": 3,
+        "name": "Gift",
+        "transactionType": "INCOME",
+        "subCategorySet": []
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "${today-5d}",
+      "endDate": null,
+      "description": null,
+      "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    }
+  ]
+}

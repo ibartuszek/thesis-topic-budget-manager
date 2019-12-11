@@ -1,0 +1,13 @@
+{
+  "message": "Schema has been deleted.",
+  "successful": true,
+  "schema": {
+    "id": 2,
+    "title": "Example scale",
+    "type": "SCALE",
+    "currency": "HUF",
+    "chartType": "BAR",
+    "mainCategory": null,
+    "subCategory": null
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "message": "Standard statistics successfully created.",
+  "successful": true,
+  "statistics": {
+    "startDate": "${today-60d}",
+    "endDate": "${today-0d}",
+    "schema": {
+      "id": 1,
+      "title": "Standard schema",
+      "type": "STANDARD",
+      "currency": "EUR",
+      "chartType": "RADIAL",
+      "mainCategory": null,
+      "subCategory": null
+    },
+    "chartData": {
+      "legend": "Expenses",
+      "dataPoints": []
+    },
+    "budgetDetails": {
+      "totalIncomes": {
+        "amount": 7383.64,
+        "label": "Total incomes"
+      },
+      "totalExpenses": {
+        "amount": 0.0,
+        "label": "Total expenses"
+      },
+      "savings": {
+        "amount": 7383.64,
+        "label": "Savings"
+      },
+      "incomes": [
+        {
+          "mainCategoryName": "Gift",
+          "subCategoryName": null,
+          "amount": 93.87
+        },
+        {
+          "mainCategoryName": "Salary",
+          "subCategoryName": null,
+          "amount": 7289.77
+        },
+        {
+          "mainCategoryName": "Salary",
+          "subCategoryName": "Allowance",
+          "amount": 89.77
+        }
+      ],
+      "outcomes": []
+    }
+  }
+}

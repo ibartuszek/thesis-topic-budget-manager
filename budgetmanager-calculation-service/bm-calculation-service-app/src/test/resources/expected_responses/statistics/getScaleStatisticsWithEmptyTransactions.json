@@ -1,0 +1,28 @@
+{
+  "message": "Custom statistics:2 successfully created.",
+  "successful": true,
+  "statistics": {
+    "startDate": "${today-60d}",
+    "endDate": "${today-0d}",
+    "schema": {
+      "id": 2,
+      "title": "Example scale",
+      "type": "SCALE",
+      "currency": "HUF",
+      "chartType": "BAR",
+      "mainCategory": null,
+      "subCategory": null
+    },
+    "chartData": {
+      "legend": "Example scale",
+      "dataPoints": []
+    },
+    "budgetDetails": {
+      "totalIncomes": null,
+      "totalExpenses": null,
+      "savings": null,
+      "incomes": null,
+      "outcomes": null
+    }
+  }
+}
