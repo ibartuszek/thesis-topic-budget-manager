@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN" "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+<suppressions>
+
+  <!-- relax rules in package info files, they are not real classes -->
+  <suppress checks="RegexpHeader" files=".*package-info.java"/>
+
+  <!-- Suppress all checks for unnecessary files -->
+  <suppress checks="[a-zA-Z0-9]*" files=".*\.properties$"/>
+  <suppress checks="[a-zA-Z0-9]*" files=".*\.xml$"/>
+  <suppress checks="[a-zA-Z0-9]*" files=".*\.jspf?$"/>
+  <suppress checks="[a-zA-Z0-9]*" files="[\\/]target[\\/]"/>
+
+  <suppress id="noWhiteSpaceAfterError" files="hu.elte.bm.*Test"/>
+  <suppress id="noWhiteSpaceAfterError" files="hu.elte.bm.*Test"/>
+
+</suppressions>
