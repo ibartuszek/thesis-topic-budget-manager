@@ -1,0 +1,196 @@
+body {
+    background-color: var(--gray);
+}
+
+div.react-datepicker-wrapper div.react-datepicker__input-container {
+    display: block;
+}
+
+main {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+label.input-group-addon.input-group-text {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.border-2 {
+    border-width: 2px !important;
+}
+
+.card.card-body {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.custom-chart-container {
+    min-width: 400px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 0.5em;
+    border-color: var(--primary);
+    /* background-color: var(--light); */
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+}
+
+.custom-chart-details-container {
+    background-color: var(--light);
+    min-width: 600px;
+    width: 100%;
+}
+
+.custom-crosshair {
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 6rem;
+    text-align: center;
+    border-radius: 0.5em;
+}
+
+.custom-error-message-container {
+    color: var(--danger);
+}
+
+.custom-example-container {
+    min-width: 550px;
+    width: 100%;
+}
+
+.custom-form-control-select {
+    height: 2.5rem;
+}
+
+.custom-list {
+    list-style-type: square;
+}
+
+.custom-popup {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-popup-inner {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 120px;
+    max-height: 650px;
+    width: 500px;
+    border-radius: 0.8em;
+    background: var(--light);
+}
+
+.custom-popup-inner-delete-transaction {
+    width: 350px;
+    margin-top: 225px;
+    border-radius: 1em;
+}
+
+.custom-popup-inner-picture {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    max-height: 600px;
+    margin-left: -200px;
+    border-radius: 0.8em;
+    background: var(--light);
+}
+
+.custom-react-datepicker-wrapper div {
+    flex: 1 1 auto;
+}
+
+.custom-success-message-container {
+    color: var(--success);
+}
+
+.custom-table-column {
+    min-width: 120px;
+}
+
+.fas.fa-sort:hover {
+    cursor: pointer;
+}
+
+.Loading {
+    height: 16vmin;
+    pointer-events: none;
+    animation: Loading-spin infinite 20s linear;
+    animation-duration: 5s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+    animation-name: Loading-spin;
+}
+
+.logout-custom-colored {
+    color: var(--light);
+}
+
+.max-w-500 {
+    max-width: 500px;
+}
+
+.min-w-400 {
+    min-width: 400px;
+}
+
+.min-w-600 {
+    min-width: 600px;
+}
+
+.my-nav-link:hover {
+    cursor: pointer;
+}
+
+.navbar-custom-colored {
+    color: var(--light);
+    background-color: var(--orange);
+    /* background-color: var(--light); */
+}
+
+.picture-close-button {
+    z-index: 1020;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.text-unmuted {
+    color: var(--dark)
+}
+
+#date {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes Loading-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
