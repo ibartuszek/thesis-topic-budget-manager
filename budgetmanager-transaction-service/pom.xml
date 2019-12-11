@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.1.6.RELEASE</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+  <groupId>hu.elte.bm.transaction-service</groupId>
+  <artifactId>budgetmanager-transaction-service</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+  <name>budgetmanager-transaction-service</name>
+  <packaging>pom</packaging>
+  <description>Thesis topic at ELTE IK</description>
+
+  <modules>
+    <module>bm-transaction-service-app</module>
+    <module>bm-transaction-service-dal</module>
+    <module>bm-transaction-service-domain</module>
+    <module>bm-transaction-service-service</module>
+    <module>bm-transaction-service-web</module>
+  </modules>
+
+  <properties>
+    <start-class>hu.elte.bm.transactionservice.app.TransactionServiceApplication</start-class>
+    <main.basedir>${basedir}</main.basedir>
+
+    <java.version>11</java.version>
+    <budget-manager-common-pack.version>0.0.1-SNAPSHOT</budget-manager-common-pack.version>
+    <checkstyle.version>8.22</checkstyle.version>
+    <dozer.version>5.5.1</dozer.version>
+    <easymock.version>4.0.2</easymock.version>
+    <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
+    <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
+    <maven.pmd.plugin.version>3.12.0</maven.pmd.plugin.version>
+    <testng.version>6.14.3</testng.version>
+
+    <checkstyle.skip>false</checkstyle.skip>
+    <checkstyleFailOnViolation>true</checkstyleFailOnViolation>
+    <checkstyle.basedir>${main.basedir}/build/rules</checkstyle.basedir>
+    <checkstyle.config.location>${main.basedir}/build/rules/checkstyle_rules.xml</checkstyle.config.location>
+    <checkstyle.suppressions.location>${main.basedir}/build/rules/checkstyle_suppressions.xml</checkstyle.suppressions.location>
+
+    <pmd.ruleset.location>${checkstyle.basedir}/pmd_rules.xml</pmd.ruleset.location>
+
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>net.sf.dozer</groupId>
+      <artifactId>dozer</artifactId>
+      <version>${dozer.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>${easymock.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate-validator.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-pmd-plugin</artifactId>
+      <version>${maven.pmd.plugin.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${maven.checkstyle.plugin.version}</version>
+        <configuration>
+          <configLocation>${checkstyle.config.location}</configLocation>
+          <propertyExpansion>samedir=${checkstyle.basedir}</propertyExpansion>
+          <suppressionsLocation>${checkstyle.suppressions.location}</suppressionsLocation>
+          <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+          <excludes>config/sun_checks.xml</excludes>
+          <failOnViolation>${checkstyleFailOnViolation}</failOnViolation>
+          <skip>${checkstyle.skip}</skip>
+          <consoleOutput>true</consoleOutput>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <includeResources>false</includeResources>
+          <includeTestResources>false</includeTestResources>
+          <logViolationsToConsole>true</logViolationsToConsole>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${checkstyle.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${maven.pmd.plugin.version}</version>
+        <configuration>
+          <rulesets>
+            <ruleset>${pmd.ruleset.location}</ruleset>
+          </rulesets>
+          <printFailingErrors>true</printFailingErrors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
