@@ -16,7 +16,7 @@ export function updateUser(context, userModel) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/users/update`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/users/update`, {
       method: 'PUT',
       headers: header,
       body: body

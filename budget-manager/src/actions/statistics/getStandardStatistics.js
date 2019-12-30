@@ -7,8 +7,10 @@ import {createErrorBody} from "../common/createErrorBody";
 export function getStandardStatistics(context, startDate, endDate) {
   const {userId, jwtToken, messages} = context;
   let header = createHeaderWithJwtAndJsonBody(jwtToken);
-  let url = `/bm/statistics/getStandardStatistics?userId=` + userId
-    + `&startDate=` + startDate + `&endDate=` + endDate;
+  let url = process.env.REACT_APP_API_ENDPOINT
+    + `/bm/statistics/getStandardStatistics?userId=` + userId
+    + `&startDate=` + startDate
+    + `&endDate=` + endDate;
   let successCase = 'GET_STANDARD_STATISTICS_SUCCESS';
   let errorCase = 'GET_STANDARD_STATISTICS_ERROR';
   let responseStatus = null;

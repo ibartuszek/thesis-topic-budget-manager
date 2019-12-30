@@ -15,7 +15,7 @@ export function registerUser(model, messages) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/users/register`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/users/register`, {
       method: 'POST',
       headers: header,
       body: body

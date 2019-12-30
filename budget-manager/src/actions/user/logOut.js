@@ -6,7 +6,7 @@ import {dispatchError, dispatchSuccess} from "../common/dispatchActions";
 import {defaultMessages} from "../../store/MessageHolder";
 
 export function logOut(userId, jwtToken, messages) {
-  let url = `/bm/users/logout?userId=` + userId;
+  let url = process.env.REACT_APP_API_ENDPOINT + `/bm/users/logout?userId=` + userId;
   let header = createHeaderWithJwt(jwtToken);
   let successCase = 'LOGOUT_SUCCESS';
   let errorCase = 'LOGOUT_ERROR';

@@ -7,9 +7,7 @@ import {dispatchError, dispatchSuccess} from "../common/dispatchActions";
 import {defaultMessages, userMessages} from "../../store/MessageHolder";
 
 export function getAccessToken(username, password, messages) {
-  const clientId = 'testjwtclientid';
-  const clientSecret = 'XY7kmzoNzl100';
-  let header = createHeaderWithClientSecret(clientId, clientSecret);
+  let header = createHeaderWithClientSecret(process.env.REACT_APP_CLIENT_ID, process.env.REACT_APP_KEY);
   let formData = createFromData(username, base64.encode(password));
   let successCase = 'GET_ACCESS_TOKEN_SUCCESS';
   let errorCase = 'GET_ACCESS_TOKEN_ERROR';
@@ -17,7 +15,7 @@ export function getAccessToken(username, password, messages) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch("http://localhost:9999/oauth/token", {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + "/oauth/token", {
       method: 'POST',
       body: formData,
       headers: header

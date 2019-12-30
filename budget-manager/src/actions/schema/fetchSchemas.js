@@ -8,7 +8,7 @@ import {transformSchemaFromResponse, transformSchemaListFromResponse} from "./cr
 export function fetchSchemas(context) {
   const {userId, jwtToken, messages} = context;
   let header = createHeaderWithJwtAndJsonBody(jwtToken);
-  let url = `/bm/statistics/schema/findAll?userId=` + userId;
+  let url = process.env.REACT_APP_API_ENDPOINT + `/bm/statistics/schema/findAll?userId=` + userId;
   let successCase = 'GET_SCHEMAS_SUCCESS';
   let errorCase = 'GET_SCHEMAS_ERROR';
   let responseStatus = null;

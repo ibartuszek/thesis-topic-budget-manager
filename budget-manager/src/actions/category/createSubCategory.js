@@ -15,7 +15,7 @@ export function createSubCategory(context, subCategoryModel) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/subCategories/create`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/subCategories/create`, {
       method: 'POST',
       headers: header,
       body: body

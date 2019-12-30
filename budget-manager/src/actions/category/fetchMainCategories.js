@@ -7,7 +7,9 @@ import {defaultMessages} from "../../store/MessageHolder";
 
 export function fetchMainCategories(context, type) {
   const {userId, jwtToken, messages} = context;
-  let url = '/bm/mainCategories/findAll?userId=' + userId + '&type=' + type;
+  let url = process.env.REACT_APP_API_ENDPOINT
+    + '/bm/mainCategories/findAll?userId=' + userId
+    + '&type=' + type;
   let header = createHeaderWithJwt(jwtToken);
   let successCase = 'GET_' + type.toUpperCase() + '_MAIN_CATEGORIES_SUCCESS';
   let errorCase = 'GET_' + type.toUpperCase() + '_MAIN_CATEGORIES_ERROR';

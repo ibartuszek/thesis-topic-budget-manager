@@ -14,7 +14,7 @@ export function uploadPicture(picture, context) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/pictures/create`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/pictures/create`, {
       method: 'POST',
       headers: header,
       body: body

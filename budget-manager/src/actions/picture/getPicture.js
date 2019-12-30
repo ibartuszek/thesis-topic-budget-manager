@@ -6,7 +6,9 @@ import {defaultMessages} from "../../store/MessageHolder";
 
 export function getPicture(pictureId, context) {
   const {userId, jwtToken, messages} = context;
-  let url = `/bm/pictures/findById?id=` + pictureId + `&userId=` + userId;
+  let url = process.env.REACT_APP_API_ENDPOINT
+    + `/bm/pictures/findById?id=` + pictureId
+    + `&userId=` + userId;
   let header = createHeaderWithJwt(jwtToken);
   let successCase = 'GET_PICTURE_SUCCESS';
   let errorCase = 'GET_PICTURE_ERROR';

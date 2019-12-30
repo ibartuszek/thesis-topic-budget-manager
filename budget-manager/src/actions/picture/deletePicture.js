@@ -14,7 +14,7 @@ export function deletePicture(picture, context) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/pictures/delete`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/pictures/delete`, {
       method: 'DELETE',
       headers: header,
       body: body

@@ -7,7 +7,8 @@ import {defaultMessages} from "../../store/MessageHolder";
 
 export function fetchTransactions(context) {
   const {endDate, jwtToken, messages, startDate, transactionType, userId} = context;
-  let url = '/bm/transactions/findAll?userId=' + userId
+  let url = process.env.REACT_APP_API_ENDPOINT
+    + '/bm/transactions/findAll?userId=' + userId
     + '&type=' + transactionType
     + '&start=' + startDate;
   url = endDate !== null ? url + '&end=' + endDate : url;

@@ -15,7 +15,7 @@ export function updateMainCategory(context, mainCategoryModel) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/mainCategories/update`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/mainCategories/update`, {
       method: 'PUT',
       headers: header,
       body: body

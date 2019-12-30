@@ -15,7 +15,7 @@ export function deleteTransaction(context, transactionModel) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/transactions/delete`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/transactions/delete`, {
       method: 'DELETE',
       headers: header,
       body: body

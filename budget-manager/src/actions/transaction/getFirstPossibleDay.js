@@ -6,7 +6,7 @@ import {defaultMessages} from "../../store/MessageHolder";
 
 export function getFirstPossibleDay(context) {
   const {jwtToken, messages, userId} = context;
-  let url = '/bm/transactions/getFirstPossibleDay?userId=' + userId;
+  let url = process.env.REACT_APP_API_ENDPOINT + '/bm/transactions/getFirstPossibleDay?userId=' + userId;
 
   let header = createHeaderWithJwtAndJsonBody(jwtToken);
   let successCase = 'GET_FIRST_POSSIBLE_DAY_SUCCESS';

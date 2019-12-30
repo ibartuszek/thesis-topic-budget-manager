@@ -7,7 +7,7 @@ import {defaultMessages, userMessages} from "../../store/MessageHolder";
 import {deleteAccessCookie} from "./cookie/deleteAccessCookie";
 
 export function getUser(userName, jwtToken, messages) {
-  let url = `/bm/users/findByEmail?email=` + userName;
+  let url = process.env.REACT_APP_API_ENDPOINT + `/bm/users/findByEmail?email=` + userName;
   let header = createHeaderWithJwt(jwtToken);
   let successCase = 'LOGIN_SUCCESS';
   let errorCase = 'LOGIN_ERROR';

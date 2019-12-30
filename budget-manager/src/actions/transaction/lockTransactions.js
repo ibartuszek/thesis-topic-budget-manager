@@ -6,7 +6,7 @@ import {defaultMessages} from "../../store/MessageHolder";
 
 export function lockTransactions(context, endDate) {
   const {jwtToken, messages, userId} = context;
-  let url = '/bm/transactions/lockTransactions?userId=' + userId + '&end=' + endDate;
+  let url = process.env.REACT_APP_API_ENDPOINT + '/bm/transactions/lockTransactions?userId=' + userId + '&end=' + endDate;
 
   let header = createHeaderWithJwtAndJsonBody(jwtToken);
   let successCase = 'TRANSACTIONS_LOCKED_SUCCESS';

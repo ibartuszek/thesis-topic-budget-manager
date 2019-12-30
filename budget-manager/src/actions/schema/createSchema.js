@@ -15,7 +15,7 @@ export function createSchema(context, schema) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/statistics/schema/create`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/statistics/schema/create`, {
       method: 'POST',
       headers: header,
       body: body

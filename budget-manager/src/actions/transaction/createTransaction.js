@@ -15,7 +15,7 @@ export function createTransaction(context, transactionModel, coordinate) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`/bm/transactions/create`, {
+    return fetch(process.env.REACT_APP_API_ENDPOINT + `/bm/transactions/create`, {
       method: 'POST',
       headers: header,
       body: body
