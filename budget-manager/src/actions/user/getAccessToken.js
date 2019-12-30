@@ -17,7 +17,7 @@ export function getAccessToken(username, password, messages) {
 
   return function (dispatch) {
     let dispatchContext = createDispatchContext(dispatch, messages, successCase, errorCase);
-    return fetch(`oauth/token`, {
+    return fetch("http://localhost:9999/oauth/token", {
       method: 'POST',
       body: formData,
       headers: header
