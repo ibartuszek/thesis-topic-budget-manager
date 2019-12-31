@@ -14,30 +14,30 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 5,
-            "name": "Internet",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 3,
             "name": "Common cost",
-            "transactionType": "OUTCOME"
-          },
-          {
-            "id": 4,
-            "name": "Overhead",
             "transactionType": "OUTCOME"
           },
           {
             "id": 6,
             "name": "Tax",
             "transactionType": "OUTCOME"
+          },
+          {
+            "id": 5,
+            "name": "Internet",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 4,
+            "name": "Overhead",
+            "transactionType": "OUTCOME"
           }
         ]
       },
       "subCategory": null,
       "monthly": true,
-      "date": "${today-150d}",
+      "date": "2019-08-03",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -56,23 +56,23 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 5,
-            "name": "Internet",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 3,
             "name": "Common cost",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 4,
-            "name": "Overhead",
+            "id": 6,
+            "name": "Tax",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 6,
-            "name": "Tax",
+            "id": 5,
+            "name": "Internet",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 4,
+            "name": "Overhead",
             "transactionType": "OUTCOME"
           }
         ]
@@ -83,7 +83,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-150d}",
+      "date": "2019-08-03",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -102,23 +102,23 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 5,
-            "name": "Internet",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 3,
             "name": "Common cost",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 4,
-            "name": "Overhead",
+            "id": 6,
+            "name": "Tax",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 6,
-            "name": "Tax",
+            "id": 5,
+            "name": "Internet",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 4,
+            "name": "Overhead",
             "transactionType": "OUTCOME"
           }
         ]
@@ -129,7 +129,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-120d}",
+      "date": "2019-09-02",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -148,23 +148,23 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 5,
-            "name": "Internet",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 3,
             "name": "Common cost",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 4,
-            "name": "Overhead",
+            "id": 6,
+            "name": "Tax",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 6,
-            "name": "Tax",
+            "id": 5,
+            "name": "Internet",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 4,
+            "name": "Overhead",
             "transactionType": "OUTCOME"
           }
         ]
@@ -175,7 +175,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-140d}",
+      "date": "2019-08-13",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -194,23 +194,23 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 5,
-            "name": "Internet",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 3,
             "name": "Common cost",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 4,
-            "name": "Overhead",
+            "id": 6,
+            "name": "Tax",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 6,
-            "name": "Tax",
+            "id": 5,
+            "name": "Internet",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 4,
+            "name": "Overhead",
             "transactionType": "OUTCOME"
           }
         ]
@@ -221,7 +221,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-150d}",
+      "date": "2019-08-03",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -240,13 +240,13 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 8,
-            "name": "Petrol",
+            "id": 7,
+            "name": "Insurance",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 7,
-            "name": "Insurance",
+            "id": 8,
+            "name": "Petrol",
             "transactionType": "OUTCOME"
           },
           {
@@ -262,7 +262,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-100d}",
+      "date": "2019-09-22",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -281,13 +281,13 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 8,
-            "name": "Petrol",
+            "id": 7,
+            "name": "Insurance",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 7,
-            "name": "Insurance",
+            "id": 8,
+            "name": "Petrol",
             "transactionType": "OUTCOME"
           },
           {
@@ -303,7 +303,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-100d}",
+      "date": "2019-09-22",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -328,7 +328,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-60d}",
+      "date": "2019-11-01",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -359,7 +359,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-60d}",
+      "date": "2019-11-01",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -395,7 +395,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": true,
-      "date": "${today-60d}",
+      "date": "2019-11-01",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -403,7 +403,7 @@
       "pictureId": null
     },
     {
-      "id": 13,
+      "id": 12,
       "title": "Petrol",
       "amount": 80.0,
       "currency": "EUR",
@@ -414,13 +414,13 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 8,
-            "name": "Petrol",
+            "id": 7,
+            "name": "Insurance",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 7,
-            "name": "Insurance",
+            "id": 8,
+            "name": "Petrol",
             "transactionType": "OUTCOME"
           },
           {
@@ -436,7 +436,48 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-60d}",
+      "date": "2019-10-12",
+      "endDate": null,
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 13,
+      "title": "Petrol",
+      "amount": 80.0,
+      "currency": "EUR",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 5,
+        "name": "Car",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 7,
+            "name": "Insurance",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 8,
+            "name": "Petrol",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 6,
+            "name": "Tax",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 8,
+        "name": "Petrol",
+        "transactionType": "OUTCOME"
+      },
+      "monthly": false,
+      "date": "2019-11-01",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -455,13 +496,13 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 8,
-            "name": "Petrol",
+            "id": 7,
+            "name": "Insurance",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 7,
-            "name": "Insurance",
+            "id": 8,
+            "name": "Petrol",
             "transactionType": "OUTCOME"
           },
           {
@@ -477,7 +518,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-40d}",
+      "date": "2019-11-21",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -496,13 +537,13 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 8,
-            "name": "Petrol",
+            "id": 7,
+            "name": "Insurance",
             "transactionType": "OUTCOME"
           },
           {
-            "id": 7,
-            "name": "Insurance",
+            "id": 8,
+            "name": "Petrol",
             "transactionType": "OUTCOME"
           },
           {
@@ -518,10 +559,91 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-20d}",
+      "date": "2019-12-11",
       "endDate": null,
       "description": null,
       "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 22,
+      "title": "Shopping",
+      "amount": 11100.0,
+      "currency": "HUF",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 6,
+        "name": "Food",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 9,
+            "name": "Restaurant",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-10-02",
+      "endDate": null,
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 23,
+      "title": "Shopping",
+      "amount": 9999.0,
+      "currency": "HUF",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 6,
+        "name": "Food",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 9,
+            "name": "Restaurant",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-10-12",
+      "endDate": null,
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 24,
+      "title": "Shopping",
+      "amount": 8675.0,
+      "currency": "HUF",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 6,
+        "name": "Food",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 9,
+            "name": "Restaurant",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-10-22",
+      "endDate": null,
+      "description": null,
+      "locked": true,
       "coordinate": null,
       "pictureId": null
     },
@@ -545,7 +667,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-60d}",
+      "date": "2019-11-01",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -572,7 +694,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-50d}",
+      "date": "2019-11-11",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -599,7 +721,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-40d}",
+      "date": "2019-11-21",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -626,7 +748,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-30d}",
+      "date": "2019-12-01",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -653,7 +775,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-20d}",
+      "date": "2019-12-11",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -680,10 +802,31 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-10d}",
+      "date": "2019-12-21",
       "endDate": null,
       "description": null,
       "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 33,
+      "title": "Hairdresser",
+      "amount": 10.0,
+      "currency": "EUR",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 7,
+        "name": "Beatuy care",
+        "transactionType": "OUTCOME",
+        "subCategorySet": []
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-10-07",
+      "endDate": null,
+      "description": null,
+      "locked": true,
       "coordinate": null,
       "pictureId": null
     },
@@ -701,7 +844,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-55d}",
+      "date": "2019-11-06",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -722,10 +865,99 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-25d}",
+      "date": "2019-12-06",
       "endDate": null,
       "description": null,
       "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 36,
+      "title": "Eye examination",
+      "amount": 25.0,
+      "currency": "EUR",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 8,
+        "name": "Health care",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 10,
+            "name": "Vitamins",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-10-27",
+      "endDate": null,
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 39,
+      "title": "D vitamin",
+      "amount": 5.0,
+      "currency": "EUR",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 8,
+        "name": "Health care",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 10,
+            "name": "Vitamins",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 10,
+        "name": "Vitamins",
+        "transactionType": "OUTCOME"
+      },
+      "monthly": false,
+      "date": "2019-10-02",
+      "endDate": null,
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 40,
+      "title": "C vitamin",
+      "amount": 3.0,
+      "currency": "EUR",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 8,
+        "name": "Health care",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 10,
+            "name": "Vitamins",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 10,
+        "name": "Vitamins",
+        "transactionType": "OUTCOME"
+      },
+      "monthly": false,
+      "date": "2019-10-02",
+      "endDate": null,
+      "description": null,
+      "locked": true,
       "coordinate": null,
       "pictureId": null
     },
@@ -753,7 +985,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-60d}",
+      "date": "2019-11-01",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -784,7 +1016,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-60d}",
+      "date": "2019-11-01",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -815,7 +1047,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-25d}",
+      "date": "2019-12-06",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -846,7 +1078,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-25d}",
+      "date": "2019-12-06",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -877,10 +1109,51 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-25d}",
+      "date": "2019-12-06",
       "endDate": null,
       "description": null,
       "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 46,
+      "title": "Aladin",
+      "amount": 5.0,
+      "currency": "EUR",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 10,
+        "name": "Entertainment",
+        "transactionType": "OUTCOME",
+        "subCategorySet": [
+          {
+            "id": 14,
+            "name": "Hobby",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 13,
+            "name": "Computer",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 12,
+            "name": "Cinema",
+            "transactionType": "OUTCOME"
+          }
+        ]
+      },
+      "subCategory": {
+        "id": 12,
+        "name": "Cinema",
+        "transactionType": "OUTCOME"
+      },
+      "monthly": false,
+      "date": "2019-10-27",
+      "endDate": null,
+      "description": null,
+      "locked": true,
       "coordinate": null,
       "pictureId": null
     },
@@ -896,11 +1169,6 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 12,
-            "name": "Cinema",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 14,
             "name": "Hobby",
             "transactionType": "OUTCOME"
@@ -908,6 +1176,11 @@
           {
             "id": 13,
             "name": "Computer",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 12,
+            "name": "Cinema",
             "transactionType": "OUTCOME"
           }
         ]
@@ -918,7 +1191,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-35d}",
+      "date": "2019-11-26",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -937,11 +1210,6 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 12,
-            "name": "Cinema",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 14,
             "name": "Hobby",
             "transactionType": "OUTCOME"
@@ -949,6 +1217,11 @@
           {
             "id": 13,
             "name": "Computer",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 12,
+            "name": "Cinema",
             "transactionType": "OUTCOME"
           }
         ]
@@ -959,7 +1232,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-15d}",
+      "date": "2019-12-16",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -978,11 +1251,6 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 12,
-            "name": "Cinema",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 14,
             "name": "Hobby",
             "transactionType": "OUTCOME"
@@ -990,6 +1258,11 @@
           {
             "id": 13,
             "name": "Computer",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 12,
+            "name": "Cinema",
             "transactionType": "OUTCOME"
           }
         ]
@@ -1000,7 +1273,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-60d}",
+      "date": "2019-11-01",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -1019,11 +1292,6 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 12,
-            "name": "Cinema",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 14,
             "name": "Hobby",
             "transactionType": "OUTCOME"
@@ -1031,6 +1299,11 @@
           {
             "id": 13,
             "name": "Computer",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 12,
+            "name": "Cinema",
             "transactionType": "OUTCOME"
           }
         ]
@@ -1041,7 +1314,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-25d}",
+      "date": "2019-12-06",
       "endDate": null,
       "description": null,
       "locked": false,
@@ -1077,7 +1350,7 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-55d}",
+      "date": "2019-11-06",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -1113,10 +1386,52 @@
         "transactionType": "OUTCOME"
       },
       "monthly": false,
-      "date": "${today-55d}",
+      "date": "2019-11-06",
       "endDate": null,
       "description": null,
       "locked": false,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 53,
+      "title": "New jeans",
+      "amount": 59.99,
+      "currency": "EUR",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 12,
+        "name": "Clothes",
+        "transactionType": "OUTCOME",
+        "subCategorySet": []
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-10-03",
+      "endDate": null,
+      "description": null,
+      "locked": true,
+      "coordinate": null,
+      "pictureId": null
+    },
+    {
+      "id": 54,
+      "title": "New suit",
+      "amount": 100.0,
+      "currency": "EUR",
+      "transactionType": "OUTCOME",
+      "mainCategory": {
+        "id": 12,
+        "name": "Clothes",
+        "transactionType": "OUTCOME",
+        "subCategorySet": []
+      },
+      "subCategory": null,
+      "monthly": false,
+      "date": "2019-10-20",
+      "endDate": null,
+      "description": null,
+      "locked": true,
       "coordinate": null,
       "pictureId": null
     },
@@ -1134,7 +1449,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-56d}",
+      "date": "2019-11-05",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -1155,7 +1470,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-35d}",
+      "date": "2019-11-26",
       "endDate": null,
       "description": null,
       "locked": true,
@@ -1176,7 +1491,7 @@
       },
       "subCategory": null,
       "monthly": false,
-      "date": "${today-16d}",
+      "date": "2019-12-15",
       "endDate": null,
       "description": null,
       "locked": false,

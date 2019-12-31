@@ -2,8 +2,8 @@
   "message": "Standard statistics successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "${today-60d}",
-    "endDate": "${today-0d}",
+    "startDate": "2019-10-01",
+    "endDate": "2019-12-31",
     "schema": {
       "id": 1,
       "title": "Standard schema",
@@ -19,7 +19,7 @@
     },
     "budgetDetails": {
       "totalIncomes": {
-        "amount": 7383.64,
+        "amount": 9763.56,
         "label": "Total incomes"
       },
       "totalExpenses": {
@@ -27,7 +27,7 @@
         "label": "Total expenses"
       },
       "savings": {
-        "amount": 7383.64,
+        "amount": 9763.56,
         "label": "Savings"
       },
       "incomes": [
@@ -39,12 +39,12 @@
         {
           "mainCategoryName": "Salary",
           "subCategoryName": null,
-          "amount": 7289.77
+          "amount": 9669.69
         },
         {
           "mainCategoryName": "Salary",
           "subCategoryName": "Allowance",
-          "amount": 89.77
+          "amount": 119.69
         }
       ],
       "outcomes": []

@@ -3,6 +3,7 @@ package hu.elte.bm.calculationservice.app.test;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -24,11 +26,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 import hu.elte.bm.calculationservice.app.CalculationServiceApplication;
 import hu.elte.bm.calculationservice.app.test.utils.LocalDateAdapter;
-import hu.elte.bm.calculationservice.app.test.utils.RelativeLocalDateChanger;
 import hu.elte.bm.calculationservice.app.test.utils.WireMockService;
 import hu.elte.bm.calculationservice.dal.schema.StatisticsSchemaEntity;
 import hu.elte.bm.calculationservice.dal.schema.StatisticsSchemaRepository;
@@ -53,8 +55,8 @@ public abstract class AbstractCalculationServiceApplicationTest {
     protected static final String FIND_ALL_SUB_CATEGORIES_RESULT_BODY = "findAllOutcomeSubCategoryWithReponseOk.json";
     protected static final String FIND_ALL_MAIN_CATEGORIES_WITH_EMPTY_BODY = "findAllOutcomeMainCategoryWithEmptyList.json";
     protected static final String FIND_ALL_INCOME_MAIN_CATEGORIES = "findAllIncomeMainCategoryWithResponseOk.json";
-    protected static final LocalDate START = LocalDate.now().minusDays(60);
-    protected static final LocalDate END = LocalDate.now();
+    protected static final LocalDate START = LocalDate.of(2019, 10, 1);
+    protected static final LocalDate END = LocalDate.of(2019, 12, 31);
     protected static final Long NEW_SCHEMA_ID = 7L;
     protected static final long INVALID_MAIN_CATEGORY_ID = 13L;
 
@@ -72,6 +74,7 @@ public abstract class AbstractCalculationServiceApplicationTest {
     private static final String OTHER_SUB_CATEGORY_NAME = "Computer";
     private static final String ANOTHER_SUB_CATEGORY_NAME = "Hobby";
     private static final String INVALID_SCHEMA = "Invalid schema";
+    private static final String STATISTICS_RESPONSE_FILE_FOLDER = "expected_responses/";
 
     @Autowired
     private MockMvc mvc;
@@ -84,47 +87,6 @@ public abstract class AbstractCalculationServiceApplicationTest {
 
     @Autowired
     private StatisticsSchemaRepository repository;
-
-    @Autowired
-    private RelativeLocalDateChanger dateChanger;
-
-    protected static StatisticsSchema.Builder createSchemaBuilderWithDefaultValues() {
-        return StatisticsSchema.builder()
-            .withId(DEFAULT_SCHEMA_ID)
-            .withTitle(DEFAULT_SCHEMA_TITLE)
-            .withType(DEFAULT_SCHEMA_TYPE)
-            .withCurrency(DEFAULT_CURRENCY)
-            .withChartType(DEFAULT_CHART_TYPE);
-    }
-
-    protected static MainCategory.Builder createDefaultMainCategoryBuilder() {
-        return MainCategory.builder()
-            .withId(DEFAULT_MAIN_CATEGORY_ID)
-            .withName(DEFAULT_MAIN_CATEGORY_NAME)
-            .withTransactionType(TRANSACTION_TYPE)
-            .withSubCategorySet(createDefaultSubCategorySet());
-    }
-
-    protected static Set<SubCategory> createDefaultSubCategorySet() {
-        SubCategory other = createSubCategory(OTHER_SUB_CATEGORY_ID, OTHER_SUB_CATEGORY_NAME);
-        SubCategory another = createSubCategory(ANOTHER_SUB_CATEGORY_ID, ANOTHER_SUB_CATEGORY_NAME);
-        return Set.of(createDefaultSubCategoryBuilder().build(), other, another);
-    }
-
-    protected static SubCategory createSubCategory(final Long id, final String name) {
-        return SubCategory.builder()
-            .withId(id)
-            .withName(name)
-            .withTransactionType(TRANSACTION_TYPE)
-            .build();
-    }
-
-    protected static SubCategory.Builder createDefaultSubCategoryBuilder() {
-        return SubCategory.builder()
-            .withId(DEFAULT_SUB_CATEGORY_ID)
-            .withName(DEFAULT_SUB_CATEGORY_NAME)
-            .withTransactionType(TRANSACTION_TYPE);
-    }
 
     public MockMvc getMvc() {
         return mvc;
@@ -139,8 +101,46 @@ public abstract class AbstractCalculationServiceApplicationTest {
     }
 
     @BeforeEach
-    public void beforeMethodOfAbstractWireMockTestClass() {
+    public void beforeMethodOfAbstractWireMockTestClass() throws ParseException {
         wireMockService.resetServer();
+    }
+
+    protected static StatisticsSchema.Builder createSchemaBuilderWithDefaultValues() {
+        return StatisticsSchema.builder()
+                .withId(DEFAULT_SCHEMA_ID)
+                .withTitle(DEFAULT_SCHEMA_TITLE)
+                .withType(DEFAULT_SCHEMA_TYPE)
+                .withCurrency(DEFAULT_CURRENCY)
+                .withChartType(DEFAULT_CHART_TYPE);
+    }
+
+    protected static MainCategory.Builder createDefaultMainCategoryBuilder() {
+        return MainCategory.builder()
+                .withId(DEFAULT_MAIN_CATEGORY_ID)
+                .withName(DEFAULT_MAIN_CATEGORY_NAME)
+                .withTransactionType(TRANSACTION_TYPE)
+                .withSubCategorySet(createDefaultSubCategorySet());
+    }
+
+    protected static Set<SubCategory> createDefaultSubCategorySet() {
+        SubCategory other = createSubCategory(OTHER_SUB_CATEGORY_ID, OTHER_SUB_CATEGORY_NAME);
+        SubCategory another = createSubCategory(ANOTHER_SUB_CATEGORY_ID, ANOTHER_SUB_CATEGORY_NAME);
+        return Set.of(createDefaultSubCategoryBuilder().build(), other, another);
+    }
+
+    protected static SubCategory createSubCategory(final Long id, final String name) {
+        return SubCategory.builder()
+                .withId(id)
+                .withName(name)
+                .withTransactionType(TRANSACTION_TYPE)
+                .build();
+    }
+
+    protected static SubCategory.Builder createDefaultSubCategoryBuilder() {
+        return SubCategory.builder()
+                .withId(DEFAULT_SUB_CATEGORY_ID)
+                .withName(DEFAULT_SUB_CATEGORY_NAME)
+                .withTransactionType(TRANSACTION_TYPE);
     }
 
     protected String getExpectedResponseJsonFromFile(final String fileName) throws IOException {
@@ -175,8 +175,13 @@ public abstract class AbstractCalculationServiceApplicationTest {
 
     protected void assertExpectedJsonFileWithDates(final String expectedBodyFileName, final String result)
             throws IOException, JSONException {
-        String expected = dateChanger.getExpectedResponseAsStringWithDates(expectedBodyFileName);
-        JSONAssert.assertEquals(expected, result, JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(getResponseObject(expectedBodyFileName), result, JSONCompareMode.LENIENT);
+    }
+
+    private String getResponseObject(final String responseFileName) throws IOException {
+        Resource resource = new ClassPathResource(STATISTICS_RESPONSE_FILE_FOLDER + responseFileName);
+        JsonReader reader = new JsonReader(new FileReader(resource.getFile()));
+        return new Gson().fromJson(reader, JsonObject.class).toString();
     }
 
 }

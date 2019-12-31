@@ -2,8 +2,8 @@
   "message": "Custom statistics:5 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "${today-60d}",
-    "endDate": "${today-0d}",
+    "startDate": "2019-10-01",
+    "endDate": "2019-12-31",
     "schema": {
       "id": 5,
       "title": "Example sum 2",
@@ -16,8 +16,8 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 14,
-            "name": "Hobby",
+            "id": 12,
+            "name": "Cinema",
             "transactionType": "OUTCOME"
           },
           {
@@ -26,8 +26,8 @@
             "transactionType": "OUTCOME"
           },
           {
-            "id": 12,
-            "name": "Cinema",
+            "id": 14,
+            "name": "Hobby",
             "transactionType": "OUTCOME"
           }
         ]
@@ -40,33 +40,39 @@
         {
           "x": 0,
           "y": 5.0,
-          "label": "Bad boys",
-          "date": "${today-35d}"
+          "label": "Aladin",
+          "date": "2019-10-27"
         },
         {
           "x": 1,
           "y": 10.0,
-          "label": "I am legend",
-          "date": "${today-15d}"
+          "label": "Bad boys",
+          "date": "2019-11-26"
         },
         {
           "x": 2,
-          "y": 100.0,
-          "label": "New video card",
-          "date": "${today-60d}"
+          "y": 15.0,
+          "label": "I am legend",
+          "date": "2019-12-16"
         },
         {
           "x": 3,
-          "y": 120.0,
+          "y": 105.0,
+          "label": "New video card",
+          "date": "2019-11-01"
+        },
+        {
+          "x": 4,
+          "y": 125.0,
           "label": "New convinient keyboard",
-          "date": "${today-25d}"
+          "date": "2019-12-06"
         }
       ]
     },
     "budgetDetails": {
       "totalIncomes": null,
       "totalExpenses": {
-        "amount": 121.0,
+        "amount": 126.51,
         "label": "Total cost of Entertainment"
       },
       "savings": null,

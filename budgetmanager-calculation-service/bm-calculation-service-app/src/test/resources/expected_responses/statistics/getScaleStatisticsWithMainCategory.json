@@ -2,8 +2,8 @@
   "message": "Custom statistics:3 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "${today-60d}",
-    "endDate": "${today-0d}",
+    "startDate": "2019-10-01",
+    "endDate": "2019-12-31",
     "schema": {
       "id": 3,
       "title": "Example scale 2",
@@ -16,11 +16,6 @@
         "transactionType": "OUTCOME",
         "subCategorySet": [
           {
-            "id": 14,
-            "name": "Hobby",
-            "transactionType": "OUTCOME"
-          },
-          {
             "id": 13,
             "name": "Computer",
             "transactionType": "OUTCOME"
@@ -28,6 +23,11 @@
           {
             "id": 12,
             "name": "Cinema",
+            "transactionType": "OUTCOME"
+          },
+          {
+            "id": 14,
+            "name": "Hobby",
             "transactionType": "OUTCOME"
           }
         ]
@@ -39,89 +39,107 @@
       "dataPoints": [
         {
           "x": 0,
-          "y": -27333.88,
-          "label": "New video card",
-          "date": "${today-60d}"
+          "y": 785358.35,
+          "label": "Salary",
+          "date": "2019-10-03"
         },
         {
           "x": 1,
-          "y": 758024.47,
-          "label": "Salary",
-          "date": "${today-58d}"
+          "y": 795358.35,
+          "label": "Fringe benefit",
+          "date": "2019-10-03"
         },
         {
           "x": 2,
-          "y": 768024.47,
-          "label": "Fringe benefit",
-          "date": "${today-58d}"
+          "y": 793687.37,
+          "label": "Aladin",
+          "date": "2019-10-27"
         },
         {
           "x": 3,
           "y": 766353.49,
-          "label": "Bad boys",
-          "date": "${today-35d}"
+          "label": "New video card",
+          "date": "2019-11-01"
         },
         {
           "x": 4,
           "y": 1551711.84,
           "label": "Salary",
-          "date": "${today-27d}"
+          "date": "2019-11-03"
         },
         {
           "x": 5,
           "y": 1561711.84,
           "label": "Fringe benefit",
-          "date": "${today-27d}"
+          "date": "2019-11-03"
         },
         {
           "x": 6,
-          "y": 1555637.64,
-          "label": "New convinient keyboard",
-          "date": "${today-25d}"
+          "y": 1560040.86,
+          "label": "Bad boys",
+          "date": "2019-11-26"
         },
         {
           "x": 7,
-          "y": 1553966.67,
-          "label": "I am legend",
-          "date": "${today-15d}"
+          "y": 2345399.21,
+          "label": "Salary",
+          "date": "2019-12-03"
         },
         {
           "x": 8,
-          "y": 2389454.27,
-          "label": "Salary",
-          "date": "${today-14d}"
+          "y": 2355399.21,
+          "label": "Fringe benefit",
+          "date": "2019-12-03"
         },
         {
           "x": 9,
-          "y": 2399454.27,
-          "label": "Fringe benefit",
-          "date": "${today-14d}"
+          "y": 2349325.01,
+          "label": "New convinient keyboard",
+          "date": "2019-12-06"
         },
         {
           "x": 10,
-          "y": 2429825.24,
-          "label": "Birthday present from grandparents",
-          "date": "${today-10d}"
+          "y": 2347654.04,
+          "label": "I am legend",
+          "date": "2019-12-16"
         },
         {
           "x": 11,
-          "y": 2430825.24,
+          "y": 3183141.64,
+          "label": "Salary",
+          "date": "2019-12-17"
+        },
+        {
+          "x": 12,
+          "y": 3193141.64,
+          "label": "Fringe benefit",
+          "date": "2019-12-17"
+        },
+        {
+          "x": 13,
+          "y": 3223512.61,
+          "label": "Birthday present from grandparents",
+          "date": "2019-12-21"
+        },
+        {
+          "x": 14,
+          "y": 3224512.61,
           "label": "Found money",
-          "date": "${today-5d}"
+          "date": "2019-12-26"
         }
       ]
     },
     "budgetDetails": {
       "totalIncomes": {
-        "amount": 2467575.27,
+        "amount": 3262933.61,
         "label": "Total incomes"
       },
       "totalExpenses": {
-        "amount": 36750.02,
+        "amount": 38421.0,
         "label": "Total expenses"
       },
       "savings": {
-        "amount": 2430825.25,
+        "amount": 3224512.61,
         "label": "Savings"
       },
       "incomes": null,

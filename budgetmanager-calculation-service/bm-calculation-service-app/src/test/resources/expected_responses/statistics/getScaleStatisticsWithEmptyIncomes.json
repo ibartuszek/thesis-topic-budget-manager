@@ -2,8 +2,8 @@
   "message": "Custom statistics:2 successfully created.",
   "successful": true,
   "statistics": {
-    "startDate": "${today-60d}",
-    "endDate": "${today-0d}",
+    "startDate": "2019-10-01",
+    "endDate": "2019-12-31",
     "schema": {
       "id": 2,
       "title": "Example scale",
@@ -18,292 +18,388 @@
       "dataPoints": [
         {
           "x": 0,
-          "y": -10025.85,
-          "label": "Tax",
-          "date": "${today-70d}"
+          "y": -11100.0,
+          "label": "Shopping",
+          "date": "2019-10-02"
         },
         {
           "x": 1,
-          "y": -20051.7,
-          "label": "Insurance",
-          "date": "${today-70d}"
+          "y": -12770.98,
+          "label": "D vitamin",
+          "date": "2019-10-02"
         },
         {
           "x": 2,
-          "y": -46787.31,
-          "label": "Petrol",
-          "date": "${today-60d}"
+          "y": -13773.56,
+          "label": "C vitamin",
+          "date": "2019-10-02"
         },
         {
           "x": 3,
-          "y": -59132.31,
-          "label": "Shopping",
-          "date": "${today-60d}"
+          "y": -28773.56,
+          "label": "Overhead",
+          "date": "2019-10-02"
         },
         {
           "x": 4,
-          "y": -60803.28,
-          "label": "D vitamin",
-          "date": "${today-60d}"
+          "y": -48821.92,
+          "label": "New jeans",
+          "date": "2019-10-03"
         },
         {
           "x": 5,
-          "y": -61805.87,
-          "label": "C vitamin",
-          "date": "${today-60d}"
+          "y": -198821.92,
+          "label": "Lodging",
+          "date": "2019-10-03"
         },
         {
           "x": 6,
-          "y": -89139.75,
-          "label": "New video card",
-          "date": "${today-60d}"
+          "y": -208821.92,
+          "label": "Common cost",
+          "date": "2019-10-03"
         },
         {
           "x": 7,
-          "y": -95823.65,
-          "label": "Massage",
-          "date": "${today-60d}"
+          "y": -238821.92,
+          "label": "Tax",
+          "date": "2019-10-03"
         },
         {
           "x": 8,
-          "y": -104934.94,
-          "label": "English",
-          "date": "${today-60d}"
+          "y": -242163.87,
+          "label": "Hairdresser",
+          "date": "2019-10-07"
         },
         {
           "x": 9,
-          "y": -111009.13,
-          "label": "Fitness ticket",
-          "date": "${today-60d}"
+          "y": -268899.47,
+          "label": "Petrol",
+          "date": "2019-10-12"
         },
         {
           "x": 10,
-          "y": -126009.13,
-          "label": "Overhead",
-          "date": "${today-59d}"
+          "y": -278898.47,
+          "label": "Shopping",
+          "date": "2019-10-12"
         },
         {
           "x": 11,
-          "y": -276009.13,
-          "label": "Lodging",
-          "date": "${today-58d}"
+          "y": -283898.47,
+          "label": "Internet",
+          "date": "2019-10-13"
         },
         {
           "x": 12,
-          "y": -286009.13,
-          "label": "Common cost",
-          "date": "${today-58d}"
+          "y": -317317.98,
+          "label": "New suit",
+          "date": "2019-10-20"
         },
         {
           "x": 13,
-          "y": -316009.13,
-          "label": "Tax",
-          "date": "${today-58d}"
+          "y": -325992.98,
+          "label": "Shopping",
+          "date": "2019-10-22"
         },
         {
           "x": 14,
-          "y": -346083.35,
-          "label": "New coat",
-          "date": "${today-56d}"
+          "y": -336018.83,
+          "label": "Tax",
+          "date": "2019-10-22"
         },
         {
           "x": 15,
-          "y": -349425.3,
-          "label": "Hairdresser",
-          "date": "${today-55d}"
+          "y": -346044.68,
+          "label": "Insurance",
+          "date": "2019-10-22"
         },
         {
           "x": 16,
-          "y": -362793.1,
-          "label": "New running shoes",
-          "date": "${today-55d}"
+          "y": -354399.56,
+          "label": "Eye examination",
+          "date": "2019-10-27"
         },
         {
           "x": 17,
-          "y": -369473.66,
-          "label": "New running shirt",
-          "date": "${today-55d}"
+          "y": -356070.53,
+          "label": "Aladin",
+          "date": "2019-10-27"
         },
         {
           "x": 18,
-          "y": -375151.66,
-          "label": "Shopping",
-          "date": "${today-50d}"
+          "y": -382806.14,
+          "label": "Petrol",
+          "date": "2019-11-01"
         },
         {
           "x": 19,
-          "y": -380151.66,
-          "label": "Internet",
-          "date": "${today-48d}"
+          "y": -395151.14,
+          "label": "Shopping",
+          "date": "2019-11-01"
         },
         {
           "x": 20,
-          "y": -406887.26,
-          "label": "Petrol",
-          "date": "${today-40d}"
+          "y": -396822.11,
+          "label": "D vitamin",
+          "date": "2019-11-01"
         },
         {
           "x": 21,
-          "y": -413132.26,
-          "label": "Shopping",
-          "date": "${today-40d}"
+          "y": -397824.7,
+          "label": "C vitamin",
+          "date": "2019-11-01"
         },
         {
           "x": 22,
-          "y": -423158.11,
-          "label": "Tax",
-          "date": "${today-39d}"
+          "y": -425158.57,
+          "label": "New video card",
+          "date": "2019-11-01"
         },
         {
           "x": 23,
-          "y": -433183.96,
-          "label": "Insurance",
-          "date": "${today-39d}"
+          "y": -431842.48,
+          "label": "Massage",
+          "date": "2019-11-01"
         },
         {
           "x": 24,
-          "y": -434854.94,
-          "label": "Bad boys",
-          "date": "${today-35d}"
+          "y": -440953.77,
+          "label": "English",
+          "date": "2019-11-01"
         },
         {
           "x": 25,
-          "y": -448216.06,
-          "label": "New shirts",
-          "date": "${today-35d}"
+          "y": -447027.96,
+          "label": "Fitness ticket",
+          "date": "2019-11-01"
         },
         {
           "x": 26,
-          "y": -460556.06,
-          "label": "Shopping",
-          "date": "${today-30d}"
+          "y": -462027.96,
+          "label": "Overhead",
+          "date": "2019-11-02"
         },
         {
           "x": 27,
-          "y": -467239.96,
-          "label": "Massage",
-          "date": "${today-29d}"
+          "y": -612027.96,
+          "label": "Lodging",
+          "date": "2019-11-03"
         },
         {
           "x": 28,
-          "y": -476351.25,
-          "label": "English",
-          "date": "${today-29d}"
+          "y": -622027.96,
+          "label": "Common cost",
+          "date": "2019-11-03"
         },
         {
           "x": 29,
-          "y": -482425.44,
-          "label": "Fitness ticket",
-          "date": "${today-29d}"
+          "y": -652027.96,
+          "label": "Tax",
+          "date": "2019-11-03"
         },
         {
           "x": 30,
-          "y": -497425.44,
-          "label": "Overhead",
-          "date": "${today-28d}"
+          "y": -682102.18,
+          "label": "New coat",
+          "date": "2019-11-05"
         },
         {
           "x": 31,
-          "y": -647425.44,
-          "label": "Lodging",
-          "date": "${today-27d}"
+          "y": -685444.13,
+          "label": "Hairdresser",
+          "date": "2019-11-06"
         },
         {
           "x": 32,
-          "y": -657425.44,
-          "label": "Common cost",
-          "date": "${today-27d}"
+          "y": -698811.93,
+          "label": "New running shoes",
+          "date": "2019-11-06"
         },
         {
           "x": 33,
-          "y": -687425.44,
-          "label": "Tax",
-          "date": "${today-27d}"
+          "y": -705492.49,
+          "label": "New running shirt",
+          "date": "2019-11-06"
         },
         {
           "x": 34,
-          "y": -690767.4,
-          "label": "Hairdresser",
-          "date": "${today-25d}"
+          "y": -711170.49,
+          "label": "Shopping",
+          "date": "2019-11-11"
         },
         {
           "x": 35,
-          "y": -692438.37,
-          "label": "D vitamin",
-          "date": "${today-25d}"
+          "y": -716170.49,
+          "label": "Internet",
+          "date": "2019-11-13"
         },
         {
           "x": 36,
-          "y": -693440.96,
-          "label": "C vitamin",
-          "date": "${today-25d}"
+          "y": -742906.09,
+          "label": "Petrol",
+          "date": "2019-11-21"
         },
         {
           "x": 37,
-          "y": -697996.6,
-          "label": "Online course",
-          "date": "${today-25d}"
+          "y": -749151.09,
+          "label": "Shopping",
+          "date": "2019-11-21"
         },
         {
           "x": 38,
-          "y": -704070.8,
-          "label": "New convinient keyboard",
-          "date": "${today-25d}"
+          "y": -759176.94,
+          "label": "Tax",
+          "date": "2019-11-22"
         },
         {
           "x": 39,
-          "y": -730806.4,
-          "label": "Petrol",
-          "date": "${today-20d}"
+          "y": -769202.79,
+          "label": "Insurance",
+          "date": "2019-11-22"
         },
         {
           "x": 40,
-          "y": -741917.4,
-          "label": "Shopping",
-          "date": "${today-20d}"
+          "y": -770873.77,
+          "label": "Bad boys",
+          "date": "2019-11-26"
         },
         {
           "x": 41,
-          "y": -746917.4,
-          "label": "Internet",
-          "date": "${today-17d}"
+          "y": -784234.89,
+          "label": "New shirts",
+          "date": "2019-11-26"
         },
         {
           "x": 42,
-          "y": -758945.08,
-          "label": "New shirt",
-          "date": "${today-16d}"
+          "y": -796574.89,
+          "label": "Shopping",
+          "date": "2019-12-01"
         },
         {
           "x": 43,
-          "y": -760616.06,
-          "label": "I am legend",
-          "date": "${today-15d}"
+          "y": -803258.79,
+          "label": "Massage",
+          "date": "2019-12-01"
         },
         {
           "x": 44,
-          "y": -775616.06,
-          "label": "Big shopping",
-          "date": "${today-10d}"
+          "y": -812370.08,
+          "label": "English",
+          "date": "2019-12-01"
         },
         {
           "x": 45,
-          "y": -785641.91,
-          "label": "Tax",
-          "date": "${today-9d}"
+          "y": -818444.27,
+          "label": "Fitness ticket",
+          "date": "2019-12-01"
         },
         {
           "x": 46,
-          "y": -795667.76,
+          "y": -833444.27,
+          "label": "Overhead",
+          "date": "2019-12-02"
+        },
+        {
+          "x": 47,
+          "y": -983444.27,
+          "label": "Lodging",
+          "date": "2019-12-03"
+        },
+        {
+          "x": 48,
+          "y": -993444.27,
+          "label": "Common cost",
+          "date": "2019-12-03"
+        },
+        {
+          "x": 49,
+          "y": -1023444.27,
+          "label": "Tax",
+          "date": "2019-12-03"
+        },
+        {
+          "x": 50,
+          "y": -1026786.23,
+          "label": "Hairdresser",
+          "date": "2019-12-06"
+        },
+        {
+          "x": 51,
+          "y": -1028457.2,
+          "label": "D vitamin",
+          "date": "2019-12-06"
+        },
+        {
+          "x": 52,
+          "y": -1029459.79,
+          "label": "C vitamin",
+          "date": "2019-12-06"
+        },
+        {
+          "x": 53,
+          "y": -1034015.43,
+          "label": "Online course",
+          "date": "2019-12-06"
+        },
+        {
+          "x": 54,
+          "y": -1040089.63,
+          "label": "New convinient keyboard",
+          "date": "2019-12-06"
+        },
+        {
+          "x": 55,
+          "y": -1066825.23,
+          "label": "Petrol",
+          "date": "2019-12-11"
+        },
+        {
+          "x": 56,
+          "y": -1077936.23,
+          "label": "Shopping",
+          "date": "2019-12-11"
+        },
+        {
+          "x": 57,
+          "y": -1082936.23,
+          "label": "Internet",
+          "date": "2019-12-13"
+        },
+        {
+          "x": 58,
+          "y": -1094963.91,
+          "label": "New shirt",
+          "date": "2019-12-15"
+        },
+        {
+          "x": 59,
+          "y": -1096634.89,
+          "label": "I am legend",
+          "date": "2019-12-16"
+        },
+        {
+          "x": 60,
+          "y": -1111634.89,
+          "label": "Big shopping",
+          "date": "2019-12-21"
+        },
+        {
+          "x": 61,
+          "y": -1121660.74,
+          "label": "Tax",
+          "date": "2019-12-22"
+        },
+        {
+          "x": 62,
+          "y": -1131686.59,
           "label": "Insurance",
-          "date": "${today-9d}"
+          "date": "2019-12-22"
         }
       ]
     },
     "budgetDetails": {
       "totalIncomes": null,
       "totalExpenses": {
-        "amount": 795667.76,
+        "amount": 1131686.59,
         "label": "Total expenses"
       },
       "savings": null,
