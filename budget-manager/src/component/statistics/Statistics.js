@@ -10,7 +10,7 @@ import TransactionTableSearchBar from "../transactions/transaction/table/Transac
 import {createContext} from "../../actions/common/createContext";
 import {getFirstPossibleDay} from "../../actions/transaction/getFirstPossibleDay";
 import {getStandardStatistics} from "../../actions/statistics/getStandardStatistics";
-import {getMessage} from "../../actions/message/messageActions";
+import {getMessage, removeMessage} from "../../actions/message/messageActions";
 import {lockTransactions} from "../../actions/transaction/lockTransactions";
 import {statisticsMessages} from "../../store/MessageHolder";
 
@@ -147,7 +147,8 @@ const mapDispatchToProps = (dispatch) => {
       {
         getStandardStatistics: getStandardStatistics,
         lockTransactions: lockTransactions,
-        getFirstPossibleDay: getFirstPossibleDay
+        getFirstPossibleDay: getFirstPossibleDay,
+        removeMessage: removeMessage
       },
       dispatch)
   }
