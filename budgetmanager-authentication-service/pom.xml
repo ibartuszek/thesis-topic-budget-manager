@@ -20,7 +20,7 @@
     <start-class>hu.elte.bm.authenticationservice.app.AuthenticationServiceApplication</start-class>
     <java.version>11</java.version>
 
-    <checkstyle.version>8.22</checkstyle.version>
+    <checkstyle.version>8.29</checkstyle.version>
     <easymock.version>4.0.2</easymock.version>
     <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
     <jaxb.version>2.2.11</jaxb.version>
