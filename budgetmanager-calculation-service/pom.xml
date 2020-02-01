@@ -20,7 +20,7 @@
     <start-class>hu.elte.bm.calculationservice.app.CalculationServiceApplication</start-class>
     <java.version>11</java.version>
 
-    <checkstyle.version>8.22</checkstyle.version>
+    <checkstyle.version>8.29</checkstyle.version>
     <easymock.version>4.0.2</easymock.version>
     <jaxb.version>2.2.11</jaxb.version>
     <junit-jupiter.version>5.5.2</junit-jupiter.version>
